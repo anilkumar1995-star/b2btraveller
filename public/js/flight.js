@@ -1687,6 +1687,7 @@ $('#proceedBookingBtn').on('click', function () {
         cancelButtonText: "Cancel"
     }).then((result) => {
 
+        
         if (result.value) {
 
             swal({

@@ -226,7 +226,7 @@
 
         .booking-slide {
             position: absolute;
-            right: 70px;
+            right: 55px;
             top: 50%;
             transform: translateY(-50%) translateX(20px);
             width: 230px;
