@@ -17,151 +17,185 @@
         style="background: linear-gradient(135deg, #6366f1, #3b82f6); box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h2 class="fw-bold mb-1 text-white">Welcome Back, Shivani ✈️</h2>
+                <h2 class="fw-bold mb-1 text-white">Welcome Back, {{ Auth::user()->name }} ✈️</h2>
                 <p class="mb-0 text-white">Plan, track & manage your travel bookings efficiently.</p>
             </div>
             <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" width="110" />
         </div>
     </div>
 
-    <!-- KPI Cards -->
-    <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 rounded-4 p-3">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <small class="text-muted">Today's Bookings</small>
-                        <h3 class="fw-bold">264</h3>
+    <div class="content-wrapper">
+        <!-- Content -->
+        <div class="row">
+            <!-- Card Border Shadow -->
+            <div class="col-lg-3 col-sm-6">
+                <div class="card card-border-shadow-primary h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar me-4">
+                                <span class="avatar-initial rounded bg-label-primary"><i
+                                        class="ti ti-plane"></i></span>
+                            </div>
+                            <h4 class="mb-0">42</h4>
+                        </div>
+                        <p class="mb-1">Today's Bookings</p>
+                        <p class="mb-0">
+                            <span class="text-heading fw-medium me-2">+0%</span>
+                            <small class="text-body-secondary">than last week</small>
+                        </p>
                     </div>
-                    <div class="bg-primary bg-opacity-10 p-3 rounded-3">✈️</div>
                 </div>
             </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="card card-border-shadow-warning h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar me-4">
+                                <span class="avatar-initial rounded bg-label-warning"><i
+                                        class="ti ti-building"></i></span>
+                            </div>
+                            <h4 class="mb-0">0</h4>
+                        </div>
+                        <p class="mb-1">Hotel Reservations</p>
+                        <p class="mb-0">
+                            <span class="text-heading fw-medium me-2">+0%</span>
+                            <small class="text-body-secondary">than last week</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="card card-border-shadow-danger h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar me-4">
+                                <span class="avatar-initial rounded bg-label-danger"><i
+                                        class="ti ti-bus"></i></span>
+                            </div>
+                            <h4 class="mb-0">0</h4>
+                        </div>
+                        <p class="mb-1">Bus Tickets</p>
+                        <p class="mb-0">
+                            <span class="text-heading fw-medium me-2">+0%</span>
+                            <small class="text-body-secondary">than last week</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-sm-6">
+                <div class="card card-border-shadow-info h-100">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="avatar me-4">
+                                <span class="avatar-initial rounded bg-label-info">₹</span>
+                            </div>
+                            <h4 class="mb-0">0</h4>
+                        </div>
+                        <p class="mb-1">Total Revenue</p>
+                        <p class="mb-0">
+                            <span class="text-heading fw-medium me-2">0%</span>
+                            <small class="text-body-secondary">than last week</small>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+
+          
+
+            <!-- Charts & Lists Row -->
+            
+
+
         </div>
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 rounded-4 p-3">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <small class="text-muted">Hotel Reservations</small>
-                        <h3 class="fw-bold">148</h3>
-                    </div>
-                    <div class="bg-warning bg-opacity-10 p-3 rounded-3">🏨</div>
-                </div>
-            </div>
-        </div>
+        <div class="row mt-4">
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 rounded-4 p-3">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <small class="text-muted">Bus Tickets</small>
-                        <h3 class="fw-bold">512</h3>
-                    </div>
-                    <div class="bg-success bg-opacity-10 p-3 rounded-3">🚌</div>
-                </div>
-            </div>
-        </div>
+                <!-- Left side section -->
+                <div class="col-lg-7">
 
-        <div class="col-md-3">
-            <div class="card shadow-sm border-0 rounded-4 p-3">
-                <div class="d-flex justify-content-between">
-                    <div>
-                        <small class="text-muted">Total Revenue</small>
-                        <h3 class="fw-bold">₹1.8 Lakh</h3>
+                    <!-- Revenue Chart Box -->
+                    <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h5 class="fw-bold">Revenue Overview</h5>
+                            <span class="text-muted small">Last 30 days</span>
+                        </div>
+                        <div
+                            style="height:270px; background:#f8faff; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#9ca3af;">
+                            <img src="https://quickchart.io/chart?c={type:'bar',data:{labels:['Week 1','Week 2','Week 3','Week 4'],datasets:[{label:'Revenue',data:[40,55,32,70]}]}}"
+                                style="max-width:100%; height:100%; object-fit:contain; opacity:0.9;" />
+                        </div>
                     </div>
-                    <div class="bg-danger bg-opacity-10 p-3 rounded-3">💸</div>
+
                 </div>
+
+                <!-- Right Section -->
+                <div class="col-lg-5">
+
+                    <!-- Recent Bookings -->
+                    <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
+                        <h5 class="fw-bold mb-4">Recent Bookings</h5>
+                        <div class="list-group">
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>Shivani P.</strong> | 🏨
+                                        <small class="text-muted">GOA • Hotel • 22 Dec</small>
+                                    </div>
+                                    <span class="badge bg-success">Confirmed</span>
+                                </div>
+                                
+                                
+                            </div>
+                            <hr/>
+                             <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>Asha R.</strong> |  🏨
+                                        <small class="text-muted">GOA • Hotel • 22 Dec</small>
+                                    </div>
+                                    <span class="badge bg-success">Confirmed</span>
+                                </div>
+                            </div> <hr/>
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>Vikram P.</strong> | ✈️
+                                        <small class="text-muted">MUM • Flight • 14 Dec</small>
+                                    </div>
+                                    <span class="badge bg-warning">Pending</span>
+                                </div>
+                            </div> <hr/>
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>Neha S.</strong> | 🚌
+                                        <small class="text-muted">DEL • Bus • 16 Dec</small>
+                                    </div>
+                                    <span class="badge bg-danger">Cancelled</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Activity Log -->
+                    {{-- <div class="card shadow-sm border-0 rounded-4 p-3">
+                        <h6 class="fw-bold mb-2">Live Activity</h6>
+                        <div style="max-height:200px; overflow:auto;">
+                            <div class="mb-2 small">🟢 Booking #5482 confirmed — <strong>Rahul K.</strong> <span
+                                    class="text-muted">2m ago</span></div>
+                            <div class="mb-2 small">🔔 Payment failed for <strong>#5479</strong> <span
+                                    class="text-muted">10m
+                                    ago</span></div>
+                            <div class="mb-2 small">✈️ Flight DEL → MUM fully booked <span class="text-muted">1h
+                                    ago</span></div>
+                        </div>
+                    </div> --}}
+
+                </div>
+
             </div>
-        </div>
     </div>
-
-    <!-- Charts & Lists Row -->
-    <div class="row g-4">
-
-        <!-- Left side section -->
-        <div class="col-lg-8">
-
-            <!-- Revenue Chart Box -->
-            <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <h5 class="fw-bold">Revenue Overview</h5>
-                    <span class="text-muted small">Last 30 days</span>
-                </div>
-                <div
-                    style="height:240px; background:#f8faff; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#9ca3af;">
-                    <img src="https://quickchart.io/chart?c={type:'bar',data:{labels:['Week 1','Week 2','Week 3','Week 4'],datasets:[{label:'Revenue',data:[40,55,32,70]}]}}"
-                        style="max-width:100%; height:100%; object-fit:contain; opacity:0.9;" /></div>
-            </div>
-
-            <!-- Popular Routes -->
-            <div class="card shadow-sm border-0 rounded-4 p-3">
-                <h5 class="fw-bold mb-3">Top Travel Routes</h5>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">DEL → MUM <span
-                            class="badge bg-primary">85%</span></li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">BLR → GOA <span
-                            class="badge bg-primary">78%</span></li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">PNQ → DEL <span
-                            class="badge bg-primary">73%</span></li>
-                </ul>
-            </div>
-
-        </div>
-
-        <!-- Right Section -->
-        <div class="col-lg-4">
-
-            <!-- Recent Bookings -->
-            <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
-                <h5 class="fw-bold mb-2">Recent Bookings</h5>
-                <div class="list-group">
-                    <div class="list-group-item border-0 px-0">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <strong>Asha R.</strong><br>
-                                <small class="text-muted">GOA • Hotel • 22 Dec</small>
-                            </div>
-                            <span class="badge bg-success">Confirmed</span>
-                        </div>
-                    </div>
-                    <div class="list-group-item border-0 px-0">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <strong>Vikram P.</strong><br>
-                                <small class="text-muted">MUM • Flight • 14 Dec</small>
-                            </div>
-                            <span class="badge bg-warning text-dark">Pending</span>
-                        </div>
-                    </div>
-                    <div class="list-group-item border-0 px-0">
-                        <div class="d-flex justify-content-between">
-                            <div>
-                                <strong>Neha S.</strong><br>
-                                <small class="text-muted">DEL • Bus • 16 Dec</small>
-                            </div>
-                            <span class="badge bg-danger">Cancelled</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Activity Log -->
-            <div class="card shadow-sm border-0 rounded-4 p-3">
-                <h6 class="fw-bold mb-2">Live Activity</h6>
-                <div style="max-height:200px; overflow:auto;">
-                    <div class="mb-2 small">🟢 Booking #5482 confirmed — <strong>Rahul K.</strong> <span
-                            class="text-muted">2m ago</span></div>
-                    <div class="mb-2 small">🔔 Payment failed for <strong>#5479</strong> <span class="text-muted">10m
-                            ago</span></div>
-                    <div class="mb-2 small">✈️ Flight DEL → MUM fully booked <span class="text-muted">1h ago</span></div>
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-
 @endsection
 
 @push('script')
