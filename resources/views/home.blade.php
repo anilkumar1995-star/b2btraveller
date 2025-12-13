@@ -15,10 +15,10 @@
         style="background: linear-gradient(135deg, #6366f1, #3b82f6); box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
         <div class="d-flex justify-content-between align-items-center">
             <div>
-                <h2 class="fw-bold mb-1 text-white">Welcome Back, {{ Auth::user()->name }} ✈️</h2>
-                <p class="mb-0 text-white">Plan, track & manage your travel bookings efficiently.</p>
+                <h2 class="fw-bold mb-1 text-white">Welcome Back, {{ Auth::user()->name }} 🏆</h2>
+                <p class="mb-0 text-white">Effortlessly plan, track, and manage your travel bookings with complete control.</p>
             </div>
-            <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" width="110" />
+            <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" width="80" />
         </div>
     </div>
 
@@ -33,7 +33,7 @@
                             <div class="avatar me-4">
                                 <span class="avatar-initial rounded bg-label-primary"><i class="ti ti-plane"></i></span>
                             </div>
-                            <h4 class="mb-0">42</h4>
+                            <h4 class="mb-0">0</h4>
                         </div>
                         <p class="mb-1">Today's Bookings</p>
                         <p class="mb-0">
@@ -226,17 +226,19 @@
 
         .booking-slide {
             position: absolute;
-            right: 60px;
+            right: 70px;
             top: 50%;
             transform: translateY(-50%) translateX(20px);
-            width: 220px;
-            background: #fff;
-            border-radius: 4px;
-            padding: 16px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            width: 230px;
+            background: linear-gradient(145deg, #ffffff, #d6dbf0);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 15px 35px rgba(99, 102, 241, 0.25);
             opacity: 0;
             pointer-events: none;
-            transition: all 0.3s ease;
+            transition: all 0.35s ease;
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            backdrop-filter: blur(6px);
         }
 
         .booking-item:hover .booking-slide {
@@ -256,7 +258,7 @@
             margin-bottom: 10px;
         }
 
-        .booking-slide button {
+        .booking-slide a {
             width: 100%;
             background: linear-gradient(135deg, #6366f1, #22c55e);
             border: none;
@@ -266,12 +268,11 @@
             transition: all 0.3s ease;
         }
 
-        .booking-slide button:hover {
+        .booking-slide a:hover {
             transform: translateY(-1px);
             color: #ececec;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
-
     </style>
 
     <div class="floating-booking">
@@ -282,7 +283,7 @@
             <div class="booking-slide">
                 <h6>Flight Booking</h6>
                 <p>Book domestic & international flights at best fares.</p>
-                <button class="btn ">New Flight Booking</button>
+                <a class="btn" href="{{ route('flight.view') }}">New Flight Booking</a>
             </div>
         </div>
 
@@ -292,7 +293,7 @@
             <div class="booking-slide">
                 <h6>Bus Booking</h6>
                 <p>Easy bus booking with multiple operators & routes.</p>
-                <button class="btn">New Bus Booking</button>
+                <a class="btn" href="{{ route('flight.view') }}">New Bus Booking</a>
             </div>
         </div>
 
@@ -302,7 +303,7 @@
             <div class="booking-slide">
                 <h6>Hotel Booking</h6>
                 <p>Find hotels with best deals and instant confirmation.</p>
-                <button class="btn">New Hotel Booking</button>
+                <a class="btn" href="{{ route('flight.view') }}">New Hotel Booking</a>
             </div>
         </div>
 
