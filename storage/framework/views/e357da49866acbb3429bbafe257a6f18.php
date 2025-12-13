@@ -3,15 +3,15 @@
 
     <div class="app-brand demo d-flex align-items-center justify-content-between">
         <?php if(Auth::user()->company->logo): ?>
-            <a href="<?php echo e(route('home')); ?>" class="app-brand-link d-flex align-items-center">
-                <img src="<?php echo e(Imagehelper::getImageUrl() . Auth::user()->company->logo); ?>" class="img-fluid rounded me-2"
-                    width="100%" alt="Logo">
-            </a>
+        <a href="<?php echo e(route('home')); ?>" class="app-brand-link d-flex align-items-center">
+            <img src="<?php echo e(Imagehelper::getImageUrl() . Auth::user()->company->logo); ?>" class="img-fluid rounded me-2"
+                width="100%" alt="Logo">
+        </a>
         <?php else: ?>
-            <a href="<?php echo e(route('home')); ?>" class="header-logo">
-                <img src="" class="img-fluid rounded" alt="">
-                <span><?php echo e(Auth::user()->company->companyname); ?></span>
-            </a>
+        <a href="<?php echo e(route('home')); ?>" class="header-logo">
+            <img src="" class="img-fluid rounded" alt="">
+            <span><?php echo e(Auth::user()->company->companyname); ?></span>
+        </a>
         <?php endif; ?>
         <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto">
             <i class="ti menu-toggle-icon d-none d-xl-block ti-sm align-middle"></i>
@@ -50,6 +50,73 @@
             </ul>
         </li>
 
+        <?php if(Myhelper::can([
+        'view_whitelable',
+        'view_md',
+        'view_distributor',
+        'view_retailer',
+        'view_apiuser',
+        'view_other',
+        'view_kycpending',
+        'view_kycsubmitted',
+        'view_kycrejected',
+        ])): ?>
+        <li class="menu-item <?php echo e(Request::is('member/*') ? 'active open' : ''); ?>">
+            <a href="#member" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-users"></i>
+                <div data-i18n="Member">Member</div>
+            </a>
+            <ul class="menu-sub <?php echo e(Request::is('member/*') ? 'show' : ''); ?>" id="member">
+                <?php if(Myhelper::can(['view_whitelable'])): ?>
+                <li class="menu-item <?php echo e(Request::is('member/whitelable') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('member', ['type' => 'whitelable'])); ?>" class="menu-link">
+                        <div data-i18n="Whitelabel">Whitelabel</div>
+                    </a>
+                </li>
+                <?php endif; ?>
+                <?php if(Myhelper::can(['view_md'])): ?>
+                <li class="menu-item <?php echo e(Request::is('member/md') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('member', ['type' => 'md'])); ?>" class=" menu-link">
+                        <div data-i18n="Master Distributor">Master Distributor</div>
+                    </a>
+                </li>
+                <?php endif; ?>
+                <?php if(Myhelper::can(['view_distributor'])): ?>
+                <li class="menu-item <?php echo e(Request::is('member/distributor') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('member', ['type' => 'distributor'])); ?>" class="menu-link">
+                        <div data-i18n="Distributor">Distributor</div>
+                    </a>
+                </li>
+                <?php endif; ?>
+                <?php if(Myhelper::can(['view_retailer'])): ?>
+                <li class="menu-item <?php echo e(Request::is('member/retailer') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('member', ['type' => 'retailer'])); ?>" class="menu-link">
+                        <div data-i18n="Retailer">Retailer</div>
+                    </a>
+                </li>
+                <?php endif; ?>
+                <?php if(Myhelper::hasRole('admin') || Myhelper::hasRole('subadmin')): ?>
+                <li class="menu-item <?php echo e(Request::is('member/web') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('member', ['type' => 'web'])); ?>" class="menu-link">
+                        <div data-i18n="All Member">All Member</div>
+                    </a>
+                </li>
+                <?php endif; ?>
+                
+                
+                <?php if(Myhelper::hasRole('admin') || Myhelper::hasRole('subadmin')): ?>
+                <li class="menu-item <?php echo e(Request::is('member/kycpending') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('member', ['type' => 'kycpending'])); ?>" class="menu-link">
+                        <div data-i18n="New User">New User</div>
+                    </a>
+                </li>
+                <?php endif; ?>
+
+
+            </ul>
+        </li>
+        <?php endif; ?>
+
         <li class="menu-item <?php echo e(Request::is('profile/*') ? 'active open' : ''); ?>">
             <a href="#accountSetting" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-file-description"></i>
@@ -64,5 +131,4 @@
             </ul>
         </li>
     </ul>
-</aside>
-<?php /**PATH C:\wamp64\www\flight_b2b_travel\flight_b2b_travel\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
+</aside><?php /**PATH C:\wamp64\www\flight_b2b_travel\flight_b2b_travel\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
