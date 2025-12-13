@@ -68,7 +68,7 @@ class FlightController extends Controller
             ->orderBy('bookings.id', 'DESC')
             ->paginate(10);
 
-            
+
         if ($request->ajax()) {
             return view('flight.booking-table', compact('bookings'))->render();
         }
@@ -79,7 +79,7 @@ class FlightController extends Controller
     public function apiLog(Request $request)
     {
         $userId = \Auth::user()->id;
-        if(!$userId){
+        if (!$userId) {
             return redirect()->route('auth');
         }
 
@@ -151,7 +151,6 @@ class FlightController extends Controller
         $response = $service->bookingFlight($request->all());
 
 
-        dd($response);
         // return response()->json($response);
         if ($response['status'] != 'success') {
             return response()->json([
@@ -257,7 +256,7 @@ class FlightController extends Controller
         ]);
     }
 
-     public function flightTicket(Request $request)
+    public function flightTicket(Request $request)
     {
         $service = new FlightService();
         $response = $service->FlightTicketView($request->all());
