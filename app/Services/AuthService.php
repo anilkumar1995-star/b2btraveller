@@ -65,7 +65,6 @@ class AuthService
 
         $url = $this->setFullUrl('authenticate');
 
-        dd($url);
         $baseUrl = url('/');
         if ($baseUrl == 'http://127.0.0.1:8000') {
             $result = $this->getStaticResponse();
@@ -82,7 +81,6 @@ class AuthService
             $result['response'] = json_decode($result['response'], true);
         }
 
-        dd($result);
         if ($result['response']['data']['TokenId'] == "") {
             Log::error('TekTravels Auth Failed', ['response' => @$result['response']['data']['message']]);
             throw new \Exception("Token not received from TekTravels API");
