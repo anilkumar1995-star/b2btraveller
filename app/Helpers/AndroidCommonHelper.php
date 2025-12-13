@@ -5,6 +5,7 @@ namespace App\Helpers;
 use App\Models\Api;
 use App\Models\Apilog;
 use App\Models\PortalSetting;
+use App\Models\Token;
 use App\Models\User;
 use App\Models\UserOTPS;
 use Illuminate\Support\Facades\DB;
@@ -219,7 +220,7 @@ class AndroidCommonHelper
         //Check Service Status From API
         switch ($type) {
             case 'travels':
-                $checkAPIS = Api::where('code', 'generateUrl')->first();
+                $checkAPIS = Token::where('code', 'generateUrl')->first();
                 break;
             case 'iydaaeps':
                 $checkAPIS = Api::where('code', 'iydaAEPS')->first();
