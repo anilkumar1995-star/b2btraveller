@@ -67,8 +67,8 @@
 
                 <!-- Booking from START -->
                 <form
-                    style="background-image: url('{{ asset('images/01.jpg') }}'); background-position: center center; background-repeat: no-repeat; background-size: cover;"
-                    id="flightSearchForm" class="bg-mode position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
+                    style="background-image: url('{{ asset('images/1.png') }}'); background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                    id="flightSearchForm" class="bg-mode bg-white position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
                     @csrf
                     <!-- Svg decoration -->
                     <figure class="position-absolute top-0 start-0 h-100 ms-n2 ms-sm-n1">
