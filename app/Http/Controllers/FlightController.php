@@ -279,8 +279,7 @@ class FlightController extends Controller
                 'message' => 'Invalid, Something went worng'
             ], 400);
         }
-
-
+        
         // Extracting required fields
         $pnr              = $data['PNR'] ?? null;
         $bookingId        = $data['BookingId'] ?? null;
