@@ -151,6 +151,7 @@ class FlightController extends Controller
         $response = $service->bookingFlight($request->all());
 
 
+        dd($response);
         // return response()->json($response);
         if ($response['status'] != 'success') {
             return response()->json([
@@ -260,7 +261,7 @@ class FlightController extends Controller
     {
         $service = new FlightService();
         $response = $service->FlightTicketView($request->all());
-// dd($response);
+
         return response()->json($response);
     }
 }
