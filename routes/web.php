@@ -111,7 +111,7 @@ Route::group(['prefix' => 'ipaydmt', 'middleware' => ['auth', 'company']], funct
     Route::post('transaction', [IpayDmtController::class, 'payment'])->name('ipaydmt1')->middleware('transactionlog:pancard');
 });
 
-Route::group(['prefix' => 'flight', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::get('view', [RoutingController::class, 'root'])->name('flight.view');
     Route::get('search-city', [FlightController::class, 'searchCity'])->name('search.city');
     Route::get('token/refresh', [FlightController::class, 'refreshToken'])->name('flight.token.refresh');
