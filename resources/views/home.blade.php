@@ -2,8 +2,6 @@
 @section('title', 'Dashboard')
 @section('pagetitle', 'Dashboard')
 @section('content')
-    <!-- Content -->
-
 
     <div id="loading">
         <div id="loading-center">
@@ -33,8 +31,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-2">
                             <div class="avatar me-4">
-                                <span class="avatar-initial rounded bg-label-primary"><i
-                                        class="ti ti-plane"></i></span>
+                                <span class="avatar-initial rounded bg-label-primary"><i class="ti ti-plane"></i></span>
                             </div>
                             <h4 class="mb-0">42</h4>
                         </div>
@@ -51,8 +48,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-2">
                             <div class="avatar me-4">
-                                <span class="avatar-initial rounded bg-label-warning"><i
-                                        class="ti ti-building"></i></span>
+                                <span class="avatar-initial rounded bg-label-warning"><i class="ti ti-building"></i></span>
                             </div>
                             <h4 class="mb-0">0</h4>
                         </div>
@@ -69,8 +65,7 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-2">
                             <div class="avatar me-4">
-                                <span class="avatar-initial rounded bg-label-danger"><i
-                                        class="ti ti-bus"></i></span>
+                                <span class="avatar-initial rounded bg-label-danger"><i class="ti ti-bus"></i></span>
                             </div>
                             <h4 class="mb-0">0</h4>
                         </div>
@@ -101,85 +96,87 @@
             </div>
 
 
-          
+
 
             <!-- Charts & Lists Row -->
-            
+
 
 
         </div>
 
         <div class="row mt-4">
 
-                <!-- Left side section -->
-                <div class="col-lg-7">
+            <!-- Left side section -->
+            <div class="col-lg-7">
 
-                    <!-- Revenue Chart Box -->
-                    <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <h5 class="fw-bold">Revenue Overview</h5>
-                            <span class="text-muted small">Last 30 days</span>
-                        </div>
-                        <div
-                            style="height:270px; background:#f8faff; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#9ca3af;">
-                            <img src="https://quickchart.io/chart?c={type:'bar',data:{labels:['Week 1','Week 2','Week 3','Week 4'],datasets:[{label:'Revenue',data:[40,55,32,70]}]}}"
-                                style="max-width:100%; height:100%; object-fit:contain; opacity:0.9;" />
-                        </div>
+                <!-- Revenue Chart Box -->
+                <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h5 class="fw-bold">Revenue Overview</h5>
+                        <span class="text-muted small">Last 30 days</span>
                     </div>
-
+                    <div
+                        style="height:270px; background:#f8faff; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#9ca3af;">
+                        <img src="https://quickchart.io/chart?c={type:'bar',data:{labels:['Week 1','Week 2','Week 3','Week 4'],datasets:[{label:'Revenue',data:[40,55,32,70]}]}}"
+                            style="max-width:100%; height:100%; object-fit:contain; opacity:0.9;" />
+                    </div>
                 </div>
 
-                <!-- Right Section -->
-                <div class="col-lg-5">
+            </div>
 
-                    <!-- Recent Bookings -->
-                    <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
-                        <h5 class="fw-bold mb-4">Recent Bookings</h5>
-                        <div class="list-group">
-                            <div class="list-group-item border-0 px-0">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <strong>Shivani P.</strong> | 🏨
-                                        <small class="text-muted">GOA • Hotel • 22 Dec</small>
-                                    </div>
-                                    <span class="badge bg-success">Confirmed</span>
+            <!-- Right Section -->
+            <div class="col-lg-5">
+
+                <!-- Recent Bookings -->
+                <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
+                    <h5 class="fw-bold mb-4">Recent Bookings</h5>
+                    <div class="list-group">
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>Shivani P.</strong> | 🏨
+                                    <small class="text-muted">GOA • Hotel • 22 Dec</small>
                                 </div>
-                                
-                                
+                                <span class="badge bg-success">Confirmed</span>
                             </div>
-                            <hr/>
-                             <div class="list-group-item border-0 px-0">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <strong>Asha R.</strong> |  🏨
-                                        <small class="text-muted">GOA • Hotel • 22 Dec</small>
-                                    </div>
-                                    <span class="badge bg-success">Confirmed</span>
+
+
+                        </div>
+                        <hr />
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>Asha R.</strong> | 🏨
+                                    <small class="text-muted">GOA • Hotel • 22 Dec</small>
                                 </div>
-                            </div> <hr/>
-                            <div class="list-group-item border-0 px-0">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <strong>Vikram P.</strong> | ✈️
-                                        <small class="text-muted">MUM • Flight • 14 Dec</small>
-                                    </div>
-                                    <span class="badge bg-warning">Pending</span>
+                                <span class="badge bg-success">Confirmed</span>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>Vikram P.</strong> | ✈️
+                                    <small class="text-muted">MUM • Flight • 14 Dec</small>
                                 </div>
-                            </div> <hr/>
-                            <div class="list-group-item border-0 px-0">
-                                <div class="d-flex justify-content-between">
-                                    <div>
-                                        <strong>Neha S.</strong> | 🚌
-                                        <small class="text-muted">DEL • Bus • 16 Dec</small>
-                                    </div>
-                                    <span class="badge bg-danger">Cancelled</span>
+                                <span class="badge bg-warning">Pending</span>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="list-group-item border-0 px-0">
+                            <div class="d-flex justify-content-between">
+                                <div>
+                                    <strong>Neha S.</strong> | 🚌
+                                    <small class="text-muted">DEL • Bus • 16 Dec</small>
                                 </div>
+                                <span class="badge bg-danger">Cancelled</span>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <!-- Activity Log -->
-                    {{-- <div class="card shadow-sm border-0 rounded-4 p-3">
+                <!-- Activity Log -->
+                {{-- <div class="card shadow-sm border-0 rounded-4 p-3">
                         <h6 class="fw-bold mb-2">Live Activity</h6>
                         <div style="max-height:200px; overflow:auto;">
                             <div class="mb-2 small">🟢 Booking #5482 confirmed — <strong>Rahul K.</strong> <span
@@ -192,9 +189,123 @@
                         </div>
                     </div> --}}
 
-                </div>
-
             </div>
+
+        </div>
+    </div>
+
+    <style>
+        .floating-booking {
+            position: fixed;
+            right: 0px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .booking-item {
+            position: relative;
+        }
+
+        .booking-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #003d75, #62bf00a8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .booking-slide {
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%) translateX(20px);
+            width: 220px;
+            background: #fff;
+            border-radius: 4px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        .booking-item:hover .booking-slide {
+            opacity: 1;
+            transform: translateY(-50%) translateX(0);
+            pointer-events: auto;
+        }
+
+        .booking-slide h6 {
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .booking-slide p {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .booking-slide button {
+            width: 100%;
+            background: linear-gradient(135deg, #6366f1, #22c55e);
+            border: none;
+            color: #fff;
+            padding: 9px 0;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .booking-slide button:hover {
+            transform: translateY(-1px);
+            color: #ececec;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+    </style>
+
+    <div class="floating-booking">
+
+        <!-- FLIGHT -->
+        <div class="booking-item">
+            <div class="booking-icon"><i class="ti ti-plane"></i></div>
+            <div class="booking-slide">
+                <h6>Flight Booking</h6>
+                <p>Book domestic & international flights at best fares.</p>
+                <button class="btn ">New Flight Booking</button>
+            </div>
+        </div>
+
+        <!-- BUS -->
+        <div class="booking-item">
+            <div class="booking-icon"><i class="ti ti-bus"></i></div>
+            <div class="booking-slide">
+                <h6>Bus Booking</h6>
+                <p>Easy bus booking with multiple operators & routes.</p>
+                <button class="btn">New Bus Booking</button>
+            </div>
+        </div>
+
+        <!-- HOTEL -->
+        <div class="booking-item">
+            <div class="booking-icon"><i class="ti ti-building"></i></div>
+            <div class="booking-slide">
+                <h6>Hotel Booking</h6>
+                <p>Find hotels with best deals and instant confirmation.</p>
+                <button class="btn">New Hotel Booking</button>
+            </div>
+        </div>
+
     </div>
 @endsection
 

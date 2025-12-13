@@ -1,11 +1,23 @@
 <!-- Menu -->
+<style>
+    li .menu-link.active {
+        background-color: #f4f6f9;
+        font-weight: 600;
+    }
+    li .menu-link{
+        font-weight: 500;
+        border:1px solid rgb(228, 225, 225);
+    }
+</style>
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
 
     <div class="app-brand demo d-flex align-items-center justify-content-between">
         @if (Auth::user()->company->logo)
-        <a href="{{ route('home') }}" class="app-brand-link d-flex align-items-center">
-            <img src="{{ Imagehelper::getImageUrl() . Auth::user()->company->logo }}" class="img-fluid rounded me-2"
+        <a href="{{ route('home') }}" class="app-brand-link d-flex align-items-center p-3">
+            <img src="https://ipayments.in/img/IPAYMNT.png" class="img-fluid rounded me-2"
                 width="100%" alt="Logo">
+            {{-- <img src="{{ Imagehelper::getImageUrl() . Auth::user()->company->logo }}" class="img-fluid rounded me-2"
+                width="100%" alt="Logo"> --}}
         </a>
         @else
         <a href="{{ route('home') }}" class="header-logo">
@@ -18,11 +30,10 @@
             <i class="ti ti-x d-block d-xl-none ti-sm align-middle"></i>
         </a>
     </div>
-
     <div class="menu-inner-shadow"></div>
 
-    <ul class="menu-inner py-1">
-        <li class="{{ Request::is('home') ? 'active' : '' }} menu-item ">
+    <ul class="menu-inner py-3">
+        <li class="{{ Request::is('dashboard') ? 'active' : '' }} menu-item ">
             <a href="{{ route('home') }}" class="menu-link">
                 <i class="menu-icon tf-icons ti ti-smart-home"></i>
                 <div data-i18n="Dashboards">Dashboards</div>
@@ -33,13 +44,53 @@
         <li class="menu-item {{ Request::is('flight/*') ? 'active open' : '' }}">
             <a href="#menu-design" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-plane"></i>
-                <div data-i18n="Traveller">Traveller</div>
+                <div data-i18n="Flight">Flight</div>
             </a>
             <ul class="menu-sub" id="menu-design {{ Request::is('flight/*') ? 'show' : '' }}">
 
                 <li class="menu-item {{ Request::is('flight/view') ? 'active' : '' }}">
                     <a href="{{ route('flight.view') }}" class="menu-link">
-                        <div data-i18n="Flight">Flight</div>
+                        <div data-i18n="Flight Booking">Flight Booking</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('flight/booking-list') ? 'active' : '' }}">
+                    <a href="{{ url('flight/booking-list') }}" class="menu-link">
+                        <div data-i18n="Booking List">Booking List</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item {{ Request::is('flight/*') ? 'active open' : '' }}">
+            <a href="#menu-design" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-bus"></i>
+                <div data-i18n="Bus">Bus</div>
+            </a>
+            <ul class="menu-sub" id="menu-design {{ Request::is('flight/*') ? 'show' : '' }}">
+
+                <li class="menu-item {{ Request::is('flight/view') ? 'active' : '' }}">
+                    <a href="{{ route('flight.view') }}" class="menu-link">
+                        <div data-i18n="Bus Booking">Bus Booking</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('flight/booking-list') ? 'active' : '' }}">
+                    <a href="{{ url('flight/booking-list') }}" class="menu-link">
+                        <div data-i18n="Booking List">Booking List</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
+        <li class="menu-item {{ Request::is('flight/*') ? 'active open' : '' }}">
+            <a href="#menu-design" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-building"></i>
+                <div data-i18n="Hotel">Hotel</div>
+            </a>
+            <ul class="menu-sub" id="menu-design {{ Request::is('flight/*') ? 'show' : '' }}">
+
+                <li class="menu-item {{ Request::is('flight/view') ? 'active' : '' }}">
+                    <a href="{{ route('flight.view') }}" class="menu-link">
+                        <div data-i18n="Hotel Booking">Hotel Booking</div>
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('flight/booking-list') ? 'active' : '' }}">
@@ -102,20 +153,7 @@
                     </a>
                 </li>
                 @endif
-                {{-- @if (Myhelper::hasRole('admin') || Myhelper::hasRole('subadmin'))
-                <li class="menu-item {{ Request::is('member/kycsubmitted') ? 'active' : '' }}">
-                    <a href="{{ route('member', ['type' => 'kycsubmitted']) }}" class="menu-link">
-                        <div data-i18n="Kycsubmited User">Kycsubmited User</div>
-                    </a>
-                </li>
-                @endif --}}
-                {{-- @if (Myhelper::hasRole('admin') || Myhelper::hasRole('subadmin'))
-                <li class="menu-item {{ Request::is('member/kycrejected') ? 'active' : '' }}">
-                    <a href="{{ route('member', ['type' => 'kycrejected']) }}" class="menu-link">
-                        <div data-i18n="Kyc Rejected User">Kyc Rejected User</div>
-                    </a>
-                </li>
-                @endif --}}
+               
                 @if (Myhelper::hasRole('admin') || Myhelper::hasRole('subadmin'))
                 <li class="menu-item {{ Request::is('member/kycpending') ? 'active' : '' }}">
                     <a href="{{ route('member', ['type' => 'kycpending']) }}" class="menu-link">
