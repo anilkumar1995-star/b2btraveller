@@ -156,7 +156,7 @@ Route::group(['prefix' => 'statement', 'middleware' => ['auth', 'company']], fun
 });
 
 
-Route::group(['prefix' => 'member', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'member', 'middleware' => ['auth']], function () {
     Route::get('{type}/{action?}', [MemberController::class, 'index'])->name('member');
     Route::post('store', [MemberController::class, 'create'])->middleware('webActivityLog')->name('memberstore');
     Route::post('commission/update', [MemberController::class, 'commissionUpdate'])->middleware('webActivityLog')->name('commissionUpdate'); //->middleware('activity');
