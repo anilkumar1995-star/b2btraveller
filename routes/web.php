@@ -178,7 +178,7 @@ Route::group(['prefix' => 'fund', 'middleware' => ['auth', 'company']], function
     // Route::post('runpaisatxn', [CyrusPayoutController::class, 'transactionRunpaisa'])->name('runpaisatxn')->middleware('transactionlog:fund');
 });
 
-Route::group(['prefix' => 'profile', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'profile', 'middleware' => ['auth']], function () {
     Route::get('/view/{id?}', [SettingController::class, 'index'])->name('profile');
     // Route::get('certificate', [SettingController::class,'certificate'])->name('certificate');
     Route::post('user_profile_update', [SettingController::class, 'profileUpdate'])->middleware('webActivityLog')->name('profileUpdate');
