@@ -117,7 +117,7 @@
                         <!-- Ticket class -->
                         <div class="col-lg-3 ms-auto">
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select js-choice select" name="FlightCabinClass" id="FlightCabinClass"
+                                <select class="form-select  select" name="FlightCabinClass" id="FlightCabinClass"
                                     required>
                                     <option value="">Select Class</option>
                                     <option value="1">All Class</option>
@@ -133,7 +133,7 @@
                         <!-- Ticket Travelers -->
                         <div class="col-lg-3 ms-auto">
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select js-choice select" name="AdultCount" id="AdultCount" required>
+                                <select class="form-select  select" name="AdultCount" id="AdultCount" required>
                                     <option value="">Select Adult (18+ Yr)</option>
                                     <option value="1" selected>1</option>
                                     <option value="2">2</option>
@@ -149,7 +149,7 @@
                         </div>
                         <div class="col-lg-3 ms-auto">
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select js-choice select" name="ChildCount" id="ChildCount" required>
+                                <select class="form-select  select" name="ChildCount" id="ChildCount" required>
                                     <option value="">Select Child (2-18 Yr)</option>
                                     <option value="0" selected>0</option>
                                     <option value="1">1</option>
@@ -164,7 +164,7 @@
                         </div>
                         <div class="col-lg-3 ms-auto">
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select js-choice select" name="InfantCount" id="InfantCount" required>
+                                <select class="form-select  select" name="InfantCount" id="InfantCount" required>
                                     <option value="">Select Infant (0-2 Yr)</option>
                                     <option value="0" selected>0</option>
                                     <option value="1">1</option>
@@ -187,7 +187,7 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-geo-alt me-2"></i>Origin</label>
-                                            <select class="form-select js-choice select" data-search-enabled="true"
+                                            <select class="form-select  select" data-search-enabled="true"
                                                 name="Origin" id="Origin">
                                                 <option value="">Select location</option>
                                                 
@@ -207,10 +207,10 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-send me-2"></i>Destination</label>
-                                            <select class="form-select js-choice select" data-search-enabled="true"
+                                            <select class="form-select  select" data-search-enabled="true"
                                                 id="Destination" name="Destination">
                                                 <option value="">Select location</option>
-                                                
+                                             
                                             </select>
                                         </div>
                                     </div>
@@ -246,12 +246,9 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-geo-alt me-2"></i>Origin</label>
-                                            <select class="form-select js-choice select w-100" data-search-enabled="true"
+                                            <select class="form-select  select w-100" data-search-enabled="true"
                                                 name="Origin" id="roundOrigin">
                                                 <option value="">Select location</option>
-
-                                                
-                                                
                                             </select>
                                         </div>
 
@@ -267,11 +264,9 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-send me-2"></i>Destination</label>
-                                            <select class="form-select js-choice select w-100" data-search-enabled="true"
+                                            <select class="form-select  select w-100" data-search-enabled="true"
                                                 id="roundDestination" name="Destination">
                                                 <option value="">Select location</option>
-                                                
-                                                
                                             </select>
                                         </div>
                                     </div>
@@ -336,7 +331,7 @@
 
                         <!-- Offcanvas body -->
                         <div class="offcanvas-body flex-column p-3 p-xl-0">
-                            <form class="rounded-3 shadow">
+                            <form class="rounded-3 shadow-sm">
                                 <!-- Popular filters START -->
                                 <div class="card card-body rounded-0 rounded-top p-4">
                                     <!-- Title -->
