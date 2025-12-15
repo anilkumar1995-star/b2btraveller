@@ -1746,7 +1746,7 @@ function hitBookingAPI() {
             LastName: trav.lastName,
             PaxType: trav.type === "Child" ? 2 : trav.type === "Infant" ? 3 : 1,
             DateOfBirth: formatDate(trav.dob),
-            Gender: trav.gender?.toLowerCase() === "male" ? 1 : 2,
+            Gender: trav.gender,
             PassportNo: trav.passportNo || "",
             PassportExpiry: formatDate(trav.passportExpiry),
             AddressLine1: trav.address1 || "",
