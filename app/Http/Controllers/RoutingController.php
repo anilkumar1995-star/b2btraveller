@@ -15,29 +15,13 @@ class RoutingController extends Controller
 
     public function root(Request $request)
     {
-        $cityList = DB::table('flightcity')
-            ->select('airport_code', 'airport_name', 'city')
-            ->limit(10)
-            ->get();
+        // $cityList = DB::table('flightcity')
+        //     ->select('airport_code', 'airport_name', 'city')
+        //     ->limit(10)
+        //     ->get();
 
-
-        if (!empty($request->all())) {
-            $text = rawurldecode($request->enc);
-            $enc = json_decode(CommonHelper::decrypt($text, $this->secretKey, 'abcd5678123456a3'));
-
-            $up = $this->userDetails($enc);
-        }
-        $userData = '';
-        $refId = session('current_ref_id');
-
-        if (isset($refId) && !empty($refId)) {
-            $userData = DB::table('auth_api_data')
-                ->where('ref_id', $refId)
-                ->first();
-            
-        }
-
-        return view('flight.index-flight', compact('cityList', 'userData'));
+        // return view('flight.index-flight', compact('cityList'));
+        return view('flight.index-flight');
     }
 
     public function clearRefId()

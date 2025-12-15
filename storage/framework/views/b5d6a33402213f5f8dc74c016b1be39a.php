@@ -190,13 +190,7 @@
                                             <select class="form-select js-choice select" data-search-enabled="true"
                                                 name="Origin" id="Origin">
                                                 <option value="">Select location</option>
-                                                <?php $__currentLoopData = $cityList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $city): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($city->airport_code); ?>">
-                                                        <?php echo e($city->airport_name); ?> -
-                                                        <?php echo e($city->airport_code); ?>
-
-                                                    </option>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                
                                             </select>
 
                                         </div>
@@ -216,13 +210,7 @@
                                             <select class="form-select js-choice select" data-search-enabled="true"
                                                 id="Destination" name="Destination">
                                                 <option value="">Select location</option>
-                                                <?php $__currentLoopData = $cityList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $city): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($city->airport_code); ?>">
-                                                        <?php echo e($city->airport_name); ?> -
-                                                        <?php echo e($city->airport_code); ?>
-
-                                                    </option>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                
                                             </select>
                                         </div>
                                     </div>
@@ -263,13 +251,7 @@
                                                 <option value="">Select location</option>
 
                                                 
-                                                <?php $__currentLoopData = $cityList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $city): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($city->airport_code); ?>">
-                                                        <?php echo e($city->airport_name); ?> -
-                                                        <?php echo e($city->airport_code); ?>
-
-                                                    </option>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                
                                             </select>
                                         </div>
 
@@ -289,13 +271,7 @@
                                                 id="roundDestination" name="Destination">
                                                 <option value="">Select location</option>
                                                 
-                                                <?php $__currentLoopData = $cityList; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $city): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                    <option value="<?php echo e($city->airport_code); ?>">
-                                                        <?php echo e($city->airport_name); ?> -
-                                                        <?php echo e($city->airport_code); ?>
-
-                                                    </option>
-                                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                                
                                             </select>
                                         </div>
                                     </div>
@@ -792,6 +768,33 @@
             priceSlider.noUiSlider.on('update', function(values) {
                 $('#min-price').text(Math.floor(values[0]));
                 $('#max-price').text(Math.floor(values[1]));
+            });
+
+
+            $('#Origin, #Destination, #roundOrigin, #roundDestination').select2({
+                placeholder: 'Type at least 3 characters',
+                minimumInputLength: 3,
+                ajax: {
+                    url: "<?php echo e(route('search.city')); ?>",
+                    dataType: 'json',
+                    delay: 300,
+                    data: function(params) {
+                        return {
+                            query: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.airport_code,
+                                    text: item.airport_name + ' - ' + item.airport_code
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
             });
         });
     </script>
