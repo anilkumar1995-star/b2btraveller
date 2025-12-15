@@ -101,7 +101,7 @@ class RoutingController extends Controller
 
     public function termsofuse()
     {
-        return view('help.terms-of-services');
+        return view('help.terms-of-service');
     }
 
     public function aboutus()

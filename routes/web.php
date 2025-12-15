@@ -51,9 +51,9 @@ use App\Http\Controllers\UpipayoutController;
 
 Route::get('/', [UserController::class, 'index'])->middleware('guest')->name('mylogin');
 
-Route::get('/privecy-policy', function () {
-    return view('privecy-policy');
-});
+// Route::get('/privecy-policy', function () {
+//     return view('privecy-policy');
+// });
 Route::post('searchbydatemystatics', [HomeController::class, 'searchdatestatics'])->name('searchbydatemystatics');
 
 Route::group(['prefix' => 'auth', "middleware" => ['webActivityLog']], function () {
