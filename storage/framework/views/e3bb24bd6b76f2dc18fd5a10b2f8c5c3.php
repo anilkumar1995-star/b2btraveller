@@ -10,7 +10,7 @@
                 <div class="col-12">
                     <!-- Card START -->
                     <div class="card card-body bg-primary justify-content-center text-center px-4 px-sm-5 pt-6 pt-md-8 pb-8"
-                        style="background-image: url('{{ asset('images/element/bg-pattern.png') }}'; background-position: center center; background-repeat: no-repeat; background-size: cover;">
+                        style="background-image: url('<?php echo e(asset('images/element/bg-pattern.png')); ?>'; background-position: center center; background-repeat: no-repeat; background-size: cover;">
                         <!-- Title -->
                         <h1 class="fs-2 text-white mb-4">How Can We Help You?</h1>
                         <!-- Search -->
@@ -139,3 +139,4 @@
     Main banner END -->
 
 </main>
+<?php /**PATH D:\wampp\www\b2btraveller\resources\views/help/about.blade.php ENDPATH**/ ?>
