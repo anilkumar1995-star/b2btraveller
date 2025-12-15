@@ -144,7 +144,7 @@ Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActiv
     Route::post('getdefault/permission/{id}', [RoleController::class, 'getdefaultpermissions'])->name('defaultpermissions');
 });
 
-Route::group(['prefix' => 'statement', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'statement', 'middleware' => ['auth']], function () {
     // Route::get("export/{type}", [StatementController::class, 'export'])->name('export');
     Route::get('{type}/{id?}/{status?}', [StatementController::class, 'index'])->name('statement');
     Route::post('fetch/{type}/{id?}/{returntype?}', [CommonController::class, 'fetchData']);
