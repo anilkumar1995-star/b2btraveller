@@ -51,6 +51,23 @@
         .form-group p {
             color: red;
         }
+          .carousel,
+    .carousel-inner,
+    .carousel-item {
+        height: 100%;
+    }
+
+    .carousel-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .carousel-caption {
+        background: rgba(0,0,0,0.45);
+        padding: 15px 20px;
+        border-radius: 10px;
+    }
     </style>
 </head>
 
@@ -61,94 +78,147 @@
 
     <?php endif; ?>
 
-    <div class="authentication-wrapper authentication-cover authentication-bg">
-        <div class="authentication-inner row sign-in-page">
-            <!-- /Left Text -->
-            <div class="d-none d-lg-flex col-lg-7 p-0">
-                <div class="auth-cover-bg auth-cover-bg-color d-flex justify-content-center align-items-center">
-                    <img src="<?php echo e(asset('theme_1/assets/img/illustrations/auth-login-illustration-light.png')); ?>" alt="auth-login-cover" class="img-fluid my-5 auth-illustration" data-app-light-img="illustrations/auth-login-illustration-light.png" data-app-dark-img="illustrations/auth-login-illustration-dark.png" />
+  <div class="authentication-wrapper authentication-cover authentication-bg vh-100">
+    <div class="authentication-inner row m-0 vh-100">
 
-                    <img src="<?php echo e(asset('theme_1/assets/img/illustrations/bg-shape-image-light.png')); ?>" alt="auth-login-cover" class="platform-bg" data-app-light-img="illustrations/bg-shape-image-light.png" data-app-dark-img="illustrations/bg-shape-image-dark.png" />
-                </div>
-            </div>
-            <!-- /Left Text -->
+      
+        <div class="d-none d-lg-flex col-lg-7 p-5 h-100">
+            <div class="w-100 h-100">
 
-            <!-- Login -->
-            <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4">
-                <div class="w-px-400 mx-auto sign-in-from">
+                <div id="flightSlider"
+                     class="carousel slide carousel-fade h-100 w-100"
+                     data-bs-ride="carousel"
+                     data-bs-interval="4000">
 
-                    <!-- Logo -->
-                    <div class="app-brand mb-4">
-                        <a href="<?php echo e(route('home')); ?>" class="app-brand-link gap-2">
-                            <span class="app-brand-logo demo">
-                                
-                                
+                    <div class="carousel-inner h-100">
 
-                        </span>
-                        </a>
-                    </div>
-                    <!-- /Logo -->
-                    <h3 class="mb-1 fw-bold">Welcome to <?php echo e(@$company->companyname); ?>! 👋</h3>
-                    <p class="mb-4">Please sign-in to your account and start the adventure</p>
-
-
-                    <form action="<?php echo e(route('authCheck')); ?>" method="POST" class="login-form">
-                        <p style="color:red"><b class="errorText"></b></p>
-                        <p style="color:teal"><b class="successText"></b></p>
-                        <?php echo e(csrf_field()); ?>
-
-                        <div class="form-group mb-3">
-                            <label for="exampleInputEmail1">Username</label>
-
-                            <input type="tel" class="form-control my-1" name="mobile" placeholder="User name" pattern="[0-9]*" maxlength="10" minlength="10" required>
-
-                        </div>
-
-                        <div class="form-group my-3">
-                            <div class="d-flex justify-content-between">
-                                <label for="exampleInputPassword1">Password</label>
-                                <a href="javascript:void(0)" onclick="forgetPassword()">
-                                    <small>Forgot Password?</small>
-                                </a>
+                        <div class="carousel-item active h-100">
+                            <img src="<?php echo e(asset('images/clouds-flight.jpg')); ?>"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h3>Book Flights Worldwide</h3>
+                                <p>Fast, Secure & Affordable Air Travel</p>
                             </div>
-                            <input type="password" name="password" class="form-control my-1" placeholder="Password" aria-label="Recipient's username" aria-describedby="basic-addon2">
-                        </div>
-                        <div class="formdata">
-
                         </div>
 
-                        <button class="btn btn-primary d-grid w-100 mb-3">Sign in</button>
+                        <div class="carousel-item h-100">
+                            <img src="<?php echo e(asset('images/01.jpg')); ?>"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h3>Explore the World</h3>
+                                <p>Best deals on domestic & international flights</p>
+                            </div>
+                        </div>
 
-                        <p class="text-center">
-                            <span>New on our platform?</span>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">
-                                <span>Create an account</span>
+                        <div class="carousel-item h-100">
+                            <img src="<?php echo e(asset('images/flight_2.jpeg')); ?>"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h3>Travel Smarter</h3>
+                                <p>Your journey starts here</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                  
+                    <button class="carousel-control-prev" type="button"
+                            data-bs-target="#flightSlider" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon"></span>
+                    </button>
+
+                    <button class="carousel-control-next" type="button"
+                            data-bs-target="#flightSlider" data-bs-slide="next">
+                        <span class="carousel-control-next-icon"></span>
+                    </button>
+
+                </div>
+
+            </div>
+        </div>
+ 
+
+        <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
+            <div class="w-px-400 mx-auto sign-in-from">
+
+                <div class="app-brand mb-4">
+                    <a href="<?php echo e(route('home')); ?>" class="app-brand-link gap-2"></a>
+                </div>
+
+                <h3 class="mb-1 fw-bold">
+                    Welcome to <?php echo e(@$company->companyname); ?>! 👋
+                </h3>
+                <p class="mb-4">
+                    Please sign-in to your account and start the adventure
+                </p>
+
+                <form action="<?php echo e(route('authCheck')); ?>" method="POST" class="login-form">
+                    <?php echo csrf_field(); ?>
+
+                    <div class="mb-3">
+                        <label class="form-label">Mobile No.</label>
+                        <input type="tel"
+                               class="form-control"
+                               name="mobile"
+                               maxlength="10"
+                               minlength="10"
+                               required>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label">Password</label>
+                            <a href="javascript:void(0)" onclick="forgetPassword()">
+                                <small>Forgot Password?</small>
                             </a>
-                        </p>
-                    </form>
+                        </div>
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               required>
+                    </div>
 
+                    <button class="btn btn-primary w-100 mb-3">
+                        Sign in
+                    </button>
+
+                    <p class="text-center">
+                        <span>New on our platform?</span>
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            <span>Create an account</span>
+                        </a>
+                    </p>
+                </form>
                     <div class=" divider my-4">
                         <div class="divider-text">or</div>
                     </div>
 
-                    <div class="d-flex justify-content-center">
-                        <a href="javascript:;" class="btn btn-icon btn-label-facebook me-3">
-                            <i class="tf-icons fa-brands fa-facebook-f fs-5"></i>
-                        </a>
-
-                        <a href="javascript:;" class="btn btn-icon btn-label-google-plus me-3">
-                            <i class="tf-icons fa-brands fa-google fs-5"></i>
-                        </a>
-
-                        <a href="javascript:;" class="btn btn-icon btn-label-twitter">
-                            <i class="tf-icons fa-brands fa-twitter fs-5"></i>
-                        </a>
+                <div class="bottom-links">
+                    <a href="<?php echo e(url('privecy-policy')); ?>">Privacy Policy</a>
+                    <span>|</span>
+                    <a href="">Refund Policy</a>
+                    <span>|</span>
+                    <a href="">Terms & Conditions</a>
+                </div>
+                 <div class=" divider my-4">
+                        <div class="divider-text">or</div>
                     </div>
+                           <div class="bottom-links">
+                    <a href="<?php echo e(url('privecy-policy')); ?>">About Us</a>
+                    <span>|</span>
+                    <a href="">Contact Us</a>
+                    <span>|</span>
+                  
                 </div>
             </div>
-            <!-- /Login -->
         </div>
+
+
     </div>
+</div>
 
 
     <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-hidden="true">

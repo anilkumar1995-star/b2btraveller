@@ -217,14 +217,14 @@
                     </li>
 
 
-                    <li>
+                    {{-- <li>
                         @if (Myhelper::hasNotRole('admin') && Myhelper::can('view_commission'))
                         <a class="dropdown-item" href="{{route('resource', ['type' => 'commission'])}}">
                             <i class="ti ti-eye me-2 ti-sm"></i>
                             <span class="align-middle">View Commission</span>
                         </a>
                         @endif
-                    </li>
+                    </li> --}}
                     <li>
                         <a class="dropdown-item" href="{{route('logout')}}">
                             <i class="ti ti-logout me-2 ti-sm"></i>
