@@ -123,7 +123,7 @@
     
 
     <?php if(isset($table) && $table == 'yes'): ?>
-        
+        <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/plugins/tables/datatables/datatables.min.js"></script>
     <?php endif; ?>
 
     <?php if(env('MAINTENANCE_MODE', false)): ?>

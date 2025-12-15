@@ -1032,4 +1032,4 @@
 
 </body>
 
-</html><?php /**PATH C:\wamp64\www\flight_b2b_travel\flight_b2b_travel\resources\views/login.blade.php ENDPATH**/ ?>
+</html><?php /**PATH D:\wampp\www\b2btraveller\resources\views/login.blade.php ENDPATH**/ ?>

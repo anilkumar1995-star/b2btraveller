@@ -144,7 +144,7 @@ Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActiv
     Route::post('getdefault/permission/{id}', [RoleController::class, 'getdefaultpermissions'])->name('defaultpermissions');
 });
 
-Route::group(['prefix' => 'statement', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'statement', 'middleware' => ['auth']], function () {
     // Route::get("export/{type}", [StatementController::class, 'export'])->name('export');
     Route::get('{type}/{id?}/{status?}', [StatementController::class, 'index'])->name('statement');
     Route::post('fetch/{type}/{id?}/{returntype?}', [CommonController::class, 'fetchData']);
@@ -156,7 +156,7 @@ Route::group(['prefix' => 'statement', 'middleware' => ['auth', 'company']], fun
 });
 
 
-Route::group(['prefix' => 'member', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'member', 'middleware' => ['auth']], function () {
     Route::get('{type}/{action?}', [MemberController::class, 'index'])->name('member');
     Route::post('store', [MemberController::class, 'create'])->middleware('webActivityLog')->name('memberstore');
     Route::post('commission/update', [MemberController::class, 'commissionUpdate'])->middleware('webActivityLog')->name('commissionUpdate'); //->middleware('activity');
@@ -178,7 +178,7 @@ Route::group(['prefix' => 'fund', 'middleware' => ['auth', 'company']], function
     // Route::post('runpaisatxn', [CyrusPayoutController::class, 'transactionRunpaisa'])->name('runpaisatxn')->middleware('transactionlog:fund');
 });
 
-Route::group(['prefix' => 'profile', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'profile', 'middleware' => ['auth']], function () {
     Route::get('/view/{id?}', [SettingController::class, 'index'])->name('profile');
     // Route::get('certificate', [SettingController::class,'certificate'])->name('certificate');
     Route::post('user_profile_update', [SettingController::class, 'profileUpdate'])->middleware('webActivityLog')->name('profileUpdate');
@@ -195,14 +195,14 @@ Route::group(['prefix' => 'setup', 'middleware' => ['auth', 'company', "webActiv
 });
 
 Route::group(['prefix' => 'resources', 'middleware' => ['auth', 'company', "webActivityLog"]], function () {
-    // Route::get('{type}', [ResourceController::class, 'index'])->name('resource');
-    // Route::post('update', [ResourceController::class, 'update'])->name('resourceupdate');
-    // Route::post('get/{type}/commission', [ResourceController::class, 'getCommission']);
-    // Route::post('get/{type}/packagecommission', [ResourceController::class, 'getPackageCommission']);
+    Route::get('{type}', [ResourceController::class, 'index'])->name('resource');
+    Route::post('update', [ResourceController::class, 'update'])->name('resourceupdate');
+    Route::post('get/{type}/commission', [ResourceController::class, 'getCommission']);
+    Route::post('get/{type}/packagecommission', [ResourceController::class, 'getPackageCommission']);
 });
 
 Route::group(['prefix' => 'recharge', 'middleware' => ['auth', 'company']], function () {
-    // Route::get('{type}', [RechargeController::class, 'index'])->name('recharge');
+    Route::get('{type}', [RechargeController::class, 'index'])->name('recharge');
     Route::get('bbps/{type}', [BillpayController::class, 'bbps'])->name('bbps');
     // Route::post('payment', [RechargeController::class, 'payment'])->name('rechargepay')->middleware('transactionlog:recharge');
     // Route::post('getplan', [RechargeController::class, 'getplan'])->name('getplan');
@@ -235,9 +235,9 @@ Route::group(['prefix' => 'upipay', 'middleware' => ['auth', 'company']], functi
 // Route::post('upibene/delete', [UpipayoutController::class, 'beneDelete'])->name('upibeneDelete');
 Route::group(['prefix' => 'pancard', 'middleware' => ['auth', 'company']], function () {
     // Route::post('uti/payment', [PancardController::class, 'utipay'])->name('utipay');
-    // Route::get('{type}', [PancardController::class, 'index'])->name('pancard');
-    // Route::post('payment', [PancardController::class, 'payment'])->name('pancardpay')->middleware('transactionlog:pancard');
-    // Route::get('nsdl/view/{id}', [PancardController::class, 'nsdlview']);
+    Route::get('{type}', [PancardController::class, 'index'])->name('pancard');
+    Route::post('payment', [PancardController::class, 'payment'])->name('pancardpay')->middleware('transactionlog:pancard');
+    Route::get('nsdl/view/{id}', [PancardController::class, 'nsdlview']);
 });
 
 // Route::post('spayment', [SpancardController::class, 'payment'])->name('spayment')->middleware(['auth']);
