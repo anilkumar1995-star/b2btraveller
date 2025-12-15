@@ -72,17 +72,16 @@
 
     <!-- Vendors CSS -->
 
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+    
     <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')); ?>" />
-    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/node-waves/node-waves.css')); ?>" />
+    
     <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.css')); ?>" />
-    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/apex-charts/apex-charts.css')); ?>" />
-    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/swiper/swiper.css')); ?>" />
+    
+    
     <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/datatables-bs5/datatables.bootstrap5.css')); ?>" />
     <link rel="stylesheet"
         href="<?php echo e(asset('theme_1/assets/vendor/libs/datatables-responsive-bs5/responsive.bootstrap5.css')); ?>" />
-    <link rel="stylesheet"
-        href="<?php echo e(asset('theme_1/assets/vendor/libs/datatables-checkboxes-jquery/datatables.checkboxes.css')); ?>" />
+    
     <link rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.10.0/css/bootstrap-datepicker.min.css"
         integrity="sha512-34s5cpvaNG3BknEWSuOncX28vz97bRI59UnVtEEpFX536A7BtZSJHsDyFoCl8S7Dt2TPzcrCEoHBGeM4SUBDBw=="
@@ -90,8 +89,8 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/flatpickr/flatpickr.css')); ?>" />
-    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.css')); ?>" />
-    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/tagify/tagify.css')); ?>" />
+    
+    
     <link rel="stylesheet"
         href="<?php echo e(asset('theme_1/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css')); ?>" />
     <!-- Page CSS -->
@@ -102,7 +101,7 @@
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Template customizer: To hide customizer set displayCustomizer value false in config.js.  -->
-    <script src="<?php echo e(asset('theme_1/assets/vendor/js/template-customizer.js')); ?>"></script>
+    
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="<?php echo e(asset('theme_1/assets/js/config.js')); ?>"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js" defer></script>
@@ -119,12 +118,12 @@
 
     <!-- JS -->
     <script src="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.0/min/dropzone.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.5.0/dropzone.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.js"></script>
+    
+    
+    
 
     <?php if(isset($table) && $table == 'yes'): ?>
-        <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/plugins/tables/datatables/datatables.min.js"></script>
+        
     <?php endif; ?>
 
     <?php if(env('MAINTENANCE_MODE', false)): ?>
@@ -480,14 +479,42 @@
 
 
         <?php if(isset($table) && $table == 'yes'): ?>
-
             function datatableSetup(urls, datas, onDraw = function() {}, ele = "#datatable", element = {}) {
+                let statusColumnIndex = 0;
+                $(`${ele} thead th`).each(function(index) {
+                    if ($(this).hasClass('status-column')) {
+                        statusColumnIndex = index;
+                    }
+                });
                 var options = {
-                    dom: '<"datatable-scroll"t><"datatable-footer"ip>',
+                    dom: '<"d-flex justify-content-between align-items-center mb-2"<"d-flex align-items-center"l><"d-flex align-items-center gap-2"fB>>rt<"datatable-footer"ip>',
                     processing: true,
                     serverSide: true,
-                    ordering: false,
                     stateSave: true,
+                    ordering: false,
+                    buttons: [{
+                        extend: 'excel',
+                        text: 'Excel',
+                        className: 'btn btn-primary text-end',
+                        exportOptions: {
+                            columns: ':visible',
+                            format: {
+                                body: function(data, row, column, node) {
+                                    if (column === statusColumnIndex - 1) {
+                                        const el = document.createElement('div');
+                                        el.innerHTML = data;
+                                        const text = el.innerText || el.textContent || '';
+                                        return text.trim().split('\n')[0];
+                                    }
+                                    return typeof data === 'string' ?
+                                        data.replace(/<[^>]*>/g, '').trim() :
+                                        data;
+                                }
+                            }
+                        }
+                    }],
+
+
                     columnDefs: [{
                         orderable: false,
                         width: '130px',
@@ -497,7 +524,7 @@
                         [10, 50, 100, 500, 1000, 5000, 10000, 20000, -1],
                         [10, 50, 100, 500, 1000, 5000, 10000, 20000, 50000]
                     ],
-                    dom: "Bfrltip",
+
                     language: {
                         paginate: {
                             'first': 'First',
@@ -506,9 +533,6 @@
                             'previous': '&larr;'
                         }
                     },
-                    buttons: ['excel'
-
-                    ],
                     drawCallback: function() {
                         $(this).find('tbody tr').slice(-3).find('.dropdown, .btn-group').addClass('dropup');
                     },
@@ -551,27 +575,6 @@
             }
         <?php endif; ?>
 
-        // function notify(msg, type = "success", notitype = "popup", element = "none") {
-        //     if (notitype == "popup") {
-        //         let snackbar = new SnackBar;
-        //         snackbar.make("message", [
-        //             msg,
-        //             null,
-        //             "bottom",
-        //             "right",
-        //             "text-" + type
-        //         ], 5000);
-        //     } else {
-        //         element.find('div.alert').remove();
-        //         element.prepend(`<div class="alert bg-` + type + ` alert-styled-left">
-    //             <button type="button" class="btn-close" data-dismiss="alert"><span></span><span class="sr-only">Close</span></button> ` + msg + `
-    //         </div>`);
-
-        //         setTimeout(function() {
-        //             element.find('div.alert').remove();
-        //         }, 5000);
-        //     }
-        // }
         function getPrevious(date = new Date(), days = 1) {
             const previous = new Date(date.getTime());
             previous.setDate(date.getDate() - days);
@@ -624,107 +627,107 @@
             window.location.href = "<?php echo e(route('logout')); ?>";
         }
 
-        function status(id, type) {
-            $.ajax({
-                url: `<?php echo e(route('statementStatus')); ?>`,
-                type: 'post',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'id': id,
-                    "type": type
-                },
-                dataType: 'json',
-                beforeSend: function() {
-                    swal({
-                        title: 'Wait!',
-                        text: 'Please wait, we are fetching transaction details',
-                        onOpen: () => {
-                            swal.showLoading()
-                        },
-                        allowOutsideClick: () => !swal.isLoading()
-                    });
-                },
-                success: function(data) {
-                    if (data.statuscode == "TXN" || data.status == 'success') {
-                        if (data.txnStatus == undefined || data.txnStatus == null) {
-                            var ot = data.status;
-                        } else {
-                            var ot = data.txnStatus;
+        // function status(id, type) {
+        //     $.ajax({
+        //         url: `<?php echo e(route('statementStatus')); ?>`,
+        //         type: 'post',
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         data: {
+        //             'id': id,
+        //             "type": type
+        //         },
+        //         dataType: 'json',
+        //         beforeSend: function() {
+        //             swal({
+        //                 title: 'Wait!',
+        //                 text: 'Please wait, we are fetching transaction details',
+        //                 onOpen: () => {
+        //                     swal.showLoading()
+        //                 },
+        //                 allowOutsideClick: () => !swal.isLoading()
+        //             });
+        //         },
+        //         success: function(data) {
+        //             if (data.statuscode == "TXN" || data.status == 'success') {
+        //                 if (data.txnStatus == undefined || data.txnStatus == null) {
+        //                     var ot = data.status;
+        //                 } else {
+        //                     var ot = data.txnStatus;
 
-                        }
-                        var refno = "Your transaction " + ot;
-                        console.log(refno);
-                        swal({
-                            type: 'success',
-                            title: "Transaction status",
-                            text: refno,
-                            onClose: () => {
-                                $('#datatable').dataTable().api().ajax.reload();
-                            }
-                        });
-                    } else if (data.statuscode == "TXF" || data.status == 'failed' || data.status ==
-                        'reversed') {
-                        if (data.txnStatus == undefined || data.txnStatus == null) {
-                            var ot = data.status;
-                        } else {
-                            var ot = data.txnStatus;
+        //                 }
+        //                 var refno = "Your transaction " + ot;
+        //                 console.log(refno);
+        //                 swal({
+        //                     type: 'success',
+        //                     title: "Transaction status",
+        //                     text: refno,
+        //                     onClose: () => {
+        //                         $('#datatable').dataTable().api().ajax.reload();
+        //                     }
+        //                 });
+        //             } else if (data.statuscode == "TXF" || data.status == 'failed' || data.status ==
+        //                 'reversed') {
+        //                 if (data.txnStatus == undefined || data.txnStatus == null) {
+        //                     var ot = data.status;
+        //                 } else {
+        //                     var ot = data.txnStatus;
 
-                        }
-                        var refno = "Your transaction " + ot;
-                        console.log(refno);
-                        swal({
-                            type: 'success',
-                            title: "Transaction status",
-                            text: refno,
-                            onClose: () => {
-                                $('#datatable').dataTable().api().ajax.reload();
-                            }
-                        });
+        //                 }
+        //                 var refno = "Your transaction " + ot;
+        //                 console.log(refno);
+        //                 swal({
+        //                     type: 'success',
+        //                     title: "Transaction status",
+        //                     text: refno,
+        //                     onClose: () => {
+        //                         $('#datatable').dataTable().api().ajax.reload();
+        //                     }
+        //                 });
 
-                    } else {
-                        swal({
-                            type: 'warning',
-                            title: "Transaction status",
-                            text: data.message || "Please try after sometimes",
-                            onClose: () => {
-                                $('#datatable').dataTable().api().ajax.reload();
-                            }
-                        });
-                    }
-                },
-                error: function(errors) {
-                    swal.close();
-                    $('#datatable').dataTable().api().ajax.reload();
-                    showError(errors, "withoutform");
-                    notify(errors.responseJSON, 'error');
+        //             } else {
+        //                 swal({
+        //                     type: 'warning',
+        //                     title: "Transaction status",
+        //                     text: data.message || "Please try after sometimes",
+        //                     onClose: () => {
+        //                         $('#datatable').dataTable().api().ajax.reload();
+        //                     }
+        //                 });
+        //             }
+        //         },
+        //         error: function(errors) {
+        //             swal.close();
+        //             $('#datatable').dataTable().api().ajax.reload();
+        //             showError(errors, "withoutform");
+        //             notify(errors.responseJSON, 'error');
 
-                }
-            })
+        //         }
+        //     })
 
-        }
+        // }
 
-        function editReport(id, refno, txnid, payid, remark, status, actiontype) {
-            $('#editModal').find('[name="id"]').val(id);
-            $('#editModal').find('[name="status"]').val(status).trigger('change');
-            $('#editModal').find('[name="refno"]').val(refno);
-            $('#editModal').find('[name="txnid"]').val(txnid);
-            if (actiontype == "billpay") {
-                $('#editModal').find('[name="payid"]').closest('div.form-group').remove();
-            } else {
-                $('#editModal').find('[name="payid"]').val(payid);
-            }
-            $('#editModal').find('[name="remark"]').val(remark);
-            $('#editModal').find('[name="actiontype"]').val(actiontype);
-            $('#editModal').offcanvas('show');
-        }
+        // function editReport(id, refno, txnid, payid, remark, status, actiontype) {
+        //     $('#editModal').find('[name="id"]').val(id);
+        //     $('#editModal').find('[name="status"]').val(status).trigger('change');
+        //     $('#editModal').find('[name="refno"]').val(refno);
+        //     $('#editModal').find('[name="txnid"]').val(txnid);
+        //     if (actiontype == "billpay") {
+        //         $('#editModal').find('[name="payid"]').closest('div.form-group').remove();
+        //     } else {
+        //         $('#editModal').find('[name="payid"]').val(payid);
+        //     }
+        //     $('#editModal').find('[name="remark"]').val(remark);
+        //     $('#editModal').find('[name="actiontype"]').val(actiontype);
+        //     $('#editModal').offcanvas('show');
+        // }
 
-        function complaint(id, product) {
-            $('#complaintModal').find('[name="transaction_id"]').val(id);
-            $('#complaintModal').find('[name="product"]').val(product);
-            $('#complaintModal').offcanvas('show');
-        }
+        // function complaint(id, product) {
+        //     $('#complaintModal').find('[name="transaction_id"]').val(id);
+        //     $('#complaintModal').find('[name="product"]').val(product);
+        //     $('#complaintModal').offcanvas('show');
+        // }
 
         function notify(text, status) {
             new Notify({
@@ -814,8 +817,7 @@
                     <div class="text-center">
                         <h4 class="offcanvas-title text-white">Load Wallet</h4>
                     </div>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
 
                 </div>
                 <form id="walletLoadForm" action="<?php echo e(route('fundtransaction')); ?>" method="post">
@@ -913,24 +915,26 @@
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="<?php echo e(asset('theme_1/assets/vendor/libs/jquery/jquery.js')); ?>"></script>
-    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/popper/popper.js')); ?>"></script>
+    
     <script src="<?php echo e(asset('theme_1/assets/vendor/js/bootstrap.js')); ?>"></script>
 
     <script src="<?php echo e(asset('theme_1/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')); ?>"></script>
-    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/node-waves/node-waves.js')); ?>"></script>
+    
 
-    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/hammer/hammer.js')); ?>"></script>
-    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/i18n/i18n.js')); ?>"></script>
+    
+    
     <script src="<?php echo e(asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.js')); ?>"></script>
 
     <script src="<?php echo e(asset('theme_1/assets/vendor/js/menu.js')); ?>"></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->
-    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/apex-charts/apexcharts.js')); ?>"></script>
-    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/swiper/swiper.js')); ?>"></script>
-    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js')); ?>"></script>
+    
+    
 
+    <?php if(!Request::is('flight/view')): ?>
+        <script src="<?php echo e(asset('theme_1/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js')); ?>"></script>
+    <?php endif; ?>
     <!-- Main JS -->
     <script src="<?php echo e(asset('theme_1/assets/js/main.js')); ?>"></script>
 
@@ -938,11 +942,11 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.3.0/jquery.form.min.js"></script>
     <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/core/jquery.validate.min.js"></script>
 
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.js"></script>
+    
+    
 
     <!-- Page JS -->
-    <script src="<?php echo e(asset('theme_1/assets/js/dashboards-analytics.js')); ?>"></script>
+    
     
 
     <script src="<?php echo e(asset('')); ?>assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>

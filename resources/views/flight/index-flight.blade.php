@@ -195,12 +195,12 @@
                                             <select class="form-select js-choice select" data-search-enabled="true"
                                                 name="Origin" id="Origin">
                                                 <option value="">Select location</option>
-                                                @foreach ($cityList as $city)
+                                                {{-- @foreach ($cityList as $city)
                                                     <option value="{{ $city->airport_code }}">
                                                         {{ $city->airport_name }} -
                                                         {{ $city->airport_code }}
                                                     </option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
 
                                         </div>
@@ -220,12 +220,12 @@
                                             <select class="form-select js-choice select" data-search-enabled="true"
                                                 id="Destination" name="Destination">
                                                 <option value="">Select location</option>
-                                                @foreach ($cityList as $city)
+                                                {{-- @foreach ($cityList as $city)
                                                     <option value="{{ $city->airport_code }}">
                                                         {{ $city->airport_name }} -
                                                         {{ $city->airport_code }}
                                                     </option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                         </div>
                                     </div>
@@ -266,12 +266,12 @@
                                                 <option value="">Select location</option>
 
                                                 {{-- <option value="DEL" selected>DEL</option> --}}
-                                                @foreach ($cityList as $city)
+                                                {{-- @foreach ($cityList as $city)
                                                     <option value="{{ $city->airport_code }}">
                                                         {{ $city->airport_name }} -
                                                         {{ $city->airport_code }}
                                                     </option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                         </div>
 
@@ -291,12 +291,12 @@
                                                 id="roundDestination" name="Destination">
                                                 <option value="">Select location</option>
                                                 {{-- <option value="CCU" selected>CCU</option> --}}
-                                                @foreach ($cityList as $city)
+                                                {{-- @foreach ($cityList as $city)
                                                     <option value="{{ $city->airport_code }}">
                                                         {{ $city->airport_name }} -
                                                         {{ $city->airport_code }}
                                                     </option>
-                                                @endforeach
+                                                @endforeach --}}
                                             </select>
                                         </div>
                                     </div>
@@ -759,9 +759,9 @@
 
 @push('script')
     <script src="{{ asset('') }}js/flight.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"> --}}
 
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script> --}}
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -801,6 +801,33 @@
             priceSlider.noUiSlider.on('update', function(values) {
                 $('#min-price').text(Math.floor(values[0]));
                 $('#max-price').text(Math.floor(values[1]));
+            });
+
+
+            $('#Origin, #Destination, #roundOrigin, #roundDestination').select2({
+                placeholder: 'Type at least 3 characters',
+                minimumInputLength: 3,
+                ajax: {
+                    url: "{{ route('search.city') }}",
+                    dataType: 'json',
+                    delay: 300,
+                    data: function(params) {
+                        return {
+                            query: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.airport_code,
+                                    text: item.airport_name + ' - ' + item.airport_code
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
             });
         });
     </script>

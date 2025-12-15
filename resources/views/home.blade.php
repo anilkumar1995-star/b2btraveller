@@ -24,7 +24,7 @@
 
     <div class="content-wrapper">
         <!-- Content -->
-        <div class="row">
+        <div class="row g-2">
             <!-- Card Border Shadow -->
             <div class="col-lg-3 col-sm-6">
                 <div class="card card-border-shadow-primary h-100">
