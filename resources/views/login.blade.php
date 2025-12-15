@@ -92,11 +92,7 @@
                     <div class="carousel-inner h-100">
 
                         <div class="carousel-item active h-100">
-<<<<<<< HEAD
                             <img src="{{ asset('images/air-india.jpg') }}"
-=======
-                            <img src="{{ asset('images/clouds-flight.jpg') }}"
->>>>>>> f0e83458dccb40769219945c4eee47db01828678
                                  class="d-block w-100 h-100"
                                  alt="Flight">
                             <div class="carousel-caption d-none d-md-block">
@@ -106,11 +102,7 @@
                         </div>
 
                         <div class="carousel-item h-100">
-<<<<<<< HEAD
                             <img src="{{ asset('images/02.jpg') }}"
-=======
-                            <img src="{{ asset('images/01.jpg') }}"
->>>>>>> f0e83458dccb40769219945c4eee47db01828678
                                  class="d-block w-100 h-100"
                                  alt="Flight">
                             <div class="carousel-caption d-none d-md-block">
@@ -120,7 +112,6 @@
                         </div>
 
                         <div class="carousel-item h-100">
-<<<<<<< HEAD
                             <img src="{{ asset('images/bus01.jpeg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
@@ -131,16 +122,13 @@
                         </div>
                         
                         <div class="carousel-item h-100">
-                            <img src="{{ asset('images/taxi01.jpg') }}"
-=======
-                            <img src="{{ asset('images/flight_2.jpeg') }}"
->>>>>>> f0e83458dccb40769219945c4eee47db01828678
+                            <img src="{{ asset('images/hotel.jpeg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
+                            <!-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Travel Smarter</h3>
                                 <p>Your journey starts here</p>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>
@@ -173,14 +161,8 @@
                     Welcome to {{ @$company->companyname }}! 👋
                 </h3>
                 <p class="mb-4">
-<<<<<<< HEAD
                 Sign in to your account and begin your journey               
                 </p>
-=======
-                    Please sign-in to your account and start the adventure
-                </p>
-
->>>>>>> f0e83458dccb40769219945c4eee47db01828678
                 <form action="{{ route('authCheck') }}" method="POST" class="login-form">
                     @csrf
 
@@ -223,34 +205,16 @@
                     </div>
 
                 <div class="bottom-links">
-<<<<<<< HEAD
                     <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
                     <span>|</span>
                     <a href="{{ route('refund-policy') }}">Refund Policy</a>
                     <span>|</span>
-                    <a href="{{ route('termsAndConditions') }}">Terms & Conditions</a>
+                    <a href="{{ route('term-of-use') }}">Terms & Conditions</a>
                       <span>|</span>
-                   <div class="text-center"><a href="{{ route('aboutus') }}">About Us</a>
+                   <div class="text-center"><a href="{{ route('about') }}">About Us</a>
                     <span>|</span>
-                    <a href="{{ route('contactus') }}">Contact Us</a></div>  
+                    <a href="{{ route('contact') }}">Contact Us</a></div>  
 
-=======
-                    <a href="{{ url('privecy-policy') }}">Privacy Policy</a>
-                    <span>|</span>
-                    <a href="">Refund Policy</a>
-                    <span>|</span>
-                    <a href="">Terms & Conditions</a>
-                </div>
-                 <div class=" divider my-4">
-                        <div class="divider-text">or</div>
-                    </div>
-                           <div class="bottom-links">
-                    <a href="{{ url('privecy-policy') }}">About Us</a>
-                    <span>|</span>
-                    <a href="">Contact Us</a>
-                    <span>|</span>
-                  
->>>>>>> f0e83458dccb40769219945c4eee47db01828678
                 </div>
             
             </div>

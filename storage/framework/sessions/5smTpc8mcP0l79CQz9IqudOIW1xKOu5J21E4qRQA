@@ -1,5 +1,1 @@
-<<<<<<< HEAD
-a:4:{s:6:"_token";s:40:"lGqS3rjVkC5BcdqYePTr1ptUZiEDDr5ZkTp3PUUL";s:9:"_previous";a:1:{s:3:"url";s:36:"http://127.0.0.1:8000/privacy-policy";}s:6:"_flash";a:2:{s:3:"old";a:0:{}s:3:"new";a:0:{}}s:3:"url";a:1:{s:8:"intended";s:31:"http://127.0.0.1:8000/contactus";}}
-=======
-a:3:{s:6:"_token";s:40:"zIXe77wCU4RSJHxmaUR9WBZ1efduXbTJjZavFe9G";s:9:"_previous";a:1:{s:3:"url";s:21:"http://127.0.0.1:8000";}s:6:"_flash";a:2:{s:3:"old";a:0:{}s:3:"new";a:0:{}}}
->>>>>>> f0e83458dccb40769219945c4eee47db01828678
+a:3:{s:6:"_token";s:40:"2KfhCF8R49KQDOpFCGsbX1k02maCedBHwxynuvuH";s:9:"_previous";a:1:{s:3:"url";s:21:"http://127.0.0.1:8000";}s:6:"_flash";a:2:{s:3:"old";a:0:{}s:3:"new";a:0:{}}}
