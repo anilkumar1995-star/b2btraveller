@@ -124,7 +124,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.js"></script> --}}
 
     @if (isset($table) && $table == 'yes')
-        <script type="text/javascript" src="{{ asset('') }}assets/js/plugins/tables/datatables/datatables.min.js"></script>
+        {{-- <script type="text/javascript" src="{{ asset('') }}assets/js/plugins/tables/datatables/datatables.min.js"></script> --}}
     @endif
 
     @if (env('MAINTENANCE_MODE', false))
@@ -627,101 +627,101 @@
             window.location.href = "{{ route('logout') }}";
         }
 
-        function status(id, type) {
-            $.ajax({
-                url: `{{ route('statementStatus') }}`,
-                type: 'post',
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                data: {
-                    'id': id,
-                    "type": type
-                },
-                dataType: 'json',
-                beforeSend: function() {
-                    swal({
-                        title: 'Wait!',
-                        text: 'Please wait, we are fetching transaction details',
-                        onOpen: () => {
-                            swal.showLoading()
-                        },
-                        allowOutsideClick: () => !swal.isLoading()
-                    });
-                },
-                success: function(data) {
-                    if (data.statuscode == "TXN" || data.status == 'success') {
-                        if (data.txnStatus == undefined || data.txnStatus == null) {
-                            var ot = data.status;
-                        } else {
-                            var ot = data.txnStatus;
+        // function status(id, type) {
+        //     $.ajax({
+        //         url: `{{ route('statementStatus') }}`,
+        //         type: 'post',
+        //         headers: {
+        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        //         },
+        //         data: {
+        //             'id': id,
+        //             "type": type
+        //         },
+        //         dataType: 'json',
+        //         beforeSend: function() {
+        //             swal({
+        //                 title: 'Wait!',
+        //                 text: 'Please wait, we are fetching transaction details',
+        //                 onOpen: () => {
+        //                     swal.showLoading()
+        //                 },
+        //                 allowOutsideClick: () => !swal.isLoading()
+        //             });
+        //         },
+        //         success: function(data) {
+        //             if (data.statuscode == "TXN" || data.status == 'success') {
+        //                 if (data.txnStatus == undefined || data.txnStatus == null) {
+        //                     var ot = data.status;
+        //                 } else {
+        //                     var ot = data.txnStatus;
 
-                        }
-                        var refno = "Your transaction " + ot;
-                        console.log(refno);
-                        swal({
-                            type: 'success',
-                            title: "Transaction status",
-                            text: refno,
-                            onClose: () => {
-                                $('#datatable').dataTable().api().ajax.reload();
-                            }
-                        });
-                    } else if (data.statuscode == "TXF" || data.status == 'failed' || data.status ==
-                        'reversed') {
-                        if (data.txnStatus == undefined || data.txnStatus == null) {
-                            var ot = data.status;
-                        } else {
-                            var ot = data.txnStatus;
+        //                 }
+        //                 var refno = "Your transaction " + ot;
+        //                 console.log(refno);
+        //                 swal({
+        //                     type: 'success',
+        //                     title: "Transaction status",
+        //                     text: refno,
+        //                     onClose: () => {
+        //                         $('#datatable').dataTable().api().ajax.reload();
+        //                     }
+        //                 });
+        //             } else if (data.statuscode == "TXF" || data.status == 'failed' || data.status ==
+        //                 'reversed') {
+        //                 if (data.txnStatus == undefined || data.txnStatus == null) {
+        //                     var ot = data.status;
+        //                 } else {
+        //                     var ot = data.txnStatus;
 
-                        }
-                        var refno = "Your transaction " + ot;
-                        console.log(refno);
-                        swal({
-                            type: 'success',
-                            title: "Transaction status",
-                            text: refno,
-                            onClose: () => {
-                                $('#datatable').dataTable().api().ajax.reload();
-                            }
-                        });
+        //                 }
+        //                 var refno = "Your transaction " + ot;
+        //                 console.log(refno);
+        //                 swal({
+        //                     type: 'success',
+        //                     title: "Transaction status",
+        //                     text: refno,
+        //                     onClose: () => {
+        //                         $('#datatable').dataTable().api().ajax.reload();
+        //                     }
+        //                 });
 
-                    } else {
-                        swal({
-                            type: 'warning',
-                            title: "Transaction status",
-                            text: data.message || "Please try after sometimes",
-                            onClose: () => {
-                                $('#datatable').dataTable().api().ajax.reload();
-                            }
-                        });
-                    }
-                },
-                error: function(errors) {
-                    swal.close();
-                    $('#datatable').dataTable().api().ajax.reload();
-                    showError(errors, "withoutform");
-                    notify(errors.responseJSON, 'error');
+        //             } else {
+        //                 swal({
+        //                     type: 'warning',
+        //                     title: "Transaction status",
+        //                     text: data.message || "Please try after sometimes",
+        //                     onClose: () => {
+        //                         $('#datatable').dataTable().api().ajax.reload();
+        //                     }
+        //                 });
+        //             }
+        //         },
+        //         error: function(errors) {
+        //             swal.close();
+        //             $('#datatable').dataTable().api().ajax.reload();
+        //             showError(errors, "withoutform");
+        //             notify(errors.responseJSON, 'error');
 
-                }
-            })
+        //         }
+        //     })
 
-        }
+        // }
 
-        function editReport(id, refno, txnid, payid, remark, status, actiontype) {
-            $('#editModal').find('[name="id"]').val(id);
-            $('#editModal').find('[name="status"]').val(status).trigger('change');
-            $('#editModal').find('[name="refno"]').val(refno);
-            $('#editModal').find('[name="txnid"]').val(txnid);
-            if (actiontype == "billpay") {
-                $('#editModal').find('[name="payid"]').closest('div.form-group').remove();
-            } else {
-                $('#editModal').find('[name="payid"]').val(payid);
-            }
-            $('#editModal').find('[name="remark"]').val(remark);
-            $('#editModal').find('[name="actiontype"]').val(actiontype);
-            $('#editModal').offcanvas('show');
-        }
+        // function editReport(id, refno, txnid, payid, remark, status, actiontype) {
+        //     $('#editModal').find('[name="id"]').val(id);
+        //     $('#editModal').find('[name="status"]').val(status).trigger('change');
+        //     $('#editModal').find('[name="refno"]').val(refno);
+        //     $('#editModal').find('[name="txnid"]').val(txnid);
+        //     if (actiontype == "billpay") {
+        //         $('#editModal').find('[name="payid"]').closest('div.form-group').remove();
+        //     } else {
+        //         $('#editModal').find('[name="payid"]').val(payid);
+        //     }
+        //     $('#editModal').find('[name="remark"]').val(remark);
+        //     $('#editModal').find('[name="actiontype"]').val(actiontype);
+        //     $('#editModal').offcanvas('show');
+        // }
 
         // function complaint(id, product) {
         //     $('#complaintModal').find('[name="transaction_id"]').val(id);
@@ -920,7 +920,7 @@
     {{-- <script src="{{ asset('theme_1/assets/vendor/libs/node-waves/node-waves.js') }}"></script> --}}
 
     {{-- <script src="{{ asset('theme_1/assets/vendor/libs/hammer/hammer.js') }}"></script> --}}
-    <script src="{{ asset('theme_1/assets/vendor/libs/i18n/i18n.js') }}"></script>
+    {{-- <script src="{{ asset('theme_1/assets/vendor/libs/i18n/i18n.js') }}"></script> --}}
     <script src="{{ asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.js') }}"></script>
 
     <script src="{{ asset('theme_1/assets/vendor/js/menu.js') }}"></script>
@@ -929,8 +929,10 @@
     <!-- Vendors JS -->
     {{-- <script src="{{ asset('theme_1/assets/vendor/libs/apex-charts/apexcharts.js') }}"></script> --}}
     {{-- <script src="{{ asset('theme_1/assets/vendor/libs/swiper/swiper.js') }}"></script> --}}
-    <script src="{{ asset('theme_1/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
 
+    @if (!Request::is('flight/view'))
+        <script src="{{ asset('theme_1/assets/vendor/libs/datatables-bs5/datatables-bootstrap5.js') }}"></script>
+    @endif
     <!-- Main JS -->
     <script src="{{ asset('theme_1/assets/js/main.js') }}"></script>
 
@@ -942,7 +944,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.js"></script> --}}
 
     <!-- Page JS -->
-    <script src="{{ asset('theme_1/assets/js/dashboards-analytics.js') }}"></script>
+    {{-- <script src="{{ asset('theme_1/assets/js/dashboards-analytics.js') }}"></script> --}}
     {{-- <script src="{{ asset('theme_1/dist/libs/nouislider/nouislider.js') }}"></script>
     <link href="{{ asset('theme_1/dist/libs/nouislider/nouislider.css') }}" rel="stylesheet"/> --}}
 

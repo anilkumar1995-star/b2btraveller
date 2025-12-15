@@ -541,7 +541,7 @@ break;
                     @endif
 
                     @if(Myhelper::can('member_stock_manager') && !in_array($type, ['retailer', 'apiuser']))
-                    menu += `<a href="javascript:void(0)" class="dropdown-item" onclick="addStock('` + full.id + `')"><i class="fa fa-user-plus"></i> Add Id Stock</a>`;
+                    menu += `<a href="javascript:void(0)" class="dropdown-item" onclick="addStock('` + full.id + `')"> Add Id Stock</a>`;
                     @endif
 
                     @if(Myhelper::can('member_permission_change'))
@@ -620,7 +620,7 @@ break;
                                        
                                     </div>
                                  </div>`;
-                    return out + out2;
+                    return out;
                 }
             }
         ];
