@@ -90,36 +90,37 @@
                      data-bs-ride="carousel"
                      data-bs-interval="4000">
 
-                    <div class="carousel-inner h-100">
+                    <div class="carousel-inner h-100 rounded">
 
                         <div class="carousel-item active h-100">
-                            <img src="<?php echo e(asset('images/clouds-flight.jpg')); ?>"
+                            <img src="<?php echo e(asset('images/air-india.jpg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h3>Book Flights Worldwide</h3>
-                                <p>Fast, Secure & Affordable Air Travel</p>
-                            </div>
+                            
                         </div>
 
                         <div class="carousel-item h-100">
-                            <img src="<?php echo e(asset('images/01.jpg')); ?>"
+                            <img src="<?php echo e(asset('images/02.jpg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h3>Explore the World</h3>
-                                <p>Best deals on domestic & international flights</p>
-                            </div>
+                            
                         </div>
 
                         <div class="carousel-item h-100">
-                            <img src="<?php echo e(asset('images/flight_2.jpeg')); ?>"
+                            <img src="<?php echo e(asset('images/bus01.jpeg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
+                            
+                        </div>
+                        
+                        <div class="carousel-item h-100">
+                            <img src="<?php echo e(asset('images/hotel.jpeg')); ?>"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            <!-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Travel Smarter</h3>
                                 <p>Your journey starts here</p>
-                            </div>
+                            </div> -->
                         </div>
 
                     </div>
@@ -152,9 +153,8 @@
                     Welcome to <?php echo e(@$company->companyname); ?>! 👋
                 </h3>
                 <p class="mb-4">
-                    Please sign-in to your account and start the adventure
+                Sign in to your account and begin your journey               
                 </p>
-
                 <form action="<?php echo e(route('authCheck')); ?>" method="POST" class="login-form">
                     <?php echo csrf_field(); ?>
 
@@ -197,22 +197,18 @@
                     </div>
 
                 <div class="bottom-links">
-                    <a href="<?php echo e(url('privecy-policy')); ?>">Privacy Policy</a>
+                    <a href="<?php echo e(route('privacy-policy')); ?>">Privacy Policy</a>
                     <span>|</span>
-                    <a href="">Refund Policy</a>
+                    <a href="<?php echo e(route('refund-policy')); ?>">Refund Policy</a>
                     <span>|</span>
-                    <a href="">Terms & Conditions</a>
+                    <a href="<?php echo e(route('term-of-use')); ?>">Terms & Conditions</a>
+                      <span>|</span>
+                   <div class="text-center"><a href="<?php echo e(route('about')); ?>">About Us</a>
+                    <span>|</span>
+                    <a href="<?php echo e(route('contact')); ?>">Contact Us</a></div>  
+
                 </div>
-                 <div class=" divider my-4">
-                        <div class="divider-text">or</div>
-                    </div>
-                           <div class="bottom-links">
-                    <a href="<?php echo e(url('privecy-policy')); ?>">About Us</a>
-                    <span>|</span>
-                    <a href="">Contact Us</a>
-                    <span>|</span>
-                  
-                </div>
+            
             </div>
         </div>
 
