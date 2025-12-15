@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 
-<html lang="en" class="light-style customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('theme_1/assets/') }}" data-template="vertical-menu-template">
+<html lang="en" class="light-style customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="<?php echo e(asset('theme_1/assets/')); ?>" data-template="vertical-menu-template">
 
 <head>
 
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
-    <title>Login - {{ @$company->companyname }}</title>
+    <title>Login - <?php echo e(@$company->companyname); ?></title>
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ Imagehelper::getImageUrl().json_decode(app\Models\Company::where('id', '1')->first(['logo']))->logo }}" class=" img-fluid rounded" />
+    <link rel="icon" type="image/x-icon" href="<?php echo e(Imagehelper::getImageUrl().json_decode(app\Models\Company::where('id', '1')->first(['logo']))->logo); ?>" class=" img-fluid rounded" />
 
 
     <!-- Fonts -->
@@ -21,21 +21,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
 
     <!-- Icons -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/fontawesome.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/tabler-icons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/flag-icons.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/fonts/fontawesome.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/fonts/tabler-icons.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/fonts/flag-icons.css')); ?>" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/rtl/theme-default.css') }}" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/css/rtl/core.css')); ?>" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/css/rtl/theme-default.css')); ?>" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/css/demo.css')); ?>" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/node-waves/node-waves.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/node-waves/node-waves.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.css')); ?>" />
     <!-- Vendor -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css')); ?>" />
 
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
@@ -45,7 +45,7 @@
 
     <!-- Page CSS -->
     <!-- Page -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/pages/page-auth.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/css/pages/page-auth.css')); ?>" />
 
     <style>
         .form-group p {
@@ -73,9 +73,10 @@
 
 <body>
     <!-- Content -->
-    @if(env('MAINTENANCE_MODE',false))
-    {{ Artisan::call('down') }}
-    @endif
+    <?php if(env('MAINTENANCE_MODE',false)): ?>
+    <?php echo e(Artisan::call('down')); ?>
+
+    <?php endif; ?>
 
   <div class="authentication-wrapper authentication-cover authentication-bg vh-100">
     <div class="authentication-inner row m-0 vh-100">
@@ -92,7 +93,7 @@
                     <div class="carousel-inner h-100">
 
                         <div class="carousel-item active h-100">
-                            <img src="{{ asset('images/clouds-flight.jpg') }}"
+                            <img src="<?php echo e(asset('images/clouds-flight.jpg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
                             <div class="carousel-caption d-none d-md-block">
@@ -102,7 +103,7 @@
                         </div>
 
                         <div class="carousel-item h-100">
-                            <img src="{{ asset('images/01.jpg') }}"
+                            <img src="<?php echo e(asset('images/01.jpg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
                             <div class="carousel-caption d-none d-md-block">
@@ -112,7 +113,7 @@
                         </div>
 
                         <div class="carousel-item h-100">
-                            <img src="{{ asset('images/flight_2.jpeg') }}"
+                            <img src="<?php echo e(asset('images/flight_2.jpeg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
                             <div class="carousel-caption d-none d-md-block">
@@ -144,18 +145,18 @@
             <div class="w-px-400 mx-auto sign-in-from">
 
                 <div class="app-brand mb-4">
-                    <a href="{{ route('home') }}" class="app-brand-link gap-2"></a>
+                    <a href="<?php echo e(route('home')); ?>" class="app-brand-link gap-2"></a>
                 </div>
 
                 <h3 class="mb-1 fw-bold">
-                    Welcome to {{ @$company->companyname }}! 👋
+                    Welcome to <?php echo e(@$company->companyname); ?>! 👋
                 </h3>
                 <p class="mb-4">
                     Please sign-in to your account and start the adventure
                 </p>
 
-                <form action="{{ route('authCheck') }}" method="POST" class="login-form">
-                    @csrf
+                <form action="<?php echo e(route('authCheck')); ?>" method="POST" class="login-form">
+                    <?php echo csrf_field(); ?>
 
                     <div class="mb-3">
                         <label class="form-label">Mobile No.</label>
@@ -196,7 +197,7 @@
                     </div>
 
                 <div class="bottom-links">
-                    <a href="{{ url('privecy-policy') }}">Privacy Policy</a>
+                    <a href="<?php echo e(url('privecy-policy')); ?>">Privacy Policy</a>
                     <span>|</span>
                     <a href="">Refund Policy</a>
                     <span>|</span>
@@ -206,7 +207,7 @@
                         <div class="divider-text">or</div>
                     </div>
                            <div class="bottom-links">
-                    <a href="{{ url('privecy-policy') }}">About Us</a>
+                    <a href="<?php echo e(url('privecy-policy')); ?>">About Us</a>
                     <span>|</span>
                     <a href="">Contact Us</a>
                     <span>|</span>
@@ -230,12 +231,13 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="passwordRequestForm" action="{{ route('authReset') }}" method="post">
+                    <form id="passwordRequestForm" action="<?php echo e(route('authReset')); ?>" method="post">
                         <b>
                             <p class="text-danger"></p>
                         </b>
                         <input type="hidden" name="type" value="request">
-                        {{ csrf_field() }}
+                        <?php echo e(csrf_field()); ?>
+
                         <div class="form-group my-1">
                             <label>Mobile</label>
                             <input type="text" name="mobile" class="form-control my-1" placeholder="Enter Mobile Number" required="">
@@ -264,13 +266,14 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="passwordForm" action="{{ route('authReset') }}" method="post">
+                    <form id="passwordForm" action="<?php echo e(route('authReset')); ?>" method="post">
                         <b>
                             <p class="text-danger"></p>
                         </b>
                         <input type="hidden" name="mobile">
                         <input type="hidden" name="type" value="reset">
-                        {{ csrf_field() }}
+                        <?php echo e(csrf_field()); ?>
+
                         <div class="form-group my-1">
                             <label>Reset Token</label>
                             <input type="text" name="token" class="form-control my-1" placeholder="Enter OTP" required="">
@@ -300,16 +303,17 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="registerForm" action="{{ route('register') }}" method="post">
-                        {{ csrf_field() }}
+                    <form id="registerForm" action="<?php echo e(route('register')); ?>" method="post">
+                        <?php echo e(csrf_field()); ?>
+
                         <div class="row">
                             <div class="form-group mb-1 col-md-4">
                                 <label>Member Type</label>
                                 <select name="slug" class="form-control my-1 select" required>
                                     <option value="">Select Member Type</option>
-                                    @foreach ($roles as $role)
-                                    <option value="{{ $role->slug }}">{{ $role->name }}</option>
-                                    @endforeach
+                                    <?php $__currentLoopData = $roles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $role): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($role->slug); ?>"><?php echo e($role->name); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                         </div>
@@ -338,9 +342,9 @@
                                 <label>State</label>
                                 <select name="state" class="form-control my-1 state" required>
                                     <option value="">Select State</option>
-                                    @foreach ($state as $state)
-                                    <option value="{{ $state->state }}">{{ $state->state }}</option>
-                                    @endforeach
+                                    <?php $__currentLoopData = $state; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $state): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <option value="<?php echo e($state->state); ?>"><?php echo e($state->state); ?></option>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                 </select>
                             </div>
                             <div class="form-group my-1 col-md-4">
@@ -375,31 +379,7 @@
                                 <textarea name="address" class="form-control my-1" rows="3" required="" placeholder="Enter Value"></textarea>
                             </div>
                         </div>
-                        {{-- <h5 class="my-2">Upload Your Documents</h5>
-                        <div class="row">
-                            <div class="form-group col-md-6 my-1">
-                                <label>Passport size photo <span class="text-danger fw-bold">*</span></label>
-
-                                <input type="file" class="form-control my-1" autocomplete="off" name="profiles" placeholder="Enter Demat account" required">
-                            </div>
-                            <div class="form-group col-md-6 my-1">
-                                <label>Pancard Photo <span class="text-danger fw-bold">*</span></label>
-                                <input type="file" class="form-control my-1" autocomplete="off"
-                                    name="pancardpics" placeholder="Enter Business saving account" required>
-                            </div>
-                            <div class="form-group col-md-6 my-1">
-                                <label>Aadharcard Front Photo <span class="text-danger fw-bold">*</span></label>
-                                <input type="file" class="form-control my-1" autocomplete="off"
-                                    name="aadharcardpics" placeholder="Enter Digital saving account" value=""
-                                    required>
-                            </div>
-                            <div class="form-group col-md-6 my-1">
-                                <label>Aadharcard Back Photo <span class="text-danger fw-bold">*</span></label>
-                                <input type="file" class="form-control my-1" autocomplete="off"
-                                    name="aadharcardpicsback" placeholder="Enter Digital saving account"
-                                    value="" required>
-                            </div>
-                        </div> --}}
+                        
                         <div class="text-center form-group">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
@@ -413,48 +393,48 @@
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
-    <script src="{{ asset('theme_1/assets/vendor/libs/jquery/jquery.js') }}"></script>
-    <script src="{{ asset('theme_1/assets/vendor/libs/popper/popper.js') }}"></script>
-    <script src="{{ asset('theme_1/assets/vendor/js/bootstrap.js') }}"></script>
-    <script src="{{ asset('theme_1/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
-    <script src="{{ asset('theme_1/assets/vendor/libs/node-waves/node-waves.js') }}"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/jquery/jquery.js')); ?>"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/popper/popper.js')); ?>"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/js/bootstrap.js')); ?>"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js')); ?>"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/node-waves/node-waves.js')); ?>"></script>
 
-    <script src="{{ asset('theme_1/assets/vendor/libs/hammer/hammer.js') }}"></script>
-    <script src="{{ asset('theme_1/assets/vendor/libs/i18n/i18n.js') }}"></script>
-    <script src="{{ asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.js') }}"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/hammer/hammer.js')); ?>"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/i18n/i18n.js')); ?>"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.js')); ?>"></script>
 
-    <script src="{{ asset('theme_1/assets/vendor/js/menu.js') }}"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/js/menu.js')); ?>"></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->
-    <script src="{{ asset('theme_1/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js') }}"></script>
-    <script src="{{ asset('theme_1/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('theme_1/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('') }}assets/js/core/jquery.validate.min.js"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/formvalidation/dist/js/FormValidation.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/formvalidation/dist/js/plugins/Bootstrap5.min.js')); ?>"></script>
+    <script src="<?php echo e(asset('theme_1/assets/vendor/libs/formvalidation/dist/js/plugins/AutoFocus.min.js')); ?>"></script>
+    <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/core/jquery.validate.min.js"></script>
     <!-- Page JS -->
-    <script src="{{ asset('theme_1/assets/js/pages-auth.js') }}"></script>
-    <script src="{{ asset('') }}theme/js/jquery.min.js"></script>
-    <script src="{{ asset('') }}theme/js/jquery.appear.js"></script>
-    <script src="{{ asset('') }}theme/js/countdown.min.js"></script>
-    <script src="{{ asset('') }}theme/js/waypoints.min.js"></script>
-    <script src="{{ asset('') }}theme/js/jquery.counterup.min.js"></script>
-    <script src="{{ asset('') }}theme/js/wow.min.js"></script>
-    <script src="{{ asset('') }}theme/js/apexcharts.js"></script>
-    <script src="{{ asset('') }}theme/js/lottie.js"></script>
-    <script src="{{ asset('') }}theme/js/slick.min.js"></script>
-    <script src="{{ asset('') }}theme/js/select2.min.js"></script>
-    <script src="{{ asset('') }}theme/js/owl.carousel.min.js"></script>
-    <script src="{{ asset('') }}theme/js/jquery.magnific-popup.min.js"></script>
-    <script src="{{ asset('') }}theme/js/smooth-scrollbar.js"></script>
-    <script src="{{ asset('') }}theme/js/style-customizer.js"></script>
-    <script src="{{ asset('') }}theme/js/chart-custom.js"></script>
-    <script src="{{ asset('') }}theme/js/custom.js"></script>
-    <script src="{{ asset('') }}assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
-    <script type="text/javascript" src="{{ asset('') }}assets/js/core/jquery.validate.min.js"></script>
-    <script type="text/javascript" src="{{ asset('') }}assets/js/core/jquery.form.min.js"></script>
-    <script type="text/javascript" src="{{ asset('') }}assets/js/core/sweetalert2.min.js"></script>
-    <script type="text/javascript" src="{{ asset('') }}assets/js/plugins/forms/selects/select2.min.js"></script>
-    <script src="{{ asset('') }}assets/js/core/snackbar.js"></script>
+    <script src="<?php echo e(asset('theme_1/assets/js/pages-auth.js')); ?>"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/jquery.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/jquery.appear.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/countdown.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/waypoints.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/jquery.counterup.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/wow.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/apexcharts.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/lottie.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/slick.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/select2.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/owl.carousel.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/jquery.magnific-popup.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/smooth-scrollbar.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/style-customizer.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/chart-custom.js"></script>
+    <script src="<?php echo e(asset('')); ?>theme/js/custom.js"></script>
+    <script src="<?php echo e(asset('')); ?>assets/js/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/core/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/core/jquery.form.min.js"></script>
+    <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/core/sweetalert2.min.js"></script>
+    <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/plugins/forms/selects/select2.min.js"></script>
+    <script src="<?php echo e(asset('')); ?>assets/js/core/snackbar.js"></script>
     <script>
         $(document).ready(function() {
             $('#passwordView').click(function() {
@@ -939,7 +919,7 @@
             if (mobile != '') {
 
                 $.ajax({
-                    url: `{{ route('authReset') }}`,
+                    url: `<?php echo e(route('authReset')); ?>`,
                     type: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -999,7 +979,7 @@
             var password = $('input[name="password"]').val();
             if (mobile.length > 0) {
                 $.ajax({
-                        url: '{{ route("authCheck")}}',
+                        url: '<?php echo e(route("authCheck")); ?>',
                         type: 'post',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -1052,4 +1032,4 @@
 
 </body>
 
-</html>
+</html><?php /**PATH D:\wampp\www\b2btraveller\resources\views/login.blade.php ENDPATH**/ ?>
