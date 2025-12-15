@@ -89,36 +89,36 @@
                      data-bs-ride="carousel"
                      data-bs-interval="4000">
 
-                    <div class="carousel-inner h-100">
+                    <div class="carousel-inner h-100 rounded">
 
                         <div class="carousel-item active h-100">
-                            <img src="{{ asset('images/air-india.jpg') }}"
+                            <img src="{{ asset('images/Air-India.jpg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
+                            {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Book Flights Worldwide</h3>
                                 <p>Fast, Secure & Affordable Air Travel</p>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="carousel-item h-100">
                             <img src="{{ asset('images/02.jpg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
+                            {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Explore the World</h3>
                                 <p>Best deals on domestic & international flights</p>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="carousel-item h-100">
                             <img src="{{ asset('images/bus01.jpeg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
+                            {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Travel Smarter</h3>
                                 <p>Your journey starts here</p>
-                            </div>
+                            </div> --}}
                         </div>
                         
                         <div class="carousel-item h-100">
