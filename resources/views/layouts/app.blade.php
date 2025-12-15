@@ -124,7 +124,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote.js"></script> --}}
 
     @if (isset($table) && $table == 'yes')
-        {{-- <script type="text/javascript" src="{{ asset('') }}assets/js/plugins/tables/datatables/datatables.min.js"></script> --}}
+        <script type="text/javascript" src="{{ asset('') }}assets/js/plugins/tables/datatables/datatables.min.js"></script>
     @endif
 
     @if (env('MAINTENANCE_MODE', false))
