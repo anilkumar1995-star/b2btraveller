@@ -58,7 +58,6 @@ $('#flightSearchForm').on('submit', function (e) {
             payload.Destination = $('#Destination').val();
             payload.PreferredDepartureTime = $('#PreferredDepartureTime').val();
         } else if (activeContent === 'pills-round-trip') {
-
             if ($('#roundOrigin').val() == '') {
                 notify("Please Select Origin Location.", "error");
                 return;
@@ -119,6 +118,9 @@ $('#flightSearchForm').on('submit', function (e) {
                 $("#search_flight_list").html('');
                 $('.all_flight_list').addClass('d-none');
                 if (response.status == 'success') {
+                    $('#summaryDetails').html('');
+                    $('#btnfordetailsPage').html('');
+                    $('#roundSummaryCard').addClass('d-none');
                     let results = response.data.Results || [];
                     if (results.length == 0) {
                         notify("❌ No flights found for selected route.", "error");
@@ -128,6 +130,7 @@ $('#flightSearchForm').on('submit', function (e) {
                     $('.all_flight_list').removeClass('d-none');
 
                     if (journeyType == 1) {
+                        $('#roundSummaryCard').addClass('d-none');
                         results.forEach((group, i) => {
                             group.forEach((flight, j) => {
                                 let segs = flight.Segments[0];
@@ -166,7 +169,7 @@ $('#flightSearchForm').on('submit', function (e) {
 
                                 let seg = segs[0];
                                 html += `
-                                <div class="card border mb-3">
+                                <div class="card border">
                                     <div class="card-header d-flex justify-content-between">
                                         <div class="d-flex align-items-center">
                                             ✈️
@@ -1145,10 +1148,10 @@ function generateTravelerForm(response) {
                 passportExpiry: inputs.eq(10).val()
             });
         });
-      
 
 
-       
+
+
 
 
 
@@ -1693,7 +1696,7 @@ $('#proceedBookingBtn').on('click', function () {
         cancelButtonText: "Cancel"
     }).then((result) => {
 
-        
+
         if (result.value) {
 
             swal({
@@ -2345,16 +2348,13 @@ function renderRoundList(index) {
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-3 text-md-end">
-                                                <h4>₹${totalFare}</h4>
+                                            <div class="col-md-3 text-md-end">                                               
                                                 <input type="radio" 
-                                                        name="select_flight_${index}" 
-                                                        class="select-flight"
-                                                        data-flight='${encodeURIComponent(JSON.stringify(flight))}'
-                                                        style="transform: scale(1.4); cursor: pointer;">
-                                                    <label class="ms-1">Select</label>
-
-                                                    <button class="btn btn-dark mb-0 btn-book-now" data-bookingflightdetails='${encodeURIComponent(JSON.stringify(flight))}'>Book Now</button>
+                                                    name="select_flight_${index}" 
+                                                    class="select-flight"
+                                                    data-flight='${encodeURIComponent(JSON.stringify(flight))}'
+                                                    style="transform: scale(1.4); cursor: pointer;">
+                                                <h4 class="mt-3">₹${totalFare}</h4>
                                             </div>
                                         </div>
                                     </div>
@@ -2366,9 +2366,9 @@ function renderRoundList(index) {
                                             </li>
                                             <li class="list-inline-item text-danger">
                                              ${layovers > 0
-                                                ? `<span class="text-primary fw-bold">${layovers} Layover${layovers > 1 ? 's' : ''}</span>`
-                                                : `<span class="text-success fw-bold">Non-stop</span>`
-                                            }</li>
+                ? `<span class="text-primary fw-bold">${layovers} Layover${layovers > 1 ? 's' : ''}</span>`
+                : `<span class="text-success fw-bold">Non-stop</span>`
+            }</li>
                             
                                             <li class="list-inline-item">
                                                 <button class="btn p-0 text-primary view-details" 
@@ -2383,8 +2383,229 @@ function renderRoundList(index) {
                                 </div>`;
 
         $("#search_flight_list").append(html);
+
+        let saved = index === 0
+            ? selectedRoundFlights.departure
+            : selectedRoundFlights.return;
+
+        if (saved && saved.ResultIndex === flight.ResultIndex) {
+            $('input[name="select_flight_' + index + '"]').last().prop('checked', true);
+        }
     });
 }
 
+var selectedRoundFlights = {
+    departure: null,
+    return: null
+};
+
+$(document).on("change", ".select-flight", function () {
+
+    let flightData = JSON.parse(decodeURIComponent($(this).data("flight")));
+    let groupName = $(this).attr("name");
+
+    if (groupName === "select_flight_0") {
+        selectedRoundFlights.departure = flightData;
+    }
+
+    if (groupName === "select_flight_1") {
+        selectedRoundFlights.return = flightData;
+    }
+
+    toggleRoundSummaryCard();
+});
+
+function toggleRoundSummaryCard() {
+
+    let depChecked = !!selectedRoundFlights.departure;
+    let retChecked = !!selectedRoundFlights.return;
+
+    if (depChecked && retChecked) {
+
+        renderRoundSummary(
+            selectedRoundFlights.departure,
+            selectedRoundFlights.return
+        );
+
+        $("#roundSummaryCard").removeClass("d-none");
+
+        let bookingData = {
+            departure: selectedRoundFlights.departure,
+            return: selectedRoundFlights.return
+        };
+
+        $('#btnfordetailsPage').html(`
+            <button class="btn btn-success mb-0 btn-book-now-rtrip"
+                data-bookingflightdetails='${encodeURIComponent(JSON.stringify(bookingData))}'>
+                Book Now
+            </button>
+        `);
+
+    } else {
+        $("#roundSummaryCard").addClass("d-none");
+    }
+}
+
+function renderRoundSummary(depFlight, retFlight) {
+
+    if (!depFlight || !retFlight) return;
+
+    // ===== DEPARTURE =====
+    let depSeg = depFlight.Segments[0][0];
+
+    let depAirlineName = depSeg.Airline.AirlineName;
+    let depFlightNo = `${depSeg.Airline.AirlineCode}-${depSeg.Airline.FlightNumber}`;
+
+    let depFromCity = depSeg.Origin.Airport.CityName;
+    let depToCity = depSeg.Destination.Airport.CityName;
+
+    let depDepTime = new Date(depSeg.Origin.DepTime);
+    let depArrTime = new Date(depSeg.Destination.ArrTime);
+
+    let depTime = depDepTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let depDate = depDepTime.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+
+    let depArrTimeStr = depArrTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let depArrDateStr = depArrTime.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+
+    let depDuration = depSeg.Duration
+        ? `${Math.floor(depSeg.Duration / 60)}h ${depSeg.Duration % 60}m`
+        : '';
+
+    // ===== RETURN =====
+    let retSeg = retFlight.Segments[0][0];
+
+    let retAirlineName = retSeg.Airline.AirlineName;
+    let retFlightNo = `${retSeg.Airline.AirlineCode}-${retSeg.Airline.FlightNumber}`;
+
+    let retFromCity = retSeg.Origin.Airport.CityName;
+    let retToCity = retSeg.Destination.Airport.CityName;
+
+    let retDepTime = new Date(retSeg.Origin.DepTime);
+    let retArrTime = new Date(retSeg.Destination.ArrTime);
+
+    let retTime = retDepTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let retDate = retDepTime.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+
+    let retArrTimeStr = retArrTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    let retArrDateStr = retArrTime.toLocaleDateString('en-IN', { day: '2-digit', month: 'short' });
+
+    let retDuration = retSeg.Duration
+        ? `${Math.floor(retSeg.Duration / 60)}h ${retSeg.Duration % 60}m`
+        : '';
+
+    // ===== TOTAL FARE =====
+    let totalFare = depFlight.Fare.PublishedFare + retFlight.Fare.PublishedFare;
+
+    // ===== HTML =====
+    let html = `
+       <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-dark">
+                    <div class="fw-semibold mb-2">
+                        ✈️ ${depAirlineName} (${depFlightNo})
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">${depTime}</h5>
+                            <small>${depDate}</small>
+                            <div class="fw-semibold">${depFromCity}</div>
+                        </div>
+
+                        <div class="text-center">
+                            <small class="text-muted">${depDuration}</small>
+                            <div class="position-relative my-4">
+                                <hr class="bg-primary opacity-5 position-relative">
+                                <div class="icon-md bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle p-2">
+                                    <i class="fa-solid fa-fw fa-plane rtl-flip"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <h5 class="mb-0">${depArrTimeStr}</h5>
+                            <small>${depArrDateStr}</small>
+                            <div class="fw-semibold">${depToCity}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-1 text-center">
+            <button type="button" class="btn text-white mt-3">
+                <i class="fa-solid fa-right-left fs-3"></i>
+            </button>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body text-dark">
+                    <div class="fw-semibold mb-2">
+                        ✈️ ${retAirlineName} (${retFlightNo})
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h5 class="mb-0">${retTime}</h5>
+                            <small>${retDate}</small>
+                            <div class="fw-semibold">${retFromCity}</div>
+                        </div>
+
+                        <div class="text-center">
+                            <small class="text-muted">${retDuration}</small>
+                            <div class="position-relative my-4">
+                                <hr class="bg-primary opacity-5 position-relative">
+                                <div class="icon-md bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle p-2">
+                                    <i class="fa-solid fa-fw fa-plane rtl-flip"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-end">
+                            <h5 class="mb-0">${retArrTimeStr}</h5>
+                            <small>${retArrDateStr}</small>
+                            <div class="fw-semibold">${retToCity}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="h-100 d-flex align-items-center justify-content-center">
+                <div class="text-center text-white">
+                    <h6 class="text-white">Total Amount</h6>
+                    <h3 class="fw-bold mb-3 text-white">₹${totalFare}</h3>
+                     <div id="btnfordetailsPage"></div>
+                </div>
+            </div>
+        </div>
+    `;
+
+    $("#summaryDetails").html(html);
+}
 
 
+// Book Now Click
+$(document).on("click", ".btn-book-now-rtrip", function () {
+    const encoded = $(this).attr('data-bookingflightdetails');
+
+    console.log(encoded);
+    return;
+    try {
+        const flight = JSON.parse(decodeURIComponent(encoded));
+        if (flight) {
+            console.log("Booking Data:", flight);
+            notify("Roundtrip flights ready for booking ✈️", "success");
+            // localStorage.setItem('selectedFlightDetails', JSON.stringify(flight));
+            // localStorage.setItem("ResultIndex", flight?.ResultIndex || '');
+            // window.location.href = "/flight/detail";
+        } else {
+            notify("Flight details not found!", "error");
+        }
+    } catch (error) {
+        notify("Error reading flight details!", "error");
+    }
+});
