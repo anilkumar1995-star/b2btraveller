@@ -151,7 +151,7 @@
  
 
         <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
-            <div class="w-px-400 mx-auto sign-in-from">
+            <div class="w-px-400 mx-auto sign-in-from mt-n5">
 
                 <div class="app-brand mb-4">
                     <a href="{{ route('home') }}" class="app-brand-link gap-2"></a>

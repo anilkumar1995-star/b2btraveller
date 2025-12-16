@@ -90,36 +90,27 @@
                      data-bs-ride="carousel"
                      data-bs-interval="4000">
 
-                    <div class="carousel-inner h-100">
+                    <div class="carousel-inner h-100 rounded">
 
                         <div class="carousel-item active h-100">
-                            <img src="<?php echo e(asset('images/air-india.jpg')); ?>"
+                            <img src="<?php echo e(asset('images/Air-India.jpg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h3>Book Flights Worldwide</h3>
-                                <p>Fast, Secure & Affordable Air Travel</p>
-                            </div>
+                            
                         </div>
 
                         <div class="carousel-item h-100">
                             <img src="<?php echo e(asset('images/02.jpg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h3>Explore the World</h3>
-                                <p>Best deals on domestic & international flights</p>
-                            </div>
+                            
                         </div>
 
                         <div class="carousel-item h-100">
                             <img src="<?php echo e(asset('images/bus01.jpeg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h3>Travel Smarter</h3>
-                                <p>Your journey starts here</p>
-                            </div>
+                            
                         </div>
                         
                         <div class="carousel-item h-100">
@@ -152,13 +143,13 @@
  
 
         <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
-            <div class="w-px-400 mx-auto sign-in-from">
+            <div class="w-px-400 mx-auto sign-in-from mt-n5">
 
                 <div class="app-brand mb-4">
                     <a href="<?php echo e(route('home')); ?>" class="app-brand-link gap-2"></a>
                 </div>
 
-                <h3 class="mb-1 fw-bold">
+                <h3 class="mb-1 fw-bold mt-1">
                     Welcome to <?php echo e(@$company->companyname); ?>! 👋
                 </h3>
                 <p class="mb-4">

@@ -1145,6 +1145,12 @@ function generateTravelerForm(response) {
                 passportExpiry: inputs.eq(10).val()
             });
         });
+      
+
+
+       
+
+
 
         localStorage.setItem('travelerDetails', JSON.stringify(travelers));
         localStorage.setItem('contactDetails', JSON.stringify({

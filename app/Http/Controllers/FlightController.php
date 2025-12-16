@@ -150,6 +150,7 @@ class FlightController extends Controller
         $service = new FlightService();
         $response = $service->bookingFlight($request->all());
 
+
         // return response()->json($response);
         if ($response['status'] != 'success') {
             return response()->json([
