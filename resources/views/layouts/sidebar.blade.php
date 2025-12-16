@@ -180,5 +180,18 @@
                 </li>
             </ul>
         </li>
+          <li class="menu-item {{ Request::is('apilog/*') ? 'active open' : '' }}">
+            <a href="#apilog" class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons ti ti-activity"></i>
+                <div data-i18n="API Log">API Logs</div>
+            </a>
+            <ul class="menu-sub {{ Request::is('apilog/*') ? 'show' : '' }}" id="apilog">
+                <li class="menu-item {{ Request::is('api/log') ? 'active' : '' }}">
+                    <a href="{{ route('apilog') }}" class="menu-link">
+                        <div data-i18n="Api Logs">Api Logs</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
     </ul>
 </aside>

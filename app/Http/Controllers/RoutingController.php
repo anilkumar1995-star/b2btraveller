@@ -114,6 +114,11 @@ class RoutingController extends Controller
         return view('help.contact');
     }
 
+     public function apilog()
+    {
+        return view('api.apilogs');
+    }
+
     /**
      * second level route
      */

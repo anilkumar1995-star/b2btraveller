@@ -1128,43 +1128,25 @@ function generateTravelerForm(response) {
         }
 
         let travelers = [];
-
-     $('.traveler-form').each(function () {
-            let form = $(this);
+        $('.traveler-form').each(function () {
+            let inputs = $(this).find('.required-field');
             travelers.push({
-                type: form.data('type'),
-                title: form.find('[name="titleName"]').val(),
-                firstName: form.find('[name="firstname"]').val(),
-                lastName: form.find('[name="lastname"]').val(),
-                dob: form.find('[name="dob"]').val(),
-                gender: form.find('[name="gender"]').val(),         
-                nationality: form.find('[name="nationality"]').val(),
-                address1: form.find('[name="address1"]').val(),
-                address2: form.find('[name="address2"]').val(),
-                city: form.find('[name="city"]').val(),
-                passportNo: form.find('[name="passportNo"]').val() || '',
-                passportExpiry: form.find('[name="passportExpiry"]').val() || '',
-                pan: form.find('[name="pan"]').val() || ''
+                type: $(this).data('type'),
+                title: inputs.eq(0).val(),
+                firstName: inputs.eq(1).val(),
+                lastName: inputs.eq(2).val(),
+                dob: inputs.eq(3).val(),
+                gender: inputs.eq(4).val(),
+                nationality: inputs.eq(5).val(),
+                address1: inputs.eq(6).val(),
+                address2: inputs.eq(7).val(),
+                city: inputs.eq(8).val(),
+                passportNo: inputs.eq(9).val(),
+                passportExpiry: inputs.eq(10).val()
             });
         });
-        
-        // $('.traveler-form').each(function () {
-        //     let inputs = $(this).find('.required-field');
-        //     travelers.push({
-        //         type: $(this).data('type'),
-        //         title: inputs.eq(0).val(),
-        //         firstName: inputs.eq(1).val(),
-        //         lastName: inputs.eq(2).val(),
-        //         dob: inputs.eq(3).val(),
-        //         gender: inputs.eq(4).val(),
-        //         nationality: inputs.eq(5).val(),
-        //         address1: inputs.eq(6).val(),
-        //         address2: inputs.eq(7).val(),
-        //         city: inputs.eq(8).val(),
-        //         passportNo: inputs.eq(9).val(),
-        //         passportExpiry: inputs.eq(10).val()
-        //     });
-        // });
+      
+
 
        
 

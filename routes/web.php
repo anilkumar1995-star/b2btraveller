@@ -71,6 +71,11 @@ Route::group(['prefix' => 'loanenquiry', 'middleware' => 'auth'], function () {
     Route::post('loanformstore', [UserController::class, 'loanformstore'])->name('loanformstore');
 });
 
+
+Route::group(['prefix' => 'api', 'middleware' => ['auth', 'company', "webActivityLog"]], function () {
+    Route::get('log', [RoutingController::class, 'apilog'])->name('apilog');
+});
+
 Route::group(['prefix' => 'condmt', 'middleware' => ['auth', 'company']], function () {
     // Route::get('/', [ConDmtController::class, 'index'])->name('dmttest');
     // Route::post('transaction', [ConDmtController::class, 'payment'])->name('agentcondmt')->middleware('transactionlog:dmt');
