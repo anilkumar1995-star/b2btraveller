@@ -93,7 +93,7 @@
                     <div class="carousel-inner h-100 rounded">
 
                         <div class="carousel-item active h-100">
-                            <img src="<?php echo e(asset('images/air-india.jpg')); ?>"
+                            <img src="<?php echo e(asset('images/Air-India.jpg')); ?>"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
                             
