@@ -179,5 +179,18 @@
                 </li>
             </ul>
         </li>
+          <li class="menu-item <?php echo e(Request::is('apilog/*') ? 'active open' : ''); ?>">
+            <a href="#apilog" class="menu-link menu-toggle">
+            <i class="menu-icon tf-icons ti ti-activity"></i>
+                <div data-i18n="API Log">API Logs</div>
+            </a>
+            <ul class="menu-sub <?php echo e(Request::is('apilog/*') ? 'show' : ''); ?>" id="apilog">
+                <li class="menu-item <?php echo e(Request::is('api/log') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(route('apilog')); ?>" class="menu-link">
+                        <div data-i18n="Api Logs">Api Logs</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
     </ul>
 </aside><?php /**PATH C:\wamp64\www\flight_b2b_travel\flight_b2b_travel\resources\views/layouts/sidebar.blade.php ENDPATH**/ ?>
