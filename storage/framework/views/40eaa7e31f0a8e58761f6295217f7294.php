@@ -497,8 +497,6 @@
 
         function updateRevenueChart(labels, values) {
 
-             $('#noRevenueData').show();
-             return
             if (!values || values.length === 0) {
                 $('#revenueChart').hide();
                 $('#noRevenueData').show();
