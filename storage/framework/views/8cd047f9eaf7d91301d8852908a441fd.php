@@ -149,7 +149,7 @@
                     <a href="<?php echo e(route('home')); ?>" class="app-brand-link gap-2"></a>
                 </div>
 
-                <h3 class="mb-1 fw-bold">
+                <h3 class="mb-1 fw-bold mt-1">
                     Welcome to <?php echo e(@$company->companyname); ?>! 👋
                 </h3>
                 <p class="mb-4">
