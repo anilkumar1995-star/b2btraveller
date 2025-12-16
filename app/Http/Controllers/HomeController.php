@@ -19,6 +19,7 @@ use App\Models\Ccreport;
 use App\Models\Role;
 use App\Services\Traveller\TravelService;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class HomeController extends Controller
 {
@@ -64,7 +65,7 @@ class HomeController extends Controller
     {
         return view('unauthorized');
     }
-    
+
     public function index(Request $post)
     {
 
@@ -76,7 +77,6 @@ class HomeController extends Controller
             session(['parentData' => \Myhelper::getParents(\Auth::id())]);
         }
 
-        // $data['state'] = Circle::all();
         $roles = ['whitelable', 'md', 'distributor', 'retailer', 'apiuser', 'other', 'employee'];
 
         foreach ($roles as $role) {
@@ -97,639 +97,92 @@ class HomeController extends Controller
             }
         }
 
+        $data['bookingSuccessAmount'] = DB::table('bookings')
+            ->where('booking_status', 'Successful')
+            ->whereBetween('created_at', [
+                Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
+                Carbon::createFromFormat('Y-m-d', $toDate)->endOfDay()
+            ])->when(!\Myhelper::hasRole('admin'), function ($q) {
+                $q->where('user_id', \Auth::id());
+            })
+            ->sum('total_amount');
 
-        // $product = [
-        //     'recharge',
-        //     'billpayment',
-        //     'utipancard',
-        //     'money',
-        //     'xpayout',
-        //     'ccbillpayment',
-        //     'aeps',
-        //     'matm',
-        //     'commission',
-        //     'charge'
-        // ];
-
-        $slot = ['today', 'month', 'lastmonth'];
-        // $txnstatus = ['success', 'pending', 'failed'];
-        $txnstatus = [
-            'success' => ['success'],
-            'pending' => ['pending'],
-            'failed' => ['failed', 'reversed']
-        ];
-
-        $statuscount = ['successCount' => ['success'], 'pendingCount' => ['pending'], 'failedCount' => ['failed', 'reversed']];
-
-        // foreach ($product as $value) {
-        //     foreach ($txnstatus as $status => $statusVal) {
-
-        //         if ($value == "aeps" || $value == "money") {
-        //             if (\Myhelper::hasRole('admin')) {
-        //                 $query = Aepsreport::whereIn('status', $statusVal);
-        //             } else {
-        //                 $query = Aepsreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-        //             }
-        //         } else if ($value == 'matm') {
-        //             if (\Myhelper::hasRole('admin')) {
-        //                 $query = Microatmreport::whereIn('status', $statusVal);
-        //             } else {
-        //                 $query = Microatmreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-        //             }
-        //         } else if ($value == "ccbillpayment") {
-        //             if ($statusVal[0] == "success") {
-        //                 $statuss = ["completed", "success"];
-        //             } else {
-        //                 $statuss = [$statusVal[0]];
-        //             }
-        //             // dd($query->get(),$statuss,$statusVal) ;
-        //             if (\Myhelper::hasRole('admin')) {
-        //                 $query = Ccreport::whereIn('status', $statuss);
-        //             } else {
-        //                 $query = Ccreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statuss);
-        //             }
-        //         } else {
-        //             if (\Myhelper::hasRole('admin')) {
-        //                 $query = Report::whereIn('status', $statusVal);
-        //             } else {
-        //                 $query = Report::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-        //             }
-        //         }
-
-        //         if ($value == "charge" || $value == "commission") {
-        //             $query2 = Aepsreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-        //         }
+        $data['bookingCount'] = DB::table('bookings')
+            ->where('payment_status', 'success')
+            ->whereBetween('created_at', [
+                Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
+                Carbon::createFromFormat('Y-m-d', $toDate)->endOfDay()
+            ])
+            ->when(!\Myhelper::hasRole('admin'), function ($q) {
+                $q->where('user_id', \Auth::id());
+            })
+            ->count();
 
 
-        //         switch ($value) {
-        //             case 'xpayout':
-        //                 $query->whereIn('product', ['payout', 'dmt'])->where('rtype', 'main');
-        //                 break;
-        //             case 'recharge':
-        //                 $query->where('product', 'recharge')->where('rtype', 'main');
-        //                 break;
 
-        //             case 'billpayment':
-        //                 $query->where('product', 'billpay')->where('rtype', 'main');
-        //                 break;
+        $data['totalRevenueAmount'] = $data['bookingSuccessAmount'];
 
-        //             case 'utipancard':
-        //                 $query->where('product', 'utipancard')->where('rtype', 'main');
-        //                 break;
+        $recentBookingsQuery = DB::table('bookings')
+            ->join('users', 'users.id', '=', 'bookings.user_id')
+            ->select(
+                'bookings.origin',
+                'bookings.destination',
+                'bookings.journey_date',
+                'bookings.payment_status',
+                'bookings.booking_status',
+                'users.name as user_name'
+            )
+            ->orderBy('bookings.created_at', 'desc')
+            ->limit(5);
 
-        //             case 'money':
-        //                 $query->where('product', 'payout')->where('rtype', 'main');
-        //                 break;
-        //             case 'commission':
-        //                 $query2->where('aepstype', 'CW')->where('rtype', 'main');
-        //                 break;
-        //             case 'charge':
-        //                 $query2->where('aepstype', 'AP')->where('rtype', 'main');
-        //                 break;
-        //             case 'aeps':
-        //                 $query->where('rtype', 'main')->whereIn('aepstype', ['CW', 'AP']);
-        //                 break;
-        //         }
+        if (!\Myhelper::hasRole('admin')) {
+            $recentBookingsQuery->where('bookings.user_id', \Auth::id());
+        }
 
-        //         if ($value == "charge") {
-        //             $sum1 = $query2->where('status', 'success')->sum('charge');
-        //             $sum2 = $query->where('status', 'success')->sum('charge');
-        //             $data[$value][$status] = $sum1 + $sum2;
-        //         } else if ($value == "commission") {
-        //             $sum1 = $query2->where('status', 'success')->sum('charge');
-        //             $sum2 = $query->where('status', 'success')->where('profit', ">", 0)->sum('profit');
-        //             $data[$value][$status] = $sum1 + $sum2;
-        //         } else {
-        //             if ($value == "ccbillpayment") {
-        //                 //   dd( $query->orderBy('id', 'DESC')->get(),[Carbon::createFromFormat('Y-m-d', $fromDate)->format('Y-m-d'), Carbon::createFromFormat('Y-m-d', $toDate)->addDay(1)->format('Y-m-d')]) ;
-        //             }
-        //             $data[$value][$status] = $query->whereBetween('created_at', [Carbon::createFromFormat('Y-m-d', $fromDate)->format('Y-m-d'), Carbon::createFromFormat('Y-m-d', $toDate)->addDay(1)->format('Y-m-d')])->sum('amount');
-        //         }
-        //     }
+        $data['recentBookings'] = $recentBookingsQuery->get();
+
+        $revenueQuery = DB::table('bookings')
+            ->select(
+                DB::raw('DATE(created_at) as booking_date'),
+                DB::raw('SUM(total_amount) as total_revenue')
+            )
+            ->where('payment_status', 'success')
+            ->whereBetween('created_at', [
+                Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
+                Carbon::createFromFormat('Y-m-d', $toDate)->endOfDay()
+            ])
+            ->groupBy('booking_date')
+            ->orderBy('booking_date');
+
+        if (!\Myhelper::hasRole('admin')) {
+            $revenueQuery->where('user_id', \Auth::id());
+        }
 
 
-        //     foreach ($statuscount as $keys => $values) {
+        $revenueData = $revenueQuery->get();
 
-        //         if ($value == "aeps" || $value == "money") {
-        //             if (\Myhelper::hasRole('admin')) {
-        //                 $query = Aepsreport::whereIn('status', $values);
-        //             } else {
-        //                 $query = Aepsreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $values);
-        //             }
-        //         } else if ($value == 'matm') {
-        //             if (\Myhelper::hasRole('admin')) {
-        //                 $query = Microatmreport::whereIn('status', $values);
-        //             } else {
-        //                 $query = Microatmreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $values);
-        //             }
-        //         } else if ($value == "ccbillpayment") {
-        //             if ($values[0] == "success") {
-        //                 $statusVal = ["completed", "success"];
-        //             }
+        // Chart labels & data
+        $data['revenueLabels'] = $revenueData->pluck('booking_date')->map(function ($date) {
+            return Carbon::parse($date)->format('d M');
+        });
 
-        //             if (\Myhelper::hasRole('admin')) {
-        //                 $query = Ccreport::whereIn('status', $statusVal);
-        //             } else {
-        //                 $query = Ccreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-        //             }
-        //         } else {
-        //             if (\Myhelper::hasRole('admin')) {
+        $data['revenueValues'] = $revenueData->pluck('total_revenue');
 
-        //                 $query = Report::whereIn('status', $values);
-        //             } else {
-
-        //                 $query = Report::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $values);
-        //             }
-        //         }
-
-        //         switch ($value) {
-
-        //             case 'xpayout':
-        //                 $query->whereIn('product', ['payout', 'dmt'])->where('rtype', 'main');
-        //                 break;
-        //             case 'recharge':
-        //                 $query->where('product', 'recharge')->where('rtype', 'main');
-        //                 break;
-
-        //             case 'billpayment':
-        //                 $query->where('product', 'billpay')->where('rtype', 'main');
-        //                 break;
-
-        //             case 'utipancard':
-        //                 $query->where('product', 'utipancard')->where('rtype', 'main');
-        //                 break;
-
-        //             case 'money':
-        //                 $query->where('product', 'payout')->where('rtype', 'main');
-        //                 break;
-        //             case 'aeps':
-        //                 $query->where('rtype', 'main')->whereIn('aepstype', ['CW', 'AP']);
-        //         }
-
-        //         $data[$value][$keys] = $query->whereBetween('created_at', [Carbon::createFromFormat('Y-m-d', $fromDate)->format('Y-m-d'), Carbon::createFromFormat('Y-m-d', $toDate)->addDay(1)->format('Y-m-d')])->count();
-        //     }
-        // }
-
+        $data['fromDate'] = $fromDate;
+        $data['toDate'] = $toDate;
         if (request()->isMethod('post')) {
-
             return response()->json($data);
         }
 
-        // if (\Myhelper::hasRole('admin') || \Myhelper::can('invesment_show')) {
 
-
-        //     $invesment = InvestmentTxn::where('investment_txns.user_id', \Auth::id())->get();
-        //     $invesmentshceme = Investment::where('status', 'active')->get();
-        //     $responseData = [];
-        //     if ($invesmentshceme->isNotEmpty()) {
-        //         $count = 0;
-        //         foreach ($invesmentshceme as $row1) {
-        //             $responseData[$count] = $row1;
-        //             $responseData[$count]["investment_id"] = @$row1->id;
-
-        //             foreach ($invesment as $row2) {
-        //                 if ($row1->id === intval($row2->investment_id)) {
-        //                     $responseData[$count]["invested_amount"] = @$row2->amount;
-        //                     $responseData[$count]["allotted_no_of_share"] = @$row2->allotted_no_of_share;
-        //                     $responseData[$count]["status"] = @$row2->status;
-        //                     $responseData[$count]["is_investment_complete"] = @$row2->is_investment_complete;
-        //                     continue;
-        //                 }
-        //             }
-        //             $count++;
-        //         }
-        //     }
-
-        //     $data['invesmentshceme'] = $responseData;
-        // }
-
-        // if (\Myhelper::can('investment_fund_request')) {
-
-        //     $data['banks'] = Fundbank::where('user_id', \Auth::user()->parent_id)->where('status', '1')->get();
-        //     $data['paymodes'] = Paymode::where('status', '1')->get();
-        //     // dd($data['banks']);
-        // } else {
-        //     $data['banks'] = [];
-        //     $data['paymodes'] = [];
-        // }
         $data['company'] = Company::where('website', $_SERVER['HTTP_HOST'])->first();
+
+
         if (count($data) > 0) {
             return view('home')->with($data);
         }
         return \Response::json(['statuscode' => 'ERR', 'status' => "Permission not allowed", 'message' => "Permission not allowed"], 400);
     }
-    // public function insights(Request $post)
-    // {
-
-    //     $fromDate = !empty($post->fromDate) ? $post->fromDate : date("Y-m-d");
-    //     $toDate = !empty($post->toDate) ? $post->toDate : date("Y-m-d");
-
-
-    //     if (!\Myhelper::getParents(\Auth::id())) {
-    //         session(['parentData' => \Myhelper::getParents(\Auth::id())]);
-    //     }
-
-    //     $data['state'] = Circle::all();
-    //     $roles = ['whitelable', 'md', 'distributor', 'retailer', 'apiuser', 'other', 'employee'];
-
-    //     foreach ($roles as $role) {
-    //         if ($role == "other") {
-    //             $data[$role] = User::whereHas('role', function ($q) {
-    //                 $q->whereNotIn('slug', ['whitelable', 'md', 'distributor', 'retailer', 'apiuser', 'admin', 'employee']);
-    //             })->whereIn('kyc', ['verified'])->count(); //->whereIn('id', \Myhelper::getParents(\Auth::id()))
-    //         } else {
-    //             if (\Myhelper::hasRole('admin')) {
-    //                 $data[$role] = User::whereHas('role', function ($q) use ($role) {
-    //                     $q->where('slug', $role);
-    //                 })->whereIn('kyc', ['verified'])->count();
-    //             } else {
-    //                 $data[$role] = User::whereHas('role', function ($q) use ($role) {
-    //                     $q->where('slug', $role);
-    //                 })->whereIn('id', \Myhelper::getParents(\Auth::id()))->whereIn('kyc', ['verified'])->count();
-    //             }
-    //         }
-    //     }
-
-
-    //     $product = [
-    //         'recharge',
-    //         'billpayment',
-    //         'utipancard',
-    //         'money',
-    //         'xpayout',
-    //         'ccbillpayment',
-    //         'aeps',
-    //         'matm',
-    //         'commission',
-    //         'charge'
-    //     ];
-
-    //     $slot = ['today', 'month', 'lastmonth'];
-    //     // $txnstatus = ['success', 'pending', 'failed'];
-    //     $txnstatus = [
-    //         'success' => ['success'],
-    //         'pending' => ['pending'],
-    //         'failed' => ['failed', 'reversed']
-    //     ];
-
-    //     $statuscount = ['successCount' => ['success'], 'pendingCount' => ['pending'], 'failedCount' => ['failed', 'reversed']];
-
-    //     foreach ($product as $value) {
-    //         foreach ($txnstatus as $status => $statusVal) {
-
-    //             if ($value == "aeps" || $value == "money") {
-    //                 if (\Myhelper::hasRole('admin')) {
-    //                     $query = Aepsreport::whereIn('status', $statusVal);
-    //                 } else {
-    //                     $query = Aepsreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-    //                 }
-    //             } else if ($value == 'matm') {
-    //                 if (\Myhelper::hasRole('admin')) {
-    //                     $query = Microatmreport::whereIn('status', $statusVal);
-    //                 } else {
-    //                     $query = Microatmreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-    //                 }
-    //             } else if ($value == "ccbillpayment") {
-    //                 if ($statusVal[0] == "success") {
-    //                     $statuss = ["completed", "success"];
-    //                 } else {
-    //                     $statuss = [$statusVal[0]];
-    //                 }
-    //                 // dd($query->get(),$statuss,$statusVal) ;
-    //                 if (\Myhelper::hasRole('admin')) {
-    //                     $query = Ccreport::whereIn('status', $statuss);
-    //                 } else {
-    //                     $query = Ccreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statuss);
-    //                 }
-    //             } else {
-    //                 if (\Myhelper::hasRole('admin')) {
-    //                     $query = Report::whereIn('status', $statusVal);
-    //                 } else {
-    //                     $query = Report::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-    //                 }
-    //             }
-
-    //             if ($value == "charge" || $value == "commission") {
-    //                 $query2 = Aepsreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-    //             }
-
-
-    //             switch ($value) {
-    //                 case 'xpayout':
-    //                     $query->whereIn('product', ['payout', 'dmt'])->where('rtype', 'main');
-    //                     break;
-    //                 case 'recharge':
-    //                     $query->where('product', 'recharge')->where('rtype', 'main');
-    //                     break;
-
-    //                 case 'billpayment':
-    //                     $query->where('product', 'billpay')->where('rtype', 'main');
-    //                     break;
-
-    //                 case 'utipancard':
-    //                     $query->where('product', 'utipancard')->where('rtype', 'main');
-    //                     break;
-
-    //                 case 'money':
-    //                     $query->where('product', 'payout')->where('rtype', 'main');
-    //                     break;
-    //                 case 'commission':
-    //                     $query2->where('aepstype', 'CW')->where('rtype', 'main');
-    //                     break;
-    //                 case 'charge':
-    //                     $query2->where('aepstype', 'AP')->where('rtype', 'main');
-    //                     break;
-    //                 case 'aeps':
-    //                     $query->where('rtype', 'main')->whereIn('aepstype', ['CW', 'AP']);
-    //                     break;
-    //             }
-
-    //             if ($value == "charge") {
-    //                 $sum1 = $query2->where('status', 'success')->sum('charge');
-    //                 $sum2 = $query->where('status', 'success')->sum('charge');
-    //                 $data[$value][$status] = $sum1 + $sum2;
-    //             } else if ($value == "commission") {
-    //                 $sum1 = $query2->where('status', 'success')->sum('charge');
-    //                 $sum2 = $query->where('status', 'success')->where('profit', ">", 0)->sum('profit');
-    //                 $data[$value][$status] = $sum1 + $sum2;
-    //             } else {
-    //                 if ($value == "ccbillpayment") {
-    //                     //   dd( $query->orderBy('id', 'DESC')->get(),[Carbon::createFromFormat('Y-m-d', $fromDate)->format('Y-m-d'), Carbon::createFromFormat('Y-m-d', $toDate)->addDay(1)->format('Y-m-d')]) ;
-    //                 }
-    //                 $data[$value][$status] = $query->whereBetween('created_at', [Carbon::createFromFormat('Y-m-d', $fromDate)->format('Y-m-d'), Carbon::createFromFormat('Y-m-d', $toDate)->addDay(1)->format('Y-m-d')])->sum('amount');
-    //             }
-    //         }
-
-
-    //         foreach ($statuscount as $keys => $values) {
-
-    //             if ($value == "aeps" || $value == "money") {
-    //                 if (\Myhelper::hasRole('admin')) {
-    //                     $query = Aepsreport::whereIn('status', $values);
-    //                 } else {
-    //                     $query = Aepsreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $values);
-    //                 }
-    //             } else if ($value == 'matm') {
-    //                 if (\Myhelper::hasRole('admin')) {
-    //                     $query = Microatmreport::whereIn('status', $values);
-    //                 } else {
-    //                     $query = Microatmreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $values);
-    //                 }
-    //             } else if ($value == "ccbillpayment") {
-    //                 if ($values[0] == "success") {
-    //                     $statusVal = ["completed", "success"];
-    //                 }
-
-    //                 if (\Myhelper::hasRole('admin')) {
-    //                     $query = Ccreport::whereIn('status', $statusVal);
-    //                 } else {
-    //                     $query = Ccreport::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $statusVal);
-    //                 }
-    //             } else {
-    //                 if (\Myhelper::hasRole('admin')) {
-
-    //                     $query = Report::whereIn('status', $values);
-    //                 } else {
-
-    //                     $query = Report::whereIn('user_id', \Myhelper::getParents(\Auth::id()))->whereIn('status', $values);
-    //                 }
-    //             }
-
-    //             switch ($value) {
-
-    //                 case 'xpayout':
-    //                     $query->whereIn('product', ['payout', 'dmt'])->where('rtype', 'main');
-    //                     break;
-    //                 case 'recharge':
-    //                     $query->where('product', 'recharge')->where('rtype', 'main');
-    //                     break;
-
-    //                 case 'billpayment':
-    //                     $query->where('product', 'billpay')->where('rtype', 'main');
-    //                     break;
-
-    //                 case 'utipancard':
-    //                     $query->where('product', 'utipancard')->where('rtype', 'main');
-    //                     break;
-
-    //                 case 'money':
-    //                     $query->where('product', 'payout')->where('rtype', 'main');
-    //                     break;
-    //                 case 'aeps':
-    //                     $query->where('rtype', 'main')->whereIn('aepstype', ['CW', 'AP']);
-    //             }
-
-    //             $data[$value][$keys] = $query->whereBetween('created_at', [Carbon::createFromFormat('Y-m-d', $fromDate)->format('Y-m-d'), Carbon::createFromFormat('Y-m-d', $toDate)->addDay(1)->format('Y-m-d')])->count();
-    //         }
-    //     }
-
-    //     if (request()->isMethod('post')) {
-
-    //         return response()->json($data);
-    //     }
-
-    //     if (\Myhelper::hasRole('admin') || \Myhelper::can('invesment_show')) {
-
-
-    //         $invesment = InvestmentTxn::where('investment_txns.user_id', \Auth::id())->get();
-    //         $invesmentshceme = Investment::where('status', 'active')->get();
-    //         $responseData = [];
-    //         if ($invesmentshceme->isNotEmpty()) {
-    //             $count = 0;
-    //             foreach ($invesmentshceme as $row1) {
-    //                 $responseData[$count] = $row1;
-    //                 $responseData[$count]["investment_id"] = @$row1->id;
-
-    //                 foreach ($invesment as $row2) {
-    //                     if ($row1->id === intval($row2->investment_id)) {
-    //                         $responseData[$count]["invested_amount"] = @$row2->amount;
-    //                         $responseData[$count]["allotted_no_of_share"] = @$row2->allotted_no_of_share;
-    //                         $responseData[$count]["status"] = @$row2->status;
-    //                         $responseData[$count]["is_investment_complete"] = @$row2->is_investment_complete;
-    //                         continue;
-    //                     }
-    //                 }
-    //                 $count++;
-    //             }
-    //         }
-
-    //         $data['invesmentshceme'] = $responseData;
-    //     }
-
-    //     if (\Myhelper::can('investment_fund_request')) {
-
-    //         $data['banks'] = Fundbank::where('user_id', \Auth::user()->parent_id)->where('status', '1')->get();
-    //         $data['paymodes'] = Paymode::where('status', '1')->get();
-    //         // dd($data['banks']);
-    //     } else {
-    //         $data['banks'] = [];
-    //         $data['paymodes'] = [];
-    //     }
-    //     $data['company'] = Company::where('website', $_SERVER['HTTP_HOST'])->first();
-    //     if (count($data) > 0) {
-    //         return view('insights')->with($data);
-    //     }
-    //     return \Response::json(['statuscode' => 'ERR', 'status' => "Permission not allowed", 'message' => "Permission not allowed"], 400);
-    // }
-
-    // public function searchTxnid(Request $request)
-    // {
-    //     $txnid = $request->get('txnid');
-    //     $txn = Report::where('txnid', $txnid)->first();
-
-    //     // with success statsu
-
-    //     if ($txn) {
-    //         $user = User::where('id', $txn->user_id)->get();
-    //         return response()->json([
-    //             'report' => $txn,
-    //             'user' => $user,
-    //             'status' => 'success'
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'message' => "No Data Found",
-    //             'status' => 'error'
-    //         ]);
-    //     }
-    // }
-
-    // public function searchUser(Request $request)
-    // {
-    //     $username = $request->get('username');
-    //     $user = User::where('name', $username)->first();
-
-    //     $rolesMap = [
-    //         'admin' => ['name' => 'N/A', 'shopname' => 'N/A', 'mobile' => 'N/A', 'mainwallet' => 'N/A'],
-    //         'master_distributor' => ['name' => 'N/A', 'shopname' => 'N/A', 'mobile' => 'N/A', 'mainwallet' => 'N/A'],
-    //         'distributor' => ['name' => 'N/A', 'shopname' => 'N/A', 'mobile' => 'N/A', 'mainwallet' => 'N/A'],
-    //         'retailer' => ['name' => 'N/A', 'shopname' => 'N/A', 'mobile' => 'N/A', 'mainwallet' => 'N/A'],
-    //     ];
-
-    //     if ($user) {
-
-    //         $permissions = \DB::table('user_permissions as up')
-    //             ->join('permissions as p', 'up.permission_id', '=', 'p.id')
-    //             ->select(
-    //                 'p.id',
-    //                 'p.name as permission_name',
-    //                 'p.type',
-    //                 \DB::raw("'Active' as status")
-    //             )
-    //             ->where('up.user_id', $user->id)
-    //             ->get();
-
-    //         $role = Role::where('id', $user->role_id)->first();
-    //         $cappingData = CappingBalance::where('user_id', $user->id)
-    //             ->where('wallet_type', 'main')
-    //             ->where('status', 'approved')
-    //             ->first();
-
-    //         $current = $user;
-
-    //         while ($current && $current->parent_id) {
-
-    //             $parent = User::where('id', $current->parent_id)->first();
-
-    //             if ($parent) {
-    //                 $parentRole = optional(Role::where('id', $parent->role_id)->first())->name;
-    //                 if (isset($rolesMap[$parentRole]) && !$rolesMap[$parentRole]['name']) {
-    //                     $rolesMap[$parentRole] = [
-    //                         'name' => $parent->name,
-    //                         'shopname' => $parent->shopname,
-    //                         'mobile' => $parent->mobile,
-    //                         'mainwallet' => $parent->mainwallet,
-    //                     ];
-    //                 }
-    //                 $current = $parent;
-    //             } else {
-    //                 break;
-    //             }
-    //         }
-
-
-    //         // capping amount
-    //         $totalCapping = 0;
-    //         if ($cappingData) {
-    //             if ($cappingData->wallet_type == 'main') {
-    //                 $totalCapping = $user->lockedamount;
-    //             } elseif ($cappingData->wallet_type == 'aeps') {
-    //                 $totalCapping = $user->aepslockedamount;
-    //             } elseif ($cappingData->wallet_type == 'cc') {
-    //                 $totalCapping = $user->cclockedamount;
-    //             }
-    //         }
-
-
-    //         return response()->json([
-    //             'user' => $user,
-    //             'role' => $role,
-    //             'parentRole' => $current,
-    //             'cappingAmount' => $totalCapping,
-    //             'cappingData' => $cappingData,
-    //             'permissions' => $permissions,
-    //             'aeps_permissions' => [
-    //                 ['label' => 'Console AEPS : ACTIVE', 'color' => '#28a745'],
-    //                 ['label' => 'FINGPAY: IN-ACTIVE', 'color' => '#dc3545'],
-    //                 ['label' => 'NSDL IN-ACTIVE', 'color' => '#dc3545'],
-    //                 ['label' => 'FINO: BLOCKED', 'color' => '#dc3545'],
-    //                 ['label' => 'DIRECT FINO: BLOCKED', 'color' => '#dc3545'],
-    //                 ['label' => 'JIO: ERROR-APPROVED', 'color' => '#dc3545'],
-    //             ],
-    //             'pipe' => [
-    //                 ['aeps_pipe' => 'CONSOLE APES'],
-    //                 ['aadhaar_pipe' => 'CONSOLE AADHAAR PAY'],
-    //                 ['aeps_message' => 'SUCCESS'],
-    //                 ['routing_type' => 'SMART ROUTING']
-    //             ],
-    //             'status' => 'success'
-    //         ]);
-    //     } else {
-    //         return response()->json([
-    //             'message' => "No Data Found",
-    //             'status' => 'error'
-    //         ]);
-    //     }
-    // }
-
-
-    // public function cappingAmtStore(Request $request)
-    // {
-    //     $request->validate([
-    //         'user_id' => 'required|exists:users,id',
-    //         'wallet_type' => 'required|in:main,aeps,cc',
-    //         'status' => 'required|in:pending,approved,rejected',
-    //         'updated_by' => 'nullable',
-    //         'remark' => 'required',
-    //     ]);
-
-    //     $post['user_id'] = $request->user_id;
-    //     $post['wallet_type'] = $request->wallet_type;
-    //     $post['status'] = 'pending';
-    //     $post['updated_by'] =  $request->user_id;
-    //     $post['approved_by'] = $request->approved_by;
-    //     $post['remark'] = $request->remark;
-    //     $post['amount'] = $request->amount;
-
-    //     $inst = CappingBalance::create($post);
-    //     // Update user's locked amount column as per wallet type
-    //     if ($inst) {
-    //         // $user = User::find($request->user_id);
-    //         // if ($user) {
-    //         //     if ($request->wallet_type == 'main') {
-    //         //         $user->lockedamount += $request->amount;
-    //         //     } elseif ($request->wallet_type == 'aeps') {
-    //         //         $user->aepslockedamount += $request->amount;
-    //         //     } elseif ($request->wallet_type == 'cc') {
-    //         //         $user->cclockedamount += $request->amount;
-    //         //     }
-    //         //     $user->save();
-    //         // }
-    //         return \Response::json(['status' => 'success', 'message' => "'Wallet lock and user locked amount updated successfully."], 200);
-    //     }
-
-    //     return \Response::json(['status' => 'failed', 'message' => "'Wallet lock and user locked amount updated successfully."], 400);
-    // }
 
     public function walletLockApprove(Request $request)
     {
