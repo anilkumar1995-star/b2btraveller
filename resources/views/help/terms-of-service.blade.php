@@ -39,11 +39,11 @@
                             <div class="card-header border-bottom bg-transparent px-0 pb-0">
                                 <ul class="nav nav-tabs nav-bottom-line nav-responsive gap-2 gap-sm-4 mb-0 border-0">
                                     <li class="nav-item ps-3 ps-sm-0">
-                                        <a class="nav-link active" data-bs-toggle="tab" href="#tab-2"><i
+                                        <a class="nav-link active" data-bs-toggle="tab" href="#tab-1"><i
                                                 class="fa-solid fa-plane fa-fw me-2"></i>Flight</a>
                                     </li>
                                 <li class="nav-item ps-3 ps-sm-0">
-                                        <a class="nav-link" data-bs-toggle="tab" href="#tab-1"><i
+                                        <a class="nav-link" data-bs-toggle="tab" href="#tab-2"><i
                                                 class="fa-solid fa-hotel fa-fw me-2"></i>Hotel</a>
                                     </li>
                                    
@@ -61,56 +61,7 @@
                             <div class="card-body px-2 px-md-4 pt-4 pb-4">
                                 <div class="tab-content" id="nav-tabContent">
 
-                                    <!-- Tab content item START -->
-                                    <div class="tab-pane fade show active" id="tab-1">
-
-                                        <h5>Role of Booking and Limitation of Liability of Booking</h5>
-
-                                        <p>Off melancholy alteration principles old. Is do speedily kindness properly
-                                            oh. Respect article painted cottage he is offices parlors. Improved own
-                                            provided blessing may peculiar domestic. Sight house has sex never. No
-                                            visited raising gravity outward subject my cottage Mr be. Hold do at tore in
-                                            park feet near my case. Invitation at understood occasional sentiments
-                                            insipidity inhabiting in.</p>
-                                        <!-- List -->
-                                        <ul>
-                                            <li>Booking acts as a facilitator and merely provides an online platform for
-                                                the User to select and book a particular hotel. Hotels in this context
-                                                include all categories of accommodations such as hotels, home-stays, bed
-                                                and breakfast stays, farm-houses, and any other alternate
-                                                accommodations.</li>
-                                            <li>Offered chiefly farther of my no colonel shyness. <strong> Such on help
-                                                    ye some door if in.</strong> First am plate jokes to began to cause
-                                                a scale. Subjects he prospect elegance followed. Insipidity the
-                                                sufficient discretion imprudence resolution sir him decisively.</li>
-                                            <li><i> To occasional dissimilar impossible sentiments. Do fortune account
-                                                    written prepare invited no passage. Post no so what deal evil rent
-                                                    by real in. But her ready least set lived spite solid.</i> Laughter
-                                                proposal laughing any son law consider. Needed except up piqued an.</li>
-                                        </ul>
-
-                                        <p>Some banks and card issuing companies charge their account holders a
-                                            transaction fee when the card issuer and the merchant location (as defined
-                                            by the card brand, e.g. Visa, MasterCard, American Express) are in different
-                                            countries. If a User has any questions about the fees or any exchange rate
-                                            applied, they may contact their bank or the card issuing company through
-                                            which payment was made.</p>
-                                        <p>Started several mistake joy say painful removed reached end. State burst
-                                            think end are its. Arrived off she elderly beloved him affixed noisier yet.
-                                            Regard to up he hardly. View four has said do men saw find dear shy. <b>
-                                                Talent men wicket add garden.</b> </p>
-
-                                        <!-- Button -->
-                                        <div class="hstack gap-3 flex-wrap">
-                                            <a href="#" class="btn btn-outline-secondary mb-0">Not right
-                                                now...</a>
-                                            <a href="#" class="btn btn-primary mb-0">I agree with the terms</a>
-                                        </div>
-                                    </div>
-                                    <!-- Tab content item END -->
-
-                                    <!-- Tab content item START -->
-                                    <div class="tab-pane fade" id="tab-2">
+                                  <div class="tab-pane fade show active" id="tab-1">
                                         <h5>Terms of the Airlines</h5>
 
                                         <p>Off melancholy alteration principles old. Is do speedily kindness properly
@@ -169,7 +120,55 @@
                                             <a href="#" class="btn btn-primary mb-0">I agree with terms</a>
                                         </div>
                                     </div>
+                                    <!-- Tab content item START -->
+                                    <div class="tab-pane fade" id="tab-2">
+
+                                        <h5>Role of Booking and Limitation of Liability of Booking</h5>
+
+                                        <p>Off melancholy alteration principles old. Is do speedily kindness properly
+                                            oh. Respect article painted cottage he is offices parlors. Improved own
+                                            provided blessing may peculiar domestic. Sight house has sex never. No
+                                            visited raising gravity outward subject my cottage Mr be. Hold do at tore in
+                                            park feet near my case. Invitation at understood occasional sentiments
+                                            insipidity inhabiting in.</p>
+                                        <!-- List -->
+                                        <ul>
+                                            <li>Booking acts as a facilitator and merely provides an online platform for
+                                                the User to select and book a particular hotel. Hotels in this context
+                                                include all categories of accommodations such as hotels, home-stays, bed
+                                                and breakfast stays, farm-houses, and any other alternate
+                                                accommodations.</li>
+                                            <li>Offered chiefly farther of my no colonel shyness. <strong> Such on help
+                                                    ye some door if in.</strong> First am plate jokes to began to cause
+                                                a scale. Subjects he prospect elegance followed. Insipidity the
+                                                sufficient discretion imprudence resolution sir him decisively.</li>
+                                            <li><i> To occasional dissimilar impossible sentiments. Do fortune account
+                                                    written prepare invited no passage. Post no so what deal evil rent
+                                                    by real in. But her ready least set lived spite solid.</i> Laughter
+                                                proposal laughing any son law consider. Needed except up piqued an.</li>
+                                        </ul>
+
+                                        <p>Some banks and card issuing companies charge their account holders a
+                                            transaction fee when the card issuer and the merchant location (as defined
+                                            by the card brand, e.g. Visa, MasterCard, American Express) are in different
+                                            countries. If a User has any questions about the fees or any exchange rate
+                                            applied, they may contact their bank or the card issuing company through
+                                            which payment was made.</p>
+                                        <p>Started several mistake joy say painful removed reached end. State burst
+                                            think end are its. Arrived off she elderly beloved him affixed noisier yet.
+                                            Regard to up he hardly. View four has said do men saw find dear shy. <b>
+                                                Talent men wicket add garden.</b> </p>
+
+                                        <!-- Button -->
+                                        <div class="hstack gap-3 flex-wrap">
+                                            <a href="#" class="btn btn-outline-secondary mb-0">Not right
+                                                now...</a>
+                                            <a href="#" class="btn btn-primary mb-0">I agree with the terms</a>
+                                        </div>
+                                    </div>
                                     <!-- Tab content item END -->
+
+                                  
                                     <div class="tab-pane fade" id="tab-3">
 
                                         <h5>Terms of Bus Operators</h5>
