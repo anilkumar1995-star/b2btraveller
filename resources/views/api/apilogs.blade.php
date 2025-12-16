@@ -18,7 +18,7 @@
                 <div class="card-body p-3 p-md-4">
 
                     <div class="table-responsive">
-                        <table class="table table-bordered table-hover align-middle mb-0" id="datatable">
+                        <table class="table table-bordered align-middle mb-0" id="datatable">
                             <thead class="bg-light text-center">
                                 <tr>
                                      <th class="sorting">Id</th>
@@ -38,6 +38,21 @@
     </div>
 
 </div>
+
+<div class="modal fade" id="readMoreModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="readMoreTitle"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <pre class="small text-wrap mb-0" id="readMoreContent"></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 @push('script')
 <script>
@@ -62,17 +77,44 @@ $(document).ready(function () {
             }
         },
         {
-            data: "request",
-            render: function (data, type, full) {
-                return `<pre class="mb-0 small text-wrap">${full?.request ?? '-'}</pre>`;
-            }
-        },
-        {
-            data: "response",
-            render: function (data, type, full) {
-                return `<pre class="mb-0 small text-wrap">${full?.response ?? '-'}</pre>`;
-            }
-        }
+    data: "request",
+    render: function (data, type, full) {
+        let text = full?.request ?? '-';
+        let shortText = text.length > 120 ? text.substring(0, 120) + '...' : text;
+
+        return `
+            <pre class="mb-0 small text-wrap">${shortText}</pre>
+            ${text.length > 120 
+                ? `<a href="javascript:void(0)" 
+                     class="text-primary fw-semibold readMore"
+                     data-title="Request"
+                     data-content="${encodeURIComponent(text)}">
+                     Read more
+                   </a>` 
+                : ''}
+        `;
+    }
+},
+{
+    data: "response",
+    render: function (data, type, full) {
+        let text = full?.response ?? '-';
+        let shortText = text.length > 120 ? text.substring(0, 120) + '...' : text;
+
+        return `
+            <pre class="mb-0 small text-wrap">${shortText}</pre>
+            ${text.length > 120 
+                ? `<a href="javascript:void(0)" 
+                     class="text-primary fw-semibold readMore"
+                     data-title="Response"
+                     data-content="${encodeURIComponent(text)}">
+                     Read more
+                   </a>` 
+                : ''}
+        `;
+    }
+}
+
     ];
 
     datatableSetup(url, options, function(){}, '#datatable', {
@@ -83,6 +125,16 @@ $(document).ready(function () {
             { orderable: false, targets: [2,3] }
         ]
     });
+$(document).on('click', '.readMore', function () {
+    let title = $(this).data('title');
+    let content = decodeURIComponent($(this).data('content'));
+
+    $('#readMoreTitle').text(title);
+    $('#readMoreContent').text(content);
+
+    let modal = new bootstrap.Modal(document.getElementById('readMoreModal'));
+    modal.show();
+});
 
 });
 </script>

@@ -1,219 +1,160 @@
-
 <!-- Bootstrap CSS -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<!-- Font Awesome (icons ke liye, optional but useful) -->
+<!-- Font Awesome -->
 <link rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
-      crossorigin="anonymous" referrerpolicy="no-referrer" />
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
 
-<!-- Bootstrap JS Bundle (Popper included) -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-        crossorigin="anonymous"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <main>
 
     <!-- =======================
     Main banner START -->
     <section class="pt-4 pt-lg-5">
-        <div class="container">
+        <div class="container-fluid py-5 ps-4 ps-lg-5">
+
             <!-- Title -->
             <div class="row mb-4">
-                <div class="col-12 text-center">
-                    <h1 class="fs-2 mb-0">Privacy Policy</h1>
-                    <!-- Image -->
-                    <img src="{{ asset('') }}/images/about/03.jpg" class="h-lg-400px rounded-3 mt-4" alt="">
+                <div class="col-12">
+                    <h1 class="fs-2 mb-3">Privacy Policy</h1>
+                    <img src="{{ asset('') }}/images/about/03.jpg"
+                         class="h-lg-400px rounded-3 mb-4"
+                         alt="">
                 </div>
             </div>
 
             <!-- Content START -->
             <div class="row">
-                <div class="col-md-10 mx-auto">
-                    <div class="vstack gap-3">
+                <div class="col-12 col-lg-10">
 
-                        <!-- Card item START -->
-                        <div class="card p-0 bg-transparent">
-                            <!-- Card header -->
-                            <div class="card-header border-bottom bg-transparent px-0">
-                                <h4 class="card-title mb-0">Booking Policy</h4>
+                    <div class="vstack gap-5">
+
+                        <!-- Booking Policy -->
+                        <div class="card bg-transparent border-0">
+                            <div class="card-header border-bottom bg-transparent px-0 pb-3">
+                                <h4 class="mb-0">Booking Policy</h4>
                             </div>
 
-                            <!-- Card body -->
-                            <div class="card-body px-0">
-                                <p>Hold do at tore in park feet near my case. Invitation at understood occasional
-                                    sentiments insipidity inhabiting in. Off melancholy alteration principles old. Is do
-                                    speedily kindness properly oh. Respect article painted cottage he is offices
-                                    parlors.</p>
-                                <p>Off melancholy alteration principles old. Is do speedily kindness properly oh.
-                                    Respect article painted cottage he is offices parlors. Improved own provided
-                                    blessing may peculiar domestic. Sight house has sex never. No visited raising
-                                    gravity outward subject my cottage Mr be. Hold do at tore in park feet near my case.
-                                    Invitation at understood occasional sentiments insipidity inhabiting in.</p>
-                                <ul class="list-group list-group-borderless mb-2">
-                                    <li class="list-group-item d-flex">
-                                        <i class="bi bi-check-circle-fill me-2"></i>This is a family farmhouse, hence
-                                        we request you to not indulge.
+                            <div class="card-body px-0 pt-3">
+                                <p class="lh-lg mb-3">
+                                    Hold do at tore in park feet near my case. Invitation at understood occasional
+                                    sentiments insipidity inhabiting in.
+                                </p>
+
+                                <p class="lh-lg mb-4">
+                                    Off melancholy alteration principles old. Is do speedily kindness properly oh.
+                                    Respect article painted cottage he is offices parlors.
+                                </p>
+
+                                <ul class="list-group list-group-borderless mb-4">
+                                    <li class="list-group-item px-0 d-flex">
+                                        <i class="fa-solid fa-circle-check text-success me-2"></i>
+                                        This is a family farmhouse, hence we request you to not indulge.
                                     </li>
-                                    <li class="list-group-item d-flex">
-                                        <i class="bi bi-check-circle-fill me-2"></i>Drinking and smoking within
-                                        controlled limits are permitted at the farmhouse but please do not create a mess
-                                        or ruckus at the house.
+                                    <li class="list-group-item px-0 d-flex">
+                                        <i class="fa-solid fa-circle-check text-success me-2"></i>
+                                        Drinking and smoking within limits are permitted.
                                     </li>
-                                    <li class="list-group-item d-flex">
-                                        <i class="bi bi-check-circle-fill me-2"></i>Drugs and intoxicating illegal
-                                        products are banned and not to be brought to the house or consumed.
+                                    <li class="list-group-item px-0 d-flex">
+                                        <i class="fa-solid fa-circle-check text-success me-2"></i>
+                                        Drugs and intoxicating products are strictly prohibited.
                                     </li>
-                                    <li class="list-group-item d-flex">
-                                        <i class="bi bi-x-circle-fill me-2"></i>For any update, the customer shall pay
-                                        applicable cancellation/modification charges.
+                                    <li class="list-group-item px-0 d-flex">
+                                        <i class="fa-solid fa-circle-xmark text-danger me-2"></i>
+                                        Cancellation or modification charges may apply.
                                     </li>
                                 </ul>
-                                <ul>
-                                    <li>Affronting imprudence do he he everything. Sex lasted dinner wanted indeed
-                                        wished outlaw. Far advanced settling say finished raillery.</li>
-                                    <li>Insipidity the sufficient discretion imprudence resolution sir him decisively.
-                                    </li>
-                                    <li>Offered chiefly farther of my no colonel shyness. <strong> Such on help ye some
-                                            door if in.</strong></li>
-                                    <li>First am plate jokes began to cause a scale. Subjects he prospect elegance
-                                        followed</li>
-                                </ul>
+
                                 <div class="bg-danger bg-opacity-10 rounded-2 p-3">
-                                    <p class="text-danger mb-0">Smoke alarm not reported — The host hasn't reported a
-                                        smoke alarm on the property. We suggest bringing a portable detector for your
-                                        trip.</p>
+                                    <p class="text-danger mb-0">
+                                        Smoke alarm not reported — We suggest bringing a portable detector.
+                                    </p>
                                 </div>
                             </div>
                         </div>
-                        <!-- Card item END -->
 
-                        <!-- Card item START -->
-                        <div class="card bg-transparent p-0">
-                            <!-- Card header -->
-                            <div class="card-header border-bottom bg-transparent px-0">
-                                <h4 class="card-title mb-0">Cancellation Policy</h4>
+                        <!-- Cancellation Policy -->
+                        <div class="card bg-transparent border-0">
+                            <div class="card-header border-bottom bg-transparent px-0 pb-3">
+                                <h4 class="mb-0">Cancellation Policy</h4>
                             </div>
 
-                            <!-- Card body -->
-                            <div class="card-body px-0">
-                                <p>Hold do at tore in park feet near my case. Invitation at understood occasional
-                                    sentiments insipidity inhabiting in. Off melancholy alteration principles old. Is do
-                                    speedily kindness properly oh. Respect article painted cottage he is offices
-                                    parlors.</p>
+                            <div class="card-body px-0 pt-3">
+                                <p class="lh-lg mb-3">
+                                    Off melancholy alteration principles old. Is do speedily kindness properly oh.
+                                </p>
 
-                                <div class="table-responsive-lg">
-                                    <table class="table table-bordered rounded-2 caption-bottom mb-0">
-                                        <!-- Table head -->
+                                <div class="table-responsive-lg my-4">
+                                    <table class="table table-bordered">
                                         <thead class="table-primary">
                                             <tr>
-                                                <th scope="col">Time Frame</th>
-                                                <th scope="col">Air Free + MMT Free</th>
+                                                <th>Time Frame</th>
+                                                <th>Charges</th>
                                             </tr>
                                         </thead>
-                                        <!-- Table body -->
-                                        <tbody class="border-top-0">
+                                        <tbody>
                                             <tr>
-                                                <td>0 hours to 24 hours</td>
+                                                <td>0 – 24 hours</td>
                                                 <td>Non-Refundable</td>
                                             </tr>
                                             <tr>
-                                                <td>24 hours to 365 days</td>
+                                                <td>24 hours – 365 days</td>
                                                 <td>30% Charge</td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
 
-                                <ul class="mt-4 mb-0">
-                                    <li>Affronting imprudence do he he everything. Sex lasted dinner wanted indeed
-                                        wished outlaw. Far advanced settling say finished raillery.</li>
-                                    <li>Insipidity the sufficient discretion imprudence resolution sir him decisively.
-                                    </li>
-                                    <li>Offered chiefly farther of my no colonel shyness. <strong> Such on help ye some
-                                            door if in.</strong></li>
-                                    <li>First am plate jokes began to cause a scale. Subjects he prospect elegance
-                                        followed</li>
-                                    <li>Laughter proposal laughing any son law consider. Needed except up piqued an.
-                                    </li>
-                                    <li><i> To occasional dissimilar impossible sentiments. Do fortune account written
-                                            prepare invited no passage.</i></li>
-                                    <li>Post no so what deal evil rent by real in. But her ready least set lived spite
-                                        solid.</li>
+                                <ul class="ps-3">
+                                    <li class="mb-2">Cancellation charges depend on time frame.</li>
+                                    <li class="mb-2">Refunds processed within 7–10 working days.</li>
+                                    <li class="mb-2">Service fees are non-refundable.</li>
                                 </ul>
                             </div>
                         </div>
-                        <!-- Card item END -->
 
-                        <!-- Card item START -->
-                        <div class="card bg-transparent p-0">
-                            <!-- Card header -->
-                            <div class="card-header border-bottom bg-transparent px-0">
-                                <h4 class="card-title mb-0">Date Change Policy</h4>
+                        <!-- Date Change Policy -->
+                        <div class="card bg-transparent border-0">
+                            <div class="card-header border-bottom bg-transparent px-0 pb-3">
+                                <h4 class="mb-0">Date Change Policy</h4>
                             </div>
 
-                            <!-- Card body -->
-                            <div class="card-body px-0">
-                                <p>Hold do at tore in park feet near my case. Invitation at understood occasional
-                                    sentiments insipidity inhabiting in. Off melancholy alteration principles old. Is do
-                                    speedily kindness properly oh. Respect article painted cottage he is offices
-                                    parlors.</p>
-                                <ul class="mb-0">
-                                    <li>Affronting imprudence do he he everything. Sex lasted dinner wanted indeed
-                                        wished outlaw. Far advanced settling say finished raillery.</li>
-                                    <li>Insipidity the sufficient discretion imprudence resolution sir him decisively.
-                                    </li>
-                                    <li>Offered chiefly farther of my no colonel shyness. <strong> Such on help ye some
-                                            door if in.</strong></li>
-                                    <li>First am plate jokes began to cause a scale. Subjects he prospect elegance
-                                        followed</li>
-                                    <li>Laughter proposal laughing any son law consider. Needed except up piqued an.
-                                    </li>
-                                    <li><i> To occasional dissimilar impossible sentiments. Do fortune account written
-                                            prepare invited no passage.</i></li>
-                                    <li>Post no so what deal evil rent by real in. But her ready least set lived spite
-                                        solid.</li>
+                            <div class="card-body px-0 pt-3">
+                                <p class="lh-lg mb-3">
+                                    Date changes are allowed based on availability and applicable charges.
+                                </p>
+
+                                <ul class="ps-3">
+                                    <li class="mb-2">One free date change allowed.</li>
+                                    <li class="mb-2">Additional changes may incur charges.</li>
+                                    <li class="mb-2">Subject to availability.</li>
                                 </ul>
                             </div>
                         </div>
-                        <!-- Card item END -->
 
-                        <!-- Card item START -->
-                        <div class="card bg-transparent p-0">
-                            <!-- Card header -->
-                            <div class="card-header border-bottom bg-transparent px-0">
-                                <h4 class="card-title mb-0">Special Request</h4>
+                        <!-- Special Request -->
+                        <div class="card bg-transparent border-0">
+                            <div class="card-header border-bottom bg-transparent px-0 pb-3">
+                                <h4 class="mb-0">Special Request</h4>
                             </div>
 
-                            <!-- Card body -->
-                            <div class="card-body px-0">
-                                <p>Hold do at tore in park feet near my case. Invitation at understood occasional
-                                    sentiments insipidity inhabiting in. Off melancholy alteration principles old. Is do
-                                    speedily kindness properly oh. Respect article painted cottage he is offices
-                                    parlors.</p>
-                                <ul class="mb-0">
-                                    <li>Affronting imprudence do he he everything. Sex lasted dinner wanted indeed
-                                        wished outlaw. Far advanced settling say finished raillery.</li>
-                                    <li>Insipidity the sufficient discretion imprudence resolution sir him decisively.
-                                    </li>
-                                    <li>Offered chiefly farther of my no colonel shyness. <strong> Such on help ye some
-                                            door if in.</strong></li>
-                                    <li>First am plate jokes began to cause a scale. Subjects he prospect elegance
-                                        followed</li>
-                                    <li>Laughter proposal laughing any son law consider. Needed except up piqued an.
-                                    </li>
-                                    <li><i> To occasional dissimilar impossible sentiments. Do fortune account written
-                                            prepare invited no passage.</i></li>
-                                    <li>Post no so what deal evil rent by real in. But her ready least set lived spite
-                                        solid.</li>
+                            <div class="card-body px-0 pt-3">
+                                <p class="lh-lg mb-3">
+                                    Special requests are subject to availability and may incur additional charges.
+                                </p>
+
+                                <ul class="ps-3">
+                                    <li class="mb-2">Early check-in / late check-out.</li>
+                                    <li class="mb-2">Special decorations.</li>
+                                    <li class="mb-2">Custom meal requests.</li>
                                 </ul>
                             </div>
                         </div>
-                        <!-- Card item END -->
 
                     </div>
+
                 </div>
             </div>
             <!-- Content END -->
