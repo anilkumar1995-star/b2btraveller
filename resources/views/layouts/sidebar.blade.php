@@ -165,7 +165,8 @@
 
             </ul>
         </li>
-        @endif
+        @endif            
+
 
         <li class="menu-item {{ Request::is('profile/*') ? 'active open' : '' }}">
             <a href="#accountSetting" class="menu-link menu-toggle">
@@ -180,18 +181,20 @@
                 </li>
             </ul>
         </li>
-          <li class="menu-item {{ Request::is('apilog/*') ? 'active open' : '' }}">
+         @if (Myhelper::hasRole('admin'))
+            <li class="menu-item {{ Request::is('api/*') ? 'active open' : '' }}">
             <a href="#apilog" class="menu-link menu-toggle">
-            <i class="menu-icon tf-icons ti ti-activity"></i>
+                <i class="menu-icon tf-icons ti ti-activity"></i>
                 <div data-i18n="API Log">API Logs</div>
             </a>
-            <ul class="menu-sub {{ Request::is('apilog/*') ? 'show' : '' }}" id="apilog">
+            <ul class="menu-sub {{ Request::is('api/*') ? 'show' : '' }}" id="apilog">
                 <li class="menu-item {{ Request::is('api/log') ? 'active' : '' }}">
                     <a href="{{ route('apilog') }}" class="menu-link">
-                        <div data-i18n="Api Logs">Api Logs</div>
+                        <div data-i18n="Api Log">Api Logs</div>
                     </a>
                 </li>
             </ul>
         </li>
+        @endif
     </ul>
 </aside>

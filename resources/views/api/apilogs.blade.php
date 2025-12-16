@@ -62,14 +62,17 @@ $(document).ready(function () {
 
     let options = [
         {
-            data: "id",
-            render: function (data, type, full) {
-                return `
-                    <strong>#${full?.id}</strong><br>
-                    <small class="text-muted">${full?.created_at}</small>
-                `;
-            }
-        },
+    data: "id",
+    render: function (data, type, full) {
+
+        let date = new Date(full.created_at).toLocaleString('en-IN', {});
+
+        return `
+            <strong>#${full.id}</strong><br>
+            <small class="text-muted">${date}</small>
+        `;
+    }
+},
         {
             data: "url",
             render: function (data, type, full) {
