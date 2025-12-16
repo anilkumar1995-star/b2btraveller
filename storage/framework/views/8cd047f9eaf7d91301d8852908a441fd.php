@@ -143,13 +143,14 @@
  
 
         <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
-            <div class="w-px-400 mx-auto sign-in-from mt-n5">
+           <div class="w-px-400 mx-auto sign-in-from mt-n5">
+
 
                 <div class="app-brand mb-4">
                     <a href="<?php echo e(route('home')); ?>" class="app-brand-link gap-2"></a>
                 </div>
 
-                <h3 class="mb-1 fw-bold mt-1">
+                <h3 class="mb-1 fw-bold">
                     Welcome to <?php echo e(@$company->companyname); ?>! 👋
                 </h3>
                 <p class="mb-4">
