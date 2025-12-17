@@ -530,11 +530,11 @@
                     displayFlightDetails(flightDetails?.departure, 'return');
                     displayFlightDetails(flightDetails?.return, 'return');
 
-                    getFareRules(resultIndex, traceId, 'return');
-                    getFareRules(resultIndex, traceId, 'return');
+                    getFareRules(depresultIndex, traceId, 'return');
+                    getFareRules(rettresultIndex, traceId, 'return');
 
-                    getFareQuote(resultIndex, traceId, 'return');
-                    getFareQuote(resultIndex, traceId, 'return');
+                    getFareQuote(depresultIndex, traceId, 'return');
+                    getFareQuote(rettresultIndex, traceId, 'return');
 
                 } else {
                     console.log('No flight details found in localStorage.');
