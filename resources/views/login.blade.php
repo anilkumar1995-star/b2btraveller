@@ -579,24 +579,24 @@
                             }
                         },
                        error: function(xhr) {
-    swal.close();
+                            swal.close();
 
-    let msg = 'Something went wrong, try again later.';
+                            let msg = 'Something went wrong, try again later.';
 
-    if (xhr.responseJSON) {
-        if (xhr.responseJSON.status) {
-            msg = xhr.responseJSON.status;
-        } else if (xhr.responseJSON.message) {
-            msg = xhr.responseJSON.message;
-        }
-    }
+                            if (xhr.responseJSON) {
+                                if (xhr.responseJSON.status) {
+                                    msg = xhr.responseJSON.status;
+                                } else if (xhr.responseJSON.message) {
+                                    msg = xhr.responseJSON.message;
+                                }
+                            }
 
-    $('b.errorText').text(msg);
+                            $('b.errorText').text(msg);
 
-    setTimeout(function () {
-        $('b.errorText').text('');
-    }, 5000);
-}
+                            setTimeout(function () {
+                                $('b.errorText').text('');
+                            }, 5000);
+                        }
 
                     });
                 }

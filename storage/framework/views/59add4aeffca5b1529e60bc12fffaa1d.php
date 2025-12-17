@@ -65,9 +65,7 @@ $(document).ready(function () {
     data: "id",
     render: function (data, type, full) {
 
-        let date = new Date(full.created_at).toLocaleString('en-IN', {
-        
-        });
+        let date = new Date(full.created_at).toLocaleString('en-IN', {});
 
         return `
             <strong>#${full.id}</strong><br>
