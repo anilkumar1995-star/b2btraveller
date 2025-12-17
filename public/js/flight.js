@@ -648,11 +648,9 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
                     let resultData = flightDetails?.Results || {};
 
                      console.log(resultData);
-                     
+
                     let segmnt = resultData.Segments[0];
                     const fmt = (num) => Number(num || 0).toLocaleString('en-IN');
-
-                    // Mini Fare rULE sECTION
 
                     let minifarehtml = '';
                     minifarehtml += `<div class="card-body">
