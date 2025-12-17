@@ -643,8 +643,12 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
             },
             success: function (response) {
                 if (response.status == 'success') {
+                   
                     let flightDetails = response.data;
                     let resultData = flightDetails?.Results || {};
+
+                     console.log(resultData);
+                     
                     let segmnt = resultData.Segments[0];
                     const fmt = (num) => Number(num || 0).toLocaleString('en-IN');
 
