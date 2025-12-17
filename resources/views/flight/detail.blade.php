@@ -7,7 +7,7 @@
     <main>
 
         <!-- =======================
-                                Main Content START -->
+                                        Main Content START -->
         <section>
             <div class="position-relative" data-sticky-container>
                 <div class="row g-4">
@@ -325,13 +325,15 @@
                                             </select>
                                         </div>
                                         <div class="col-md-4">
-                                            <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                                            <label class="form-label">Mobile Number<span
+                                                    class="text-danger">*</span></label>
                                             <input type="text" class="form-control required-contact"
                                                 placeholder="Enter your mobile number" name="mobileNo">
                                         </div>
 
                                         <div class="col-md-5">
-                                            <label class="form-label">Email Address<span class="text-danger">*</span></label>
+                                            <label class="form-label">Email Address<span
+                                                    class="text-danger">*</span></label>
                                             <input type="email" class="form-control required-contact"
                                                 placeholder="Enter your email address" name="emailId">
                                         </div>
@@ -378,8 +380,8 @@
 
                                     <p class="mb-2">The Cancellation penalty on this booking will depend on how close
                                         to the departure date you cancel your ticket. View fare rules to know more</p>
-                                    <div><a href="#" class="btn p-0 mb-0 "
-                                            data-bs-toggle="modal" data-bs-target="#cancellation">
+                                    <div><a href="#" class="btn p-0 mb-0 " data-bs-toggle="modal"
+                                            data-bs-target="#cancellation">
                                             <i class="ti ti-eye"></i> <u class="text-decoration-underline">View Detail</u>
                                         </a></div>
                                 </div>
@@ -394,7 +396,7 @@
             </div>
         </section>
         <!-- =======================
-                                Main Content END -->
+                                        Main Content END -->
 
     </main>
     <!-- **************** MAIN CONTENT END **************** -->
@@ -500,17 +502,43 @@
     <script>
         $(document).ready(function() {
 
-            const storedFlight = localStorage.getItem('selectedFlightDetails');
-            const resultIndex = localStorage.getItem('ResultIndex');
-            const traceId = localStorage.getItem('TraceId');
-            if (storedFlight) {
-                const flightDetails = JSON.parse(storedFlight);
-                displayFlightDetails(flightDetails);
-                getFareRules(resultIndex, traceId);
-                getFareQuote(resultIndex, traceId);
+            const payload = JSON.parse(localStorage.getItem('payload'));
 
-            } else {
-                console.log('No flight details found in localStorage.');
+            if (payload.JourneyType == 1) {
+                const storedFlight = localStorage.getItem('selectedFlightDetails');
+                const resultIndex = localStorage.getItem('ResultIndex');
+                const traceId = localStorage.getItem('TraceId');
+                if (storedFlight) {
+                    const flightDetails = JSON.parse(storedFlight);
+                    displayFlightDetails(flightDetails);
+                    getFareRules(resultIndex, traceId);
+                    getFareQuote(resultIndex, traceId);
+
+                } else {
+                    console.log('No flight details found in localStorage.');
+                }
+            } else if (payload.JourneyType == 2) {
+
+                const storedFlight = localStorage.getItem('selectedFlightDetails');
+                const depresultIndex = localStorage.getItem('DepartureResultIndex');
+                const rettresultIndex = localStorage.getItem('ReturnResultIndex');
+                const traceId = localStorage.getItem('TraceId');
+
+                if (storedFlight) {
+                    const flightDetails = JSON.parse(storedFlight);
+                   
+                    displayFlightDetails(flightDetails?.departure, 'return');
+                    displayFlightDetails(flightDetails?.return, 'return');
+
+                    getFareRules(resultIndex, traceId, 'return');
+                    getFareRules(resultIndex, traceId, 'return');
+
+                    getFareQuote(resultIndex, traceId, 'return');
+                    getFareQuote(resultIndex, traceId, 'return');
+
+                } else {
+                    console.log('No flight details found in localStorage.');
+                }
             }
         });
     </script>

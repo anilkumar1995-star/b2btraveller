@@ -111,16 +111,17 @@ $('#flightSearchForm').on('submit', function (e) {
                 $('#flightSearchForm').find('button[type="submit"]').html('Find Ticket <i class="ti ti-arrow-right ps-3"></i>').attr('disabled', false);
             },
             success: function (response) {
-                // localstorage save payload
-
                 localStorage.setItem("payload", JSON.stringify(payload) || {});
 
-                $("#search_flight_list").html('');
+
+                $("#search_flight_list").html("");
                 $('.all_flight_list').addClass('d-none');
+
                 if (response.status == 'success') {
                     $('#summaryDetails').html('');
                     $('#btnfordetailsPage').html('');
                     $('#roundSummaryCard').addClass('d-none');
+
                     let results = response.data.Results || [];
                     if (results.length == 0) {
                         notify("❌ No flights found for selected route.", "error");
@@ -130,7 +131,8 @@ $('#flightSearchForm').on('submit', function (e) {
                     $('.all_flight_list').removeClass('d-none');
 
                     if (journeyType == 1) {
-                        $('#roundSummaryCard').addClass('d-none');
+                        $("#roundTabs").addClass("d-none");
+
                         results.forEach((group, i) => {
                             group.forEach((flight, j) => {
                                 let segs = flight.Segments[0];
@@ -586,7 +588,7 @@ function formatDuration(minutes) {
 }
 
 
-function getFareRules(resultIndex, traceId) {
+function getFareRules(resultIndex, traceId, trip = 'oneway') {
     if (resultIndex && traceId) {
         $.ajax({
             url: "/flight/farerule",
@@ -629,7 +631,7 @@ function getFareRules(resultIndex, traceId) {
     }
 }
 
-function getFareQuote(resultIndex, traceId) {
+function getFareQuote(resultIndex, traceId, trip = 'oneway') {
     if (resultIndex && traceId) {
         $.ajax({
             url: "/flight/farequote",
@@ -872,7 +874,7 @@ function getFareQuote(resultIndex, traceId) {
 }
 
 
-function displayFlightDetails(flightDetails) {
+function displayFlightDetails(flightDetails, trip = 'oneway') {
 
     let segs = flightDetails?.Segments[0] || [];
     let detailsHtml = '';
@@ -2248,6 +2250,17 @@ $(document).on("click", "#flightTabs .nav-link", function () {
 });
 
 function roundtripFlightResults(data) {
+
+    selectedRoundFlights = {
+        departure: null,
+        return: null
+    };
+    $('input[name="select_flight_0"]').prop('checked', false);
+    $('input[name="select_flight_1"]').prop('checked', false);
+
+    $("#roundTabs .nav-link").removeClass("active");
+    $("#roundTabs #tabDeparture").addClass("active");
+
     let results = data.Results || [];
 
     if (results.length < 2) {
@@ -2261,13 +2274,13 @@ function roundtripFlightResults(data) {
 }
 
 $("#tabDeparture").on("click", function () {
-    $(".nav-link").removeClass("active");
+    $("#roundTabs .nav-link").removeClass("active");
     $(this).addClass("active");
     renderRoundList(0);
 });
 
 $("#tabReturn").on("click", function () {
-    $(".nav-link").removeClass("active");
+    $("#roundTabs .nav-link").removeClass("active");
     $(this).addClass("active");
     renderRoundList(1);
 });
@@ -2587,21 +2600,16 @@ function renderRoundSummary(depFlight, retFlight) {
     $("#summaryDetails").html(html);
 }
 
-
-// Book Now Click
 $(document).on("click", ".btn-book-now-rtrip", function () {
     const encoded = $(this).attr('data-bookingflightdetails');
 
-    console.log(encoded);
-    return;
     try {
         const flight = JSON.parse(decodeURIComponent(encoded));
         if (flight) {
-            console.log("Booking Data:", flight);
-            notify("Roundtrip flights ready for booking ✈️", "success");
-            // localStorage.setItem('selectedFlightDetails', JSON.stringify(flight));
-            // localStorage.setItem("ResultIndex", flight?.ResultIndex || '');
-            // window.location.href = "/flight/detail";
+            localStorage.setItem('selectedFlightDetails', JSON.stringify(flight));
+            localStorage.setItem("DepartureResultIndex", flight?.departure.ResultIndex || '');
+            localStorage.setItem("ReturnResultIndex", flight?.return.ResultIndex || '');
+            window.location.href = "/flight/detail";
         } else {
             notify("Flight details not found!", "error");
         }
