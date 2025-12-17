@@ -164,9 +164,11 @@
                 <p class="mb-4">
                 Sign in to your account and begin your journey               
                 </p>
+                
                 <form action="{{ route('authCheck') }}" method="POST" class="login-form">
                     @csrf
-
+                <b class="errorText text-danger d-block mb-2"></b>
+                <b class="successText text-success d-block mb-2"></b>
                     <div class="mb-3">
                         <label class="form-label">Mobile No.</label>
                         <input type="tel"
@@ -576,21 +578,26 @@
                                 }
                             }
                         },
-                        error: function(errors) {
+                       error: function(xhr) {
                             swal.close();
-                            if (errors.status == '400') {
-                                $('b.errorText').text(errors.responseJSON.status);
-                                setTimeout(function() {
-                                    $('b.errorText').text('');
-                                }, 5000);
-                            } else {
-                                $('b.errorText').text(
-                                    'Something went wrong, try again later.');
-                                setTimeout(function() {
-                                    $('b.errorText').text('');
-                                }, 5000);
+
+                            let msg = 'Something went wrong, try again later.';
+
+                            if (xhr.responseJSON) {
+                                if (xhr.responseJSON.status) {
+                                    msg = xhr.responseJSON.status;
+                                } else if (xhr.responseJSON.message) {
+                                    msg = xhr.responseJSON.message;
+                                }
                             }
+
+                            $('b.errorText').text(msg);
+
+                            setTimeout(function () {
+                                $('b.errorText').text('');
+                            }, 5000);
                         }
+
                     });
                 }
             });
@@ -724,8 +731,8 @@
                         error: function(errors) {
                             form.find('button:submit').html('Submit').attr("disabled",
                                 false).removeClass('btn-secondary');
-                            if (errors.status == '422') {
-                                // notify(errors.responseJSON.errors[0], 'warning');
+                            if (errors.status == '400') {
+                                notify(errors.responseJSON.errors[0], 'warning');
                                 $('#emailError').text(errors.responseJSON.errors.email);
                                 $('#mobileError').text(errors.responseJSON.errors.mobile);
                                 $('#shopnameError').text(errors.responseJSON.errors

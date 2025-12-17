@@ -88,8 +88,8 @@ class UserController extends Controller
     public function login(Request $post)
     {
 
-        if (!empty($request['g-recaptcha-response'])) {
-            $Response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . env('re_Captcha_SecretKey') . "&response={$request['g-recaptcha-response']}");
+        if (!empty($post['g-recaptcha-response'])) {
+            $Response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . env('re_Captcha_SecretKey') . "&response={$post['g-recaptcha-response']}");
             $Return = json_decode($Response);
             if ($Return->success == false) {
                 return response()->json(['status' => "Your are a robot"], 400);
