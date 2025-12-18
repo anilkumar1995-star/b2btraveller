@@ -836,7 +836,6 @@ function getFareQuote(resultIndex, traceId, trip) {
                        datachargehtml = `<div class="p-3 text-muted">No date change charges available</div>`;
                     }
 
-
                     if (trip === 'departure') {
                         $('#departureMiniFare').html(minifarehtml);
                         $('#departureDateCharge').html(datachargehtml);
