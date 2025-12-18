@@ -98,11 +98,37 @@
                         <div class="row g-4 sticky-top">
 
                             <div class="col-md-6 col-xl-12">
-                                <div class="card bg-light rounded-2" id="fareChargeDetails">
+                                <div class="card rounded-2">
+                                    <!-- Tabs Header -->
+                                    <ul class="nav nav-tabs ms-0 w-100" id="fareTabs" role="tablist">
+                                        <li class="nav-item w-50" role="presentation">
+                                            <button class="nav-link active" id="departure-tab-fare" data-bs-toggle="tab"
+                                                data-bs-target="#departure" type="button" role="tab"
+                                                aria-controls="departure" aria-selected="true">
+                                                Departure
+                                            </button>
+                                        </li>
+                                        <li class="nav-item w-50 d-none" role="presentation" id="returntabfare">
+                                            <button class="nav-link" id="return-tab-fare" data-bs-toggle="tab"
+                                                data-bs-target="#return" type="button" role="tab"
+                                                aria-controls="return" aria-selected="false">
+                                                Return
+                                            </button>
+                                        </li>
+                                    </ul>
 
+                                    <!-- Tabs Content -->
+                                    <div class="tab-content p-3" id="fareTabsContent">
+                                        <div class="tab-pane fade show active bg-light rounded" id="departurefareChargeDetails" role="tabpanel"
+                                            aria-labelledby="departure-tab-fare">
+                                            
+                                        </div>
+                                        <div class="tab-pane fade bg-light rounded" id="returnfareChargeDetails" role="tabpanel"
+                                            aria-labelledby="return-tab-fare">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-
 
 
                             <div class="col-md-6 col-xl-12" id="couponSection">
@@ -231,7 +257,8 @@
                                         <li class="nav-item" role="presentation">
                                             <button class="nav-link rounded-end mb-0" id="tour-pills-tab-22"
                                                 data-bs-toggle="pill" data-bs-target="#tour-pills-tab22" type="button"
-                                                role="tab" aria-controls="tour-pills-tab22" aria-selected="false">Date
+                                                role="tab" aria-controls="tour-pills-tab22"
+                                                aria-selected="false">Date
                                                 Change Charge</button>
                                         </li>
                                     </ul>

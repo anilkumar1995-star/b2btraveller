@@ -786,7 +786,7 @@ function getFareQuote(resultIndex, traceId, trip) {
 
                     let datachargehtml = '';
                     if (resultData?.FareBreakdown?.length) {
-                       
+
                         datachargehtml += ` 
                             <div class="card-header border-bottom"> 
                                 <h5 class="card-title mb-0">
@@ -833,7 +833,7 @@ function getFareQuote(resultIndex, traceId, trip) {
                             </div>`;
 
                     } else {
-                       datachargehtml = `<div class="p-3 text-muted">No date change charges available</div>`;
+                        datachargehtml = `<div class="p-3 text-muted">No date change charges available</div>`;
                     }
 
                     if (trip === 'departure') {
@@ -847,11 +847,15 @@ function getFareQuote(resultIndex, traceId, trip) {
                     }
 
                     // Fare Section
+                    $('#returntabfare').addClass('d-none');
+                    if (trip === 'return') {
+                        $('#returntabfare').removeClass('d-none');
+                    }
+
                     let fare = resultData?.Fare || {};
                     let farehtml = '';
 
-                    farehtml = `
-                        <div class="card-header border-bottom bg-light d-flex justify-content-between align-items-center">
+                    farehtml += `<div class="card-header border-bottom bg-light d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Fare Summary</h5>
                                 <span class="badge ${resultData?.IsRefundable ? 'bg-success' : 'bg-danger'}">
                                 ${resultData?.IsRefundable ? 'Refundable' : 'Non-Refundable'}
@@ -876,11 +880,9 @@ function getFareQuote(resultIndex, traceId, trip) {
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center">
                                     <span class="h6 fw-normal mb-0">Base Fare
-                                        <a href="#" tabindex="0" data-bs-toggle="popover"
-                                            data-bs-trigger="focus" data-bs-placement="bottom"
-                                            data-bs-content="COVID-19 test required Vaccinated travelers can visit">
+                                        <span tabindex="0">
                                             <i class="ti ti-info-circle"></i>
-                                        </a>
+                                        </span>
                                     </span>
                                     <span class="fs-5">₹${fmt(fare?.BaseFare)}</span>
                                 </li>
@@ -914,7 +916,13 @@ function getFareQuote(resultIndex, traceId, trip) {
                         </div>
                     `;
 
-                    $("#fareChargeDetails").html(farehtml);
+                    if (trip === 'departure') {
+                        $("#departurefareChargeDetails").html(farehtml);
+                    }
+
+                    if (trip === 'return') {
+                        $("#returnfareChargeDetails").html(farehtml);
+                    }
 
                     // Baggage Section
                     if (resultData?.Segments[0].length == 0) {
