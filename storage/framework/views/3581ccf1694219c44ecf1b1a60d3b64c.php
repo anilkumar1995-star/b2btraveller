@@ -218,8 +218,8 @@
                         console.log('No SSR details found in localStorage.');
                     }
                 } else if (payload.JourneyType == 2) {
-                    notify('We will working on roundtrip ssr api integration', 'error');
-                    return;
+                    // notify('We will working on roundtrip ssr api integration', 'error');
+                    // return;
                     const depresultIndex = localStorage.getItem('DepartureResultIndex');
                     const rettresultIndex = localStorage.getItem('ReturnResultIndex');
                     const traceId = localStorage.getItem('TraceId');
