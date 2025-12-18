@@ -729,13 +729,20 @@ function getFareQuote(resultIndex, traceId, trip) {
                     let flightDetails = response.data;
                     let resultData = flightDetails?.Results || {};
 
-                    console.log(resultData);
-
                     let segmnt = resultData.Segments[0];
                     const fmt = (num) => Number(num || 0).toLocaleString('en-IN');
 
+                    $('#returnAccordion').hide();
+
+
+                    if (trip === 'return') {
+                        $('#returnAccordion').show();
+                    }
+
                     let minifarehtml = '';
-                    minifarehtml += `<div class="card-body">
+                    if (resultData?.MiniFareRules?.[0]?.length) {
+
+                        minifarehtml += `<div class="card-body">
                                 
                                 <div class="table-responsive-lg">
                                     <table class="table table-bordered rounded caption-bottom overflow-hidden mb-0">
@@ -755,31 +762,32 @@ function getFareQuote(resultIndex, traceId, trip) {
                                         
                                         <tbody class="border-top-0">`;
 
-                    resultData.MiniFareRules[0].forEach(mfare => {
-                        minifarehtml += `
+                        resultData.MiniFareRules[0].forEach(mfare => {
+                            minifarehtml += `
                                 <tr>
-                                    <td>${mfare?.JourneyPoints}</td>
-                                    <td>${mfare.Type}</td>
-                                    <td>${mfare.Details}</td>
+                                    <td>${mfare?.JourneyPoints || '-'}</td>
+                                    <td>${mfare.Type || '-'}</td>
+                                    <td>${mfare.Details || '-'}</td>
                                     <td>${mfare?.OnlineReissueAllowed ? 'Allowed' : 'Not Allowed'}</td>
                                     <td>${mfare?.OnlineRefundAllowed ? 'Allowed' : 'Not Allowed'}</td>
                                 </tr>
                                 `;
-                    });
+                        });
 
-                    minifarehtml += `</tbody>
+                        minifarehtml += `</tbody>
                                     </table>
                                 </div>
                                 
                             </div>`;
 
-
-                    $('#miniFareRules').html(minifarehtml);
-
-
+                    } else {
+                        minifarehtml = `<div class="p-3 text-muted">No mini fare rules available</div>`;
+                    }
 
                     let datachargehtml = '';
-                    datachargehtml += ` 
+                    if (resultData?.FareBreakdown?.length) {
+                       
+                        datachargehtml += ` 
                             <div class="card-header border-bottom"> 
                                 <h5 class="card-title mb-0">
                                     ✈️
@@ -806,9 +814,9 @@ function getFareQuote(resultIndex, traceId, trip) {
                                         </thead>
                                         
                                         <tbody class="border-top-0">`;
-                    resultData.FareBreakdown.forEach(fare => {
-                        let type = fare.PassengerType === 1 ? "Adult" : fare.PassengerType === 2 ? "Child" : "Infant";
-                        datachargehtml += `
+                        resultData.FareBreakdown.forEach(fare => {
+                            let type = fare.PassengerType === 1 ? "Adult" : fare.PassengerType === 2 ? "Child" : "Infant";
+                            datachargehtml += `
                                 <tr>
                                     <td>${type}</td>
                                     <td>₹${fare.BaseFare}</td>
@@ -816,15 +824,28 @@ function getFareQuote(resultIndex, traceId, trip) {
                                     <td>₹${resultData?.Fare.PublishedFare}</td>
                                 </tr>
                                 `;
-                    });
+                        });
 
-                    datachargehtml += `</tbody>
+                        datachargehtml += `</tbody>
                                     </table>
                                 </div>
                                 
                             </div>`;
 
-                    $('#datatchargeDet').html(datachargehtml);
+                    } else {
+                       datachargehtml = `<div class="p-3 text-muted">No date change charges available</div>`;
+                    }
+
+
+                    if (trip === 'departure') {
+                        $('#departureMiniFare').html(minifarehtml);
+                        $('#departureDateCharge').html(datachargehtml);
+                    }
+
+                    if (trip === 'return') {
+                        $('#returnMiniFare').html(minifarehtml);
+                        $('#returnDateCharge').html(datachargehtml);
+                    }
 
                     // Fare Section
                     let fare = resultData?.Fare || {};
@@ -899,7 +920,7 @@ function getFareQuote(resultIndex, traceId, trip) {
                     // Baggage Section
                     if (resultData?.Segments[0].length == 0) {
                         let bagDetHtml = '';
-                        
+
                         bagDetHtml += `<div class="card mb-2 border"><div class="card-header border-bottom px-4">
                                     <h4 class="card-title mb-0">Baggage Information for (${trip})</h4>
                                 </div>

@@ -106,7 +106,7 @@
 
 
                             <div class="col-md-6 col-xl-12" id="couponSection">
-                               
+
                             </div>
 
 
@@ -134,14 +134,14 @@
                 </div>
             </div>
         </section>
-        
+
     </main>
-    
+
     <div class="modal fade" id="cancellation" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
 
-                <div class="modal-header">
+                <div class="modal-header border-bottom pb-3">
                     <h5 class="modal-title" id="cancellationlabel">Cancellation, Date Change Charges & Mini Fare Rule</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -149,45 +149,122 @@
 
                 <div class="modal-body p-3">
 
-                    <ul class="nav nav-pills nav-justified nav-responsive border bg-opacity-10 rounded p-2 mb-3"
-                        id="tour-pills-tab" role="tablist">
+                    <div class="accordion" id="cancellationAccordion">
 
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-start active mb-0" id="tour-pills-tab-1"
-                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab1" type="button" role="tab"
-                                aria-controls="tour-pills-tab1" aria-selected="true">Mini Fare Charge</button>
-                        </li>
+                        <!-- Departure -->
+                        <div class="accordion-item border" id="departureAccordion">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#departureCollapse">
+                                    ✈️ Departure – Cancellation & Fare Rules
+                                </button>
+                            </h2>
+                            <div id="departureCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <ul class="nav nav-pills nav-justified nav-responsive border bg-opacity-10 rounded p-2 mb-3"
+                                        id="tour-pills-tab" role="tablist">
 
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-end mb-0" id="tour-pills-tab-2" data-bs-toggle="pill"
-                                data-bs-target="#tour-pills-tab2" type="button" role="tab"
-                                aria-controls="tour-pills-tab2" aria-selected="false">Date Change Charge</button>
-                        </li>
-                    </ul>
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-start active mb-0" id="tour-pills-tab-1"
+                                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab1" type="button"
+                                                role="tab" aria-controls="tour-pills-tab1" aria-selected="true">Mini
+                                                Fare Charge</button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-end mb-0" id="tour-pills-tab-2"
+                                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab2" type="button"
+                                                role="tab" aria-controls="tour-pills-tab2" aria-selected="false">Date
+                                                Change Charge</button>
+                                        </li>
+                                    </ul>
 
 
-                    <div class="tab-content mb-0" id="tour-pills-tabContent">
+                                    <div class="tab-content mb-0" id="tour-pills-tabContent">
 
 
-                        <div class="tab-pane fade show active" id="tour-pills-tab1" role="tabpanel"
-                            aria-labelledby="tour-pills-tab-1">
+                                        <div class="tab-pane fade show active" id="tour-pills-tab1" role="tabpanel"
+                                            aria-labelledby="tour-pills-tab-1">
 
-                            <div class="card border" id="miniFareRules">
+                                            {{-- <div id="miniFareRules"> --}}
+                                            <div id="departureMiniFare">
 
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="tab-pane fade" id="tour-pills-tab2" role="tabpanel"
+                                            aria-labelledby="tour-pills-tab-2">
+                                            {{-- <div id="datatchargeDet"> --}}
+                                            <div id="departureDateCharge">
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
+                        <!-- Return -->
+                        <div class="accordion-item border mt-3" id="returnAccordion">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#returnCollapse">
+                                    🔁 Return – Cancellation & Fare Rules
+                                </button>
+                            </h2>
+                            <div id="returnCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <ul class="nav nav-pills nav-justified nav-responsive border bg-opacity-10 rounded p-2 mb-3"
+                                        id="tour-pills-tab-return" role="tablist">
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-start active mb-0" id="tour-pills-tab-11"
+                                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab11" type="button"
+                                                role="tab" aria-controls="tour-pills-tab11" aria-selected="true">Mini
+                                                Fare Charge</button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-end mb-0" id="tour-pills-tab-22"
+                                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab22" type="button"
+                                                role="tab" aria-controls="tour-pills-tab22" aria-selected="false">Date
+                                                Change Charge</button>
+                                        </li>
+                                    </ul>
 
 
-                        <div class="tab-pane fade" id="tour-pills-tab2" role="tabpanel"
-                            aria-labelledby="tour-pills-tab-2">
-                            <div class="card border" id="datatchargeDet">
+                                    <div class="tab-content mb-0" id="tour-pills-tabContentReturn">
 
+
+                                        <div class="tab-pane fade show active" id="tour-pills-tab11" role="tabpanel"
+                                            aria-labelledby="tour-pills-tab-11">
+
+                                            <div id="returnMiniFare">
+
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="tab-pane fade" id="tour-pills-tab22" role="tabpanel"
+                                            aria-labelledby="tour-pills-tab-22">
+                                            <div id="returnDateCharge">
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
                             </div>
                         </div>
-
 
                     </div>
+
 
                 </div>
             </div>
