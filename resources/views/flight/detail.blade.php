@@ -10,19 +10,24 @@
                 <div class="row g-4">
                     <!-- Left Content START -->
                     <div class="col-xl-8">
+                        <div class="accordion" id="accordionExample">
+
+                            <!-- Accordion Item 2 -->
+                            <div class="accordion-item mb-3 border">
+                                <h2 class="accordion-header" id="headingTwo">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                        <div class="d-flex align-items-center" id="titleSection">
+                                    </button>
+                                </h2>
+                                <div id="collapseTwo" class="border-top accordion-collapse collapse"
+                                    aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body mt-3" id="getSelectFlightDetails">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="vstack gap-4">
-
-                            <!-- Title START -->
-                            <div class="d-flex align-items-center" id="titleSection">
-
-                            </div>
-                            <!-- Title END -->
-
-                            <!-- Ticket START -->
-                            <div class="card border" id="getSelectFlightDetails">
-
-                            </div>
-                            <!-- Ticket END -->
 
                             <!-- Information START -->
                             <div class="card border">
@@ -139,7 +144,7 @@
             </div>
         </section>
         <!-- =======================
-                                                            Main Content END -->
+                                                                    Main Content END -->
 
     </main>
     <!-- **************** MAIN CONTENT END **************** -->
@@ -162,8 +167,8 @@
                         id="tour-pills-tab" role="tablist">
                         <!-- Tab item -->
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link rounded-start active mb-0" id="tour-pills-tab-1" data-bs-toggle="pill"
-                                data-bs-target="#tour-pills-tab1" type="button" role="tab"
+                            <button class="nav-link rounded-start active mb-0" id="tour-pills-tab-1"
+                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab1" type="button" role="tab"
                                 aria-controls="tour-pills-tab1" aria-selected="true">Mini Fare Charge</button>
                         </li>
                         <!-- Tab item -->
@@ -217,9 +222,12 @@
                 <!-- Body -->
                 <div class="modal-body p-3">
                     <!-- Card START -->
-                    <div class="card border" id="importantInfoSection">
+                    {{-- <div class="card border" id="importantInfoSection">
 
-                    </div>
+                    </div> --}}
+                    <div class="card border" id="importantInfoSectionDeparture"></div>
+                    <div class="card border" id="importantInfoSectionReturn"></div>
+
                 </div>
             </div>
         </div>

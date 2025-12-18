@@ -588,10 +588,74 @@ function formatDuration(minutes) {
 }
 
 
+// function getFareRules(resultIndex, traceId, trip) {
+//     if (!resultIndex || !traceId) return;
+
+//     $('#importantInfoSection').html('');
+
+//     $.ajax({
+//         url: "/flight/farerule",
+//         method: "POST",
+//         data: {
+//             ResultIndex: resultIndex,
+//             TraceId: traceId,
+//             _token: $('meta[name="csrf-token"]').attr('content')
+//         },
+//         success: function (response) {
+
+//             if (response.status !== 'success') {
+//                 notify(response.message, "error");
+//                 return;
+//             }
+
+//             let flightDetails = response.data;
+//             localStorage.setItem("TraceId", flightDetails?.TraceId);
+
+//             let fareRules = flightDetails?.FareRules || [];
+
+//             if (fareRules.length === 0) {
+//                 $('#importantInfoSection').html('No Data Available');
+//                 return;
+//             }
+
+//             fareRules.forEach((rule, index) => {
+
+//                 let cardHtml = `
+//                     <div class="card mb-3">
+//                         <div class="card-header border-bottom">
+//                             <h5 class="card-title mb-0">
+//                                 ✈️ ${rule.Origin} - ${rule.Destination} [${rule.Airline}]
+//                                 <span class="badge bg-light text-success mb-2"><i class="ti ti-star fs-6 me-2"></i>Travel
+//                                     Hack ${index + 1 }</span>
+//                             </h5>
+//                         </div>
+
+//                         <div class="card-body mt-3">
+//                             ${rule.FareRuleDetail || 'No Fare Rules Available.'}
+//                         </div>
+//                     </div>
+//                 `;
+
+//                 $('#importantInfoSection').append(cardHtml);
+//             });
+
+//             $('#importantInfoSection table').addClass('w-100');
+//         },
+//         error: function () {
+//             notify("Failed to fetch fare rule. Please try again.", "error");
+//         }
+//     });
+// }
+
 function getFareRules(resultIndex, traceId, trip) {
     if (!resultIndex || !traceId) return;
 
-    $('#importantInfoSection').html('');
+    $('#importantInfoSectionDeparture').hide().html('');
+    $('#importantInfoSectionReturn').hide().html('');
+
+    let containerId = trip === 'departure' ? '#importantInfoSectionDeparture' : '#importantInfoSectionReturn';
+
+    $(containerId).show('');
 
     $.ajax({
         url: "/flight/farerule",
@@ -614,19 +678,20 @@ function getFareRules(resultIndex, traceId, trip) {
             let fareRules = flightDetails?.FareRules || [];
 
             if (fareRules.length === 0) {
-                $('#importantInfoSection').html('No Data Available');
+                $(containerId).html('No Data Available');
                 return;
             }
 
+            let cardHtml = '';
             fareRules.forEach((rule, index) => {
 
-                let cardHtml = `
+                cardHtml += `
                     <div class="card mb-3">
                         <div class="card-header border-bottom">
                             <h5 class="card-title mb-0">
                                 ✈️ ${rule.Origin} - ${rule.Destination} [${rule.Airline}]
                                 <span class="badge bg-light text-success mb-2"><i class="ti ti-star fs-6 me-2"></i>Travel
-                                    Hack ${index + 1 }</span>
+                                    Hack ${index + 1}</span>
                             </h5>
                         </div>
 
@@ -635,18 +700,17 @@ function getFareRules(resultIndex, traceId, trip) {
                         </div>
                     </div>
                 `;
-
-                $('#importantInfoSection').append(cardHtml);
             });
 
-            $('#importantInfoSection table').addClass('w-100');
+            $(containerId).html(cardHtml);
+
+            $(containerId + ' table').addClass('w-100');
         },
         error: function () {
             notify("Failed to fetch fare rule. Please try again.", "error");
         }
     });
 }
-
 
 
 function getFareQuote(resultIndex, traceId, trip) {
@@ -894,50 +958,155 @@ function getFareQuote(resultIndex, traceId, trip) {
 }
 
 
+// function displayFlightDetails(flightDetails, trip) {
+
+//     let segs = flightDetails?.Segments[0] || [];
+//     let detailsHtml = '';
+//     let titledetailsHtml = '';
+
+//     const fmtTime = (t) => new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+//     const fmtDate = (t) => new Date(t).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+
+//     titledetailsHtml = `<h1 class="display-4 mb-0"><i class="fa-solid fa-plane rtl-flip"></i></h1>
+
+//         <div class="ms-3">
+//             <ul class="list-inline mb-2">
+//                 <li class="list-inline-item me-2">
+//                     <h3 class="mb-0">${segs[0].Origin?.Airport?.CityName}(${segs[0].Origin?.Airport?.AirportCode || segs[0].Origin?.Airport?.CityCode})</h3>
+//                 </li>
+//                 <li class="list-inline-item me-2">
+//                     <h3 class="mb-0"><i class="ti ti-arrow-right"></i></h3>
+//                 </li>
+//                 <li class="list-inline-item me-0">
+//                     <h3 class="mb-0">${segs[0].Destination?.Airport?.CityName}(${segs[0].Destination?.Airport?.AirportCode || segs[0].Destination?.Airport?.CityCode})</h3>
+//                 </li>
+//             </ul>
+
+//             <ul class="nav nav-divider h6 fw-normal text-body mb-0">
+//                 <li class="nav-item">${fmtDate(segs[0].Origin?.DepTime)}</li>
+//                 <li class="nav-item">${segs.length - 1 != 0 ? segs.length - 1 : 'Non'} Stop</li>
+//             </ul>
+//         </div>`;
+
+//     // -------- MULTIPLE SEGMENTS LOOP --------
+//     detailsHtml += `<div class="card-header d-flex justify-content-between pb-0">
+//             <h6 class="fw-normal mb-0"><span class="text-body">Travel Class:</span> ${segs[0].CabinClass}</h6>
+//             <a href="#" class="btn p-0 mb-0"
+//                 data-bs-toggle="modal" data-bs-target="#ruleFare">
+//                 <i class="ti ti-eye me-1"></i> <u class="text-decoration-underline">Fare Rules</u>
+//             </a>
+//         </div>  
+//     <div class="card-body p-4">`;
+
+//     for (let i = 0; i < segs.length; i++) {
+
+//         let s = segs[i];
+
+//         detailsHtml += `
+//         <div class="row g-4 ">
+//             <div class="col-md-3 pt-5">
+//                 ✈️
+//                 <h6 class="fw-normal mb-0">${s.Airline.AirlineName}</h6>
+//                 <h6 class="fw-normal mb-0">(${s.Airline.AirlineCode} - ${s.Airline.FlightNumber})</h6>
+//             </div>
+
+//             <div class="col-sm-4 col-md-3">
+//                 <h4>${s.Origin.Airport.AirportCode}</h4>
+//                 <h6>${fmtTime(s.Origin.DepTime)}</h6>
+//                 <p>${fmtDate(s.Origin.DepTime)}</p>
+//                 <p>${s.Origin.Airport.AirportName} ${s.Origin.Airport.CityName}</p>
+//                 <p>Terminal: ${s.Origin.Airport.Terminal || 'N/A'}</p>
+//             </div>
+
+//             <div class="col-sm-4 col-md-3 text-center my-sm-auto">
+//                 <h5>${formatDuration(s.Duration)}</h5>
+
+//                 <div class="position-relative my-4">
+//                     <hr class="bg-primary opacity-5 position-relative">
+//                     <div class="icon-md bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle p-2">
+//                         <i class="fa-solid fa-plane"></i>
+//                     </div>
+//                 </div>
+//             </div>
+
+//             <div class="col-sm-4 col-md-3 text-end">
+//                 <h4>${s.Destination.Airport.AirportCode}</h4>
+//                 <h6>${fmtTime(s.Destination.ArrTime)}</h6>
+//                 <p>${fmtDate(s.Destination.ArrTime)}</p>
+//                 <p>${s.Destination.Airport.AirportName} ${s.Destination.Airport.CityName}</p>
+//                 <p>Terminal: ${s.Destination.Airport.Terminal || 'N/A'}</p>
+//             </div>
+//         </div>`;
+
+//         if (i < segs.length - 1) {
+//             let groundTime = calculateGroundTime(
+//                 s.Destination.ArrTime,
+//                 segs[i + 1].Origin.DepTime
+//             );
+
+//             detailsHtml += `
+//             <div class="bg-light rounded-2 text-center text-danger p-2 mb-4">
+//                 Ground Time at ${s.Destination.Airport.CityName}: ${groundTime}
+//             </div>`;
+//         }
+//     }
+
+//     detailsHtml += `</div>`;
+
+//     $('#titleSection').html(titledetailsHtml);
+//     $('#getSelectFlightDetails').html(detailsHtml);
+// }
+
 function displayFlightDetails(flightDetails, trip) {
 
+
     let segs = flightDetails?.Segments[0] || [];
+
+    let firstSeg = segs[0] || null;
+    let lastSeg = segs.length ? segs[segs.length - 1] : null;
+
     let detailsHtml = '';
     let titledetailsHtml = '';
 
     const fmtTime = (t) => new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const fmtDate = (t) => new Date(t).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 
-    titledetailsHtml = `<h1 class="display-4 mb-0"><i class="fa-solid fa-plane rtl-flip"></i></h1>
-
+    titledetailsHtml = `<h1 class="display-4 mb-0"><i class="fa-solid fa-plane rtl-flip fs-1"></i></h1>
         <div class="ms-3">
             <ul class="list-inline mb-2">
                 <li class="list-inline-item me-2">
-                    <h3 class="mb-0">${segs[0].Origin?.Airport?.CityName}(${segs[0].Origin?.Airport?.AirportCode || segs[0].Origin?.Airport?.CityCode})</h3>
+                    <h4 class="mb-0">${firstSeg.Origin?.Airport?.CityName}(${firstSeg.Origin?.Airport?.AirportCode || firstSeg.Origin?.Airport?.CityCode})</h4>
                 </li>
                 <li class="list-inline-item me-2">
-                    <h3 class="mb-0"><i class="ti ti-arrow-right"></i></h3>
+                    <h4 class="mb-0"><i class="ti ti-arrow-right"></i></h4>
                 </li>
                 <li class="list-inline-item me-0">
-                    <h3 class="mb-0">${segs[0].Destination?.Airport?.CityName}(${segs[0].Destination?.Airport?.AirportCode || segs[0].Destination?.Airport?.CityCode})</h3>
+                    <h4 class="mb-0">${lastSeg.Destination?.Airport?.CityName}(${lastSeg.Destination?.Airport?.AirportCode || lastSeg.Destination?.Airport?.CityCode})</h4>
                 </li>
             </ul>
 
             <ul class="nav nav-divider h6 fw-normal text-body mb-0">
                 <li class="nav-item">${fmtDate(segs[0].Origin?.DepTime)}</li>
-                <li class="nav-item">${segs.length - 1 != 0 ? segs.length - 1 : 'Non'} Stop</li>
+                <li class="nav-item">&nbsp;| &nbsp;${segs.length - 1 != 0 ? segs.length - 1 : 'Non'} Stop &nbsp;| &nbsp;</li>
+                <li class="nav-item badge bg-label-warning">${trip}</li>
             </ul>
         </div>`;
 
     // -------- MULTIPLE SEGMENTS LOOP --------
     detailsHtml += `<div class="card-header d-flex justify-content-between pb-0">
             <h6 class="fw-normal mb-0"><span class="text-body">Travel Class:</span> ${segs[0].CabinClass}</h6>
-            <a href="#" class="btn p-0 mb-0"
-                data-bs-toggle="modal" data-bs-target="#ruleFare">
-                <i class="ti ti-eye me-1"></i> <u class="text-decoration-underline">Fare Rules</u>
+            <a href="javascript:void(0)" 
+                class="btn p-0 mb-0"
+                data-bs-toggle="modal"
+                data-bs-target="#ruleFare">
+                <i class="ti ti-eye me-1"></i>
+                <u class="text-decoration-underline">Fare Rules (${trip})</u>
             </a>
         </div>  
     <div class="card-body p-4">`;
 
     for (let i = 0; i < segs.length; i++) {
-
         let s = segs[i];
-
         detailsHtml += `
         <div class="row g-4 ">
             <div class="col-md-3 pt-5">
@@ -945,7 +1114,6 @@ function displayFlightDetails(flightDetails, trip) {
                 <h6 class="fw-normal mb-0">${s.Airline.AirlineName}</h6>
                 <h6 class="fw-normal mb-0">(${s.Airline.AirlineCode} - ${s.Airline.FlightNumber})</h6>
             </div>
-
             <div class="col-sm-4 col-md-3">
                 <h4>${s.Origin.Airport.AirportCode}</h4>
                 <h6>${fmtTime(s.Origin.DepTime)}</h6>
@@ -953,10 +1121,8 @@ function displayFlightDetails(flightDetails, trip) {
                 <p>${s.Origin.Airport.AirportName} ${s.Origin.Airport.CityName}</p>
                 <p>Terminal: ${s.Origin.Airport.Terminal || 'N/A'}</p>
             </div>
-
             <div class="col-sm-4 col-md-3 text-center my-sm-auto">
                 <h5>${formatDuration(s.Duration)}</h5>
-
                 <div class="position-relative my-4">
                     <hr class="bg-primary opacity-5 position-relative">
                     <div class="icon-md bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle p-2">
@@ -964,7 +1130,6 @@ function displayFlightDetails(flightDetails, trip) {
                     </div>
                 </div>
             </div>
-
             <div class="col-sm-4 col-md-3 text-end">
                 <h4>${s.Destination.Airport.AirportCode}</h4>
                 <h6>${fmtTime(s.Destination.ArrTime)}</h6>
@@ -980,8 +1145,7 @@ function displayFlightDetails(flightDetails, trip) {
                 segs[i + 1].Origin.DepTime
             );
 
-            detailsHtml += `
-            <div class="bg-light rounded-2 text-center text-danger p-2 mb-4">
+            detailsHtml += `<div class="bg-light rounded-2 text-center text-danger p-2 mb-4">
                 Ground Time at ${s.Destination.Airport.CityName}: ${groundTime}
             </div>`;
         }
@@ -989,9 +1153,30 @@ function displayFlightDetails(flightDetails, trip) {
 
     detailsHtml += `</div>`;
 
-    $('#titleSection').html(titledetailsHtml);
-    $('#getSelectFlightDetails').html(detailsHtml);
+    if (trip === 'return') {
+        // Create a new accordion item for return
+        $('#accordionExample').append(`
+            <div class="accordion-item mb-3 border">
+                <h2 class="accordion-header" id="headingReturn">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseReturn" aria-expanded="false" aria-controls="collapseReturn">
+                        <div class="d-flex align-items-center" id="titleSectionReturn"></div>
+                    </button>
+                </h2>
+                <div id="collapseReturn" class="border-top accordion-collapse collapse" aria-labelledby="headingReturn"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body mt-3" id="getSelectFlightDetailsReturn"></div>
+                </div>
+            </div>
+        `);
+        $('#titleSectionReturn').html(titledetailsHtml);
+        $('#getSelectFlightDetailsReturn').html(detailsHtml);
+    } else {
+        $('#titleSection').html(titledetailsHtml);
+        $('#getSelectFlightDetails').html(detailsHtml);
+    }
 }
+
 
 function calculateGroundTime(prevArr, nextDep) {
     let diffMs = new Date(nextDep) - new Date(prevArr);
