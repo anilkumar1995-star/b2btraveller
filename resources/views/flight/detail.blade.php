@@ -3,16 +3,16 @@
 @section('pagetitle', 'Booking Details')
 
 @section('content')
-    <!-- **************** MAIN CONTENT START **************** -->
+
     <main>
         <section>
             <div class="position-relative" data-sticky-container>
                 <div class="row g-4">
-                    <!-- Left Content START -->
+
                     <div class="col-xl-8">
                         <div class="accordion" id="accordionExample">
 
-                            <!-- Accordion Item 2 -->
+
                             <div class="accordion-item mb-3 border">
                                 <h2 class="accordion-header" id="headingTwo">
                                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -27,18 +27,11 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="vstack gap-4">
 
-                            <!-- Information START -->
-                            <div class="card border">
-                                <!-- Card header -->
-                                <div class="card-header border-bottom px-4">
-                                    <h4 class="card-title mb-0">Baggage Information</h4>
-                                </div>
-                                <!-- Card body -->
-                                <div class="card-body py-4" id="baggageInfo">
-                                    No Data Available
-                                </div>
+
+                            <div id="baggageInfo">
                             </div>
 
 
@@ -60,7 +53,7 @@
 
                                     <div id="travelerAccordion" class="accordion accordion-icon accordion-bg-light"></div>
 
-                                    <!-- Contact Details -->
+
                                     <h5 class="mt-4">Booking details will be sent to</h5>
                                     <div class="row g-3 g-md-4">
                                         <div class="col-md-3">
@@ -97,29 +90,27 @@
 
                         </div>
                     </div>
-                    <!-- Left Content END -->
 
-                    <!-- Right content START -->
+
+
                     <aside class="col-xl-4">
 
                         <div class="row g-4 sticky-top">
-                            <!-- Fare summary START -->
+
                             <div class="col-md-6 col-xl-12">
                                 <div class="card bg-light rounded-2" id="fareChargeDetails">
 
                                 </div>
                             </div>
-                            <!-- Fare summary END -->
 
-                            <!-- Coupon START -->
-                            <div class="col-md-6 col-xl-12">
-                                <div class="card card-body bg-light" id="couponSection">
 
-                                </div>
+
+                            <div class="col-md-6 col-xl-12" id="couponSection">
+                               
                             </div>
-                            <!-- Coupon END -->
 
-                            <!-- Cancel policy START -->
+
+
                             <div class="col-md-6 col-xl-12">
                                 <div class="card card-body border p-4">
                                     <div class="cardt-title mb-3">
@@ -134,44 +125,39 @@
                                         </a></div>
                                 </div>
                             </div>
-                            <!-- Cancel policy END -->
+
                         </div>
 
                     </aside>
-                    <!-- Right content END -->
+
 
                 </div>
             </div>
         </section>
-        <!-- =======================
-                                                                    Main Content END -->
-
+        
     </main>
-    <!-- **************** MAIN CONTENT END **************** -->
-
-
-    <!-- Cancellation modal START -->
+    
     <div class="modal fade" id="cancellation" aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <!-- Title -->
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="cancellationlabel">Cancellation, Date Change Charges & Mini Fare Rule</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <!-- Body -->
+
                 <div class="modal-body p-3">
 
                     <ul class="nav nav-pills nav-justified nav-responsive border bg-opacity-10 rounded p-2 mb-3"
                         id="tour-pills-tab" role="tablist">
-                        <!-- Tab item -->
+
                         <li class="nav-item" role="presentation">
                             <button class="nav-link rounded-start active mb-0" id="tour-pills-tab-1"
                                 data-bs-toggle="pill" data-bs-target="#tour-pills-tab1" type="button" role="tab"
                                 aria-controls="tour-pills-tab1" aria-selected="true">Mini Fare Charge</button>
                         </li>
-                        <!-- Tab item -->
+
                         <li class="nav-item" role="presentation">
                             <button class="nav-link rounded-end mb-0" id="tour-pills-tab-2" data-bs-toggle="pill"
                                 data-bs-target="#tour-pills-tab2" type="button" role="tab"
@@ -179,10 +165,10 @@
                         </li>
                     </ul>
 
-                    <!-- Tab content START -->
+
                     <div class="tab-content mb-0" id="tour-pills-tabContent">
 
-                        <!-- Content item START -->
+
                         <div class="tab-pane fade show active" id="tour-pills-tab1" role="tabpanel"
                             aria-labelledby="tour-pills-tab-1">
 
@@ -190,38 +176,37 @@
 
                             </div>
                         </div>
-                        <!-- Content item END -->
 
-                        <!-- Content item START -->
+
+
                         <div class="tab-pane fade" id="tour-pills-tab2" role="tabpanel"
                             aria-labelledby="tour-pills-tab-2">
                             <div class="card border" id="datatchargeDet">
 
                             </div>
                         </div>
-                        <!-- Content item END -->
+
 
                     </div>
-                    <!-- Tab content END -->
+
                 </div>
             </div>
         </div>
     </div>
-    <!-- Cancellation modal END -->
 
-    <!-- Baggage and fare START -->
+
     <div class="modal fade" id="ruleFare" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
-                <!-- Title -->
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="ruleFarelabel">Fare Rules</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
-                <!-- Body -->
+
                 <div class="modal-body p-3">
-                    <!-- Card START -->
+
                     {{-- <div class="card border" id="importantInfoSection">
 
                     </div> --}}
@@ -232,7 +217,7 @@
             </div>
         </div>
     </div>
-    <!-- Baggage and fare END -->
+
 
 @endsection
 

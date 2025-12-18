@@ -777,6 +777,7 @@ function getFareQuote(resultIndex, traceId, trip) {
                     $('#miniFareRules').html(minifarehtml);
 
 
+
                     let datachargehtml = '';
                     datachargehtml += ` 
                             <div class="card-header border-bottom"> 
@@ -896,53 +897,77 @@ function getFareQuote(resultIndex, traceId, trip) {
                     $("#fareChargeDetails").html(farehtml);
 
                     // Baggage Section
-                    let bagDetHtml = '';
-                    bagDetHtml = `
-                        <div class="table-responsive-lg">
-                            <table class="table table-bordered rounded caption-bottom overflow-hidden mb-0">
-                            <thead class="table-dark border-light">
-                                    <tr>
-                                        <th scope="col">Baggage Type</th>
-                                        <th scope="col">Check In</th>
-                                        <th scope="col">Cabin</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="border-top-0">
-                        `;
+                    if (resultData?.Segments[0].length == 0) {
+                        let bagDetHtml = '';
+                        
+                        bagDetHtml += `<div class="card mb-2 border"><div class="card-header border-bottom px-4">
+                                    <h4 class="card-title mb-0">Baggage Information for (${trip})</h4>
+                                </div>
 
-                    resultData?.Segments[0].forEach((seg, index) => {
-                        bagDetHtml += `
-                                <tr>
-                                    <td>Adult 🧳 (Segment ${index + 1} - ${seg.Craft})</td>
-                                    <td>${seg.Baggage}</td>
-                                    <td>${seg.CabinBaggage}</td>
-                                </tr>
+                            <div class="card-body py-4">
+                                <div class="table-responsive-lg">
+                                <table class="table table-bordered rounded caption-bottom overflow-hidden mb-0">
+                                <thead class="table-dark border-light">
+                                        <tr>
+                                            <th scope="col">Baggage Type</th>
+                                            <th scope="col">Check In</th>
+                                            <th scope="col">Cabin</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="border-top-0">
                             `;
-                    });
 
-                    bagDetHtml += `
-                                </tbody>
-                            </table>
+                        resultData?.Segments[0].forEach((seg, index) => {
+                            bagDetHtml += `
+                                    <tr>
+                                        <td>Adult 🧳 (Segment ${index + 1} - ${seg.Craft})</td>
+                                        <td>${seg.Baggage}</td>
+                                        <td>${seg.CabinBaggage}</td>
+                                    </tr>
+                                `;
+                        });
+
+                        bagDetHtml += `
+                                    </tbody>
+                                </table>
+                            </div>           
+                        </div>
                         </div>`;
 
-                    $('#baggageInfo').html(bagDetHtml);
+                        $('#baggageInfo').append(bagDetHtml);
+                    } else {
+                        $('#baggageInfo').append(`<div class="card border mb-2">
+                            <div class="card-header border-bottom px-4">
+                                    <h4 class="card-title mb-0">Baggage Information for (${trip})</h4>
+                                </div>
+                                <div class="text-center text-danger py-3">
+                                    No baggage data available
+                                </div>
+                            </div>
+                        `);
+                    }
 
                     // Coupon Section
+
+                    $('#couponSectiondeparture').hide().html('');
+                    $('#couponSectionreturn').hide().html('');
                     if (resultData?.IsCouponAppilcable) {
                         let couponHtml = '';
-                        couponHtml = `<form>
+
+                        couponHtml += ` <div class="card card-body bg-light mb-3">
+                                 <form>
                                     <div class="card-title">
-                                        <h5>Offer & Discount</h5>
+                                        <h5>Offer & Discount for (${trip})</h5>
                                     </div>
-                                    
+
                                     <div class="input-group mt-2">
                                         <input class="form-control form-control" placeholder="Coupon code">
                                         <button type="button" class="btn btn-primary">Apply</button>
                                     </div>
-                                </form>`;
-                        $('#couponSection').html(couponHtml);
+                                </form>
+                        </div>`;
+                        $('#couponSection').append(couponHtml);
                     }
-
                     // Passenger Form
                     generateTravelerForm(resultData);
                 } else {
@@ -957,105 +982,6 @@ function getFareQuote(resultIndex, traceId, trip) {
     }
 }
 
-
-// function displayFlightDetails(flightDetails, trip) {
-
-//     let segs = flightDetails?.Segments[0] || [];
-//     let detailsHtml = '';
-//     let titledetailsHtml = '';
-
-//     const fmtTime = (t) => new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-//     const fmtDate = (t) => new Date(t).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
-
-//     titledetailsHtml = `<h1 class="display-4 mb-0"><i class="fa-solid fa-plane rtl-flip"></i></h1>
-
-//         <div class="ms-3">
-//             <ul class="list-inline mb-2">
-//                 <li class="list-inline-item me-2">
-//                     <h3 class="mb-0">${segs[0].Origin?.Airport?.CityName}(${segs[0].Origin?.Airport?.AirportCode || segs[0].Origin?.Airport?.CityCode})</h3>
-//                 </li>
-//                 <li class="list-inline-item me-2">
-//                     <h3 class="mb-0"><i class="ti ti-arrow-right"></i></h3>
-//                 </li>
-//                 <li class="list-inline-item me-0">
-//                     <h3 class="mb-0">${segs[0].Destination?.Airport?.CityName}(${segs[0].Destination?.Airport?.AirportCode || segs[0].Destination?.Airport?.CityCode})</h3>
-//                 </li>
-//             </ul>
-
-//             <ul class="nav nav-divider h6 fw-normal text-body mb-0">
-//                 <li class="nav-item">${fmtDate(segs[0].Origin?.DepTime)}</li>
-//                 <li class="nav-item">${segs.length - 1 != 0 ? segs.length - 1 : 'Non'} Stop</li>
-//             </ul>
-//         </div>`;
-
-//     // -------- MULTIPLE SEGMENTS LOOP --------
-//     detailsHtml += `<div class="card-header d-flex justify-content-between pb-0">
-//             <h6 class="fw-normal mb-0"><span class="text-body">Travel Class:</span> ${segs[0].CabinClass}</h6>
-//             <a href="#" class="btn p-0 mb-0"
-//                 data-bs-toggle="modal" data-bs-target="#ruleFare">
-//                 <i class="ti ti-eye me-1"></i> <u class="text-decoration-underline">Fare Rules</u>
-//             </a>
-//         </div>  
-//     <div class="card-body p-4">`;
-
-//     for (let i = 0; i < segs.length; i++) {
-
-//         let s = segs[i];
-
-//         detailsHtml += `
-//         <div class="row g-4 ">
-//             <div class="col-md-3 pt-5">
-//                 ✈️
-//                 <h6 class="fw-normal mb-0">${s.Airline.AirlineName}</h6>
-//                 <h6 class="fw-normal mb-0">(${s.Airline.AirlineCode} - ${s.Airline.FlightNumber})</h6>
-//             </div>
-
-//             <div class="col-sm-4 col-md-3">
-//                 <h4>${s.Origin.Airport.AirportCode}</h4>
-//                 <h6>${fmtTime(s.Origin.DepTime)}</h6>
-//                 <p>${fmtDate(s.Origin.DepTime)}</p>
-//                 <p>${s.Origin.Airport.AirportName} ${s.Origin.Airport.CityName}</p>
-//                 <p>Terminal: ${s.Origin.Airport.Terminal || 'N/A'}</p>
-//             </div>
-
-//             <div class="col-sm-4 col-md-3 text-center my-sm-auto">
-//                 <h5>${formatDuration(s.Duration)}</h5>
-
-//                 <div class="position-relative my-4">
-//                     <hr class="bg-primary opacity-5 position-relative">
-//                     <div class="icon-md bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle p-2">
-//                         <i class="fa-solid fa-plane"></i>
-//                     </div>
-//                 </div>
-//             </div>
-
-//             <div class="col-sm-4 col-md-3 text-end">
-//                 <h4>${s.Destination.Airport.AirportCode}</h4>
-//                 <h6>${fmtTime(s.Destination.ArrTime)}</h6>
-//                 <p>${fmtDate(s.Destination.ArrTime)}</p>
-//                 <p>${s.Destination.Airport.AirportName} ${s.Destination.Airport.CityName}</p>
-//                 <p>Terminal: ${s.Destination.Airport.Terminal || 'N/A'}</p>
-//             </div>
-//         </div>`;
-
-//         if (i < segs.length - 1) {
-//             let groundTime = calculateGroundTime(
-//                 s.Destination.ArrTime,
-//                 segs[i + 1].Origin.DepTime
-//             );
-
-//             detailsHtml += `
-//             <div class="bg-light rounded-2 text-center text-danger p-2 mb-4">
-//                 Ground Time at ${s.Destination.Airport.CityName}: ${groundTime}
-//             </div>`;
-//         }
-//     }
-
-//     detailsHtml += `</div>`;
-
-//     $('#titleSection').html(titledetailsHtml);
-//     $('#getSelectFlightDetails').html(detailsHtml);
-// }
 
 function displayFlightDetails(flightDetails, trip) {
 
