@@ -1352,6 +1352,9 @@ function getSSRDetails(resultIndex, traceId, trip) {
                 if (response.status == 'success') {
 
                     console.log(response);
+                    if(trip == 'return'){
+                        return;
+                    }
 
                     let searchPayload = JSON.parse(localStorage.getItem('payload')) || {};
                     let adults = parseInt(searchPayload.AdultCount) || 1;
