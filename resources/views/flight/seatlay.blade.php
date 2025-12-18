@@ -3,16 +3,18 @@
 @section('pagetitle', 'Seat Layout Details')
 
 @section('content')
-    <div class="preloader">
+    <div class="preloader text-center">
         <div class="preloader-item">
             <div class="spinner-grow text-primary"></div>
         </div>
     </div>
+
     <div class="pb-4 d-none" id="seatLayoutContainer">
         <div class="card shadow-sm mb-3">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <p class="mb-0 text-secondary" style="font-size: 15px;">
-                    📢 Note: <b class="text-warning">You may proceed with the booking without selecting any optional SSR (Seat, Baggage, Meal) services.</b>
+                    📢 Note: <b class="text-warning">You may proceed with the booking without selecting any optional SSR
+                        (Seat, Baggage, Meal) services.</b>
                 </p>
 
                 <button class="btn btn-primary" id="proceedBookingBtn">
@@ -206,20 +208,37 @@
             localStorage.removeItem('selectedmeal');
             localStorage.removeItem('selectedBaggage');
 
+            const payload = JSON.parse(localStorage.getItem('payload'));
             const travelerDet = JSON.parse(localStorage.getItem('travelerDetails'));
 
             if (travelerDet) {
-                const resultIndex = localStorage.getItem('ResultIndex');
-                const traceId = localStorage.getItem('TraceId');
-                if (resultIndex && traceId) {
-                    getSSRDetails(resultIndex, traceId);
+                if (payload.JourneyType == 1) {
+                    const resultIndex = localStorage.getItem('ResultIndex');
+                    const traceId = localStorage.getItem('TraceId');
+                    if (resultIndex && traceId) {
+                        getSSRDetails(resultIndex, traceId, 'departure');
 
-                } else {
-                    console.log('No SSR details found in localStorage.');
+                    } else {
+                        console.log('No SSR details found in localStorage.');
+                    }
+                } else if (payload.JourneyType == 2) {
+                    notify('We will working on roundtrip ssr api integration', 'error');
+                    return;
+                    const depresultIndex = localStorage.getItem('DepartureResultIndex');
+                    const rettresultIndex = localStorage.getItem('ReturnResultIndex');
+                    const traceId = localStorage.getItem('TraceId');
+
+                    if (depresultIndex && rettresultIndex && traceId) {
+                        getSSRDetails(depresultIndex, traceId, 'departure');
+                        getSSRDetails(rettresultIndex, traceId, 'return');
+                    } else {
+                        console.log('No SSR details found in localStorage.');
+                    }
                 }
             } else {
                 window.location.href = "/flight/detail";
             }
+
         });
     </script>
 @endpush

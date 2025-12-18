@@ -925,7 +925,7 @@ function getFareQuote(resultIndex, traceId, trip) {
                     }
 
                     // Baggage Section
-                    if (resultData?.Segments[0].length == 0) {
+                    if (resultData?.Segments[0].length != 0) {
                         let bagDetHtml = '';
 
                         bagDetHtml += `<div class="card mb-2 border"><div class="card-header border-bottom px-4">
@@ -1327,7 +1327,8 @@ function generateTravelerForm(response) {
 }
 
 
-function getSSRDetails(resultIndex, traceId) {
+function getSSRDetails(resultIndex, traceId, trip) {
+
     if (resultIndex && traceId) {
         $('#seatLayoutContainer').addClass('d-none');
         $('.preloader').removeClass('d-none');
