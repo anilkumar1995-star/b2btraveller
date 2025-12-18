@@ -6,7 +6,7 @@
     <main>
 
         <!-- =======================
-                                        Main Content START -->
+                                                        Main Content START -->
         <section>
             <div class="position-relative" data-sticky-container>
                 <div class="row g-4">
@@ -143,7 +143,7 @@
             </div>
         </section>
         <!-- =======================
-                                        Main Content END -->
+                                                        Main Content END -->
 
     </main>
     <!-- **************** MAIN CONTENT END **************** -->
@@ -162,7 +162,7 @@
                 <!-- Body -->
                 <div class="modal-body p-3">
 
-                    <ul class="nav nav-pills nav-justified nav-responsive bg-primary bg-opacity-10 rounded p-2 mb-3"
+                    <ul class="nav nav-pills nav-justified nav-responsive border bg-opacity-10 rounded p-2 mb-3"
                         id="tour-pills-tab" role="tablist">
                         <!-- Tab item -->
                         <li class="nav-item" role="presentation">
@@ -221,24 +221,15 @@
                 <!-- Body -->
                 <div class="modal-body p-3">
                     <!-- Card START -->
-                    <div class="card border">
-                        <!-- Card header -->
-                        <div class="card-header border-bottom" id="fareRulehead">
-                            <!-- Title -->
-
-                        </div>
-
-                        <!-- Card body -->
-                        <div class="card-body mt-3" id="importantInfoSection">
-
-                        </div>
-
+                    <div class="card border" id="importantInfoSection">
+                        
                     </div>
                 </div>
             </div>
         </div>
     </div>
     <!-- Baggage and fare END -->
+
 <?php $__env->stopSection(); ?>
 
 
@@ -249,36 +240,44 @@
     <script>
         $(document).ready(function() {
 
-
             const payload = JSON.parse(localStorage.getItem('payload'));
 
-            console.log(payload?.JourneyType);
             if (payload.JourneyType == 1) {
-
-
                 const storedFlight = localStorage.getItem('selectedFlightDetails');
                 const resultIndex = localStorage.getItem('ResultIndex');
                 const traceId = localStorage.getItem('TraceId');
+
+                $('#return-tab').hide();
+                $('#returnFareRule').remove();
+
                 if (storedFlight) {
                     const flightDetails = JSON.parse(storedFlight);
-                    displayFlightDetails(flightDetails);
-                    getFareRules(resultIndex, traceId);
-                    getFareQuote(resultIndex, traceId);
+                    displayFlightDetails(flightDetails, 'departure');
+                    getFareRules(resultIndex, traceId, 'departure');
+                    getFareQuote(resultIndex, traceId, 'departure');
 
                 } else {
                     console.log('No flight details found in localStorage.');
                 }
             } else if (payload.JourneyType == 2) {
+
                 const storedFlight = localStorage.getItem('selectedFlightDetails');
                 const depresultIndex = localStorage.getItem('DepartureResultIndex');
                 const rettresultIndex = localStorage.getItem('ReturnResultIndex');
                 const traceId = localStorage.getItem('TraceId');
+
+                $('#return-tab').show();
                 if (storedFlight) {
                     const flightDetails = JSON.parse(storedFlight);
-                    console.log(flightDetails);
-                    // displayFlightDetails(flightDetails);
-                    // getFareRules(resultIndex, traceId);
-                    // getFareQuote(resultIndex, traceId);
+
+                    displayFlightDetails(flightDetails?.departure, 'departure');
+                    displayFlightDetails(flightDetails?.return, 'return');
+
+                    getFareRules(depresultIndex, traceId, 'departure');
+                    getFareRules(rettresultIndex, traceId, 'return');
+
+                    getFareQuote(depresultIndex, traceId, 'departure');
+                    getFareQuote(rettresultIndex, traceId, 'return');
 
                 } else {
                     console.log('No flight details found in localStorage.');

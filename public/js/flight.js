@@ -588,50 +588,68 @@ function formatDuration(minutes) {
 }
 
 
-function getFareRules(resultIndex, traceId, trip = 'oneway') {
-    if (resultIndex && traceId) {
-        $.ajax({
-            url: "/flight/farerule",
-            method: "POST",
-            data: {
-                ResultIndex: resultIndex,
-                TraceId: traceId,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (response) {
-                if (response.status == 'success') {
-                    let flightDetails = response.data;
+function getFareRules(resultIndex, traceId, trip) {
+    if (!resultIndex || !traceId) return;
 
-                    // trace id store in localstorage
+    $('#importantInfoSection').html('');
 
-                    localStorage.setItem("TraceId", flightDetails?.TraceId);
+    $.ajax({
+        url: "/flight/farerule",
+        method: "POST",
+        data: {
+            ResultIndex: resultIndex,
+            TraceId: traceId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
 
-                    if (flightDetails?.FareRules.length > 0) {
-                        $('#fareRulehead').html(`<h5 class="card-title mb-0">
-                                ✈️
-                               ${flightDetails.FareRules[0].Origin} - ${flightDetails.FareRules[0].Destination}  [${flightDetails.FareRules[0].Airline}] 
-                               <span class="badge bg-light text-success mb-2"><i class="ti ti-star-fill me-2"></i>Travel
-                                 Hack</span>
-                            </h5>`);
-                        $('#importantInfoSection').html(flightDetails.FareRules[0].FareRuleDetail || 'No Fare Rules Available.');
-                        $('#importantInfoSection table').addClass('w-100');
-                    } else {
-                        $('#fareRulehead').html(`<h5 class="card-title mb-0">No Header Data</h4>`);
-                        $('#importantInfoSection').html('No Data Available');
-                    }
-                } else {
-                    notify(response.message, "error");
-                }
-            },
-            error: function (xhr) {
-                notify("Failed to fetch fare quote. Please try again.", "error");
+            if (response.status !== 'success') {
+                notify(response.message, "error");
+                return;
             }
-        });
 
-    }
+            let flightDetails = response.data;
+            localStorage.setItem("TraceId", flightDetails?.TraceId);
+
+            let fareRules = flightDetails?.FareRules || [];
+
+            if (fareRules.length === 0) {
+                $('#importantInfoSection').html('No Data Available');
+                return;
+            }
+
+            fareRules.forEach((rule, index) => {
+
+                let cardHtml = `
+                    <div class="card mb-3">
+                        <div class="card-header border-bottom">
+                            <h5 class="card-title mb-0">
+                                ✈️ ${rule.Origin} - ${rule.Destination} [${rule.Airline}]
+                                <span class="badge bg-light text-success mb-2"><i class="ti ti-star fs-6 me-2"></i>Travel
+                                    Hack ${index + 1 }</span>
+                            </h5>
+                        </div>
+
+                        <div class="card-body mt-3">
+                            ${rule.FareRuleDetail || 'No Fare Rules Available.'}
+                        </div>
+                    </div>
+                `;
+
+                $('#importantInfoSection').append(cardHtml);
+            });
+
+            $('#importantInfoSection table').addClass('w-100');
+        },
+        error: function () {
+            notify("Failed to fetch fare rule. Please try again.", "error");
+        }
+    });
 }
 
-function getFareQuote(resultIndex, traceId, trip = 'oneway') {
+
+
+function getFareQuote(resultIndex, traceId, trip) {
     if (resultIndex && traceId) {
         $.ajax({
             url: "/flight/farequote",
@@ -643,11 +661,11 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
             },
             success: function (response) {
                 if (response.status == 'success') {
-                   
+
                     let flightDetails = response.data;
                     let resultData = flightDetails?.Results || {};
 
-                     console.log(resultData);
+                    console.log(resultData);
 
                     let segmnt = resultData.Segments[0];
                     const fmt = (num) => Number(num || 0).toLocaleString('en-IN');
@@ -705,7 +723,7 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
                                 </h5>
                             </div>
                             
-                            <div class="card-body">
+                            <div class="card-body mt-3">
                                 
                                 <div class="table-responsive-lg">
                                     <table class="table table-bordered rounded caption-bottom overflow-hidden mb-0">
@@ -876,7 +894,7 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
 }
 
 
-function displayFlightDetails(flightDetails, trip = 'oneway') {
+function displayFlightDetails(flightDetails, trip) {
 
     let segs = flightDetails?.Segments[0] || [];
     let detailsHtml = '';

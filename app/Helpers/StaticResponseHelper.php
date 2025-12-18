@@ -3197,278 +3197,348 @@ class StaticResponseHelper
     static public function fareRuleStaticResponse()
     {
         return '{
-            "code": "0x0200",
-            "message": "success",
-            "status": "SUCCESS",
-            "data": {
-            "TokenId": "aa57a3a1-8429-4de5-83da-0a8fae566a05",
-            "TraceId": "633831d6-b724-4292-b1bf-14118cd6a1c7",
-            "FareRules": [
-                {
-                "Airline": "AI",
-                "DepartureTime": "2025-11-08T20:30:00",
-                "Destination": "DEL",
-                "FareBasisCode": "GU1YXSII",
-                "FareInclusions": null,
-                "FareRestriction": "",
-                "FareRuleDetail": "<b>These Are Non Refundable Fares.</b></br><table border=\'1\'><tr><th>Sector Details</th><th>Pax Type</th><th>Duration</th><th>Amount</th></tr><tr><th rowspan=\'2\'>CCU-DEL</th><th rowspan=\'2\'>Adult</th><td>UPTO 2 HOURS</td><td>INR 5000</td></tr><tr><td>Rest of time period</td><td>Not Allowed</td></tr></table><br /><br /><ul><li><b>There is no Minimum Stay requirement</b><br><li><b>There is no Maximum Stay requirement</b><br><fieldset><legend><b><b>Adult</b><br></b></legend><ul><li><b>Revalidation/Reissue</b><br>Fare Component <b>GU1YXSII</b>&emsp; Sector <b>CCU-DEL</b> &nbsp;<ul><li>Revalidation before/after departure, including failure to show at first/subsequent flight(s) : <b>Not Allowed</b></li><li>Reissue, including failure to show at first flight : <b>Allowed with Restrictions</b></li><li>Revalidation/Reissue request, including failure to show at first flight, must be made prior to <b>08NOV26  0000</b></li><li><b>Prior to Departure of journey</b><ul><u>Reissue</u><li>Penalty fee between : <b>0 INR/3000 INR</b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>3000 INR</b></li></ul></li><li><b>Failure to show at first flight</b><ul><u>Reissue</u><li>Reissue : <b>Allowed, Free of charge</b></li><li>Maximum reissue penalty fee for entire ticket (per reissue) : <b>No charge</b></li></ul></li><li><b>After departure of journey</b><ul><li>Revalidation/Reissue request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Revalidation/Reissue request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><li><b>Refund</b><br>Fare Component <b>GU1YXSII</b>&emsp; Sector <b>CCU-DEL</b> &nbsp;<ul><li>Refund, including failure to show at subsequent flight(s) : <b>Not Allowed</b></li><li><b>Prior to Departure of journey</b><ul><li>Refund : <b>Allowed with Restrictions</b></li><li>Penalty fee : <b>5000 INR(at today exchange rates 5000 INR) </b></td></tr><li>Maximum Refund penalty fee for entire ticket : <b>5000 INR</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at first flight</b><ul><li>Refund : <b>Not Allowed</b></li><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>After departure of journey</b><ul><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li><li><b>Failure to show at subsequent flight(s)</b><ul><li>Refund request must be made prior to : <b>No restriction</b></li></ul></li></ul></li><br><b>* Revalidation is a modification of the original ticket without any reissue of a new ticket.</b><br><b>* For Reissue, Penalty fees are in addition to any difference in fare.</b><br><b>* For Refund, certain Taxes are non-refundable.</b></ul></fieldset></ul><br/> <br/><b>These Are Non Refundable Fares.</b><br />RateClass : GU1YXSII<br/>FareClass : GU1YXSII<br/>marketing Company : AI<br/>Booking Class : G<br/>Origin : CCU<br/>destination : DEL<br/>ruleSectionLocalId : 1<br/>ruleCategoryCode : (5)<br/>AP.ADVANCE RES/TKT  RESERVATIONS FOR EACH SECTOR AND TICKETING MUST BE  COMPLETED AT THE SAME TIME.  WAITLIST AND STANDBY NOT PERMITTED.         NOTE -          RESERVATION AND TICKETING TO BE COMPLETED          SIMULTANIOUSLY.          NO TIME LIMIT PERMITTED<br/>ruleSectionLocalId : 2<br/>ruleCategoryCode : (16)<br/>PE.PENALTIESFOR GU1YXSII TYPE FARES  CHANGES    CHARGE INR 3000 FOR REISSUE/REVALIDATION.         NOTE -          TILL 02 HRS CHARGE INR 3000 PER COMPONENT FOR          REISSUE/REVALIDATION.          --------------------------------------------------          CHARGES ARE NON-COMMISISONABLE. APPLICABLE GST          WILL BE ADDITIONAL 5 PERCENT GST FOR ALL ECONOMY          CLASS 18 PERCENT GST FOR ALL FIRST / BUSINESS          CLASS /PREMIUM ECONOMY AND APPLICABLE TAXES TO BE          COLLECTED.          --------------------------------------------------          CHARGE APPLIES TO ADULT AND CHILD INFANT NOT          OCCUPYING A SEAT IS EXEMPTED. CHANGE FEE CHARGES          ARE APPLICABLE PER FARE COMPONENT. SUM OF FEES OF          ALL CHANGED FARE COMPONENTS WOULD APPLY INCASE OF          MULTIPLE FARE COMPONENTS IN A JOURNEY/ITINERARY.          --------------------------------------------------          EXAMPLE.1 TOTAL FARE CHARGED INR 5000.00 BLR-          BOM2000.00 BOM-UDR3000.00 IN THE ABOVE EXAMPLE AS          THERE ARE TWO FARE COMPONENTS FC.FC1 BLR-BOM AND          FC 2 BOMUDR FOR CHANGE FEES SYSTEM WOULD SUM-UP          THE FEES OF EACH FARE COMPONENT.          --------------------------------------------------          EXAMPLE 2 TOTAL FARE CHARGED INR 4000.00          BLR-X/BOM-UDR4000.00 INCASE OF THROUGH FARE AS          SHOWN IN THE ABOVE EXAMPLE FOR ANY CHANGE SYSTEM          WOULD APPLY THE FEES ONLY ONCE.          --------------------------------------------------          DOWNSELLING TO A LOWER FARE/BRAND/CABIN IS NOT          PERMITTED.          --------------------------------------------------          IN CASE OF CHANGE TO HIGHER BRAND/CABIN FOR          TRAVEL ON THE SAME DAY/SAME FLIGHT/RE-ISSUANCE          FEE WILL NOT BE APPLICABLE.ONLY DIFFERENCE IN          TOTAL FARE IS TO BE COLLECTED.          --------------------------------------------------          RE ROUTING IS PERMITTED.          --------------------------------------------------          THE CHANGE/REISSUE CHARGE IS NON - REFUNDABLE  CANCELLATIONS    CHARGE INR 5000 FOR CANCEL/REFUND.         NOTE -          TILL 02 HRS CHARGE INR 5000 PER COMPONENT FOR          CANCELLATION.          --------------------------------------------------          BASE FARE OR CANCELLATION/REFUND FEES WHICHEVER          IS LOWER WILL BE DEDUCTED WHEN PROCESSING REFUND.          -------------------------------------------------          RESERVATIONS BOOKED MORE THAN 7 DAYS PRIOR TO          COMMENCEMENT OF TRAVEL MAY BE CANCELLED OR          AMENDED WITHIN 24 HOURS OF BOOKING TICKET WITHOUT          PENALTY. RESERVATIONS BOOKED WITHIN 7 DAYS OF          COMMENCEMENT OF TRAVEL ARE SUBJECT TO THE          APPLICABLE CANCELLATION PENALTY.          -------------------------------------------------          THE ABOVE-MENTIONED FREE LOOK IN OPTION IS          AUTOMATED FOR CANCELLATIONS DEFINED UNDER CAT 33.          HOWEVER IT CAN NOT BE PROCESSED FOR CHANGES          DEFINED UNDER CAT 31 THROUGH AUTOMATED          SYSTEM.HENCE KINDLY PROCESS MANUALLY.          -------------------------------------------------          CHARGES ARE NON-COMMISISONABLE. APPLICABLE GST          WILL BE ADDITIONAL 5 PERCENT GST FOR ALL ECONOMY          CLASS 18 PERCENT GST FOR ALL FIRST / BUSINESS          CLASS /PREMIUM ECONOMY AND APPLICABLE TAXES TO BE          COLLECTED.          --------------------------------------------------          THE CUT-OFF DATE FOR REFUND OF K3 TAX WILL BE          31ST OCTOBER YYYY FOR TICKETS ISSUED DURING          FINANCIAL YEAR  01ST APRIL XXXX TO 31ST MARCH          YYYY AND / OR EXCHANGED / REISSUED UPTO          31 OCTOBER YYYY          --------------------------------------------------          CHARGE APPLIES TO ADULT AND CHILD INFANT NOT          THE CANCEL/REFUND CHARGE IS NON - REFUNDABLE          OCCUPYING A SEAT IS EXEMPTED. CHANGE FEE CHARGES          ARE APPLICABLE PER FARE COMPONENT. SUM OF FEES OF          ALL CHANGED FARE COMPONENTS WOULD APPLY INCASE OF          MULTIPLE FARE COMPONENTS IN A JOURNEY/ITINERARY.          --------------------------------------------------          WHEN FARES ARE COMBINED THE MOST RESTRICTIVE          CONDITIONS APPLY FOR THE ENTIRE JOURNEY.          --------------------------------------------------          CANCELLATION/REFUND FEE OF PARTLY USED TICKET          DEDUCT ONEWAY FARE AND LEVIES FOR THE TRAVELLED          SECTOR PLUS CANCELLATION/REFUND FEE.          --------------------------------------------------          FARES WHEN COMBINED ON A HALF ROUND TRIP BASIS          SHALL BE GOVERNED  BY THE CORRESPONDING          APPLICABLE TICKETED FARE PER SECTOR AND ITS          APPLICABLE TERMS AND CONDITIONS.          --------------------------------------------------          OUT OF SEQUENCE TRAVEL NOT PERMITTED FOR THROUGH          AND CONNECTION FARES THERE WILL BE NO REFUND FOR          OUT OF SEQUENCE COUPON EXCEPT THE STATUTARY TAXES.          --------------------------------------------------          THE CANCEL/REFUND CHARGE IS NON - REFUNDABLE          --------------------------------------------------    TICKET IS NON-REFUNDABLE IN CASE OF NO-SHOW.         NOTE -          100 PERCENT OF BASIC FARE WILL BE FORFEITED.          ---------------------------------------------          ONLY TAX REFUNDABLE.          --------------------------------------------------          CHARGES ARE NON-COMMISISONABLE. APPLICABLE GST          WILL BE ADDITIONAL. 5 PERCENT GST FOR ALL ECONOMY          CLASS 18 PERCENT GST FOR ALL FIRST / BUSINESS          CLASS.          --------------------------------------------------          NO SHOW IS WHEN A PAX FAILS TO CHANGE/CANCEL          BOOKING ATLEAST 02 HOURS BEFORE DEPARTURE OF THE          FLIGHT BEING CHANGED/CANCELLED.          -------------------------------------------------          THE CHANGE/REISSUE/CANCEL/REFUND CHARGE IS NON -          REFUNDABLE.          --------------------------------------------------          LOOK-IN OPTION-          RESERVATIONS BOOKED MORE THAN 7 DAYS PRIOR TO          COMMENCEMENT OF TRAVEL MAY BE REFUND OR REISSUED          WITHIN 24 HOURS OF BOOKING OF TICKET WITHOUT          PENALTY.RESERVATIONS BOOKED WITHIN 7 DAYS OF          COMMENCEMENT OF TRAVEL ARE SUBJECT TO THE          APPLICABLE CANCELLATION PENALTY.          FOR EXAMPLE A PASSENGER BOOKED A TICKET ON DEL-          BOM SECTOR ON 12/02/20 AT 1000 AM AND HIS DATE          OFDEPARTURE IS 20/02/2020 FROM DEL. NOW          PASSENGERCAN AMEND THE TICKET TILL 13/02/2020 UP          TO 0959 AM. A PASSENGER BOOKED A TICKET ON DEL          BOM SECTOR 12/02/2020 AND HIS DATE OF TRVEL IS          WITHIN 7 DAYS 16/02/2020 FROM DEL THEN PENALTY          FEE WILL BE APPLICABLE AS PER THE RULES.          RESERVATIONS BOOKED WITHIN 7 DAYS OF COMMENCEMENT          OF TRAVEL ARE SUBJECT TO THE APPLICABLE          CHANGE/CANCELLATION PENALTY.          --------------------------------------------------          THE ABOVE MENTIONED FREE LOOK IN OPTION IS          AUTOMATED FOR CANCELLATIONS DEFINED UNDER CAT33 .          HOWEVER IT  CAN NOT BE PROCESSED FOR CHANGES          DEFINED UNDER  CAT 31  THROUGH AUTOMATED SYSTEM.          HENCE KINDLY PROCESS MANUALLY.         NOTE -          FOR WAIVER OF PENALTY ON ACCOUNT OF DEATH OF          PASSENGER OR IMMEDIATE FAMILY MEMBER PLS REFER          BELOW NOTE          -------------------------------------------------          IN CASE OF DEATH OF A PASSENGER OR IMMEDIATE          FAMILY MEMBER BEFORE COMMENCEMENT OF TRAVEL          PENALTY CHARGES STAND WAIVED OFF. THE ABOVE IS          APPLICABLE ONLY WHEN TICKET IS PURCHASED BEFORE          DEATH OF PASSENGER OR IMMEDIATE FAMILY MEMBER IS          OCCURRED.          -------------------------------------------------          IMMEDIATE FAMILY SHALL BE LIMITED TO SPOUSE          CHILDREN INCLUDING ADOPTED CHILDREN PARENTS          BROTHERS SISTERS GRAND-PARENTS GRANDCHILDREN FA          FATHER IN LAW MOTHER IN LAW SISTER IN LAW BROTHER          IN LAW SON IN LAW AND DAUGHTER IN LAW          -----------------------------------------------          PENALTY ON ABOVE ACCOUNT IS WAIVED FOR FIRST          TRANSACTION ONLY. SUBSEQUENT TRANSACTION IF ANY          WILL ATTRACT APPLICABLE PENALTY.          -------------------------------------------------          IN CASE OF DEATH OF PASSENGER OCCURRED AFTER          COMMENCEMENT OF TRAVEL ACCOMPANYING PASSENGER MAY          TERMINATE TRAVEL OR INTERRUPT TRAVEL UNTIL          COMPLETION OF FORMALITIES AND RELIGIOUS CUSTOMS          IF ANY BUT IN NO EVENT LATER THAN FORTY FIVE 45          DAYS AFTER TRAVEL IS INTERRUPTED. THE TICKET OF          RETURNING PASSENGERS WILL BE ENDORSED RETURN          ACCOUNT DEATH NAME  AND SUCH ENDORSEMENT SHALL BE          AUTHENTICATED BY VALIDATION OR OTHER DUTY MANAGER          OFFICIAL STAMP. REFUND MAY BE ARRANGED. RE-          ROUTING MAY BE PERMITTED APPLICABLE PENALTY IF          ANY MAY BE WAIVED. DIFFERENCE OF FARE NEEDS TO BE          COLLECTED.          ----------------------------------------------          FOR RETURN-ONWARD TICKER REFUND DEDUCT ONE WAY          FARE AND LEVIES FOR THE TRAVELLED SECTOR AND          BALANCE AMOUNT MAY BE REFUNDED.          -----------------------------------------------          REFUND IN CASE OF DEATH WILL BE CALCAULTED AFTER          DEDUCTING  ONE WAY FARE FOR THE TRAVELLED SECTOR          AND BALANCE AMOUNT MAY BE REFUNDED.          -----------------------------------------------          IN THE EVENT A PASSENGER IS DISCONTINUING TRAVEL          WITH THE GROUP IN ACCORDANCE WITH THE ABOVE- THIS          SHALL NOT AFFECT THE ENTITLEMENT TO TRAVEL AT THE          GROUP FARE OF THE REMAINING PASSENGERS IN THE          GROUP.          NO WAIVER WILL BE GRANTED IN ABSENCE OF DEATH          CERTIFICATE ISSUED BY COMPETENT AUTHORITIES.          I.E.THOSE DESIGNATED TO ISSUE DEATH CERTIFICATE          BY APPLICABLE LAWS OF THE COUNTRY IN WHICH THE          DEATH OCCURRED. WAIVER ISSUING STATION MUST          RETAIN THE COPY OF DEATH CERTIFICATE AND RELATION          PROOF OF BEING PART OF IMMEDIATE FAMILY MEMBER.<br/><ul><li>APART FROM AIRLINE CHARGES,GST+RAF+ APPLICABLE CHARGES IF ANY, WILL BE CHARGED.</li><li>MENTIONED FEE ARE INDICATIVE PER PAX AND PER SECTOR.</li><li>FOR DOMESTIC BOOKINGS, PASSENGERS ARE REQUIRED TO SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE AIRLINES CANCELLATION AND REISSUE POLICY.</li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS ARE REQUIRED TO SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE AIRLINES CANCELLATION AND REISSUE POLICY.</li></ul>",
-                "FlightId": -2147483648,
-                "Origin": "CCU",
-                "ReturnDate": "0001-01-01T00:00:00"
+                "code": "0x0200",
+                "message": "success",
+                "status": "SUCCESS",
+                "data": {
+                    "TokenId": "0b677715-fe53-4ca1-ab70-51cd70b42770",
+                    "TraceId": "1dc9b6ba-9146-42e2-9c51-4164f5e6d6a1",
+                    "FareRules": [
+                    {
+                        "Airline": "6E",
+                        "DepartureTime": "0001-01-01T00:00:00",
+                        "Destination": "LKO",
+                        "FareBasisCode": "RCIP",
+                        "FareInclusions": [
+                        "Temp Fare Rules GG"
+                        ],
+                        "FareRestriction": null,
+                        "FareRuleDetail": "The FareBasisCode is: RCIP<br \\/>Temp Fare Rules GG<br\\/> <br\\/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.<\\/li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.<\\/li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINEs POLICY.<\\/li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINEs POLICY.<\\/li><\\/ul>",
+                        "FlightId": 0,
+                        "Origin": "DEL",
+                        "ReturnDate": "0001-01-01T00:00:00"
+                    },
+                    {
+                        "Airline": "6E",
+                        "DepartureTime": "0001-01-01T00:00:00",
+                        "Destination": "CCU",
+                        "FareBasisCode": "R0IP",
+                        "FareInclusions": [
+                        "Temp Fare Rules GG"
+                        ],
+                        "FareRestriction": null,
+                        "FareRuleDetail": "The FareBasisCode is: R0IP<br \\/>Temp Fare Rules GG<br\\/> <br\\/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.<\\/li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.<\\/li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINEs POLICY.<\\/li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINEs POLICY.<\\/li><\\/ul>",
+                        "FlightId": 0,
+                        "Origin": "LKO",
+                        "ReturnDate": "0001-01-01T00:00:00"
+                    }
+                    ]
                 }
-            ]
-            }
             }';
     }
 
     static public function fareQuoteStaticResponse()
     {
         return '{
-                "code": "0x0200",
-                "message": "success",
-                "status": "SUCCESS",
-                "data": {
-                    "TokenId": "aa57a3a1-8429-4de5-83da-0a8fae566a05",
-                    "TraceId": "633831d6-b724-4292-b1bf-14118cd6a1c7",
-                    "FlightDetailChangeInfo": null,
-                    "IsPriceChanged": false,
-                    "ItineraryChangeList": [],
-                    "Results": {
-                    "FareInclusions": [],
-                    "FirstNameFormat": "Canada: If Given/First Name missing, put surname in Last Name and Given Name as \"FNU\" + title (e.g., SMITH/FNU MR).\r\nUAE: Single-name travel documents not allowed. Passports must have surname and given name separated by space.\r\nExamples:\r\n- Maryam (Given only): Not accepted\r\n- (No surname)/Maryam: Not accepted\r\n- Ali/Maryam: Accepted as Ali/Maryam MS\r\n- Maryam Ali (single field, space & MRZ): Accepted as Maryam Ali/FNU MS\r\nExemptions:\r\n- Parent/guardian name on passport\r\n- UAE ID with two names\r\n- UAE employment visa or visa with additional names\r\n- Government duty passport\r\nAustralia/NZ:\r\n1. Single name repeated as Last/First (e.g., JONES/JONES MR).\r\n2. Single-char surname repeated twice as Last Name; Given Name as First (e.g., OO/JOE MR).",
-                    "IsBookableIfSeatNotAvailable": false,
-                    "IsExclusiveFare": false,
-                    "IsFreeMealAvailable": true,
-                    "IsHoldAllowedWithSSR": false,
-                    "IsHoldMandatoryWithSSR": false,
-                    "LastNameFormat": "For Canada: If LastName is missing, set LastName as \"LNU\" and FirstName as \"Given Name(s) Title\" (e.g., LNU/JEREMY BROWN MR).\r\nFor UAE: If LastName is missing but full name exists in GivenName (e.g., \"Maryam Ali\"), set LastName as full name and FirstName as \"FNU Title\" (e.g., MARYAM ALI/FNU MS).\r\nFor Australia & New Zealand: If only one name exists on the passport, repeat the name as both LastName and FirstName (e.g., JONES/JONES MR).",
-                    "ResultIndex": "OB1[TBO]3R+Zlch6tid/2d1zJxXuqgYX0f8GAbkjIe+eQzi7Ldi+e7r7Rtxh4KQr/iMSJXMyeZu86E1Zvip6fHtaCCPU78k0zFv/bAlIHetN15f1BONdP2Qxj+Geh5Vw+qunVf6yGBKb9JWMuV9CTh7l7TVJofUCNcund08iJ9UXZj3crV3PhFHbThCl7WhWTxmmFj3N5o7vOYcILWjPtHwtgQ9eKfssIiWAd8yn9TfdULH54ELCww1CD8eJbAhBuJ9jLHd5bvwuKvEiGnCG4bN35pphx6kAuggoVYuPPWl+G9qpcoLkic+Xa+cokLHzCdVDvv5PlxY6hjpQZHzQt3ODlqv/nBlSrCnEvIWeCyo1YaLwLwFOPfrxHi/HScmgBvwTyCZIyYuuSxQXH+YFY9y6nkCzViFbTFaKHSTI+G2pN5wiUdkLbpNwZbnK48XQ4tCLBNUReNfPUBklwysllao26jiAzO96bhS+F5BHdICG9Ls2uaJ7giNltCoEnT12IQ1g9SY8p8ULLfYwvsRqzJGWwPaA9aXaN7LDmjvtUh8zsqUzeMvTrNqCDifYzSa4fTqUDPtYNRTQ+rodMLMtlyhSAAej4AKMokdvRzA3cb8hnrqSBH0JoKLB5JggMPW9xR7s3Vu/",
-                    "Source": 4,
-                    "IsLCC": false,
-                    "IsRefundable": true,
-                    "IsPanRequiredAtBook": false,
-                    "IsPanRequiredAtTicket": false,
-                    "IsPassportRequiredAtBook": false,
-                    "IsPassportRequiredAtTicket": false,
-                    "GSTAllowed": true,
-                    "IsCouponAppilcable": true,
-                    "IsGSTMandatory": false,
-                    "AirlineRemark": "We are testing Airline remark node.",
-                    "IsPassportFullDetailRequiredAtBook": false,
-                    "ResultFareType": "RegularFare",
-                    "Fare": {
-                        "ServiceFeeDisplayType": 0,
-                        "Currency": "INR",
-                        "BaseFare": 5341,
-                        "Tax": 1508,
-                        "TaxBreakup": [
-                        {
-                            "key": "K3",
-                            "value": 276
-                        },
-                        {
-                            "key": "YQTax",
-                            "value": 0
-                        },
-                        {
-                            "key": "YR",
-                            "value": 170
-                        },
-                        {
-                            "key": "PSF",
-                            "value": 0
-                        },
-                        {
-                            "key": "UDF",
-                            "value": 0
-                        },
-                        {
-                            "key": "INTax",
-                            "value": 826
-                        },
-                        {
-                            "key": "TransactionFee",
-                            "value": 0
-                        },
-                        {
-                            "key": "OtherTaxes",
-                            "value": 236
-                        }
-                        ],
-                        "YQTax": 0,
-                        "AdditionalTxnFeeOfrd": 0,
-                        "AdditionalTxnFeePub": 0,
-                        "PGCharge": 0,
-                        "OtherCharges": 0,
-                        "ChargeBU": [
-                        {
-                            "key": "TBOMARKUP",
-                            "value": 0
-                        },
-                        {
-                            "key": "GLOBALPROCUREMENTCHARGE",
-                            "value": 0
-                        },
-                        {
-                            "key": "CONVENIENCECHARGE",
-                            "value": 0
-                        },
-                        {
-                            "key": "OTHERCHARGE",
-                            "value": 0
-                        }
-                        ],
-                        "Discount": 0,
-                        "PublishedFare": 6849,
-                        "CommissionEarned": 131.39,
-                        "PLBEarned": 163.87,
-                        "IncentiveEarned": 213.59,
-                        "OfferedFare": 6543.7,
-                        "TdsOnCommission": 52.56,
-                        "TdsOnPLB": 65.55,
-                        "TdsOnIncentive": 85.44,
-                        "ServiceFee": 0,
-                        "TotalBaggageCharges": 0,
-                        "TotalMealCharges": 0,
-                        "TotalSeatCharges": 0,
-                        "TotalSpecialServiceCharges": 0
+            "code": "0x0200",
+            "message": "success",
+            "status": "SUCCESS",
+            "data": {
+                "TokenId": "0b677715-fe53-4ca1-ab70-51cd70b42770",
+                "TraceId": "1dc9b6ba-9146-42e2-9c51-4164f5e6d6a1",
+                "FlightDetailChangeInfo": null,
+                "IsPriceChanged": false,
+                "ItineraryChangeList": [],
+                "Results": {
+                "FareInclusions": [],
+                "FirstNameFormat": "If FirstName is missing, Update FirstName as LastName.\\r\\n\\t\\t\\t<br\\/> For UAE Sector- If there is a space in the passengers last name, then split it (ie, put the name before the space in the first name).\\r\\n\\t\\t\\t<br\\/> If the passenger has a single word name in last name so put father name will be the first name as per passport.",
+                "IsBookableIfSeatNotAvailable": true,
+                "IsExclusiveFare": false,
+                "IsFreeMealAvailable": false,
+                "IsHoldAllowedWithSSR": false,
+                "IsHoldMandatoryWithSSR": false,
+                "LastNameFormat": "If LastName is missing, Update LastName and FirstName as FirstName.\\r\\n\\t\\t\\t<br\\/> For UAE Sector - If there is a space in the passengers given name, then split it (ie, put the name after the space in the last name).\\r\\n\\t\\t\\t<br\\/> If the passenger has a single word name in given name so put father name will be the last name as per passport.",
+                "ResultIndex": "OB6[TBO]r5MvXMGJ42fbW+5EOO\\/M7Npaen2uVJ80h+6RMLUB\\/wvdxDAD49UgDNDceF+3ltHHX873xLJD5nZY1zRQHbiUGxQIW80eO8QjqS1lryamhGIkERr8OD3rI+yZFv6MCb6x8H\\/Ahjg6OshGQQuzOuJM7tnVO+OCroFYUwisZ+ajri5AX0N6cef+LtSe4SeOqDMeMUmMsZJ4GAiXEqw5IHG05xR54OL9ZRLQahFLlTgYrZkQuV3cS3XUjbzE9OrU5yZ+mbjjs\\/eAWCXfPrUxShe6QrQt+6DoHkNRXQibTPD+A2sfe4ffwVVbdFqUOFm9VdKaD74vYsM\\/k3lb1MkJ6b6hjeZJ2SFqJR2G8B1Idsk7kVeAYoTjs7Z7lSwilFPLpkNT0Cp1g8hizGDxt9cTwAi3iPesawM1XegOMQy3itt8qRsr63OGdobB\\/43Gvwsuz1i9KJS7eLpHjvX3I+ig9GSp3PSnP1GlfjTRdrv0rXcE66PYih+QAzHxzF7EXbWkcaUKSIvIkbyaOOrmHr+\\/gQAKABJyjlub\\/4WyN\\/4NCL5mJDUfJcjakFiHCmhAFf\\/UocFHaKaqTeDr\\/ubGn4S21jRJfTJYYYjDoLxjOzG\\/0EBCehbGBuIUhEyseG3yxut19\\/0D11B\\/d4VMIetbxQWuPXIoJagoN5giOC7m3toCdi1TcJY=",
+                "Source": 6,
+                "IsLCC": true,
+                "IsRefundable": true,
+                "IsPanRequiredAtBook": false,
+                "IsPanRequiredAtTicket": false,
+                "IsPassportRequiredAtBook": false,
+                "IsPassportRequiredAtTicket": false,
+                "GSTAllowed": true,
+                "IsCouponAppilcable": true,
+                "IsGSTMandatory": false,
+                "IsHoldAllowed": true,
+                "AirlineRemark": "6E main.",
+                "IsPassportFullDetailRequiredAtBook": false,
+                "ResultFareType": "RegularFare",
+                "Fare": {
+                    "ServiceFeeDisplayType": 0,
+                    "Currency": "INR",
+                    "BaseFare": 4450,
+                    "Tax": 1327,
+                    "TaxBreakup": [
+                    {
+                        "key": "K3",
+                        "value": 230
                     },
-                    "FareBreakdown": [
-                        {
-                        "Currency": "INR",
-                        "PassengerType": 1,
-                        "PassengerCount": 1,
-                        "BaseFare": 5341,
-                        "Tax": 1508,
-                        "TaxBreakUp": [
-                            {
-                            "key": "YR",
-                            "value": 170
-                            },
-                            {
-                            "key": "K3",
-                            "value": 276
-                            },
-                            {
-                            "key": "INTax",
-                            "value": 826
-                            },
-                            {
-                            "key": "OtherTaxes",
-                            "value": 236
-                            }
-                        ],
-                        "YQTax": 0,
-                        "AdditionalTxnFeeOfrd": 0,
-                        "AdditionalTxnFeePub": 0,
-                        "PGCharge": 0,
-                        "SupplierReissueCharges": 0
-                        }
+                    {
+                        "key": "YQTax",
+                        "value": 0
+                    },
+                    {
+                        "key": "YR",
+                        "value": 50
+                    },
+                    {
+                        "key": "PSF",
+                        "value": 0
+                    },
+                    {
+                        "key": "UDF",
+                        "value": 711
+                    },
+                    {
+                        "key": "INTax",
+                        "value": 0
+                    },
+                    {
+                        "key": "TransactionFee",
+                        "value": 0
+                    },
+                    {
+                        "key": "OtherTaxes",
+                        "value": 236
+                    }
                     ],
-                    "Segments": [
-                        [
-                        {
-                            "Baggage": "15 KG",
-                            "CabinBaggage": "7 KG",
-                            "CabinClass": 2,
-                            "SupplierFareClass": null,
-                            "TripIndicator": 1,
-                            "SegmentIndicator": 1,
-                            "Airline": {
-                            "AirlineCode": "AI",
-                            "AirlineName": "Air India",
-                            "FlightNumber": "2708",
-                            "FareClass": "G",
-                            "OperatingCarrier": "AI"
-                            },
-                            "Origin": {
-                            "Airport": {
-                                "AirportCode": "CCU",
-                                "AirportName": "Netaji Subhash Chandra Bose International Airport",
-                                "Terminal": "",
-                                "CityCode": "CCU",
-                                "CityName": "Kolkata",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "DepTime": "2025-11-08T20:30:00"
-                            },
-                            "Destination": {
-                            "Airport": {
-                                "AirportCode": "DEL",
-                                "AirportName": "Indira Gandhi Airport",
-                                "Terminal": "3",
-                                "CityCode": "DEL",
-                                "CityName": "Delhi",
-                                "CountryCode": "IN",
-                                "CountryName": "India"
-                            },
-                            "ArrTime": "2025-11-08T22:55:00"
-                            },
-                            "AccumulatedDuration": 145,
-                            "Duration": 145,
-                            "GroundTime": 0,
-                            "Mile": 0,
-                            "StopOver": false,
-                            "FlightInfoIndex": "",
-                            "StopPoint": "",
-                            "StopPointArrivalTime": "0001-01-01T00:00:00",
-                            "StopPointDepartureTime": "0001-01-01T00:00:00",
-                            "Craft": "321",
-                            "Remark": null,
-                            "IsETicketEligible": true,
-                            "FlightStatus": "Confirmed",
-                            "Status": "",
-                            "FareClassification": null
-                        }
-                        ]
+                    "YQTax": 0,
+                    "AdditionalTxnFeeOfrd": 0,
+                    "AdditionalTxnFeePub": 0,
+                    "PGCharge": 0,
+                    "OtherCharges": 0,
+                    "ChargeBU": [
+                    {
+                        "key": "TBOMARKUP",
+                        "value": 0
+                    },
+                    {
+                        "key": "GLOBALPROCUREMENTCHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "CONVENIENCECHARGE",
+                        "value": 0
+                    },
+                    {
+                        "key": "OTHERCHARGE",
+                        "value": 0
+                    }
                     ],
-                    "LastTicketDate": "2025-11-08T00:00:00",
-                    "TicketAdvisory": null,
-                    "FareRules": [
+                    "Discount": 0,
+                    "PublishedFare": 5777,
+                    "CommissionEarned": 0,
+                    "PLBEarned": 0,
+                    "IncentiveEarned": 0,
+                    "OfferedFare": 5777,
+                    "TdsOnCommission": 0,
+                    "TdsOnPLB": 0,
+                    "TdsOnIncentive": 0,
+                    "ServiceFee": 0,
+                    "TotalBaggageCharges": 0,
+                    "TotalMealCharges": 0,
+                    "TotalSeatCharges": 0,
+                    "TotalSpecialServiceCharges": 0
+                },
+                "FareBreakdown": [
+                    {
+                    "Currency": "INR",
+                    "PassengerType": 1,
+                    "PassengerCount": 1,
+                    "BaseFare": 4450,
+                    "Tax": 1327,
+                    "TaxBreakUp": [
                         {
-                        "Origin": "CCU",
-                        "Destination": "DEL",
-                        "Airline": "AI",
-                        "FareBasisCode": "GU1YXSII",
-                        "FareRuleDetail": "",
-                        "FareRestriction": "Y",
-                        "FareFamilyCode": "",
-                        "FareRuleIndex": ""
-                        }
-                    ],
-                    "AirlineCode": "AI",
-                    "MiniFareRules": [
-                        [
-                        {
-                            "JourneyPoints": "CCU-DEL",
-                            "Type": "Reissue",
-                            "From": "",
-                            "To": "",
-                            "Unit": "",
-                            "Details": "INR 3000*",
-                            "OnlineReissueAllowed": true,
-                            "OnlineRefundAllowed": false
+                        "key": "UDF",
+                        "value": 711
                         },
                         {
-                            "JourneyPoints": "CCU-DEL",
-                            "Type": "Cancellation",
-                            "From": "",
-                            "To": "",
-                            "Unit": "",
-                            "Details": "INR 5000*",
-                            "OnlineReissueAllowed": false,
-                            "OnlineRefundAllowed": true
+                        "key": "YR",
+                        "value": 50
+                        },
+                        {
+                        "key": "K3",
+                        "value": 230
+                        },
+                        {
+                        "key": "OtherTaxes",
+                        "value": 236
                         }
-                        ]
                     ],
-                    "ValidatingAirline": "AI",
-                    "FareClassification": {
-                        "Color": "rgb(182,215,228)",
-                        "Type": "Publish"
+                    "YQTax": 0,
+                    "AdditionalTxnFeeOfrd": 0,
+                    "AdditionalTxnFeePub": 0,
+                    "PGCharge": 0,
+                    "SupplierReissueCharges": 0
                     }
+                ],
+                "Segments": [
+                    [
+                    {
+                        "Baggage": "15 Kilograms",
+                        "CabinBaggage": "7 KG",
+                        "CabinClass": 2,
+                        "SupplierFareClass": "Sale",
+                        "TripIndicator": 1,
+                        "SegmentIndicator": 1,
+                        "Airline": {
+                        "AirlineCode": "6E",
+                        "AirlineName": "IndiGo",
+                        "FlightNumber": "115",
+                        "FareClass": "SS",
+                        "OperatingCarrier": ""
+                        },
+                        "Origin": {
+                        "Airport": {
+                            "AirportCode": "CCU",
+                            "AirportName": "Netaji Subhash Chandra Bose International Airport",
+                            "Terminal": "",
+                            "CityCode": "CCU",
+                            "CityName": "Kolkata",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "DepTime": "2026-01-10T21:30:00"
+                        },
+                        "Destination": {
+                        "Airport": {
+                            "AirportCode": "BOM",
+                            "AirportName": "Chhatrapati Shivaji International Airport",
+                            "Terminal": "2",
+                            "CityCode": "BOM",
+                            "CityName": "Mumbai",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "ArrTime": "2026-01-11T00:30:00"
+                        },
+                        "Duration": 180,
+                        "GroundTime": 0,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": "0001-01-01T00:00:00",
+                        "StopPointDepartureTime": "0001-01-01T00:00:00",
+                        "Craft": "321",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "",
+                        "FareClassification": null
+                    },
+                    {
+                        "Baggage": "15 Kilograms",
+                        "CabinBaggage": "7 KG",
+                        "CabinClass": 2,
+                        "SupplierFareClass": "Saver (Regular)",
+                        "TripIndicator": 1,
+                        "SegmentIndicator": 2,
+                        "Airline": {
+                        "AirlineCode": "6E",
+                        "AirlineName": "IndiGo",
+                        "FlightNumber": "6045",
+                        "FareClass": "RR",
+                        "OperatingCarrier": ""
+                        },
+                        "Origin": {
+                        "Airport": {
+                            "AirportCode": "BOM",
+                            "AirportName": "Chhatrapati Shivaji International Airport",
+                            "Terminal": "2",
+                            "CityCode": "BOM",
+                            "CityName": "Mumbai",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "DepTime": "2026-01-11T03:00:00"
+                        },
+                        "Destination": {
+                        "Airport": {
+                            "AirportCode": "DEL",
+                            "AirportName": "Indira Gandhi Airport",
+                            "Terminal": "1",
+                            "CityCode": "DEL",
+                            "CityName": "Delhi",
+                            "CountryCode": "IN",
+                            "CountryName": "India"
+                        },
+                        "ArrTime": "2026-01-11T05:10:00"
+                        },
+                        "AccumulatedDuration": 460,
+                        "Duration": 130,
+                        "GroundTime": 150,
+                        "Mile": 0,
+                        "StopOver": false,
+                        "FlightInfoIndex": "",
+                        "StopPoint": "",
+                        "StopPointArrivalTime": "0001-01-01T00:00:00",
+                        "StopPointDepartureTime": "0001-01-01T00:00:00",
+                        "Craft": "321",
+                        "Remark": null,
+                        "IsETicketEligible": true,
+                        "FlightStatus": "Confirmed",
+                        "Status": "",
+                        "FareClassification": null
                     }
+                    ]
+                ],
+                "LastTicketDate": "0001-01-01T00:00:00",
+                "TicketAdvisory": null,
+                "FareRules": [
+                    {
+                    "Origin": "CCU",
+                    "Destination": "BOM",
+                    "Airline": "6E",
+                    "FareBasisCode": "SSPL",
+                    "FareRuleDetail": "",
+                    "FareRestriction": "",
+                    "FareFamilyCode": "",
+                    "FareRuleIndex": ""
+                    },
+                    {
+                    "Origin": "BOM",
+                    "Destination": "DEL",
+                    "Airline": "6E",
+                    "FareBasisCode": "AA07",
+                    "FareRuleDetail": "",
+                    "FareRestriction": "",
+                    "FareFamilyCode": "",
+                    "FareRuleIndex": ""
+                    }
+                ],
+                "AirlineCode": "6E",
+                "MiniFareRules": [
+                    [
+                    {
+                        "JourneyPoints": "",
+                        "Type": "",
+                        "From": "",
+                        "To": "",
+                        "Unit": "",
+                        "Details": "",
+                        "OnlineReissueAllowed": false,
+                        "OnlineRefundAllowed": false
+                    }
+                    ]
+                ],
+                "ValidatingAirline": "6E",
+                "FareClassification": {
+                    "Color": "rgb(182,215,228)",
+                    "Type": "Publish"
                 }
+                }
+            }
             }';
     }
 
@@ -16439,6 +16509,362 @@ class StaticResponseHelper
                 "Destination": "DEL",
                 "Results": [
                 [
+                    {
+                        "FareCombinationId": "AI#77#0",
+                        "FareInclusions": [],
+                        "FirstNameFormat": null,
+                        "IsBookableIfSeatNotAvailable": false,
+                        "IsExclusiveFare": false,
+                        "IsFreeMealAvailable": true,
+                        "IsHoldAllowedWithSSR": false,
+                        "IsHoldMandatoryWithSSR": false,
+                        "LastNameFormat": null,
+                        "NonStopFirstRanking": 28,
+                        "SmartChoiceRanking": 28,
+                        "ResultIndex": "OB12[TBO]tReFRIII\/YIr2TTpEMjJqb8G1njatUtmZxFyoimuCmdvWT0Jvjk7ri+EiKAx1j\/l681yarpbxLGqftWJdSLpTPnS15xF8SDEMzrSPEQ\/wPUxEC17wamGaB2MWbWo\/xtWvBobmulkY+8P9zoJDJgYoeDoyk3DAdmRFnIHfGzrvKfXHvDr9eWcBgHXRXT7tVLJEYHCKKRwCCpvM\/XP7hzWYsoKBV07OG+qbltiZ5njoInPoTxuAqi2pj7qMMXFftzvDarTTcAHVa1L4Q6q9AEMBnkk7zqMPbK2wJ7yA0R988v3N4GQhJ+Bv9YPvZi\/YuJcrKK+bFBsOMbgL6DEHYUAP5CRj0WCvoj\/UVNmq4CWkv\/Z\/5brN\/YGg\/guMaQ5wIpPJac6LMtSkU8r3qWyfNJZqLHH6D8QmwozSp6+IGWOm8GTHh7T\/qg73IZIchXUKpKsiltu00\/qzREYniF1SXGhyrFzh+f38HE\/LdeWllaNh5LLsO0BsxpCstYr0Yan7ravOWfz2gDQFHDv2UL7G+xq7iucivPrG8mO\/qLDb+8hRlSFdIxqX59t1RM1UVNKk8Ct2VrgKtkGNNUBoFTQc7kthIrjqxqtHqF3xJHc6zLobkxmjz2xXU7fIbogKz\/wyshGnd1x8oFSxFplQuaYYDqi31A7De3d1s45Su7Z01wGQuA780v4H20IbYTDJqCU19LoUI2BzNAUqoiHQMA0MjiWU3Hdvec+v1SgyVmFD+\/OoiA7Rah2kxkGtRgWn8GjpO2XI\/Zrgbb1VlZtiqr3wAh06gN9jqVaSYbNzOxOswPY0lY=",
+                        "Source": 77,
+                        "IsLCC": false,
+                        "IsRefundable": true,
+                        "IsPanRequiredAtBook": false,
+                        "IsPanRequiredAtTicket": false,
+                        "IsPassportRequiredAtBook": false,
+                        "IsPassportRequiredAtTicket": false,
+                        "GSTAllowed": true,
+                        "IsCouponAppilcable": true,
+                        "IsGSTMandatory": false,
+                        "AirlineRemark": "We are testing Airline remark node. AmadeusNDC Result.",
+                        "IsPassportFullDetailRequiredAtBook": false,
+                        "ResultFareType": "RegularFare",
+                        "Fare": {
+                            "ServiceFeeDisplayType": 0,
+                            "Currency": "INR",
+                            "BaseFare": 21145,
+                            "Tax": 2861,
+                            "TaxBreakup": [
+                                {
+                                    "key": "K3",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "YQTax",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "YR",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "PSF",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "UDF",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "INTax",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "TransactionFee",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "OtherTaxes",
+                                    "value": 2861
+                                }
+                            ],
+                            "YQTax": 0,
+                            "AdditionalTxnFeeOfrd": 0,
+                            "AdditionalTxnFeePub": 0,
+                            "PGCharge": 0,
+                            "OtherCharges": 0,
+                            "ChargeBU": [
+                                {
+                                    "key": "TBOMARKUP",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "GLOBALPROCUREMENTCHARGE",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "CONVENIENCECHARGE",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "OTHERCHARGE",
+                                    "value": 0
+                                }
+                            ],
+                            "Discount": 0,
+                            "PublishedFare": 24006,
+                            "CommissionEarned": 179.80000000000001136868377216160297393798828125,
+                            "PLBEarned": 0,
+                            "IncentiveEarned": 0,
+                            "OfferedFare": 23826.20000000000072759576141834259033203125,
+                            "TdsOnCommission": 71.9200000000000017053025658242404460906982421875,
+                            "TdsOnPLB": 0,
+                            "TdsOnIncentive": 0,
+                            "ServiceFee": 0,
+                            "TotalBaggageCharges": 0,
+                            "TotalMealCharges": 0,
+                            "TotalSeatCharges": 0,
+                            "TotalSpecialServiceCharges": 0
+                        },
+                        "FareBreakdown": [
+                            {
+                                "Currency": "INR",
+                                "PassengerType": 1,
+                                "PassengerCount": 1,
+                                "BaseFare": 21145,
+                                "Tax": 2861,
+                                "TaxBreakUp": [
+                                    {
+                                        "key": "OtherTaxes",
+                                        "value": 2861
+                                    }
+                                ],
+                                "YQTax": 0,
+                                "AdditionalTxnFeeOfrd": 0,
+                                "AdditionalTxnFeePub": 0,
+                                "PGCharge": 0,
+                                "SupplierReissueCharges": 0
+                            }
+                        ],
+                        "Segments": [
+                            [
+                                {
+                                    "Baggage": "15 KG",
+                                    "CabinBaggage": "Included",
+                                    "CabinClass": 2,
+                                    "SupplierFareClass": null,
+                                    "TripIndicator": 1,
+                                    "SegmentIndicator": 1,
+                                    "Airline": {
+                                        "AirlineCode": "AI",
+                                        "AirlineName": "Air India",
+                                        "FlightNumber": "823",
+                                        "FareClass": "K",
+                                        "OperatingCarrier": "AI"
+                                    },
+                                    "Origin": {
+                                        "Airport": {
+                                            "AirportCode": "DEL",
+                                            "AirportName": "Indira Gandhi Airport",
+                                            "Terminal": "3",
+                                            "CityCode": "DEL",
+                                            "CityName": "Delhi",
+                                            "CountryCode": "IN",
+                                            "CountryName": "India"
+                                        },
+                                        "DepTime": "2026-01-02T04:55:00"
+                                    },
+                                    "Destination": {
+                                        "Airport": {
+                                            "AirportCode": "BDQ",
+                                            "AirportName": "Vadodara",
+                                            "Terminal": "",
+                                            "CityCode": "BDQ",
+                                            "CityName": "Vadodara",
+                                            "CountryCode": "IN",
+                                            "CountryName": "India"
+                                        },
+                                        "ArrTime": "2026-01-02T06:40:00"
+                                    },
+                                    "Duration": 0,
+                                    "GroundTime": 0,
+                                    "Mile": 0,
+                                    "StopOver": false,
+                                    "FlightInfoIndex": "1",
+                                    "StopPoint": "",
+                                    "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                    "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                    "Craft": "321",
+                                    "Remark": null,
+                                    "IsETicketEligible": true,
+                                    "FlightStatus": "Confirmed",
+                                    "Status": "",
+                                    "FareClassification": null
+                                },
+                                {
+                                    "Baggage": "15 KG",
+                                    "CabinBaggage": "Included",
+                                    "CabinClass": 2,
+                                    "SupplierFareClass": null,
+                                    "TripIndicator": 1,
+                                    "SegmentIndicator": 2,
+                                    "Airline": {
+                                        "AirlineCode": "AI",
+                                        "AirlineName": "Air India",
+                                        "FlightNumber": "2892",
+                                        "FareClass": "K",
+                                        "OperatingCarrier": "AI"
+                                    },
+                                    "Origin": {
+                                        "Airport": {
+                                            "AirportCode": "BDQ",
+                                            "AirportName": "Vadodara",
+                                            "Terminal": "",
+                                            "CityCode": "BDQ",
+                                            "CityName": "Vadodara",
+                                            "CountryCode": "IN",
+                                            "CountryName": "India"
+                                        },
+                                        "DepTime": "2026-01-02T07:40:00"
+                                    },
+                                    "Destination": {
+                                        "Airport": {
+                                            "AirportCode": "BOM",
+                                            "AirportName": "Chhatrapati Shivaji Maharaj International Airport",
+                                            "Terminal": "2",
+                                            "CityCode": "BOM",
+                                            "CityName": "Mumbai",
+                                            "CountryCode": "IN",
+                                            "CountryName": "India"
+                                        },
+                                        "ArrTime": "2026-01-02T09:10:00"
+                                    },
+                                    "Duration": 0,
+                                    "GroundTime": 0,
+                                    "Mile": 0,
+                                    "StopOver": false,
+                                    "FlightInfoIndex": "2",
+                                    "StopPoint": "",
+                                    "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                    "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                    "Craft": "321",
+                                    "Remark": null,
+                                    "IsETicketEligible": true,
+                                    "FlightStatus": "Confirmed",
+                                    "Status": "",
+                                    "FareClassification": null
+                                },
+                                {
+                                    "Baggage": "15 KG",
+                                    "CabinBaggage": "Included",
+                                    "CabinClass": 2,
+                                    "SupplierFareClass": null,
+                                    "TripIndicator": 1,
+                                    "SegmentIndicator": 3,
+                                    "Airline": {
+                                        "AirlineCode": "AI",
+                                        "AirlineName": "Air India",
+                                        "FlightNumber": "625",
+                                        "FareClass": "T",
+                                        "OperatingCarrier": "AI"
+                                    },
+                                    "Origin": {
+                                        "Airport": {
+                                            "AirportCode": "BOM",
+                                            "AirportName": "Chhatrapati Shivaji Maharaj International Airport",
+                                            "Terminal": "2",
+                                            "CityCode": "BOM",
+                                            "CityName": "Mumbai",
+                                            "CountryCode": "IN",
+                                            "CountryName": "India"
+                                        },
+                                        "DepTime": "2026-01-02T11:05:00"
+                                    },
+                                    "Destination": {
+                                        "Airport": {
+                                            "AirportCode": "LKO",
+                                            "AirportName": "Amausi",
+                                            "Terminal": "3",
+                                            "CityCode": "LKO",
+                                            "CityName": "Lucknow",
+                                            "CountryCode": "IN",
+                                            "CountryName": "India"
+                                        },
+                                        "ArrTime": "2026-01-02T13:25:00"
+                                    },
+                                    "AccumulatedDuration": 510,
+                                    "Duration": 0,
+                                    "GroundTime": 0,
+                                    "Mile": 0,
+                                    "StopOver": false,
+                                    "FlightInfoIndex": "3",
+                                    "StopPoint": "",
+                                    "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                    "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                    "Craft": "32N",
+                                    "Remark": null,
+                                    "IsETicketEligible": true,
+                                    "FlightStatus": "Confirmed",
+                                    "Status": "",
+                                    "FareClassification": null
+                                }
+                            ]
+                        ],
+                        "LastTicketDate": "17Dec25",
+                        "TicketAdvisory": "SUBJ TO CANCELLATION\/CHANGE PENALTY \n",
+                        "FareRules": [
+                            {
+                                "Origin": "DEL",
+                                "Destination": "BDQ",
+                                "Airline": "AI",
+                                "FareBasisCode": "KU1YXSII",
+                                "FareRuleDetail": "",
+                                "FareRestriction": "",
+                                "FareFamilyCode": "",
+                                "FareRuleIndex": ""
+                            },
+                            {
+                                "Origin": "BDQ",
+                                "Destination": "BOM",
+                                "Airline": "AI",
+                                "FareBasisCode": "KU1YXSII",
+                                "FareRuleDetail": "",
+                                "FareRestriction": "",
+                                "FareFamilyCode": "",
+                                "FareRuleIndex": ""
+                            },
+                            {
+                                "Origin": "BOM",
+                                "Destination": "LKO",
+                                "Airline": "AI",
+                                "FareBasisCode": "TU1YXRII",
+                                "FareRuleDetail": "",
+                                "FareRestriction": "",
+                                "FareFamilyCode": "",
+                                "FareRuleIndex": ""
+                            }
+                        ],
+                        "PenaltyCharges": {
+                            "ReissueCharge": "INR 9000*",
+                            "CancellationCharge": "INR 21145*"
+                        },
+                        "AirlineCode": "AI",
+                        "MiniFareRules": [
+                            [
+                                {
+                                    "JourneyPoints": "DEL-BDQ-BOM-LKO",
+                                    "Type": "Reissue",
+                                    "From": null,
+                                    "To": null,
+                                    "Unit": null,
+                                    "Details": "INR 9000*",
+                                    "OnlineReissueAllowed": true,
+                                    "OnlineRefundAllowed": false
+                                },
+                                {
+                                    "JourneyPoints": "DEL-BDQ-BOM-LKO",
+                                    "Type": "Cancellation",
+                                    "From": null,
+                                    "To": null,
+                                    "Unit": null,
+                                    "Details": "INR 21145*",
+                                    "OnlineReissueAllowed": false,
+                                    "OnlineRefundAllowed": true
+                                }
+                            ]
+                        ],
+                        "ValidatingAirline": "AI",
+                        "FareClassification": {
+                            "Color": "lightblue",
+                            "Type": "PublishNDC"
+                        }
+                    },
                     {
                     "FareCombinationId": "",
                     "FareInclusions": [],
