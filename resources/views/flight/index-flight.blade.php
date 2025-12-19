@@ -756,7 +756,7 @@
 
 
 @push('script')
-    <script src="{{ asset('') }}js/flight.js"></script>
+    <script src="{{ asset('') }}js/flighttrip.js"></script>
     {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"> --}}
 
     {{-- <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script> --}}
