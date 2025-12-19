@@ -305,7 +305,7 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ruleFarelabel">Fare Rules</h5>
+                    <h5 class="modal-title" id="ruleFarelabel">Fare Rules Departure</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
@@ -322,13 +322,12 @@
             <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ruleFareRetlabel">Fare Rules</h5>
+                    <h5 class="modal-title" id="ruleFareRetlabel">Fare Rules Return</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
 
                 <div class="modal-body p-3">
-
                     <div class="card border" id="importantInfoSectionReturn"></div>
 
                 </div>
@@ -341,7 +340,7 @@
 
 
 <?php $__env->startPush('script'); ?>
-    <script src="<?php echo e(asset('')); ?>js/flighttrip.js"></script>
+    <script src="<?php echo e(asset('')); ?>js/flight.js"></script>
 
 
     <script>
