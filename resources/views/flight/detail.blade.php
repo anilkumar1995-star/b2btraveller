@@ -103,15 +103,15 @@
                                     <ul class="nav nav-tabs ms-0 w-100" id="fareTabs" role="tablist">
                                         <li class="nav-item w-50" role="presentation">
                                             <button class="nav-link active" id="departure-tab-fare" data-bs-toggle="tab"
-                                                data-bs-target="#departure" type="button" role="tab"
-                                                aria-controls="departure" aria-selected="true">
+                                                data-bs-target="#departurefareChargeDetails" type="button" role="tab"
+                                                aria-controls="departurefareChargeDetails" aria-selected="true">
                                                 Departure
                                             </button>
                                         </li>
                                         <li class="nav-item w-50 d-none" role="presentation" id="returntabfare">
                                             <button class="nav-link" id="return-tab-fare" data-bs-toggle="tab"
-                                                data-bs-target="#return" type="button" role="tab"
-                                                aria-controls="return" aria-selected="false">
+                                                data-bs-target="#returnfareChargeDetails" type="button" role="tab"
+                                                aria-controls="returnfareChargeDetails" aria-selected="false">
                                                 Return
                                             </button>
                                         </li>
