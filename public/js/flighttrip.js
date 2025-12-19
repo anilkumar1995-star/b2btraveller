@@ -653,10 +653,6 @@ function getFareRules(resultIndex, traceId, trip) {
     $('#importantInfoSectionDeparture').hide().html('');
     $('#importantInfoSectionReturn').hide().html('');
 
-    let containerId = trip === 'departure' ? '#importantInfoSectionDeparture' : '#importantInfoSectionReturn';
-
-    $(containerId).show('');
-
     $.ajax({
         url: "/flight/farerule",
         method: "POST",
@@ -677,8 +673,15 @@ function getFareRules(resultIndex, traceId, trip) {
 
             let fareRules = flightDetails?.FareRules || [];
 
+
             if (fareRules.length === 0) {
-                $(containerId).html('No Data Available');
+
+                if (trip === 'departure') {
+                    $('#importantInfoSectionDeparture').html('No Data Available');
+                }
+                if (trip === 'return') {
+                    $('#importantInfoSectionReturn').html('No Data Available');
+                }
                 return;
             }
 
@@ -702,9 +705,12 @@ function getFareRules(resultIndex, traceId, trip) {
                 `;
             });
 
-            $(containerId).html(cardHtml);
-
-            $(containerId + ' table').addClass('w-100');
+            if (trip === 'departure') {
+                $('#importantInfoSectionDeparture').html(cardHtml);
+            }
+            if (trip === 'return') {
+                $('#importantInfoSectionReturn').html(cardHtml);
+            }
         },
         error: function () {
             notify("Failed to fetch fare rule. Please try again.", "error");
@@ -850,7 +856,7 @@ function getFareQuote(resultIndex, traceId, trip) {
                     $('#returntabfare').addClass('d-none');
                     console.log(trip, resultData?.Fare);
 
-                    
+
                     if (trip == 'return') {
                         $('#returntabfare').removeClass('d-none');
                     }
@@ -1355,7 +1361,7 @@ function getSSRDetails(resultIndex, traceId, trip) {
                 if (response.status == 'success') {
 
                     console.log(response);
-                    if(trip == 'return'){
+                    if (trip == 'return') {
                         return;
                     }
 
@@ -1365,7 +1371,6 @@ function getSSRDetails(resultIndex, traceId, trip) {
                     let infants = parseInt(searchPayload.InfantCount) || 0;
 
                     totalPassengers = adults + children + infants;
-
 
                     selectedMeals = [];
                     selectedBaggage = [];

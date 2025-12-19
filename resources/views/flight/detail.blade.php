@@ -364,12 +364,11 @@
                     const flightDetails = JSON.parse(storedFlight);
 
                     displayFlightDetails(flightDetails?.departure, 'departure');
-                    displayFlightDetails(flightDetails?.return, 'return');
-
                     getFareRules(depresultIndex, traceId, 'departure');
-                    getFareRules(rettresultIndex, traceId, 'return');
-
                     getFareQuote(depresultIndex, traceId, 'departure');
+
+                    displayFlightDetails(flightDetails?.return, 'return');
+                     getFareRules(rettresultIndex, traceId, 'return');
                     getFareQuote(rettresultIndex, traceId, 'return');
 
                 } else {
