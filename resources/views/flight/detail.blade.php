@@ -328,7 +328,6 @@
 
 
                 <div class="modal-body p-3">
-
                     <div class="card border" id="importantInfoSectionReturn"></div>
 
                 </div>
