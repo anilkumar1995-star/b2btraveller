@@ -1060,12 +1060,14 @@ function displayFlightDetails(flightDetails, trip) {
         </div>`;
 
     // -------- MULTIPLE SEGMENTS LOOP --------
+
+    let modalId = trip == 'departure' ? 'ruleFaredeparture' : 'ruleFarereturn';
     detailsHtml += `<div class="card-header d-flex justify-content-between pb-0">
             <h6 class="fw-normal mb-0"><span class="text-body">Travel Class:</span> ${segs[0].CabinClass}</h6>
             <a href="javascript:void(0)" 
                 class="btn p-0 mb-0"
                 data-bs-toggle="modal"
-                data-bs-target="#ruleFare${trip}">
+                data-bs-target="#${modalId}">
                 <i class="ti ti-eye me-1"></i>
                 <u class="text-decoration-underline">Fare Rules (${trip})</u>
             </a>
