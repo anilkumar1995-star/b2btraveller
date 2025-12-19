@@ -119,12 +119,13 @@
 
                                     <!-- Tabs Content -->
                                     <div class="tab-content p-3" id="fareTabsContent">
-                                        <div class="tab-pane fade show active bg-light rounded" id="departurefareChargeDetails" role="tabpanel"
+                                        <div class="tab-pane fade show active bg-light rounded"
+                                            id="departurefareChargeDetails" role="tabpanel"
                                             aria-labelledby="departure-tab-fare">
-                                            
+
                                         </div>
-                                        <div class="tab-pane fade bg-light rounded" id="returnfareChargeDetails" role="tabpanel"
-                                            aria-labelledby="return-tab-fare">
+                                        <div class="tab-pane fade bg-light rounded" id="returnfareChargeDetails"
+                                            role="tabpanel" aria-labelledby="return-tab-fare">
                                         </div>
                                     </div>
                                 </div>
@@ -299,7 +300,7 @@
     </div>
 
 
-    <div class="modal fade" id="ruleFare" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal fade" id="ruleFaredeparture" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-xl">
             <div class="modal-content">
 
@@ -310,12 +311,25 @@
 
 
                 <div class="modal-body p-3">
-
-                    {{-- <div class="card border" id="importantInfoSection">
-
-                    </div> --}}
                     <div class="card border" id="importantInfoSectionDeparture"></div>
-                    <div class="card border d-none" id="importantInfoSectionReturn"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="ruleFarereturn" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="ruleFareRetlabel">Fare Rules</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+
+                <div class="modal-body p-3">
+
+                    <div class="card border" id="importantInfoSectionReturn"></div>
 
                 </div>
             </div>
@@ -340,11 +354,12 @@
                 const resultIndex = localStorage.getItem('ResultIndex');
                 const traceId = localStorage.getItem('TraceId');
 
-                $('#return-tab').hide();
-                $('#returnFareRule').remove();
+                // $('#return-tab').hide();
+                // $('#returnFareRule').remove();
 
                 if (storedFlight) {
                     const flightDetails = JSON.parse(storedFlight);
+
                     displayFlightDetails(flightDetails, 'departure');
                     getFareRules(resultIndex, traceId, 'departure');
                     getFareQuote(resultIndex, traceId, 'departure');
@@ -359,7 +374,7 @@
                 const rettresultIndex = localStorage.getItem('ReturnResultIndex');
                 const traceId = localStorage.getItem('TraceId');
 
-                $('#return-tab').show();
+                // $('#return-tab').show();
                 if (storedFlight) {
                     const flightDetails = JSON.parse(storedFlight);
 
@@ -368,7 +383,7 @@
                     getFareQuote(depresultIndex, traceId, 'departure');
 
                     displayFlightDetails(flightDetails?.return, 'return');
-                     getFareRules(rettresultIndex, traceId, 'return');
+                    getFareRules(rettresultIndex, traceId, 'return');
                     getFareQuote(rettresultIndex, traceId, 'return');
 
                 } else {

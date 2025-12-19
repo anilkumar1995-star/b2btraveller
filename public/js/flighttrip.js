@@ -654,10 +654,10 @@ function formatDuration(minutes) {
 function getFareRules(resultIndex, traceId, trip) {
     if (!resultIndex || !traceId) return;
 
-    if (trip === 'departure') {
+    if (trip == 'departure') {
         $('#importantInfoSectionDeparture').html('');
     }
-    if (trip === 'return') {
+    if (trip == 'return') {
         $('#importantInfoSectionReturn').html('');
     }
     $.ajax({
@@ -1065,7 +1065,7 @@ function displayFlightDetails(flightDetails, trip) {
             <a href="javascript:void(0)" 
                 class="btn p-0 mb-0"
                 data-bs-toggle="modal"
-                data-bs-target="#ruleFare">
+                data-bs-target="#ruleFare${trip}">
                 <i class="ti ti-eye me-1"></i>
                 <u class="text-decoration-underline">Fare Rules (${trip})</u>
             </a>

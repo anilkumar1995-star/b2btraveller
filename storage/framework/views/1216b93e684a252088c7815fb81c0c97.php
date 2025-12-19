@@ -103,15 +103,15 @@
                                     <ul class="nav nav-tabs ms-0 w-100" id="fareTabs" role="tablist">
                                         <li class="nav-item w-50" role="presentation">
                                             <button class="nav-link active" id="departure-tab-fare" data-bs-toggle="tab"
-                                                data-bs-target="#departure" type="button" role="tab"
-                                                aria-controls="departure" aria-selected="true">
+                                                data-bs-target="#departurefareChargeDetails" type="button" role="tab"
+                                                aria-controls="departurefareChargeDetails" aria-selected="true">
                                                 Departure
                                             </button>
                                         </li>
                                         <li class="nav-item w-50 d-none" role="presentation" id="returntabfare">
                                             <button class="nav-link" id="return-tab-fare" data-bs-toggle="tab"
-                                                data-bs-target="#return" type="button" role="tab"
-                                                aria-controls="return" aria-selected="false">
+                                                data-bs-target="#returnfareChargeDetails" type="button" role="tab"
+                                                aria-controls="returnfareChargeDetails" aria-selected="false">
                                                 Return
                                             </button>
                                         </li>
@@ -313,7 +313,7 @@
 
                     
                     <div class="card border" id="importantInfoSectionDeparture"></div>
-                    <div class="card border" id="importantInfoSectionReturn"></div>
+                    <div class="card border d-none" id="importantInfoSectionReturn"></div>
 
                 </div>
             </div>
@@ -362,12 +362,11 @@
                     const flightDetails = JSON.parse(storedFlight);
 
                     displayFlightDetails(flightDetails?.departure, 'departure');
-                    displayFlightDetails(flightDetails?.return, 'return');
-
                     getFareRules(depresultIndex, traceId, 'departure');
-                    getFareRules(rettresultIndex, traceId, 'return');
-
                     getFareQuote(depresultIndex, traceId, 'departure');
+
+                    displayFlightDetails(flightDetails?.return, 'return');
+                     getFareRules(rettresultIndex, traceId, 'return');
                     getFareQuote(rettresultIndex, traceId, 'return');
 
                 } else {
