@@ -848,6 +848,7 @@ function getFareQuote(resultIndex, traceId, trip) {
 
                     // Fare Section
                     $('#returntabfare').addClass('d-none');
+                    console.log(trip);
                     if (trip === 'return') {
                         $('#returntabfare').removeClass('d-none');
                     }
@@ -864,14 +865,14 @@ function getFareQuote(resultIndex, traceId, trip) {
 
                         <div class="card-body" >
                             <div class="row mb-3">
-                                <div class="col-md-8">
+                                <div class="col-md-7">
                                     <h6 class="fw-normal mb-1">${segmnt[0]?.Airline?.AirlineName || 'Unknown Airline'}</h6>
                                     <p class="mb-0 small text-muted">
                                         ${segmnt[0]?.Airline?.AirlineCode || ''} - ${segmnt[0]?.Airline?.FlightNumber || ''}
                                     </p>
                                 </div>
-                                <div class="col-md-4 text-end">
-                                    <h5 class="fw-bold text-success mb-0">₹ ${fmt(fare?.PublishedFare)}</h5>
+                                <div class="col-md-5 text-end">
+                                    <h5 class="fw-bold text-success mb-0">₹${fmt(fare?.PublishedFare)}</h5>
                                     <small class="text-muted">Total Fare</small>
                                 </div>
                             </div>
