@@ -712,10 +712,10 @@ function getFareRules(resultIndex, traceId, trip) {
                 `;
             });
 
-            if (trip === 'departure') {
+            if (trip == 'departure') {
                 $('#importantInfoSectionDeparture').html(cardHtml);
             }
-            if (trip === 'return') {
+            if (trip == 'return') {
                 $('#importantInfoSectionReturn').html(cardHtml);
             }
         },
