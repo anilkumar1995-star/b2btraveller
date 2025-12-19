@@ -848,8 +848,8 @@ function getFareQuote(resultIndex, traceId, trip) {
 
                     // Fare Section
                     $('#returntabfare').addClass('d-none');
-                    console.log(trip);
-                    if (trip === 'return') {
+                    console.log(trip, resultData?.Fare);
+                    if (trip == 'return') {
                         $('#returntabfare').removeClass('d-none');
                     }
 
