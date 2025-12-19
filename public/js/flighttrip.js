@@ -654,9 +654,12 @@ function formatDuration(minutes) {
 function getFareRules(resultIndex, traceId, trip) {
     if (!resultIndex || !traceId) return;
 
-    $('#importantInfoSectionDeparture').hide().html('');
-    $('#importantInfoSectionReturn').hide().html('');
-
+    if (trip === 'departure') {
+        $('#importantInfoSectionDeparture').html('');
+    }
+    if (trip === 'return') {
+        $('#importantInfoSectionReturn').html('');
+    }
     $.ajax({
         url: "/flight/farerule",
         method: "POST",
@@ -857,9 +860,6 @@ function getFareQuote(resultIndex, traceId, trip) {
                     }
 
                     // Fare Section
-                    $('#returntabfare').addClass('d-none');
-                    console.log(trip, resultData?.Fare);
-
 
                     if (trip == 'return') {
                         $('#returntabfare').removeClass('d-none');
@@ -1322,12 +1322,6 @@ function generateTravelerForm(response) {
                 passportExpiry: inputs.eq(10).val()
             });
         });
-
-
-
-
-
-
 
         localStorage.setItem('travelerDetails', JSON.stringify(travelers));
         localStorage.setItem('contactDetails', JSON.stringify({

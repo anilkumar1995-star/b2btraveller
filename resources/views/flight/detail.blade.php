@@ -315,7 +315,7 @@
 
                     </div> --}}
                     <div class="card border" id="importantInfoSectionDeparture"></div>
-                    <div class="card border" id="importantInfoSectionReturn"></div>
+                    <div class="card border d-none" id="importantInfoSectionReturn"></div>
 
                 </div>
             </div>
