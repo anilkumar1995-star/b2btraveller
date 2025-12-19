@@ -3,6 +3,10 @@ let selectedSeats = {};
 let selectedMeals = [];
 let selectedBaggage = [];
 
+let selectedSeatsRet = {};
+let selectedMealsRet = [];
+let selectedBaggageRet = [];
+
 let selectedDeparture = '';
 let selectedReturn = '';
 
@@ -1341,6 +1345,8 @@ function getSSRDetails(resultIndex, traceId, trip) {
     if (resultIndex && traceId) {
         $('#seatLayoutContainer').addClass('d-none');
         $('.preloader').removeClass('d-none');
+
+        $('#returnTabLi').addClass('d-none');
         $.ajax({
             url: "/flight/ssr",
             method: "POST",
@@ -1360,9 +1366,8 @@ function getSSRDetails(resultIndex, traceId, trip) {
             success: function (response) {
                 if (response.status == 'success') {
 
-                    console.log(response);
                     if (trip == 'return') {
-                        return;
+                        $('#returnTabLi').removeClass('d-none');
                     }
 
                     let searchPayload = JSON.parse(localStorage.getItem('payload')) || {};
@@ -1449,13 +1454,29 @@ function getSSRDetails(resultIndex, traceId, trip) {
                             `;
                         });
 
-                        $("#baggageContainer").html(baggageHtml);
+                        if (trip == 'departure') {
+                            $("#baggageContainer").html(baggageHtml);
+                        }
+                        if (trip == 'return') {
+                            $("#baggageContainerRet").html(baggageHtml);
+                        }
+
                     } else {
-                        $("#baggageContainer").html(`
+                        if (trip == 'departure') {
+                            $("#baggageContainer").html(`
                             <div class="alert alert-warning text-center mb-0">
                                 No baggage options available for this flight.
                             </div>
                         `);
+                        }
+                        if (trip == 'return') {
+                            $("#baggageContainerRet").html(`
+                            <div class="alert alert-warning text-center mb-0">
+                                No baggage options available for this flight.
+                            </div>
+                        `);
+                        }
+
                     }
 
                     // Meal Details
@@ -1529,19 +1550,41 @@ function getSSRDetails(resultIndex, traceId, trip) {
                             `;
                         });
 
-                        $("#mealContainer").html(mealHtml);
+                        if (trip == 'departure') {
+                            $("#mealContainer").html(mealHtml);
+                        }
+                        if (trip == 'return') {
+                            $("#mealContainerRet").html(mealHtml);
+                        }
                     } else {
-                        $("#mealContainer").html(`
+                        if (trip == 'departure') {
+                            $("#mealContainer").html(`
                             <div class="alert alert-warning text-center mb-0">
                                 No Meal options available for this flight.
                             </div>
                         `);
+                        }
+                        if (trip == 'return') {
+                            $("#mealContainerRet").html(`
+                            <div class="alert alert-warning text-center mb-0">
+                                No Meal options available for this flight.
+                            </div>
+                        `);
+                        }
+
                     }
 
                     if (ssrDetails?.SeatDynamic && ssrDetails?.SeatDynamic.length > 0) {
-                        renderSeatLayout(ssrDetails?.SeatDynamic, totalPassengers);
+                        renderSeatLayout(ssrDetails?.SeatDynamic, totalPassengers, trip);
                     } else {
-                        $("#mainPlaneWrapper").html(`<div class="alert alert-danger">No seat layout found</div>`);
+
+                        if (trip == 'departure') {
+                            $("#mainPlaneWrapper").html(`<div class="alert alert-danger">No seat layout found</div>`);
+                        }
+                        if (trip == 'return') {
+                            $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger">No seat layout found</div>`);
+                        }
+
                     }
 
                     // Baggage checkbox handler
@@ -1583,7 +1626,7 @@ function getSSRDetails(resultIndex, traceId, trip) {
 
                         // 🧮 Update selected count display
                         $('.baggage-count').text(selectedBaggage.length);
-                        updateSummaryUI();
+                        updateSummaryUI(trip);
                     });
 
 
@@ -1624,13 +1667,20 @@ function getSSRDetails(resultIndex, traceId, trip) {
 
                         // 🧮 Update selected count display
                         $('.meal-count').text(selectedMeals.length);
-                        updateSummaryUI();
+                        updateSummaryUI(trip);
                     });
 
                 } else {
-                    $("#baggageContainer").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
-                    $("#mealContainer").html(`<div class="alert alert-danger">Meal Not Found</div>`);
-                    $("#mainPlaneWrapper").html(`<div class="alert alert-danger">Seat Layout Not found</div>`);
+                    if (trip == "departure") {
+                        $("#baggageContainer").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
+                        $("#mealContainer").html(`<div class="alert alert-danger">Meal Not Found</div>`);
+                        $("#mainPlaneWrapper").html(`<div class="alert alert-danger">Seat Layout Not found</div>`);
+                    }
+                    if (trip == 'return') {
+                        $("#baggageContainerRet").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
+                        $("#mealContainerRet").html(`<div class="alert alert-danger">Meal Not Found</div>`);
+                        $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger">Seat Layout Not found</div>`);
+                    }
                 }
             },
             error: function (xhr) {
@@ -1641,13 +1691,23 @@ function getSSRDetails(resultIndex, traceId, trip) {
     }
 }
 
-function renderSeatLayout(seatDynamicData, totalPassengers) {
+function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
 
     $("#flightContainer").html("");
-    $("#mainPlaneWrapper").html("");
+    if (trip == 'departure') {
+        $("#mainPlaneWrapper").html("");
+    }
+    if (trip == 'return') {
+        $("#mainPlaneWrapperRet").html("");
+    }
 
     if (!seatDynamicData || seatDynamicData.length === 0) {
-        $("#mainPlaneWrapper").html("<p class='text-danger'>No seat layout found.</p>");
+        if (trip == 'departure') {
+            $("#mainPlaneWrapper").html("<p class='text-danger'>No seat layout found.</p>");
+        }
+        if (trip == 'return') {
+            $("#mainPlaneWrapperRet").html("<p class='text-danger'>No seat layout found.</p>");
+        }
         return;
     }
 
@@ -1670,7 +1730,7 @@ function renderSeatLayout(seatDynamicData, totalPassengers) {
                     <div class="exit">EXIT</div>
                 </div>
 
-                <div style="display:flex; flex-direction:row;" id="planeContainer_${segIndex}">
+                <div style="display:flex; flex-direction:row;" id="planeContainer_${segIndex}${trip}">
                 </div>
 
                 <div class="section">
@@ -1681,7 +1741,13 @@ function renderSeatLayout(seatDynamicData, totalPassengers) {
             </div>
         `;
 
-        $("#mainPlaneWrapper").append(planeHtml);
+        console.log(trip);
+        if (trip == 'departure') {
+            $("#mainPlaneWrapper").append(planeHtml);
+        }
+        if (trip == 'return') {
+            $("#mainPlaneWrapperRet").append(planeHtml);
+        }
 
         segment.RowSeats.forEach((row, rowIndex) => {
 
@@ -1792,71 +1858,113 @@ function renderSeatLayout(seatDynamicData, totalPassengers) {
                         $(this).addClass("selected").css({ background: "#007bff" });
                     }
 
-                    updateSummaryUI(selectedSeats);
+                    updateSummaryUI(trip);
                 });
 
                 rowDiv.append(seatDiv);
                 if (idx === 2) rowDiv.append("<br>");
             });
 
-            $(`#planeContainer_${segIndex}`).append(rowDiv);
+            $(`#planeContainer_${segIndex}${trip}`).append(rowDiv);
         });
     });
 }
 
 
-function updateSummaryUI() {
-    // const seatsCount = selectedSeats?.length || 0;
-    // const totalSeatPrice = selectedSeats.reduce((sum, item) => {
+function updateSummaryUI(trip) {
 
-    //     let price = parseFloat(item.price?.toString().replace(/[^\d.]/g, '')) || 0;
-    //     return sum + price;
-    // }, 0);
+    if (trip == "departure") {
+        let totalSeatPrice = 0;
+        let seatsCount = 0;
 
+        // ---- SEAT SUMMARY (segment-wise object) ----
+        if (selectedSeats && typeof selectedSeats === "object") {
+            Object.values(selectedSeats).forEach(segmentArray => {
+                segmentArray.forEach(item => {
+                    seatsCount++;
 
-    let totalSeatPrice = 0;
-    let seatsCount = 0;
-
-    // ---- SEAT SUMMARY (segment-wise object) ----
-    if (selectedSeats && typeof selectedSeats === "object") {
-        Object.values(selectedSeats).forEach(segmentArray => {
-            segmentArray.forEach(item => {
-                seatsCount++;
-
-                let price = parseFloat(item.price?.toString().replace(/[^\d.]/g, '')) || 0;
-                totalSeatPrice += price;
+                    let price = parseFloat(item.price?.toString().replace(/[^\d.]/g, '')) || 0;
+                    totalSeatPrice += price;
+                });
             });
-        });
+        }
+
+        // Meal Summary
+        const mealsCount = selectedMeals?.length || 0;
+        const totalMealPrice = selectedMeals.reduce((sum, item) => {
+            let price = 0;
+            if (item.price && item.price.toLowerCase() !== 'included') {
+                price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+            }
+            return sum + price;
+        }, 0);
+
+        // Baggage Summary
+        const baggageCount = selectedBaggage?.length || 0;
+        const totalBaggagePrice = selectedBaggage.reduce((sum, item) => {
+            let price = 0;
+            if (item.price && item.price.toLowerCase() !== 'included') {
+                price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+            }
+            return sum + price;
+        }, 0);
+
+        localStorage.setItem('selectedmeal', JSON.stringify(selectedMeals));
+        localStorage.setItem('selectedBaggage', JSON.stringify(selectedBaggage));
+        localStorage.setItem('selectedSeat', JSON.stringify(selectedSeats));
+
+        // $("#totalSeats").text(seatsCount);
+        $("#totalSeatPrice").text(`₹${totalSeatPrice.toFixed(2)}`);
+        $("#totalMealPrice").text(`₹${totalMealPrice.toFixed(2)}`);
+        $("#totalBaggagePrice").text(`₹${totalBaggagePrice.toFixed(2)}`);
     }
 
-    // Meal Summary
-    const mealsCount = selectedMeals?.length || 0;
-    const totalMealPrice = selectedMeals.reduce((sum, item) => {
-        let price = 0;
-        if (item.price && item.price.toLowerCase() !== 'included') {
-            price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+    if (trip == 'return') {
+        let totalSeatPriceRet = 0;
+        let seatsCountRet = 0;
+
+        // ---- SEAT SUMMARY (segment-wise object) ----
+        if (selectedSeats && typeof selectedSeats === "object") {
+            Object.values(selectedSeats).forEach(segmentArray => {
+                segmentArray.forEach(item => {
+                    seatsCountRet++;
+
+                    let price = parseFloat(item.price?.toString().replace(/[^\d.]/g, '')) || 0;
+                    totalSeatPriceRet += price;
+                });
+            });
         }
-        return sum + price;
-    }, 0);
 
-    // Baggage Summary
-    const baggageCount = selectedBaggage?.length || 0;
-    const totalBaggagePrice = selectedBaggage.reduce((sum, item) => {
-        let price = 0;
-        if (item.price && item.price.toLowerCase() !== 'included') {
-            price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
-        }
-        return sum + price;
-    }, 0);
+        // Meal Summary
+        const mealsCountRet = selectedMeals?.length || 0;
+        const totalMealPriceRet = selectedMeals.reduce((sum, item) => {
+            let price = 0;
+            if (item.price && item.price.toLowerCase() !== 'included') {
+                price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+            }
+            return sum + price;
+        }, 0);
 
-    localStorage.setItem('selectedmeal', JSON.stringify(selectedMeals));
-    localStorage.setItem('selectedBaggage', JSON.stringify(selectedBaggage));
-    localStorage.setItem('selectedSeat', JSON.stringify(selectedSeats));
+        // Baggage Summary
+        const baggageCountRet = selectedBaggage?.length || 0;
+        const totalBaggagePriceRet = selectedBaggage.reduce((sum, item) => {
+            let price = 0;
+            if (item.price && item.price.toLowerCase() !== 'included') {
+                price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+            }
+            return sum + price;
+        }, 0);
 
-    // $("#totalSeats").text(seatsCount);
-    $("#totalSeatPrice").text(`₹${totalSeatPrice.toFixed(2)}`);
-    $("#totalMealPrice").text(`₹${totalMealPrice.toFixed(2)}`);
-    $("#totalBaggagePrice").text(`₹${totalBaggagePrice.toFixed(2)}`);
+        localStorage.setItem('selectedmeal', JSON.stringify(selectedMeals));
+        localStorage.setItem('selectedBaggage', JSON.stringify(selectedBaggage));
+        localStorage.setItem('selectedSeat', JSON.stringify(selectedSeats));
+
+        // $("#totalSeats").text(seatsCount);
+        $("#totalSeatPriceRet").text(`₹${totalSeatPriceRet.toFixed(2)}`);
+        $("#totalMealPriceRet").text(`₹${totalMealPriceRet.toFixed(2)}`);
+        $("#totalBaggagePriceRet").text(`₹${totalBaggagePriceRet.toFixed(2)}`);
+    }
+
 }
 
 
