@@ -4,7 +4,8 @@
 <head>
 <meta name="viewport" content="width=device-width" />
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Member Creation</title>
+<title>Request For Password</title>
+
 
 <style type="text/css">
 img {
@@ -62,27 +63,25 @@ background-color: #f6f6f6;
 <table class="body-wrap" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; width: 100%; background-color: #f6f6f6; margin: 0;" bgcolor="#f6f6f6"><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
 		<td class="container" width="600" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;" valign="top">
 			<div class="content" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">
-				<table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="alert alert-warning" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #088ead;font-weight: bold; margin: 0; padding: 20px;" align="center" bgcolor="#2f353f" valign="top">
-                            <span style="float:left">Welcome to {{$mydata['company']->companyname}}</span>
+				<table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="alert alert-warning" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #088ead; margin: 0; padding: 20px;" align="center" bgcolor="#2f353f" valign="top">
+							Forgot Your Password
 						</td>
 					</tr><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-wrap" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">
 							<table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
-                    <strong style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">Congratulations! {{$name}},</strong> <br>For joining {{$mydata['company']->companyname}} as a business partner. Here is some important information about your new Account. Please save this email so you can refer to it later.
-                    <ul>
-                      <li>Login Website : <a href="http://{{$mydata['company']->website}}">http://{{$mydata['company']->website}}</a></li>
-                      <li>Username : {{$username}}</li>
-                      <li>Password - {{$username}}</li>
-                    </ul>
-                  </td>
-                </tr>
-                <tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
+										<strong style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">Hello <?php echo e($name); ?>, </strong><br>
+                    You are receiving this email because we received a password reset request for your account. Your password reset token is 
+									</td>
+								</tr><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px; text-align:center" valign="top">
+										<a href="javascript:void(0)" class="btn-primary" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; color: #FFF; text-decoration: none; line-height: 2em; font-weight: bold; text-align: center; cursor: pointer; display: inline-block; border-radius: 5px; text-transform: capitalize; background-color: #5fbeaa; margin: 0; border-color: #5fbeaa; border-style: solid; border-width: 10px 20px;"><?php echo e($token); ?></a>
+									</td>
+								</tr><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
                     Thanks & Regards<br>
-                    {{$mydata['company']->companyname}}<br>
-                    <!-- Contact No. - {{$mydata['supportnumber']}} -->
+                    <?php echo e($mydata['company']->companyname); ?><br>
+                    <!-- Contact No. - <?php echo e($mydata['supportnumber']); ?> -->
 									</td>
 								</tr></table></td>
 					</tr></table></div>
 		</td>
 		<td style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
 	</tr></table></body>
-</html>
+</html><?php /**PATH D:\wampp\www\b2btraveller\resources\views/mail/password.blade.php ENDPATH**/ ?>

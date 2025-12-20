@@ -35,7 +35,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['agentcode','name', 'email', 'mobile', 'password', 'remember_token', 'nsdlwallet', 'lockedamount', 'cclockedamount', 'aepslockedamount', 'role_id', 'parent_id', 'company_id', 'scheme_id', 'status', 'address', 'shopname', 'gstin', 'city', 'state', 'pincode', 'pancard', 'aadharcard', 'pancardpic', 'aadharcardpic', 'gstpic', 'profile', 'kyc', 'callbackurl', 'remark', 'resetpwd', 'otpverify', 'otpresend', 'account', 'bank', 'ifsc', 'bene_id1', 'apptoken', 'agntpic', 'signature', 'shop_photo', 'otpdate','livepic'];
+    protected $fillable = ['agentcode','name', 'email', 'mobile', 'password','gender','mpin', 'remember_token', 'nsdlwallet', 'lockedamount', 'cclockedamount', 'aepslockedamount', 'role_id', 'parent_id', 'company_id', 'scheme_id', 'status', 'address', 'shopname', 'gstin', 'city', 'state', 'pincode', 'pancard', 'aadharcard', 'pancardpic', 'aadharcardpic', 'gstpic', 'profile', 'kyc', 'callbackurl', 'remark', 'resetpwd', 'otpverify', 'otpresend', 'account', 'bank', 'ifsc', 'bene_id1', 'apptoken', 'agntpic', 'signature', 'shop_photo', 'otpdate','livepic'];
 
     /**
      * The attributes that should be hidden for arrays.

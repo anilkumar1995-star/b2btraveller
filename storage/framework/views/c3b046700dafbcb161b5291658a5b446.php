@@ -63,26 +63,27 @@ background-color: #f6f6f6;
 		<td class="container" width="600" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; display: block !important; max-width: 600px !important; clear: both !important; margin: 0 auto;" valign="top">
 			<div class="content" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; max-width: 600px; display: block; margin: 0 auto; padding: 20px;">
 				<table class="main" width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; border-radius: 3px; background-color: #fff; margin: 0; border: 1px solid #e9e9e9;" bgcolor="#fff"><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="alert alert-warning" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 16px; vertical-align: top; color: #fff; font-weight: 500; text-align: center; border-radius: 3px 3px 0 0; background-color: #088ead;font-weight: bold; margin: 0; padding: 20px;" align="center" bgcolor="#2f353f" valign="top">
-                            <span style="float:left">Welcome to {{$mydata['company']->companyname}}</span>
+                            <span style="float:left">Welcome to <?php echo e($mydata['company']->companyname); ?></span>
 						</td>
 					</tr><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-wrap" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 20px;" valign="top">
 							<table width="100%" cellpadding="0" cellspacing="0" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
-                    <strong style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">Congratulations! {{$name}},</strong> <br>For joining {{$mydata['company']->companyname}} as a business partner. Here is some important information about your new Account. Please save this email so you can refer to it later.
+                    <strong style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;">Congratulations! <?php echo e($name); ?>,</strong> <br>For joining <?php echo e($mydata['company']->companyname); ?> as a business partner. Here is some important information about your new Account. Please save this email so you can refer to it later.
                     <ul>
-                      <li>Login Website : <a href="http://{{$mydata['company']->website}}">http://{{$mydata['company']->website}}</a></li>
-                      <li>Username : {{$username}}</li>
-                      <li>Password - {{$username}}</li>
+                      <li>Login Website : <a href="http://<?php echo e($mydata['company']->website); ?>">http://<?php echo e($mydata['company']->website); ?></a></li>
+                      <li>Username : <?php echo e($username); ?></li>
+                      <li>Password - <?php echo e($username); ?></li>
                     </ul>
                   </td>
                 </tr>
                 <tr style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; margin: 0;"><td class="content-block" style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0; padding: 0 0 20px;" valign="top">
                     Thanks & Regards<br>
-                    {{$mydata['company']->companyname}}<br>
-                    <!-- Contact No. - {{$mydata['supportnumber']}} -->
+                    <?php echo e($mydata['company']->companyname); ?><br>
+                    Contact No. - <?php echo e($mydata['supportnumber']); ?>
+
 									</td>
 								</tr></table></td>
 					</tr></table></div>
 		</td>
 		<td style="font-family: 'Arial','Helvetica Neue',Helvetica,Arial,sans-serif; box-sizing: border-box; font-size: 14px; vertical-align: top; margin: 0;" valign="top"></td>
 	</tr></table></body>
-</html>
+</html><?php /**PATH D:\wampp\www\b2btraveller\resources\views/mail/member.blade.php ENDPATH**/ ?>
