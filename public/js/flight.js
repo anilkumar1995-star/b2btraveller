@@ -1994,7 +1994,8 @@ $('#proceedBookingBtn').on('click', function () {
 
 });
 
-function hitBookingAPI() {
+function hitBookingAPI(trip) {
+  
     const selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails'));
     const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
     const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
@@ -2070,6 +2071,9 @@ function hitBookingAPI() {
         traceId: traceId,
         _token: $('meta[name="csrf-token"]').attr('content')
     };
+
+    console.log(payload);
+    return;
 
     if (selectedFlightDetails?.IsLCC) {
         ViewTicketAjax(payload);
