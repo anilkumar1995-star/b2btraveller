@@ -1994,16 +1994,10 @@ $('#proceedBookingBtn').on('click', function () {
 
 });
 
-function hitBookingAPI(trip) {
-  
-    const selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails'));
+function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals, selectedBaggage, trip) {
+
     const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
     const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
-    const selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
-    const selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
-    const selectedBaggage = JSON.parse(localStorage.getItem('selectedBaggage')) || [];
-    const traceId = localStorage.getItem('TraceId') || '';
-
     const formatDate = (date) => date ? `${date}T00:00:00` : null;
 
     const mapSeatsToPassengers = (seatData, numPassengers) => {
@@ -2012,7 +2006,6 @@ function hitBookingAPI(trip) {
             seatArray.forEach((seatObj, index) => {
 
                 if (index < numPassengers) {
-                    // const { price, ...rest } = seatObj; // remove price
                     passengersSeats[index].push(seatObj?.SeatObjData);
                 }
             });
@@ -2071,9 +2064,6 @@ function hitBookingAPI(trip) {
         traceId: traceId,
         _token: $('meta[name="csrf-token"]').attr('content')
     };
-
-    console.log(payload);
-    return;
 
     if (selectedFlightDetails?.IsLCC) {
         ViewTicketAjax(payload);
