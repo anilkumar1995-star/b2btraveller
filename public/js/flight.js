@@ -1819,13 +1819,25 @@ function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
                     }
 
                     // let segmentSelected = selectedSeats[seg];
-                    let segmentSelected = trip == 'departure' ? selectedSeats[seg] : selectedSeatsRet[seg];
+                    let segmentSelected = '';
+                    if (trip == 'departure') {
+                        segmentSelected = selectedSeats[seg];
+                    }
+                    if (trip == 'return') {
+                        segmentSelected = selectedSeatsRet[seg];
+                    }
 
                     const found = segmentSelected.find(s => s.Code === code);
 
                     if (found) {
                         // remove
-                        selectedSeats[seg] = segmentSelected.filter(s => s.Code !== code);
+                        if (trip == 'departure') {
+                            selectedSeats[seg] = segmentSelected.filter(s => s.Code !== code);
+                        }
+                        if (trip == 'return') {
+                            selectedSeatsRet[seg] = segmentSelected.filter(s => s.Code !== code);
+                        }
+
                         $(this).removeClass("selected").css({ background: "#4caf50" });
                     } else {
                         if (segmentSelected.length >= totalPassengers) {
@@ -1940,13 +1952,8 @@ function updateSummaryUI(trip) {
             return sum + price;
         }, 0);
 
-        localStorage.setItem('selectedMealsDeparture', JSON.stringify(selectedMeals));
         localStorage.setItem('selectedMealsReturn', JSON.stringify(selectedMealsRet));
-
-        localStorage.setItem('selectedBaggageDeparture', JSON.stringify(selectedBaggage));
         localStorage.setItem('selectedBaggageReturn', JSON.stringify(selectedBaggageRet));
-
-        localStorage.setItem('selectedSeatDeparture', JSON.stringify(selectedSeats));
         localStorage.setItem('selectedSeatReturn', JSON.stringify(selectedSeatsRet));
 
         // $("#totalSeats").text(seatsCount);

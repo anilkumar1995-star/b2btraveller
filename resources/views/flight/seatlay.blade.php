@@ -310,6 +310,10 @@
             localStorage.removeItem('selectedmeal');
             localStorage.removeItem('selectedBaggage');
 
+            localStorage.removeItem('selectedMealsReturn');
+            localStorage.removeItem('selectedSeatReturn');
+            localStorage.removeItem('selectedBaggageReturn');
+
             const payload = JSON.parse(localStorage.getItem('payload'));
             const travelerDet = JSON.parse(localStorage.getItem('travelerDetails'));
 
