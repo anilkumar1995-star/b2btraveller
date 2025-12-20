@@ -142,7 +142,7 @@
                 hitBookingAPI('departure');
             }
             if (payload.JourneyType == 2) {
-                 hitBookingAPI('departure');
+                hitBookingAPI('departure');
                 hitBookingAPI('return');
             }
         });
