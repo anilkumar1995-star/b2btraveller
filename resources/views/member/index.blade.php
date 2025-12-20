@@ -483,6 +483,7 @@ break;
                               <label class="custom-control-label" for="membarStatus_${full.id}"></label>
                               <span class='text-inverse pull-right m-l-10'><b>` + full.id + `</b> </span>
                            </div>
+                           <span><b>${full.agentcode}</b> </span>
                            </div>
                         <span style='font-size:13px'>` + full.updated_at + `</span>`;
                 }

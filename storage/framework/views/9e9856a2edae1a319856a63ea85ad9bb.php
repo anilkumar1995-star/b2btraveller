@@ -31,6 +31,11 @@
             }
         }
 
+
+        .select2-container--default {
+            width: 100% !important;
+        }
+
         .select2-container--default .select2-selection--single {
             border: 1px solid #dbdade !important;
             height: 38px !important;
@@ -117,9 +122,10 @@
 
                         <!-- Ticket class -->
                         <div class="col-lg-3 ms-auto">
+
+                            <label>Cabin Class</label>
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select  select" name="FlightCabinClass" id="FlightCabinClass"
-                                    required>
+                                <select class="form-select  select" name="FlightCabinClass" id="FlightCabinClass" required>
                                     <option value="">Select Class</option>
                                     <option value="1">All Class</option>
                                     <option value="2" selected>Economy</option>
@@ -133,6 +139,8 @@
 
                         <!-- Ticket Travelers -->
                         <div class="col-lg-3 ms-auto">
+
+                            <label>Adult Count</label>
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select  select" name="AdultCount" id="AdultCount" required>
                                     <option value="">Select Adult (18+ Yr)</option>
@@ -149,6 +157,8 @@
                             </div>
                         </div>
                         <div class="col-lg-3 ms-auto">
+
+                            <label>Child Count</label>
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select  select" name="ChildCount" id="ChildCount" required>
                                     <option value="">Select Child (2-18 Yr)</option>
@@ -164,6 +174,7 @@
                             </div>
                         </div>
                         <div class="col-lg-3 ms-auto">
+                            <label>Infant Count</label>
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select  select" name="InfantCount" id="InfantCount" required>
                                     <option value="">Select Infant (0-2 Yr)</option>
@@ -178,7 +189,7 @@
                         </div>
 
                         <!-- Tab content START -->
-                        <div class="tab-content mt-4" id="pills-tabContent">
+                        <div class="tab-content pt-0 px-3" id="pills-tabContent">
                             <!-- One way tab START -->
                             <div class="tab-pane fade show active" id="pills-one-way" role="tabpanel"
                                 aria-labelledby="pills-one-way-tab">
@@ -188,10 +199,10 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-geo-alt me-2"></i>Origin</label>
-                                            <select class="form-select  select" data-search-enabled="true"
-                                                name="Origin" id="Origin">
+                                            <select class="form-select  select" data-search-enabled="true" name="Origin"
+                                                id="Origin">
                                                 <option value="">Select location</option>
-                                                
+
                                             </select>
 
                                         </div>
@@ -211,7 +222,7 @@
                                             <select class="form-select  select" data-search-enabled="true"
                                                 id="Destination" name="Destination">
                                                 <option value="">Select location</option>
-                                             
+
                                             </select>
                                         </div>
                                     </div>
@@ -664,7 +675,19 @@
                 <!-- Main content END -->
             </div> <!-- Row END -->
 
+
         </section>
+
+        <div id="roundSummaryCard"
+            class="card shadow-lg position-fixed bottom-0 start-50 translate-middle-x bg-primary text-white d-none"
+            style="width:100%; z-index:9050;">
+
+            <div class="card-body">
+                <div class="row g-3 align-items-center" id="summaryDetails">
+
+                </div>
+            </div>
+        </div>
 
     </main>
 
