@@ -3,16 +3,21 @@
 @section('pagetitle', 'Seat Layout Details')
 
 @section('content')
-    <div class="preloader">
+    <div class="preloader text-center">
         <div class="preloader-item">
             <div class="spinner-grow text-primary"></div>
         </div>
     </div>
+
     <div class="pb-4 d-none" id="seatLayoutContainer">
+
+        <!-- Tabs Header -->
         <div class="card shadow-sm mb-3">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <p class="mb-0 text-secondary" style="font-size: 15px;">
-                    📢 Note: <b class="text-warning">You may proceed with the booking without selecting any optional SSR (Seat, Baggage, Meal) services.</b>
+                    📢 Note: <b class="text-warning">You may proceed with the booking without selecting any optional
+                        SSR
+                        (Seat, Baggage, Meal) services.</b>
                 </p>
 
                 <button class="btn btn-primary" id="proceedBookingBtn">
@@ -20,94 +25,193 @@
                 </button>
             </div>
         </div>
-        {{-- ================== SEAT SELECTION ================== --}}
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-center">
-                    <i class="fa fa-plane me-2"></i>
-                    <h5 class="mb-0 text-white">Seat Selection</h5>
-                </div>
-                <div class="d-flex flex-wrap text-end">
-                    <div class="me-3">
-                        <small>Total Seat:</small> <span id="totalSeatPrice" class="fw-bold">₹0</span>
-                    </div>
-                </div>
-            </div>
 
-            <div class="card-body" style="overflow: auto">
-                <div class="mt-3">
+        <ul class="nav nav-tabs mb-3 bg-light w-100" id="ssrTabs" role="tablist">
+            <li class="nav-item w-50">
+                <button class="nav-link active" id="departure-tab-ssr" data-bs-toggle="tab" data-bs-target="#departureSSR"
+                    type="button">
+                    ✈️ Departure
+                </button>
+            </li>
 
-                    <div class="text-center">
-                        <div class="legend d-inline-block">
-                            <span class="legend-item"><span class="seat " style="background:#007bff">🔵</span>
-                                Selected</span>
-                            <span class="legend-item ms-3"><span class="seat " style="background:#4caf50">🟢</span>
-                                Available</span>
-                            <span class="legend-item ms-3"><span class="seat " style="background:#ff9800">🟡</span>
-                                Reserved</span>
-                            <span class="legend-item ms-3"><span class="seat" style="background:#f44336">🔴</span>
-                                Blocked</span>
-                            <span class="legend-item ms-3"><span class="seat " style="background:transparent">⚪</span>
-                                NoSeatAtThisLocation</span>
-                            <span class="legend-item ms-3"><span class="seat" style="background:#9e9e9e">⚪</span> Not
-                                Set</span>
+            <li class="nav-item w-50 d-none" id="returnTabLi">
+                <button class="nav-link" id="return-tab-ssr" data-bs-toggle="tab" data-bs-target="#returnSSR"
+                    type="button">
+                    🔁 Return
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tabs Content -->
+        <div class="tab-content">
+            <!-- Departure SSR -->
+            <div class="tab-pane fade show active" id="departureSSR">
+                <div class="card mb-4 shadow-sm">
+                    <div
+                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-plane me-2"></i>
+                            <h5 class="mb-0 text-white">Seat Selection</h5>
+                        </div>
+                        <div class="d-flex flex-wrap text-end">
+                            <div class="me-3">
+                                <small>Total Seat:</small> <span id="totalSeatPrice" class="fw-bold">₹0</span>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Nose Section -->
-                <div id="mainPlaneWrapper"></div>
-            </div>
-        </div>
+                    <div class="card-body" style="overflow: auto">
+                        <div class="mt-3">
 
-        {{-- ================== MEAL SELECTION ================== --}}
-        <div class="card mb-5 shadow-sm">
+                            <div class="text-center">
+                                <div class="legend d-inline-block">
+                                    <span class="legend-item"><span class="seat " style="background:#007bff">🔵</span>
+                                        Selected</span>
+                                    <span class="legend-item ms-3"><span class="seat " style="background:#4caf50">🟢</span>
+                                        Available</span>
+                                    <span class="legend-item ms-3"><span class="seat " style="background:#ff9800">🟡</span>
+                                        Reserved</span>
+                                    <span class="legend-item ms-3"><span class="seat" style="background:#f44336">🔴</span>
+                                        Blocked</span>
+                                    <span class="legend-item ms-3"><span class="seat "
+                                            style="background:transparent">⚪</span>
+                                        NoSeatAtThisLocation</span>
+                                    <span class="legend-item ms-3"><span class="seat" style="background:#9e9e9e">⚪</span>
+                                        Not
+                                        Set</span>
+                                </div>
+                            </div>
+                        </div>
 
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-center">
-                    <i class="fa fa-plane me-2"></i>
-                    <h5 class="mb-0 text-white" id="mealSectionHead">Meal Selection</h5>
-                </div>
-                <div class="d-flex flex-wrap text-end">
-
-                    <div class="me-3">
-                        <small>Total Meal:</small> <span id="totalMealPrice" class="fw-bold">₹0</span>
-                    </div>
-
-                </div>
-            </div>
-            <div class="card-body" id="mealContainer">
-
-            </div>
-        </div>
-
-
-        {{-- ================== BAGGAGE SELECTION ================== --}}
-        <div class="card shadow-sm">
-
-            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
-                <div class="d-flex align-items-center">
-                    <i class="fa fa-plane me-2"></i>
-                    <h5 class="mb-0 text-white" id="baggageSectionHead">Baggage Selection</h5>
-                </div>
-                <div class="d-flex flex-wrap text-end">
-                    <div>
-                        <small>Total Baggage:</small> <span id="totalBaggagePrice" class="fw-bold">₹0</span>
+                        <!-- Nose Section -->
+                        <div id="mainPlaneWrapper"></div>
                     </div>
                 </div>
-            </div>
-            <div class="card-body" id="baggageContainer"></div>
-        </div>
+                <div class="card mb-5 shadow-sm">
 
-        {{-- Proceed Button --}}
-        {{-- <div class="text-center mt-5">
-            <button class="btn btn-primary px-5 py-2" id="proceedBookingBtn">
-                Proceed to Booking
-            </button>
-        </div> --}}
+                    <div
+                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-plane me-2"></i>
+                            <h5 class="mb-0 text-white" id="mealSectionHead">Meal Selection</h5>
+                        </div>
+                        <div class="d-flex flex-wrap text-end">
+
+                            <div class="me-3">
+                                <small>Total Meal:</small> <span id="totalMealPrice" class="fw-bold">₹0</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body" id="mealContainer">
+
+                    </div>
+                </div>
+                <div class="card shadow-sm">
+
+                    <div
+                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-plane me-2"></i>
+                            <h5 class="mb-0 text-white" id="baggageSectionHead">Baggage Selection</h5>
+                        </div>
+                        <div class="d-flex flex-wrap text-end">
+                            <div>
+                                <small>Total Baggage:</small> <span id="totalBaggagePrice" class="fw-bold">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" id="baggageContainer"></div>
+                </div>
+            </div>
+
+            <!-- Return SSR -->
+            <div class="tab-pane fade" id="returnSSR">
+                <div class="card mb-4 shadow-sm">
+                    <div
+                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-plane me-2"></i>
+                            <h5 class="mb-0 text-white">Seat Selection</h5>
+                        </div>
+                        <div class="d-flex flex-wrap text-end">
+                            <div class="me-3">
+                                <small>Total Seat:</small> <span id="totalSeatPriceRet" class="fw-bold">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body" style="overflow: auto">
+                        <div class="mt-3">
+
+                            <div class="text-center">
+                                <div class="legend d-inline-block">
+                                    <span class="legend-item"><span class="seat " style="background:#007bff">🔵</span>
+                                        Selected</span>
+                                    <span class="legend-item ms-3"><span class="seat "
+                                            style="background:#4caf50">🟢</span>
+                                        Available</span>
+                                    <span class="legend-item ms-3"><span class="seat "
+                                            style="background:#ff9800">🟡</span>
+                                        Reserved</span>
+                                    <span class="legend-item ms-3"><span class="seat"
+                                            style="background:#f44336">🔴</span>
+                                        Blocked</span>
+                                    <span class="legend-item ms-3"><span class="seat "
+                                            style="background:transparent">⚪</span>
+                                        NoSeatAtThisLocation</span>
+                                    <span class="legend-item ms-3"><span class="seat"
+                                            style="background:#9e9e9e">⚪</span>
+                                        Not
+                                        Set</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Nose Section -->
+                        <div id="mainPlaneWrapperRet"></div>
+                    </div>
+                </div>
+                <div class="card mb-5 shadow-sm">
+
+                    <div
+                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-plane me-2"></i>
+                            <h5 class="mb-0 text-white" id="mealSectionHeadRet">Meal Selection</h5>
+                        </div>
+                        <div class="d-flex flex-wrap text-end">
+
+                            <div class="me-3">
+                                <small>Total Meal:</small> <span id="totalMealPriceRet" class="fw-bold">₹0</span>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="card-body" id="mealContainerRet">
+
+                    </div>
+                </div>
+                <div class="card shadow-sm">
+
+                    <div
+                        class="card-header bg-primary text-white d-flex justify-content-between align-items-center flex-wrap">
+                        <div class="d-flex align-items-center">
+                            <i class="fa fa-plane me-2"></i>
+                            <h5 class="mb-0 text-white" id="baggageSectionHeadRet">Baggage Selection</h5>
+                        </div>
+                        <div class="d-flex flex-wrap text-end">
+                            <div>
+                                <small>Total Baggage:</small> <span id="totalBaggagePriceRet" class="fw-bold">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body" id="baggageContainerRet"></div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    {{-- ================== STYLES ================== --}}
     <style>
         .plane-container {
             display: flex;
@@ -206,20 +310,41 @@
             localStorage.removeItem('selectedmeal');
             localStorage.removeItem('selectedBaggage');
 
+            localStorage.removeItem('selectedMealsReturn');
+            localStorage.removeItem('selectedSeatReturn');
+            localStorage.removeItem('selectedBaggageReturn');
+
+            const payload = JSON.parse(localStorage.getItem('payload'));
             const travelerDet = JSON.parse(localStorage.getItem('travelerDetails'));
 
             if (travelerDet) {
-                const resultIndex = localStorage.getItem('ResultIndex');
-                const traceId = localStorage.getItem('TraceId');
-                if (resultIndex && traceId) {
-                    getSSRDetails(resultIndex, traceId);
+                if (payload.JourneyType == 1) {
+                    const resultIndex = localStorage.getItem('ResultIndex');
+                    const traceId = localStorage.getItem('TraceId');
+                    if (resultIndex && traceId) {
+                        getSSRDetails(resultIndex, traceId, 'departure');
 
-                } else {
-                    console.log('No SSR details found in localStorage.');
+                    } else {
+                        console.log('No SSR details found in localStorage.');
+                    }
+                } else if (payload.JourneyType == 2) {
+                    // notify('We will working on roundtrip ssr api integration', 'error');
+                    // return;
+                    const depresultIndex = localStorage.getItem('DepartureResultIndex');
+                    const rettresultIndex = localStorage.getItem('ReturnResultIndex');
+                    const traceId = localStorage.getItem('TraceId');
+
+                    if (depresultIndex && rettresultIndex && traceId) {
+                        getSSRDetails(depresultIndex, traceId, 'departure');
+                        getSSRDetails(rettresultIndex, traceId, 'return');
+                    } else {
+                        console.log('No SSR details found in localStorage.');
+                    }
                 }
             } else {
                 window.location.href = "/flight/detail";
             }
+
         });
     </script>
 @endpush

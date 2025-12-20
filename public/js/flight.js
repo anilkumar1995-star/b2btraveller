@@ -3,6 +3,10 @@ let selectedSeats = {};
 let selectedMeals = [];
 let selectedBaggage = [];
 
+let selectedSeatsRet = {};
+let selectedMealsRet = [];
+let selectedBaggageRet = [];
+
 let selectedDeparture = '';
 let selectedReturn = '';
 
@@ -587,51 +591,82 @@ function formatDuration(minutes) {
     return `${hrs}h ${mins}m`;
 }
 
+function getFareRules(resultIndex, traceId, trip) {
+    if (!resultIndex || !traceId) return;
 
-function getFareRules(resultIndex, traceId, trip = 'oneway') {
-    if (resultIndex && traceId) {
-        $.ajax({
-            url: "/flight/farerule",
-            method: "POST",
-            data: {
-                ResultIndex: resultIndex,
-                TraceId: traceId,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            success: function (response) {
-                if (response.status == 'success') {
-                    let flightDetails = response.data;
-
-                    // trace id store in localstorage
-
-                    localStorage.setItem("TraceId", flightDetails?.TraceId);
-
-                    if (flightDetails?.FareRules.length > 0) {
-                        $('#fareRulehead').html(`<h5 class="card-title mb-0">
-                                ✈️
-                               ${flightDetails.FareRules[0].Origin} - ${flightDetails.FareRules[0].Destination}  [${flightDetails.FareRules[0].Airline}] 
-                               <span class="badge bg-light text-success mb-2"><i class="ti ti-star-fill me-2"></i>Travel
-                                 Hack</span>
-                            </h5>`);
-                        $('#importantInfoSection').html(flightDetails.FareRules[0].FareRuleDetail || 'No Fare Rules Available.');
-                        $('#importantInfoSection table').addClass('w-100');
-                    } else {
-                        $('#fareRulehead').html(`<h5 class="card-title mb-0">No Header Data</h4>`);
-                        $('#importantInfoSection').html('No Data Available');
-                    }
-                } else {
-                    notify(response.message, "error");
-                }
-            },
-            error: function (xhr) {
-                notify("Failed to fetch fare quote. Please try again.", "error");
-            }
-        });
-
+    if (trip == 'departure') {
+        $('#importantInfoSectionDeparture').html('');
     }
+    if (trip == 'return') {
+        $('#importantInfoSectionReturn').html('');
+    }
+    $.ajax({
+        url: "/flight/farerule",
+        method: "POST",
+        data: {
+            ResultIndex: resultIndex,
+            TraceId: traceId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+
+            if (response.status !== 'success') {
+                notify(response.message, "error");
+                return;
+            }
+
+            let flightDetails = response.data;
+            localStorage.setItem("TraceId", flightDetails?.TraceId);
+
+            let fareRules = flightDetails?.FareRules || [];
+
+
+            if (fareRules.length === 0) {
+
+                if (trip === 'departure') {
+                    $('#importantInfoSectionDeparture').html('No Data Available');
+                }
+                if (trip === 'return') {
+                    $('#importantInfoSectionReturn').html('No Data Available');
+                }
+                return;
+            }
+
+            let cardHtml = '';
+            fareRules.forEach((rule, index) => {
+
+                cardHtml += `
+                    <div class="card mb-3">
+                        <div class="card-header border-bottom">
+                            <h5 class="card-title mb-0">
+                                ✈️ ${rule.Origin} - ${rule.Destination} [${rule.Airline}]
+                                <span class="badge bg-light text-success mb-2"><i class="ti ti-star fs-6 me-2"></i>Travel
+                                    Hack ${index + 1}</span>
+                            </h5>
+                        </div>
+
+                        <div class="card-body mt-3">
+                            ${rule.FareRuleDetail || 'No Fare Rules Available.'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            if (trip == 'departure') {
+                $('#importantInfoSectionDeparture').html(cardHtml);
+            }
+            if (trip == 'return') {
+                $('#importantInfoSectionReturn').html(cardHtml);
+            }
+        },
+        error: function () {
+            notify("Failed to fetch fare rule. Please try again.", "error");
+        }
+    });
 }
 
-function getFareQuote(resultIndex, traceId, trip = 'oneway') {
+
+function getFareQuote(resultIndex, traceId, trip) {
     if (resultIndex && traceId) {
         $.ajax({
             url: "/flight/farequote",
@@ -643,19 +678,24 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
             },
             success: function (response) {
                 if (response.status == 'success') {
-                   
+
                     let flightDetails = response.data;
                     let resultData = flightDetails?.Results || {};
 
-                     console.log(resultData);
-                     
                     let segmnt = resultData.Segments[0];
                     const fmt = (num) => Number(num || 0).toLocaleString('en-IN');
 
-                    // Mini Fare rULE sECTION
+                    $('#returnAccordion').hide();
+
+
+                    if (trip === 'return') {
+                        $('#returnAccordion').show();
+                    }
 
                     let minifarehtml = '';
-                    minifarehtml += `<div class="card-body">
+                    if (resultData?.MiniFareRules?.[0]?.length) {
+
+                        minifarehtml += `<div class="card-body">
                                 
                                 <div class="table-responsive-lg">
                                     <table class="table table-bordered rounded caption-bottom overflow-hidden mb-0">
@@ -675,30 +715,32 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
                                         
                                         <tbody class="border-top-0">`;
 
-                    resultData.MiniFareRules[0].forEach(mfare => {
-                        minifarehtml += `
+                        resultData.MiniFareRules[0].forEach(mfare => {
+                            minifarehtml += `
                                 <tr>
-                                    <td>${mfare?.JourneyPoints}</td>
-                                    <td>${mfare.Type}</td>
-                                    <td>${mfare.Details}</td>
+                                    <td>${mfare?.JourneyPoints || '-'}</td>
+                                    <td>${mfare.Type || '-'}</td>
+                                    <td>${mfare.Details || '-'}</td>
                                     <td>${mfare?.OnlineReissueAllowed ? 'Allowed' : 'Not Allowed'}</td>
                                     <td>${mfare?.OnlineRefundAllowed ? 'Allowed' : 'Not Allowed'}</td>
                                 </tr>
                                 `;
-                    });
+                        });
 
-                    minifarehtml += `</tbody>
+                        minifarehtml += `</tbody>
                                     </table>
                                 </div>
                                 
                             </div>`;
 
-
-                    $('#miniFareRules').html(minifarehtml);
-
+                    } else {
+                        minifarehtml = `<div class="p-3 text-muted">No mini fare rules available</div>`;
+                    }
 
                     let datachargehtml = '';
-                    datachargehtml += ` 
+                    if (resultData?.FareBreakdown?.length) {
+
+                        datachargehtml += ` 
                             <div class="card-header border-bottom"> 
                                 <h5 class="card-title mb-0">
                                     ✈️
@@ -707,7 +749,7 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
                                 </h5>
                             </div>
                             
-                            <div class="card-body">
+                            <div class="card-body mt-3">
                                 
                                 <div class="table-responsive-lg">
                                     <table class="table table-bordered rounded caption-bottom overflow-hidden mb-0">
@@ -725,9 +767,9 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
                                         </thead>
                                         
                                         <tbody class="border-top-0">`;
-                    resultData.FareBreakdown.forEach(fare => {
-                        let type = fare.PassengerType === 1 ? "Adult" : fare.PassengerType === 2 ? "Child" : "Infant";
-                        datachargehtml += `
+                        resultData.FareBreakdown.forEach(fare => {
+                            let type = fare.PassengerType === 1 ? "Adult" : fare.PassengerType === 2 ? "Child" : "Infant";
+                            datachargehtml += `
                                 <tr>
                                     <td>${type}</td>
                                     <td>₹${fare.BaseFare}</td>
@@ -735,22 +777,38 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
                                     <td>₹${resultData?.Fare.PublishedFare}</td>
                                 </tr>
                                 `;
-                    });
+                        });
 
-                    datachargehtml += `</tbody>
+                        datachargehtml += `</tbody>
                                     </table>
                                 </div>
                                 
                             </div>`;
 
-                    $('#datatchargeDet').html(datachargehtml);
+                    } else {
+                        datachargehtml = `<div class="p-3 text-muted">No date change charges available</div>`;
+                    }
+
+                    if (trip === 'departure') {
+                        $('#departureMiniFare').html(minifarehtml);
+                        $('#departureDateCharge').html(datachargehtml);
+                    }
+
+                    if (trip === 'return') {
+                        $('#returnMiniFare').html(minifarehtml);
+                        $('#returnDateCharge').html(datachargehtml);
+                    }
 
                     // Fare Section
+
+                    if (trip == 'return') {
+                        $('#returntabfare').removeClass('d-none');
+                    }
+
                     let fare = resultData?.Fare || {};
                     let farehtml = '';
 
-                    farehtml = `
-                        <div class="card-header border-bottom bg-light d-flex justify-content-between align-items-center">
+                    farehtml += `<div class="card-header border-bottom bg-light d-flex justify-content-between align-items-center">
                             <h5 class="card-title mb-0">Fare Summary</h5>
                                 <span class="badge ${resultData?.IsRefundable ? 'bg-success' : 'bg-danger'}">
                                 ${resultData?.IsRefundable ? 'Refundable' : 'Non-Refundable'}
@@ -759,14 +817,14 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
 
                         <div class="card-body" >
                             <div class="row mb-3">
-                                <div class="col-md-8">
+                                <div class="col-md-7">
                                     <h6 class="fw-normal mb-1">${segmnt[0]?.Airline?.AirlineName || 'Unknown Airline'}</h6>
                                     <p class="mb-0 small text-muted">
                                         ${segmnt[0]?.Airline?.AirlineCode || ''} - ${segmnt[0]?.Airline?.FlightNumber || ''}
                                     </p>
                                 </div>
-                                <div class="col-md-4 text-end">
-                                    <h5 class="fw-bold text-success mb-0">₹ ${fmt(fare?.PublishedFare)}</h5>
+                                <div class="col-md-5 text-end">
+                                    <h5 class="fw-bold text-success mb-0">₹${fmt(fare?.PublishedFare)}</h5>
                                     <small class="text-muted">Total Fare</small>
                                 </div>
                             </div>
@@ -775,11 +833,9 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
                                 <li
                                     class="list-group-item d-flex justify-content-between align-items-center">
                                     <span class="h6 fw-normal mb-0">Base Fare
-                                        <a href="#" tabindex="0" data-bs-toggle="popover"
-                                            data-bs-trigger="focus" data-bs-placement="bottom"
-                                            data-bs-content="COVID-19 test required Vaccinated travelers can visit">
+                                        <span tabindex="0">
                                             <i class="ti ti-info-circle"></i>
-                                        </a>
+                                        </span>
                                     </span>
                                     <span class="fs-5">₹${fmt(fare?.BaseFare)}</span>
                                 </li>
@@ -813,56 +869,86 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
                         </div>
                     `;
 
-                    $("#fareChargeDetails").html(farehtml);
+                    if (trip === 'departure') {
+                        $("#departurefareChargeDetails").html(farehtml);
+                    }
+
+                    if (trip === 'return') {
+                        $("#returnfareChargeDetails").html(farehtml);
+                    }
 
                     // Baggage Section
-                    let bagDetHtml = '';
-                    bagDetHtml = `
-                        <div class="table-responsive-lg">
-                            <table class="table table-bordered rounded caption-bottom overflow-hidden mb-0">
-                            <thead class="table-dark border-light">
-                                    <tr>
-                                        <th scope="col">Baggage Type</th>
-                                        <th scope="col">Check In</th>
-                                        <th scope="col">Cabin</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="border-top-0">
-                        `;
+                    if (resultData?.Segments[0].length != 0) {
+                        let bagDetHtml = '';
 
-                    resultData?.Segments[0].forEach((seg, index) => {
-                        bagDetHtml += `
-                                <tr>
-                                    <td>Adult 🧳 (Segment ${index + 1} - ${seg.Craft})</td>
-                                    <td>${seg.Baggage}</td>
-                                    <td>${seg.CabinBaggage}</td>
-                                </tr>
+                        bagDetHtml += `<div class="card mb-2 border"><div class="card-header border-bottom px-4">
+                                    <h4 class="card-title mb-0">Baggage Information for (${trip})</h4>
+                                </div>
+
+                            <div class="card-body py-4">
+                                <div class="table-responsive-lg">
+                                <table class="table table-bordered rounded caption-bottom overflow-hidden mb-0">
+                                <thead class="table-dark border-light">
+                                        <tr>
+                                            <th scope="col">Baggage Type</th>
+                                            <th scope="col">Check In</th>
+                                            <th scope="col">Cabin</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="border-top-0">
                             `;
-                    });
 
-                    bagDetHtml += `
-                                </tbody>
-                            </table>
+                        resultData?.Segments[0].forEach((seg, index) => {
+                            bagDetHtml += `
+                                    <tr>
+                                        <td>Adult 🧳 (Segment ${index + 1} - ${seg.Craft})</td>
+                                        <td>${seg.Baggage}</td>
+                                        <td>${seg.CabinBaggage}</td>
+                                    </tr>
+                                `;
+                        });
+
+                        bagDetHtml += `
+                                    </tbody>
+                                </table>
+                            </div>           
+                        </div>
                         </div>`;
 
-                    $('#baggageInfo').html(bagDetHtml);
+                        $('#baggageInfo').append(bagDetHtml);
+                    } else {
+                        $('#baggageInfo').append(`<div class="card border mb-2">
+                            <div class="card-header border-bottom px-4">
+                                    <h4 class="card-title mb-0">Baggage Information for (${trip})</h4>
+                                </div>
+                                <div class="text-center text-danger py-3">
+                                    No baggage data available
+                                </div>
+                            </div>
+                        `);
+                    }
 
                     // Coupon Section
+
+                    $('#couponSectiondeparture').hide().html('');
+                    $('#couponSectionreturn').hide().html('');
                     if (resultData?.IsCouponAppilcable) {
                         let couponHtml = '';
-                        couponHtml = `<form>
+
+                        couponHtml += ` <div class="card card-body bg-light mb-3">
+                                 <form>
                                     <div class="card-title">
-                                        <h5>Offer & Discount</h5>
+                                        <h5>Offer & Discount for (${trip})</h5>
                                     </div>
-                                    
+
                                     <div class="input-group mt-2">
                                         <input class="form-control form-control" placeholder="Coupon code">
                                         <button type="button" class="btn btn-primary">Apply</button>
                                     </div>
-                                </form>`;
-                        $('#couponSection').html(couponHtml);
+                                </form>
+                        </div>`;
+                        $('#couponSection').append(couponHtml);
                     }
-
                     // Passenger Form
                     generateTravelerForm(resultData);
                 } else {
@@ -878,50 +964,58 @@ function getFareQuote(resultIndex, traceId, trip = 'oneway') {
 }
 
 
-function displayFlightDetails(flightDetails, trip = 'oneway') {
+function displayFlightDetails(flightDetails, trip) {
+
 
     let segs = flightDetails?.Segments[0] || [];
+
+    let firstSeg = segs[0] || null;
+    let lastSeg = segs.length ? segs[segs.length - 1] : null;
+
     let detailsHtml = '';
     let titledetailsHtml = '';
 
     const fmtTime = (t) => new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     const fmtDate = (t) => new Date(t).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 
-    titledetailsHtml = `<h1 class="display-4 mb-0"><i class="fa-solid fa-plane rtl-flip"></i></h1>
-
+    titledetailsHtml = `<h1 class="display-4 mb-0"><i class="fa-solid fa-plane rtl-flip fs-1"></i></h1>
         <div class="ms-3">
             <ul class="list-inline mb-2">
                 <li class="list-inline-item me-2">
-                    <h3 class="mb-0">${segs[0].Origin?.Airport?.CityName}(${segs[0].Origin?.Airport?.AirportCode || segs[0].Origin?.Airport?.CityCode})</h3>
+                    <h4 class="mb-0">${firstSeg.Origin?.Airport?.CityName}(${firstSeg.Origin?.Airport?.AirportCode || firstSeg.Origin?.Airport?.CityCode})</h4>
                 </li>
                 <li class="list-inline-item me-2">
-                    <h3 class="mb-0"><i class="ti ti-arrow-right"></i></h3>
+                    <h4 class="mb-0"><i class="ti ti-arrow-right"></i></h4>
                 </li>
                 <li class="list-inline-item me-0">
-                    <h3 class="mb-0">${segs[0].Destination?.Airport?.CityName}(${segs[0].Destination?.Airport?.AirportCode || segs[0].Destination?.Airport?.CityCode})</h3>
+                    <h4 class="mb-0">${lastSeg.Destination?.Airport?.CityName}(${lastSeg.Destination?.Airport?.AirportCode || lastSeg.Destination?.Airport?.CityCode})</h4>
                 </li>
             </ul>
 
             <ul class="nav nav-divider h6 fw-normal text-body mb-0">
                 <li class="nav-item">${fmtDate(segs[0].Origin?.DepTime)}</li>
-                <li class="nav-item">${segs.length - 1 != 0 ? segs.length - 1 : 'Non'} Stop</li>
+                <li class="nav-item">&nbsp;| &nbsp;${segs.length - 1 != 0 ? segs.length - 1 : 'Non'} Stop &nbsp;| &nbsp;</li>
+                <li class="nav-item badge bg-label-warning">${trip}</li>
             </ul>
         </div>`;
 
     // -------- MULTIPLE SEGMENTS LOOP --------
+
+    let modalId = trip == 'departure' ? 'ruleFaredeparture' : 'ruleFarereturn';
     detailsHtml += `<div class="card-header d-flex justify-content-between pb-0">
             <h6 class="fw-normal mb-0"><span class="text-body">Travel Class:</span> ${segs[0].CabinClass}</h6>
-            <a href="#" class="btn p-0 mb-0"
-                data-bs-toggle="modal" data-bs-target="#ruleFare">
-                <i class="ti ti-eye me-1"></i> <u class="text-decoration-underline">Fare Rules</u>
+            <a href="javascript:void(0)" 
+                class="btn p-0 mb-0"
+                data-bs-toggle="modal"
+                data-bs-target="#${modalId}">
+                <i class="ti ti-eye me-1"></i>
+                <u class="text-decoration-underline">Fare Rules (${trip})</u>
             </a>
         </div>  
     <div class="card-body p-4">`;
 
     for (let i = 0; i < segs.length; i++) {
-
         let s = segs[i];
-
         detailsHtml += `
         <div class="row g-4 ">
             <div class="col-md-3 pt-5">
@@ -929,7 +1023,6 @@ function displayFlightDetails(flightDetails, trip = 'oneway') {
                 <h6 class="fw-normal mb-0">${s.Airline.AirlineName}</h6>
                 <h6 class="fw-normal mb-0">(${s.Airline.AirlineCode} - ${s.Airline.FlightNumber})</h6>
             </div>
-
             <div class="col-sm-4 col-md-3">
                 <h4>${s.Origin.Airport.AirportCode}</h4>
                 <h6>${fmtTime(s.Origin.DepTime)}</h6>
@@ -937,10 +1030,8 @@ function displayFlightDetails(flightDetails, trip = 'oneway') {
                 <p>${s.Origin.Airport.AirportName} ${s.Origin.Airport.CityName}</p>
                 <p>Terminal: ${s.Origin.Airport.Terminal || 'N/A'}</p>
             </div>
-
             <div class="col-sm-4 col-md-3 text-center my-sm-auto">
                 <h5>${formatDuration(s.Duration)}</h5>
-
                 <div class="position-relative my-4">
                     <hr class="bg-primary opacity-5 position-relative">
                     <div class="icon-md bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle p-2">
@@ -948,7 +1039,6 @@ function displayFlightDetails(flightDetails, trip = 'oneway') {
                     </div>
                 </div>
             </div>
-
             <div class="col-sm-4 col-md-3 text-end">
                 <h4>${s.Destination.Airport.AirportCode}</h4>
                 <h6>${fmtTime(s.Destination.ArrTime)}</h6>
@@ -964,8 +1054,7 @@ function displayFlightDetails(flightDetails, trip = 'oneway') {
                 segs[i + 1].Origin.DepTime
             );
 
-            detailsHtml += `
-            <div class="bg-light rounded-2 text-center text-danger p-2 mb-4">
+            detailsHtml += `<div class="bg-light rounded-2 text-center text-danger p-2 mb-4">
                 Ground Time at ${s.Destination.Airport.CityName}: ${groundTime}
             </div>`;
         }
@@ -973,9 +1062,30 @@ function displayFlightDetails(flightDetails, trip = 'oneway') {
 
     detailsHtml += `</div>`;
 
-    $('#titleSection').html(titledetailsHtml);
-    $('#getSelectFlightDetails').html(detailsHtml);
+    if (trip === 'return') {
+        // Create a new accordion item for return
+        $('#accordionExample').append(`
+            <div class="accordion-item mb-3 border">
+                <h2 class="accordion-header" id="headingReturn">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapseReturn" aria-expanded="false" aria-controls="collapseReturn">
+                        <div class="d-flex align-items-center" id="titleSectionReturn"></div>
+                    </button>
+                </h2>
+                <div id="collapseReturn" class="border-top accordion-collapse collapse" aria-labelledby="headingReturn"
+                    data-bs-parent="#accordionExample">
+                    <div class="accordion-body mt-3" id="getSelectFlightDetailsReturn"></div>
+                </div>
+            </div>
+        `);
+        $('#titleSectionReturn').html(titledetailsHtml);
+        $('#getSelectFlightDetailsReturn').html(detailsHtml);
+    } else {
+        $('#titleSection').html(titledetailsHtml);
+        $('#getSelectFlightDetails').html(detailsHtml);
+    }
 }
+
 
 function calculateGroundTime(prevArr, nextDep) {
     let diffMs = new Date(nextDep) - new Date(prevArr);
@@ -1155,12 +1265,6 @@ function generateTravelerForm(response) {
             });
         });
 
-
-
-
-
-
-
         localStorage.setItem('travelerDetails', JSON.stringify(travelers));
         localStorage.setItem('contactDetails', JSON.stringify({
             mobile: $('.required-contact').eq(0).val(),
@@ -1172,10 +1276,13 @@ function generateTravelerForm(response) {
 }
 
 
-function getSSRDetails(resultIndex, traceId) {
+function getSSRDetails(resultIndex, traceId, trip) {
+
     if (resultIndex && traceId) {
         $('#seatLayoutContainer').addClass('d-none');
         $('.preloader').removeClass('d-none');
+
+        $('#returnTabLi').addClass('d-none');
         $.ajax({
             url: "/flight/ssr",
             method: "POST",
@@ -1195,6 +1302,10 @@ function getSSRDetails(resultIndex, traceId) {
             success: function (response) {
                 if (response.status == 'success') {
 
+                    if (trip == 'return') {
+                        $('#returnTabLi').removeClass('d-none');
+                    }
+
                     let searchPayload = JSON.parse(localStorage.getItem('payload')) || {};
                     let adults = parseInt(searchPayload.AdultCount) || 1;
                     let children = parseInt(searchPayload.ChildCount) || 0;
@@ -1202,9 +1313,17 @@ function getSSRDetails(resultIndex, traceId) {
 
                     totalPassengers = adults + children + infants;
 
+                    if (trip === 'departure') {
+                        selectedMeals = [];
+                        selectedBaggage = [];
+                        selectedSeats = {};
+                    }
 
-                    selectedMeals = [];
-                    selectedBaggage = [];
+                    if (trip === 'return') {
+                        selectedMealsRet = [];
+                        selectedBaggageRet = [];
+                        selectedSeatsRet = {};
+                    }
 
                     let ssrDetails = response.data;
                     // Baggae Details
@@ -1260,7 +1379,7 @@ function getSSRDetails(resultIndex, traceId) {
                                         <td>${baggage.Weight || '0'} Kg</td>
                                         <td>${priceText}</td>
                                         <td>
-                                            <input type="checkbox" name="baggage-checkbox" 
+                                            <input type="checkbox" name="baggage-checkbox${trip}" 
                                             data-code="${baggage?.Code}" 
                                             data-price="${priceText}"  
                                             data-description="${baggage?.Description}"
@@ -1274,19 +1393,35 @@ function getSSRDetails(resultIndex, traceId) {
                                                 </tbody>
                                             </table>
                                              <small class="text-muted d-block mt-1 text-end">
-                                                <span class="baggage-count">0</span> / ${totalPassengers} selected
+                                                <span class="baggage-count${trip}">0</span> / ${totalPassengers} selected
                                             </small>
                                         </div>
                             `;
                         });
 
-                        $("#baggageContainer").html(baggageHtml);
+                        if (trip == 'departure') {
+                            $("#baggageContainer").html(baggageHtml);
+                        }
+                        if (trip == 'return') {
+                            $("#baggageContainerRet").html(baggageHtml);
+                        }
+
                     } else {
-                        $("#baggageContainer").html(`
+                        if (trip == 'departure') {
+                            $("#baggageContainer").html(`
                             <div class="alert alert-warning text-center mb-0">
                                 No baggage options available for this flight.
                             </div>
                         `);
+                        }
+                        if (trip == 'return') {
+                            $("#baggageContainerRet").html(`
+                            <div class="alert alert-warning text-center mb-0">
+                                No baggage options available for this flight.
+                            </div>
+                        `);
+                        }
+
                     }
 
                     // Meal Details
@@ -1340,7 +1475,7 @@ function getSSRDetails(resultIndex, traceId) {
                                         <td>${meal.Quantity || '0'} </td>
                                         <td>${priceText}</td>
                                         <td>
-                                            <input type="checkbox" name="meal-checkbox" 
+                                            <input type="checkbox" name="meal-checkbox${trip}" 
                                             data-code="${meal?.Code}" 
                                             data-price="${priceText}" 
                                             data-description="${meal?.Description}"
@@ -1354,30 +1489,52 @@ function getSSRDetails(resultIndex, traceId) {
                                                 </tbody>
                                             </table>
                                              <small class="text-muted d-block mt-1 text-end">
-                                                <span class="meal-count">0</span> / ${totalPassengers} selected
+                                                <span class="meal-count${trip}">0</span> / ${totalPassengers} selected
                                             </small>
                                         </div>
                             `;
                         });
 
-                        $("#mealContainer").html(mealHtml);
+                        if (trip == 'departure') {
+                            $("#mealContainer").html(mealHtml);
+                        }
+                        if (trip == 'return') {
+                            $("#mealContainerRet").html(mealHtml);
+                        }
                     } else {
-                        $("#mealContainer").html(`
+                        if (trip == 'departure') {
+                            $("#mealContainer").html(`
                             <div class="alert alert-warning text-center mb-0">
                                 No Meal options available for this flight.
                             </div>
                         `);
+                        }
+                        if (trip == 'return') {
+                            $("#mealContainerRet").html(`
+                            <div class="alert alert-warning text-center mb-0">
+                                No Meal options available for this flight.
+                            </div>
+                        `);
+                        }
+
                     }
 
                     if (ssrDetails?.SeatDynamic && ssrDetails?.SeatDynamic.length > 0) {
-                        renderSeatLayout(ssrDetails?.SeatDynamic, totalPassengers);
+                        renderSeatLayout(ssrDetails?.SeatDynamic, totalPassengers, trip);
                     } else {
-                        $("#mainPlaneWrapper").html(`<div class="alert alert-danger">No seat layout found</div>`);
+
+                        if (trip == 'departure') {
+                            $("#mainPlaneWrapper").html(`<div class="alert alert-danger">No seat layout found</div>`);
+                        }
+                        if (trip == 'return') {
+                            $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger">No seat layout found</div>`);
+                        }
+
                     }
 
                     // Baggage checkbox handler
-                    $(document).on('change', 'input[name="baggage-checkbox"]', function () {
-                        let checkedCount = $('input[name="baggage-checkbox"]:checked').length;
+                    $(document).on('change', `input[name="baggage-checkbox${trip}"]`, function () {
+                        let checkedCount = $(`input[name="baggage-checkbox${trip}"]:checked`).length;
 
                         if ($(this).is(':checked')) {
                             if (checkedCount > totalPassengers) {
@@ -1404,22 +1561,38 @@ function getSSRDetails(resultIndex, traceId) {
                                 Description: bdesc,
                                 bagObjData: $(this).data('bagobjdata')
                             };
-                            selectedBaggage.push(baggageData);
+                            if (trip === 'departure') {
+                                selectedBaggage.push(baggageData);
+                            }
+                            if (trip === 'return') {
+                                selectedBaggageRet.push(baggageData);
+                            }
+
 
                         } else {
-                            // 🔴 Remove unselected baggage from array
+
                             let codeToRemove = $(this).data('code');
-                            selectedBaggage = selectedBaggage.filter(baggage => baggage.Code !== codeToRemove);
+                            if (trip === 'departure') {
+                                selectedBaggage = selectedBaggage.filter(baggage => baggage.Code !== codeToRemove);
+                            }
+                            if (trip === 'return') {
+                                selectedBaggageRet = selectedBaggageRet.filter(baggage => baggage.Code !== codeToRemove);
+                            }
                         }
 
-                        // 🧮 Update selected count display
-                        $('.baggage-count').text(selectedBaggage.length);
-                        updateSummaryUI();
+                        if (trip === 'departure') {
+                            $(`.baggage-count${trip}`).text(selectedBaggage.length);
+                        }
+                        if (trip === 'return') {
+                            $(`.baggage-count${trip}`).text(selectedBaggageRet.length);
+                        }
+
+                        updateSummaryUI(trip);
                     });
 
 
-                    $(document).on('change', 'input[name="meal-checkbox"]', function () {
-                        let checkedCount = $('input[name="meal-checkbox"]:checked').length;
+                    $(document).on('change', `input[name="meal-checkbox${trip}"]`, function () {
+                        let checkedCount = $(`input[name="meal-checkbox${trip}"]:checked`).length;
 
 
                         if ($(this).is(':checked')) {
@@ -1445,23 +1618,46 @@ function getSSRDetails(resultIndex, traceId) {
                                 Description: mdesc,
                                 mealObjData: $(this).data('mealobjdata')
                             };
-                            selectedMeals.push(mealData);
+
+                            if (trip === 'departure') {
+                                selectedMeals.push(mealData);
+                            }
+                            if (trip === 'return') {
+                                selectedMealsRet.push(mealData);
+                            }
 
                         } else {
-                            // 🔴 Remove unselected meal from array
                             let codeToRemove = $(this).data('code');
-                            selectedMeals = selectedMeals.filter(meal => meal.Code !== codeToRemove);
+                            if (trip === 'departure') {
+                                selectedMeals = selectedMeals.filter(meal => meal.Code !== codeToRemove);
+                            }
+                            if (trip === 'return') {
+                                selectedMealsRet = selectedMealsRet.filter(meal => meal.Code !== codeToRemove);
+                            }
                         }
 
                         // 🧮 Update selected count display
-                        $('.meal-count').text(selectedMeals.length);
-                        updateSummaryUI();
+                        if (trip == 'departure') {
+                            $(`.meal-count${trip}`).text(selectedMeals.length);
+                        }
+                        if (trip === 'return') {
+                            $(`.meal-count${trip}`).text(selectedMealsRet.length);
+                        }
+
+                        updateSummaryUI(trip);
                     });
 
                 } else {
-                    $("#baggageContainer").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
-                    $("#mealContainer").html(`<div class="alert alert-danger">Meal Not Found</div>`);
-                    $("#mainPlaneWrapper").html(`<div class="alert alert-danger">Seat Layout Not found</div>`);
+                    if (trip == "departure") {
+                        $("#baggageContainer").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
+                        $("#mealContainer").html(`<div class="alert alert-danger">Meal Not Found</div>`);
+                        $("#mainPlaneWrapper").html(`<div class="alert alert-danger">Seat Layout Not found</div>`);
+                    }
+                    if (trip == 'return') {
+                        $("#baggageContainerRet").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
+                        $("#mealContainerRet").html(`<div class="alert alert-danger">Meal Not Found</div>`);
+                        $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger">Seat Layout Not found</div>`);
+                    }
                 }
             },
             error: function (xhr) {
@@ -1472,13 +1668,23 @@ function getSSRDetails(resultIndex, traceId) {
     }
 }
 
-function renderSeatLayout(seatDynamicData, totalPassengers) {
+function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
 
     $("#flightContainer").html("");
-    $("#mainPlaneWrapper").html("");
+    if (trip == 'departure') {
+        $("#mainPlaneWrapper").html("");
+    }
+    if (trip == 'return') {
+        $("#mainPlaneWrapperRet").html("");
+    }
 
     if (!seatDynamicData || seatDynamicData.length === 0) {
-        $("#mainPlaneWrapper").html("<p class='text-danger'>No seat layout found.</p>");
+        if (trip == 'departure') {
+            $("#mainPlaneWrapper").html("<p class='text-danger'>No seat layout found.</p>");
+        }
+        if (trip == 'return') {
+            $("#mainPlaneWrapperRet").html("<p class='text-danger'>No seat layout found.</p>");
+        }
         return;
     }
 
@@ -1486,8 +1692,15 @@ function renderSeatLayout(seatDynamicData, totalPassengers) {
     const segmentSeats = seatDynamicData[0]?.SegmentSeat || [];
 
     // 🔥 Segment-wise seat selection storage
-    selectedSeats = {};
-    segmentSeats.forEach((s, i) => selectedSeats[i] = []);
+    if (trip === 'departure') {
+        selectedSeats = {};
+        segmentSeats.forEach((s, i) => selectedSeats[i] = []);
+    }
+
+    if (trip === 'return') {
+        selectedSeatsRet = {};
+        segmentSeats.forEach((s, i) => selectedSeatsRet[i] = []);
+    }
 
 
     segmentSeats.forEach((segment, segIndex) => {
@@ -1501,7 +1714,7 @@ function renderSeatLayout(seatDynamicData, totalPassengers) {
                     <div class="exit">EXIT</div>
                 </div>
 
-                <div style="display:flex; flex-direction:row;" id="planeContainer_${segIndex}">
+                <div style="display:flex; flex-direction:row;" id="planeContainer_${segIndex}${trip}">
                 </div>
 
                 <div class="section">
@@ -1512,7 +1725,13 @@ function renderSeatLayout(seatDynamicData, totalPassengers) {
             </div>
         `;
 
-        $("#mainPlaneWrapper").append(planeHtml);
+        console.log(trip);
+        if (trip == 'departure') {
+            $("#mainPlaneWrapper").append(planeHtml);
+        }
+        if (trip == 'return') {
+            $("#mainPlaneWrapperRet").append(planeHtml);
+        }
 
         segment.RowSeats.forEach((row, rowIndex) => {
 
@@ -1599,13 +1818,26 @@ function renderSeatLayout(seatDynamicData, totalPassengers) {
                         desc = 'Purchase (The Seat charges are added while making the ticket)';
                     }
 
-                    let segmentSelected = selectedSeats[seg];
+                    // let segmentSelected = selectedSeats[seg];
+                    let segmentSelected = '';
+                    if (trip == 'departure') {
+                        segmentSelected = selectedSeats[seg];
+                    }
+                    if (trip == 'return') {
+                        segmentSelected = selectedSeatsRet[seg];
+                    }
 
                     const found = segmentSelected.find(s => s.Code === code);
 
                     if (found) {
                         // remove
-                        selectedSeats[seg] = segmentSelected.filter(s => s.Code !== code);
+                        if (trip == 'departure') {
+                            selectedSeats[seg] = segmentSelected.filter(s => s.Code !== code);
+                        }
+                        if (trip == 'return') {
+                            selectedSeatsRet[seg] = segmentSelected.filter(s => s.Code !== code);
+                        }
+
                         $(this).removeClass("selected").css({ background: "#4caf50" });
                     } else {
                         if (segmentSelected.length >= totalPassengers) {
@@ -1623,71 +1855,113 @@ function renderSeatLayout(seatDynamicData, totalPassengers) {
                         $(this).addClass("selected").css({ background: "#007bff" });
                     }
 
-                    updateSummaryUI(selectedSeats);
+                    updateSummaryUI(trip);
                 });
 
                 rowDiv.append(seatDiv);
                 if (idx === 2) rowDiv.append("<br>");
             });
 
-            $(`#planeContainer_${segIndex}`).append(rowDiv);
+            $(`#planeContainer_${segIndex}${trip}`).append(rowDiv);
         });
     });
 }
 
 
-function updateSummaryUI() {
-    // const seatsCount = selectedSeats?.length || 0;
-    // const totalSeatPrice = selectedSeats.reduce((sum, item) => {
+function updateSummaryUI(trip) {
 
-    //     let price = parseFloat(item.price?.toString().replace(/[^\d.]/g, '')) || 0;
-    //     return sum + price;
-    // }, 0);
+    if (trip == "departure") {
+        let totalSeatPrice = 0;
+        let seatsCount = 0;
 
+        // ---- SEAT SUMMARY (segment-wise object) ----
+        if (selectedSeats && typeof selectedSeats === "object") {
+            Object.values(selectedSeats).forEach(segmentArray => {
+                segmentArray.forEach(item => {
+                    seatsCount++;
 
-    let totalSeatPrice = 0;
-    let seatsCount = 0;
-
-    // ---- SEAT SUMMARY (segment-wise object) ----
-    if (selectedSeats && typeof selectedSeats === "object") {
-        Object.values(selectedSeats).forEach(segmentArray => {
-            segmentArray.forEach(item => {
-                seatsCount++;
-
-                let price = parseFloat(item.price?.toString().replace(/[^\d.]/g, '')) || 0;
-                totalSeatPrice += price;
+                    let price = parseFloat(item.price?.toString().replace(/[^\d.]/g, '')) || 0;
+                    totalSeatPrice += price;
+                });
             });
-        });
+        }
+
+        // Meal Summary
+        const mealsCount = selectedMeals?.length || 0;
+        const totalMealPrice = selectedMeals.reduce((sum, item) => {
+            let price = 0;
+            if (item.price && item.price.toLowerCase() !== 'included') {
+                price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+            }
+            return sum + price;
+        }, 0);
+
+        // Baggage Summary
+        const baggageCount = selectedBaggage?.length || 0;
+        const totalBaggagePrice = selectedBaggage.reduce((sum, item) => {
+            let price = 0;
+            if (item.price && item.price.toLowerCase() !== 'included') {
+                price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+            }
+            return sum + price;
+        }, 0);
+
+        localStorage.setItem('selectedmeal', JSON.stringify(selectedMeals));
+        localStorage.setItem('selectedBaggage', JSON.stringify(selectedBaggage));
+        localStorage.setItem('selectedSeat', JSON.stringify(selectedSeats));
+
+        // $("#totalSeats").text(seatsCount);
+        $("#totalSeatPrice").text(`₹${totalSeatPrice.toFixed(2)}`);
+        $("#totalMealPrice").text(`₹${totalMealPrice.toFixed(2)}`);
+        $("#totalBaggagePrice").text(`₹${totalBaggagePrice.toFixed(2)}`);
     }
 
-    // Meal Summary
-    const mealsCount = selectedMeals?.length || 0;
-    const totalMealPrice = selectedMeals.reduce((sum, item) => {
-        let price = 0;
-        if (item.price && item.price.toLowerCase() !== 'included') {
-            price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+    if (trip == 'return') {
+        let totalSeatPriceRet = 0;
+        let seatsCountRet = 0;
+
+        // ---- SEAT SUMMARY (segment-wise object) ----
+        if (selectedSeatsRet && typeof selectedSeatsRet === "object") {
+            Object.values(selectedSeatsRet).forEach(segmentArray => {
+                segmentArray.forEach(item => {
+                    seatsCountRet++;
+
+                    let price = parseFloat(item.price?.toString().replace(/[^\d.]/g, '')) || 0;
+                    totalSeatPriceRet += price;
+                });
+            });
         }
-        return sum + price;
-    }, 0);
 
-    // Baggage Summary
-    const baggageCount = selectedBaggage?.length || 0;
-    const totalBaggagePrice = selectedBaggage.reduce((sum, item) => {
-        let price = 0;
-        if (item.price && item.price.toLowerCase() !== 'included') {
-            price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
-        }
-        return sum + price;
-    }, 0);
+        // Meal Summary
+        const mealsCountRet = selectedMealsRet?.length || 0;
+        const totalMealPriceRet = selectedMealsRet.reduce((sum, item) => {
+            let price = 0;
+            if (item.price && item.price.toLowerCase() !== 'included') {
+                price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+            }
+            return sum + price;
+        }, 0);
 
-    localStorage.setItem('selectedmeal', JSON.stringify(selectedMeals));
-    localStorage.setItem('selectedBaggage', JSON.stringify(selectedBaggage));
-    localStorage.setItem('selectedSeat', JSON.stringify(selectedSeats));
+        // Baggage Summary
+        const baggageCountRet = selectedBaggageRet?.length || 0;
+        const totalBaggagePriceRet = selectedBaggageRet.reduce((sum, item) => {
+            let price = 0;
+            if (item.price && item.price.toLowerCase() !== 'included') {
+                price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
+            }
+            return sum + price;
+        }, 0);
 
-    // $("#totalSeats").text(seatsCount);
-    $("#totalSeatPrice").text(`₹${totalSeatPrice.toFixed(2)}`);
-    $("#totalMealPrice").text(`₹${totalMealPrice.toFixed(2)}`);
-    $("#totalBaggagePrice").text(`₹${totalBaggagePrice.toFixed(2)}`);
+        localStorage.setItem('selectedMealsReturn', JSON.stringify(selectedMealsRet));
+        localStorage.setItem('selectedBaggageReturn', JSON.stringify(selectedBaggageRet));
+        localStorage.setItem('selectedSeatReturn', JSON.stringify(selectedSeatsRet));
+
+        // $("#totalSeats").text(seatsCount);
+        $("#totalSeatPriceRet").text(`₹${totalSeatPriceRet.toFixed(2)}`);
+        $("#totalMealPriceRet").text(`₹${totalMealPriceRet.toFixed(2)}`);
+        $("#totalBaggagePriceRet").text(`₹${totalBaggagePriceRet.toFixed(2)}`);
+    }
+
 }
 
 
@@ -1720,7 +1994,8 @@ $('#proceedBookingBtn').on('click', function () {
 
 });
 
-function hitBookingAPI() {
+function hitBookingAPI(trip) {
+  
     const selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails'));
     const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
     const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
@@ -1796,6 +2071,9 @@ function hitBookingAPI() {
         traceId: traceId,
         _token: $('meta[name="csrf-token"]').attr('content')
     };
+
+    console.log(payload);
+    return;
 
     if (selectedFlightDetails?.IsLCC) {
         ViewTicketAjax(payload);

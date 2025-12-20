@@ -19,7 +19,7 @@
                             <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                                 <h5 class="mb-0 card-title">Your Booking 🔖</h5>
 
-                          
+
                                 <a href="<?php echo e(route('flight.bookingList')); ?>" class="btn btn-primary">Review booking</a>
                             </div>
 
@@ -119,7 +119,7 @@
             </div>
         </section>
 
-         <div id="fareRuleListModal"></div>
+        <div id="fareRuleListModal"></div>
 
     </main>
 
@@ -136,7 +136,14 @@
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');
             $('.preloader').removeClass('d-none');
-            hitBookingAPI();
+            const payload = JSON.parse(localStorage.getItem('payload'));
+            if (payload.JourneyType == 1) {
+                hitBookingAPI('departure');
+            }
+            if (payload.JourneyType == 2) {
+                 hitBookingAPI('departure');
+                hitBookingAPI('return');
+            }
         });
     </script>
 <?php $__env->stopPush(); ?>
