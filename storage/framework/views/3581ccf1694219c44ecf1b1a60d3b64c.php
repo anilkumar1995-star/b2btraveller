@@ -34,7 +34,7 @@
                 </button>
             </li>
 
-            <li class="nav-item w-50" id="returnTabLi">
+            <li class="nav-item w-50 d-none" id="returnTabLi">
                 <button class="nav-link" id="return-tab-ssr" data-bs-toggle="tab" data-bs-target="#returnSSR"
                     type="button">
                     🔁 Return

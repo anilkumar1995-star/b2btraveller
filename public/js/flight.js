@@ -591,66 +591,6 @@ function formatDuration(minutes) {
     return `${hrs}h ${mins}m`;
 }
 
-
-// function getFareRules(resultIndex, traceId, trip) {
-//     if (!resultIndex || !traceId) return;
-
-//     $('#importantInfoSection').html('');
-
-//     $.ajax({
-//         url: "/flight/farerule",
-//         method: "POST",
-//         data: {
-//             ResultIndex: resultIndex,
-//             TraceId: traceId,
-//             _token: $('meta[name="csrf-token"]').attr('content')
-//         },
-//         success: function (response) {
-
-//             if (response.status !== 'success') {
-//                 notify(response.message, "error");
-//                 return;
-//             }
-
-//             let flightDetails = response.data;
-//             localStorage.setItem("TraceId", flightDetails?.TraceId);
-
-//             let fareRules = flightDetails?.FareRules || [];
-
-//             if (fareRules.length === 0) {
-//                 $('#importantInfoSection').html('No Data Available');
-//                 return;
-//             }
-
-//             fareRules.forEach((rule, index) => {
-
-//                 let cardHtml = `
-//                     <div class="card mb-3">
-//                         <div class="card-header border-bottom">
-//                             <h5 class="card-title mb-0">
-//                                 ✈️ ${rule.Origin} - ${rule.Destination} [${rule.Airline}]
-//                                 <span class="badge bg-light text-success mb-2"><i class="ti ti-star fs-6 me-2"></i>Travel
-//                                     Hack ${index + 1 }</span>
-//                             </h5>
-//                         </div>
-
-//                         <div class="card-body mt-3">
-//                             ${rule.FareRuleDetail || 'No Fare Rules Available.'}
-//                         </div>
-//                     </div>
-//                 `;
-
-//                 $('#importantInfoSection').append(cardHtml);
-//             });
-
-//             $('#importantInfoSection table').addClass('w-100');
-//         },
-//         error: function () {
-//             notify("Failed to fetch fare rule. Please try again.", "error");
-//         }
-//     });
-// }
-
 function getFareRules(resultIndex, traceId, trip) {
     if (!resultIndex || !traceId) return;
 
@@ -1373,8 +1313,17 @@ function getSSRDetails(resultIndex, traceId, trip) {
 
                     totalPassengers = adults + children + infants;
 
-                    selectedMeals = [];
-                    selectedBaggage = [];
+                    if (trip === 'departure') {
+                        selectedMeals = [];
+                        selectedBaggage = [];
+                        selectedSeats = {};
+                    }
+
+                    if (trip === 'return') {
+                        selectedMealsRet = [];
+                        selectedBaggageRet = [];
+                        selectedSeatsRet = {};
+                    }
 
                     let ssrDetails = response.data;
                     // Baggae Details
@@ -1430,7 +1379,7 @@ function getSSRDetails(resultIndex, traceId, trip) {
                                         <td>${baggage.Weight || '0'} Kg</td>
                                         <td>${priceText}</td>
                                         <td>
-                                            <input type="checkbox" name="baggage-checkbox" 
+                                            <input type="checkbox" name="baggage-checkbox${trip}" 
                                             data-code="${baggage?.Code}" 
                                             data-price="${priceText}"  
                                             data-description="${baggage?.Description}"
@@ -1444,7 +1393,7 @@ function getSSRDetails(resultIndex, traceId, trip) {
                                                 </tbody>
                                             </table>
                                              <small class="text-muted d-block mt-1 text-end">
-                                                <span class="baggage-count">0</span> / ${totalPassengers} selected
+                                                <span class="baggage-count${trip}">0</span> / ${totalPassengers} selected
                                             </small>
                                         </div>
                             `;
@@ -1526,7 +1475,7 @@ function getSSRDetails(resultIndex, traceId, trip) {
                                         <td>${meal.Quantity || '0'} </td>
                                         <td>${priceText}</td>
                                         <td>
-                                            <input type="checkbox" name="meal-checkbox" 
+                                            <input type="checkbox" name="meal-checkbox${trip}" 
                                             data-code="${meal?.Code}" 
                                             data-price="${priceText}" 
                                             data-description="${meal?.Description}"
@@ -1540,7 +1489,7 @@ function getSSRDetails(resultIndex, traceId, trip) {
                                                 </tbody>
                                             </table>
                                              <small class="text-muted d-block mt-1 text-end">
-                                                <span class="meal-count">0</span> / ${totalPassengers} selected
+                                                <span class="meal-count${trip}">0</span> / ${totalPassengers} selected
                                             </small>
                                         </div>
                             `;
@@ -1584,8 +1533,8 @@ function getSSRDetails(resultIndex, traceId, trip) {
                     }
 
                     // Baggage checkbox handler
-                    $(document).on('change', 'input[name="baggage-checkbox"]', function () {
-                        let checkedCount = $('input[name="baggage-checkbox"]:checked').length;
+                    $(document).on('change', `input[name="baggage-checkbox${trip}"]`, function () {
+                        let checkedCount = $(`input[name="baggage-checkbox${trip}"]:checked`).length;
 
                         if ($(this).is(':checked')) {
                             if (checkedCount > totalPassengers) {
@@ -1612,22 +1561,38 @@ function getSSRDetails(resultIndex, traceId, trip) {
                                 Description: bdesc,
                                 bagObjData: $(this).data('bagobjdata')
                             };
-                            selectedBaggage.push(baggageData);
+                            if (trip === 'departure') {
+                                selectedBaggage.push(baggageData);
+                            }
+                            if (trip === 'return') {
+                                selectedBaggageRet.push(baggageData);
+                            }
+
 
                         } else {
-                            // 🔴 Remove unselected baggage from array
+
                             let codeToRemove = $(this).data('code');
-                            selectedBaggage = selectedBaggage.filter(baggage => baggage.Code !== codeToRemove);
+                            if (trip === 'departure') {
+                                selectedBaggage = selectedBaggage.filter(baggage => baggage.Code !== codeToRemove);
+                            }
+                            if (trip === 'return') {
+                                selectedBaggageRet = selectedBaggageRet.filter(baggage => baggage.Code !== codeToRemove);
+                            }
                         }
 
-                        // 🧮 Update selected count display
-                        $('.baggage-count').text(selectedBaggage.length);
+                        if (trip === 'departure') {
+                            $(`.baggage-count${trip}`).text(selectedBaggage.length);
+                        }
+                        if (trip === 'return') {
+                            $(`.baggage-count${trip}`).text(selectedBaggageRet.length);
+                        }
+
                         updateSummaryUI(trip);
                     });
 
 
-                    $(document).on('change', 'input[name="meal-checkbox"]', function () {
-                        let checkedCount = $('input[name="meal-checkbox"]:checked').length;
+                    $(document).on('change', `input[name="meal-checkbox${trip}"]`, function () {
+                        let checkedCount = $(`input[name="meal-checkbox${trip}"]:checked`).length;
 
 
                         if ($(this).is(':checked')) {
@@ -1653,16 +1618,32 @@ function getSSRDetails(resultIndex, traceId, trip) {
                                 Description: mdesc,
                                 mealObjData: $(this).data('mealobjdata')
                             };
-                            selectedMeals.push(mealData);
+
+                            if (trip === 'departure') {
+                                selectedMeals.push(mealData);
+                            }
+                            if (trip === 'return') {
+                                selectedMealsRet.push(mealData);
+                            }
 
                         } else {
-                            // 🔴 Remove unselected meal from array
                             let codeToRemove = $(this).data('code');
-                            selectedMeals = selectedMeals.filter(meal => meal.Code !== codeToRemove);
+                            if (trip === 'departure') {
+                                selectedMeals = selectedMeals.filter(meal => meal.Code !== codeToRemove);
+                            }
+                            if (trip === 'return') {
+                                selectedMealsRet = selectedMealsRet.filter(meal => meal.Code !== codeToRemove);
+                            }
                         }
 
                         // 🧮 Update selected count display
-                        $('.meal-count').text(selectedMeals.length);
+                        if (trip == 'departure') {
+                            $(`.meal-count${trip}`).text(selectedMeals.length);
+                        }
+                        if (trip === 'return') {
+                            $(`.meal-count${trip}`).text(selectedMealsRet.length);
+                        }
+
                         updateSummaryUI(trip);
                     });
 
@@ -1711,8 +1692,15 @@ function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
     const segmentSeats = seatDynamicData[0]?.SegmentSeat || [];
 
     // 🔥 Segment-wise seat selection storage
-    selectedSeats = {};
-    segmentSeats.forEach((s, i) => selectedSeats[i] = []);
+    if (trip === 'departure') {
+        selectedSeats = {};
+        segmentSeats.forEach((s, i) => selectedSeats[i] = []);
+    }
+
+    if (trip === 'return') {
+        selectedSeatsRet = {};
+        segmentSeats.forEach((s, i) => selectedSeatsRet[i] = []);
+    }
 
 
     segmentSeats.forEach((segment, segIndex) => {
@@ -1830,7 +1818,8 @@ function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
                         desc = 'Purchase (The Seat charges are added while making the ticket)';
                     }
 
-                    let segmentSelected = selectedSeats[seg];
+                    // let segmentSelected = selectedSeats[seg];
+                    let segmentSelected = trip == 'departure' ? selectedSeats[seg] : selectedSeatsRet[seg];
 
                     const found = segmentSelected.find(s => s.Code === code);
 
@@ -1920,8 +1909,8 @@ function updateSummaryUI(trip) {
         let seatsCountRet = 0;
 
         // ---- SEAT SUMMARY (segment-wise object) ----
-        if (selectedSeats && typeof selectedSeats === "object") {
-            Object.values(selectedSeats).forEach(segmentArray => {
+        if (selectedSeatsRet && typeof selectedSeatsRet === "object") {
+            Object.values(selectedSeatsRet).forEach(segmentArray => {
                 segmentArray.forEach(item => {
                     seatsCountRet++;
 
@@ -1932,8 +1921,8 @@ function updateSummaryUI(trip) {
         }
 
         // Meal Summary
-        const mealsCountRet = selectedMeals?.length || 0;
-        const totalMealPriceRet = selectedMeals.reduce((sum, item) => {
+        const mealsCountRet = selectedMealsRet?.length || 0;
+        const totalMealPriceRet = selectedMealsRet.reduce((sum, item) => {
             let price = 0;
             if (item.price && item.price.toLowerCase() !== 'included') {
                 price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
@@ -1942,8 +1931,8 @@ function updateSummaryUI(trip) {
         }, 0);
 
         // Baggage Summary
-        const baggageCountRet = selectedBaggage?.length || 0;
-        const totalBaggagePriceRet = selectedBaggage.reduce((sum, item) => {
+        const baggageCountRet = selectedBaggageRet?.length || 0;
+        const totalBaggagePriceRet = selectedBaggageRet.reduce((sum, item) => {
             let price = 0;
             if (item.price && item.price.toLowerCase() !== 'included') {
                 price = parseFloat(item.price.toString().replace(/[^\d.]/g, '')) || 0;
@@ -1951,9 +1940,14 @@ function updateSummaryUI(trip) {
             return sum + price;
         }, 0);
 
-        localStorage.setItem('selectedmeal', JSON.stringify(selectedMeals));
-        localStorage.setItem('selectedBaggage', JSON.stringify(selectedBaggage));
-        localStorage.setItem('selectedSeat', JSON.stringify(selectedSeats));
+        localStorage.setItem('selectedMealsDeparture', JSON.stringify(selectedMeals));
+        localStorage.setItem('selectedMealsReturn', JSON.stringify(selectedMealsRet));
+
+        localStorage.setItem('selectedBaggageDeparture', JSON.stringify(selectedBaggage));
+        localStorage.setItem('selectedBaggageReturn', JSON.stringify(selectedBaggageRet));
+
+        localStorage.setItem('selectedSeatDeparture', JSON.stringify(selectedSeats));
+        localStorage.setItem('selectedSeatReturn', JSON.stringify(selectedSeatsRet));
 
         // $("#totalSeats").text(seatsCount);
         $("#totalSeatPriceRet").text(`₹${totalSeatPriceRet.toFixed(2)}`);
