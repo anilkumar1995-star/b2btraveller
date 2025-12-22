@@ -50,76 +50,80 @@
               ?>
               
               <?php if(!empty($bookings) && $bookings->count() > 0): ?>
-                <?php $__currentLoopData = $bookings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                    <?php
-                        $status = $statusMap[$b->booking_status] ?? [
-                            'label' => 'Unknown',
-                            'class' => 'badge bg-secondary',
-                        ];
-                    ?>
-                    <tr>
-                        <td>##<?php echo e($b->id); ?> <br /><?php echo e($b->created_at); ?></td>
-                        <td>
-                            <?php echo e($b->user_name ?? ''); ?><br />
-                            <?php echo e($b->user_email ?? ''); ?><br />
-                            <?php echo e($b->user_mobile ?? ''); ?>
+                  <?php $__currentLoopData = $bookings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $b): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                      <?php
+                          $status = $statusMap[$b->booking_status] ?? [
+                              'label' => 'Unknown',
+                              'class' => 'badge bg-secondary',
+                          ];
+                      ?>
+                      <tr>
+                          <td>##<?php echo e($b->id); ?> <br /><?php echo e($b->created_at); ?></td>
+                          <td>
+                              <?php echo e($b->user_name ?? ''); ?><br />
+                              <?php echo e($b->user_email ?? ''); ?><br />
+                              <?php echo e($b->user_mobile ?? ''); ?>
 
-                        </td>
-                        <td>PNR: <b><?php echo e($b->pnr ?? 'N/A'); ?></b> <br /> Booking Id: <b><?php echo e($b->booking_id_api ?? 'N/A'); ?></b>
-                            <br /><?php echo e($b->airline_code); ?> - [<?php echo e($b->flight_number); ?>]
-                        </td>
+                          </td>
+                          <td>PNR: <b><?php echo e($b->pnr ?? 'N/A'); ?></b> <br /> Booking Id:
+                              <b><?php echo e($b->booking_id_api ?? 'N/A'); ?></b>
+                              <br /><?php echo e($b->airline_code); ?> - [<?php echo e($b->flight_number); ?>]
+                          </td>
 
-                        <td><?php echo e($b->origin); ?> <br /> <?php echo e($b->destination); ?></td>
-                        <td>₹<?php echo e($b->total_amount ?? 0); ?></td>
+                          <td><?php echo e($b->origin); ?> <br /> <?php echo e($b->destination); ?></td>
+                          <td>₹<?php echo e($b->total_amount ?? 0); ?></td>
 
-                        <td><?php echo $b->is_lcc === 'true' ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'; ?>
+                          <td><?php echo $b->is_lcc === 'true' ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'; ?>
 
 
-                            <br>
+                              <br>
 
-                            <?php echo $b->is_refundable === 'true'
-                                ? '<span class="text-success">Refundable</span>'
-                                : '<span class="text-danger">Non-Refundable</span>'; ?>
+                              <?php echo $b->is_refundable === 'true'
+                                  ? '<span class="text-success">Refundable</span>'
+                                  : '<span class="text-danger">Non-Refundable</span>'; ?>
 
-                        </td>
-                        <td>
-                            <span class="<?php echo e($status['class']); ?>">
-                                <?php echo e($status['label']); ?>
+                          </td>
+                          <td>
+                              <span class="<?php echo e($status['class']); ?>">
+                                  <?php echo e($status['label']); ?>
 
-                            </span><br/>
-                            <div class="dropdown mt-1">
-                                <button class="btn btn-sm btn-light border dropdown-toggle" type="button"
-                                    id="dropdownMenuButton<?php echo e($b->id); ?>" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
-                                    👁️ View
-                                </button>
+                              </span><br />
+                              <div class="dropdown mt-1">
+                                  <button class="btn btn-sm btn-light border dropdown-toggle" type="button"
+                                      id="dropdownMenuButton<?php echo e($b->id); ?>" data-bs-toggle="dropdown"
+                                      aria-expanded="false">
+                                      👁️ View
+                                  </button>
 
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo e($b->id); ?>">
-                                    <li>
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            🎫 View Ticket
-                                        </a>
-                                    </li>
+                                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo e($b->id); ?>">
+                                      <?php if($b->is_lcc !== 'true'): ?>
+                                          <li>
+                                              <a class="dropdown-item" href="javascript:void(0)"  data-id="<?php echo e($b->id); ?>">
+                                                  🎫 View Ticket
+                                              </a>
+                                          </li>
+                                      <?php endif; ?>
 
-                                    <li>
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            📄 Booking Details
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a class="dropdown-item" href="javascript:void(0)">
-                                            ✈️ Cancel Flight
-                                        </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+
+                                      <li>
+                                          <a class="dropdown-item booking-details" href="javascript:void(0)"  data-id="<?php echo e($b->id); ?>">
+                                              📄 Booking Details
+                                          </a>
+                                      </li>
+                                      <li>
+                                          <a class="dropdown-item cancel-flight" href="javascript:void(0)"  data-id="<?php echo e($b->id); ?>">
+                                              ✈️ Cancel Flight
+                                          </a>
+                                      </li>
+                                  </ul>
+                              </div>
+                          </td>
+                      </tr>
+                  <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               <?php else: ?>
-                <tr>
-                    <td colspan="7" class="text-center text-danger">No Bookings Details found.</td>
-                </tr>
+                  <tr>
+                      <td colspan="7" class="text-center text-danger">No Bookings Details found.</td>
+                  </tr>
               <?php endif; ?>
           </tbody>
       </table>
