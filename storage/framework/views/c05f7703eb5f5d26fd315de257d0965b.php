@@ -136,13 +136,29 @@
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');
             $('.preloader').removeClass('d-none');
+
             const payload = JSON.parse(localStorage.getItem('payload'));
+            const traceId = localStorage.getItem('TraceId') || '';
+
+
+            let selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails'));
+            let selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
+            let selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
+            let selectedBaggage = JSON.parse(localStorage.getItem('selectedBaggage')) || [];
+
             if (payload.JourneyType == 1) {
-                hitBookingAPI('departure');
+                hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals,
+                    selectedBaggage, 'departure', '1');
             }
             if (payload.JourneyType == 2) {
-                 hitBookingAPI('departure');
-                hitBookingAPI('return');
+                selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
+                selectedMealsRet = JSON.parse(localStorage.getItem('selectedMealsReturn')) || [];
+                selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
+
+                hitBookingAPI(traceId, selectedFlightDetails.departure, selectedSeats, selectedMeals,
+                    selectedBaggage, 'departure', '2');
+                hitBookingAPI(traceId, selectedFlightDetails.return, selectedSeatsRet, selectedMealsRet,
+                    selectedBaggageRet, 'return', '2');
             }
         });
     </script>

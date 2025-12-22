@@ -953,10 +953,14 @@ function getFareQuote(resultIndex, traceId, trip) {
                     generateTravelerForm(resultData);
                 } else {
                     notify(response.message, "error");
+                    localStorage.clear();
+                    window.location.href = "/flight/view";
                 }
             },
             error: function (xhr) {
                 notify("Failed to fetch fare quote. Please try again.", "error");
+                localStorage.clear();
+                window.location.href = "/flight/view";
             }
         });
 
@@ -1994,16 +1998,10 @@ $('#proceedBookingBtn').on('click', function () {
 
 });
 
-function hitBookingAPI(trip) {
-  
-    const selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails'));
+function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals, selectedBaggage, trip, journeyType) {
+
     const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
     const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
-    const selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
-    const selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
-    const selectedBaggage = JSON.parse(localStorage.getItem('selectedBaggage')) || [];
-    const traceId = localStorage.getItem('TraceId') || '';
-
     const formatDate = (date) => date ? `${date}T00:00:00` : null;
 
     const mapSeatsToPassengers = (seatData, numPassengers) => {
@@ -2012,7 +2010,6 @@ function hitBookingAPI(trip) {
             seatArray.forEach((seatObj, index) => {
 
                 if (index < numPassengers) {
-                    // const { price, ...rest } = seatObj; // remove price
                     passengersSeats[index].push(seatObj?.SeatObjData);
                 }
             });
@@ -2072,74 +2069,23 @@ function hitBookingAPI(trip) {
         _token: $('meta[name="csrf-token"]').attr('content')
     };
 
-    console.log(payload);
-    return;
-
     if (selectedFlightDetails?.IsLCC) {
-        ViewTicketAjax(payload);
+        ViewTicketAjax(payload, '/flight/ticket', trip, journeyType);
     } else {
-        $('#bookingData').addClass('d-none');
-        $('.preloader').removeClass('d-none');
-        $.ajax({
-            url: '/flight/book',
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(payload),
-            beforeSend: function () {
-                $('#bookingData').addClass('d-none');
-                $('.preloader').removeClass('d-none');
-            },
-            complete: function () {
-                $('#bookingData').removeClass('d-none');
-                $('.preloader').addClass('d-none');
-            },
-            success: function (response) {
-                if (response?.status == 'success') {
-                    const bookingData = response?.data?.Response?.Response;
-
-                    swal({
-                        title: "Booking Successful!",
-                        html: `
-                    <p>${response?.message || "Your ticket has been booked successfully 🎉"}</p>
-                    <p><strong>PNR:</strong> ${bookingData?.PNR || "Not Available"}</p>
-                    <p><strong>Booking Id:</strong> ${bookingData?.BookingId || "Not Available"}</p>
-                `,
-                        type: "success",
-                        confirmButtonText: "OK, I got it",
-                        allowOutsideClick: false,
-                        allowEscapeKey: false
-                    }).then(() => {
-                        renderFareSummary(bookingData);
-                        renderBookingDetails(bookingData);
-                    });
-                } else {
-                    swal({
-                        title: "Error",
-                        text: response.message || "Something went wrong while booking.",
-                        type: "error"
-                    }).then(() => {
-                        window.location.href = "/";
-                    });
-                }
-
-
-            },
-            error: function (err) {
-                swal({
-                    title: "Error",
-                    text: "Something went wrong while booking.",
-                    type: "error"
-                });
-            }
-        });
+        ViewTicketAjax(payload, '/flight/book', trip, journeyType);
     }
 }
 
-function ViewTicketAjax(payload) {
+let bookingResult = {
+    departure: null,
+    return: null
+};
+
+function ViewTicketAjax(payload, apiUrl, trip, journeyType) {
     $('#bookingData').addClass('d-none');
     $('.preloader').removeClass('d-none');
     $.ajax({
-        url: '/flight/ticket',
+        url: apiUrl,
         type: 'POST',
         contentType: 'application/json',
         data: JSON.stringify(payload),
@@ -2152,45 +2098,147 @@ function ViewTicketAjax(payload) {
             $('.preloader').addClass('d-none');
         },
         success: function (response) {
-            if (response?.status == 'success') {
-                const bookingData = response?.data?.Response?.Response;
-
-                swal({
-                    title: "Booking Successful!",
-                    html: `
-                    <p>${response?.message || "Your ticket has been booked successfully 🎉"}</p>
-                    <p><strong>PNR:</strong> ${bookingData?.PNR || "Not Available"}</p>
-                    <p><strong>Booking Id:</strong> ${bookingData?.BookingId || "Not Available"}</p>
-                `,
-                    type: "success",
-                    confirmButtonText: "OK, I got it",
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }).then(() => {
-                    renderFareSummary(bookingData);
-                    renderBookingDetails(bookingData);
-                });
-            } else {
-                swal({
-                    title: "Error",
-                    text: response.message || "Something went wrong while booking.",
-                    type: "error"
-                }).then(() => {
-                    window.location.href = "/";
-                });
-            }
-
-
+            bookingResult[trip] = response;
+            checkFinalBookingStatus(trip, journeyType);
         },
-        error: function (err) {
+
+        error: function () {
+            bookingResult[trip] = { status: 'failed' };
+            checkFinalBookingStatus(trip, journeyType);
+        }
+        // success: function (response) {
+        //     if (response?.status == 'success') {
+
+        //         const bookingData = response?.data?.Response?.Response;
+
+        //         swal({
+        //             title: "Booking Successful!",
+        //             html: `
+        //             <p>${response?.message || "Your ticket has been booked successfully 🎉"}</p>
+        //             <p><strong>PNR:</strong> ${bookingData?.PNR || "Not Available"}</p>
+        //             <p><strong>Booking Id:</strong> ${bookingData?.BookingId || "Not Available"}</p>
+        //         `,
+        //             type: "success",
+        //             confirmButtonText: "OK, I got it",
+        //             allowOutsideClick: false,
+        //             allowEscapeKey: false
+        //         }).then(() => {
+        //             renderFareSummary(bookingData);
+        //             renderBookingDetails(bookingData);
+        //         });
+        //     } else {
+        //         swal({
+        //             title: "Error",
+        //             text: response.message || "Something went wrong while booking.",
+        //             type: "error"
+        //         }).then(() => {
+        //             window.location.href = "/flight/view";
+        //         });
+        //     }
+        // },
+        // error: function (err) {
+        //     swal({
+        //         title: "Error",
+        //         text: "Something went wrong while booking.",
+        //         type: "error"
+        //     });
+        // }
+    });
+}
+
+function checkFinalBookingStatus(trip, journeyType) {
+    if (trip == 'departure' && journeyType == '1') {
+        if (!bookingResult.departure) return;
+
+        if (bookingResult.departure.status === 'success') {
+
+            const dep = bookingResult.departure.data.Response.Response;
+
+            swal({
+                title: "Booking Successful!",
+                html: `
+                <p>"Your ticket has been booked successfully 🎉"}</p>
+                <p><strong>PNR:</strong> ${dep?.PNR || "Not Available"}</p>
+                <p><strong>Booking Id:</strong> ${dep?.BookingId || "Not Available"}</p>
+            `,
+                type: "success",
+                confirmButtonText: "OK, I got it",
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(() => {
+                renderFareSummary(dep);
+                renderBookingDetails(dep);
+            });
+
+        } else {
             swal({
                 title: "Error",
                 text: "Something went wrong while booking.",
                 type: "error"
+            }).then(() => {
+                window.location.href = "/flight/view";
             });
         }
-    });
+    }
+
+    if (journeyType == '2') {
+
+        if (!bookingResult.departure || !bookingResult.return) return;
+
+        const depRes = bookingResult.departure;
+        const retRes = bookingResult.return;
+
+        if (depRes.status == 'success' && retRes.status == 'success') {
+
+            const dep = depRes.data.Response.Response;
+            const ret = retRes.data.Response.Response;
+
+
+            swal({
+                title: "Booking Successful!",
+                html: `
+            <p>Your ticket has been booked successfully 🎉</p>
+            <p><strong>Departure PNR:</strong> ${dep?.PNR || "Not Available"}</p>
+           
+            <p><strong>Return PNR:</strong> ${ret?.PNR || "Not Available"}</p>
+        `,
+                type: "success",
+                confirmButtonText: "View Booking Details",
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then(() => {
+                window.location.href = "/flight/booking-list";
+            });
+        } else if (depRes.status === 'success' || retRes.status === 'success') {
+           swal({
+                title: "Partial Booking Completed",
+                html: "One leg is confirmed. <br/> Please book the remaining leg separately.",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "View Booking Details",
+                cancelButtonText: "Search Again",
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
+                if (result.value) {
+                    window.location.href = "/flight/booking-list";
+                } else{
+                    window.location.href = "/flight/view";
+                }
+            });
+
+        } else {
+            swal({
+                title: "Booking Failed ❌",
+                text: "Both departure and return bookings failed.",
+                type: "error"
+            }).then(() => {
+                window.location.href = "/flight/view";
+            });
+        }
+    }
 }
+
 
 
 function removeExtraKey(obj, keys) {
@@ -2207,6 +2255,7 @@ function removeExtraKey(obj, keys) {
 }
 
 function renderFareSummary(data) {
+
     const fare = data?.FlightItinerary?.Fare || {};
 
     $("#fareBaseFare").text("₹" + fare.BaseFare || 0);
