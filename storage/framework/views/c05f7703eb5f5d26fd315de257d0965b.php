@@ -148,7 +148,7 @@
 
             if (payload.JourneyType == 1) {
                 hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals,
-                    selectedBaggage, 'departure');
+                    selectedBaggage, 'departure', '1');
             }
             if (payload.JourneyType == 2) {
                 selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
@@ -156,9 +156,9 @@
                 selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
 
                 hitBookingAPI(traceId, selectedFlightDetails.departure, selectedSeats, selectedMeals,
-                    selectedBaggage, 'departure');
+                    selectedBaggage, 'departure', '2');
                 hitBookingAPI(traceId, selectedFlightDetails.return, selectedSeatsRet, selectedMealsRet,
-                    selectedBaggageRet, 'return');
+                    selectedBaggageRet, 'return', '2');
             }
         });
     </script>
