@@ -2157,7 +2157,7 @@ function checkFinalBookingStatus(trip, journeyType) {
             swal({
                 title: "Booking Successful!",
                 html: `
-                <p>"Your ticket has been booked successfully 🎉"}</p>
+                <p>Your ticket has been booked successfully 🎉</p>
                 <p><strong>PNR:</strong> ${dep?.PNR || "Not Available"}</p>
                 <p><strong>Booking Id:</strong> ${dep?.BookingId || "Not Available"}</p>
             `,
