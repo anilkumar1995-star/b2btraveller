@@ -94,7 +94,7 @@
                                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
                                       @if ($b->is_lcc !== 'true')
                                           <li>
-                                              <a class="dropdown-item" href="javascript:void(0)"  data-id="{{ $b->id }}>
+                                              <a class="dropdown-item" href="javascript:void(0)"  data-id="{{ $b->id }}">
                                                   🎫 View Ticket
                                               </a>
                                           </li>
@@ -102,12 +102,12 @@
 
 
                                       <li>
-                                          <a class="dropdown-item booking-details d-none" href="javascript:void(0)"  data-id="{{ $b->id }}>
+                                          <a class="dropdown-item booking-details d-none" href="javascript:void(0)"  data-id="{{ $b->id }}">
                                               📄 Booking Details
                                           </a>
                                       </li>
                                       <li>
-                                          <a class="dropdown-item cancel-flight" href="javascript:void(0)"  data-id="{{ $b->id }}>
+                                          <a class="dropdown-item cancel-flight" href="javascript:void(0)"  data-id="{{ $b->id }}">
                                               ✈️ Cancel Flight
                                           </a>
                                       </li>
