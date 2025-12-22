@@ -102,7 +102,7 @@
 
 
                                       <li>
-                                          <a class="dropdown-item booking-details d-none" href="javascript:void(0)"  data-id="{{ $b->id }}">
+                                          <a class="dropdown-item booking-details" href="javascript:void(0)"  data-id="{{ $b->id }}">
                                               📄 Booking Details
                                           </a>
                                       </li>

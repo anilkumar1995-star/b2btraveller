@@ -48,13 +48,13 @@
                 });
             }
 
-            $(document).on('click', '.view-ticket', function() {
-                const bookingId = $(this).data('id');
+            // $(document).on('click', '.view-ticket', function() {
+            //     const bookingId = $(this).data('id');
 
-                $(this).addClass('d-none');
+            //     $(this).addClass('d-none');
 
-                $(`.booking-details[data-id="${bookingId}"]`).removeClass('d-none');
-            });
+            //     $(`.booking-details[data-id="${bookingId}"]`).removeClass('d-none');
+            // });
 
         });
     </script>
