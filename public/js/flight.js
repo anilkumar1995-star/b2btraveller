@@ -1141,7 +1141,7 @@ function generateTravelerForm(response) {
                     <button class="accordion-button fw-bold rounded collapsed" type="button"
                         data-bs-toggle="collapse" data-bs-target="#collapse-${type}-${index}"
                         aria-expanded="false" aria-controls="collapse-${type}-${index}">
-                        ${type} ${index}
+                       ➕ ${type} ${index}
                     </button>
                 </h6>
                 <div id="collapse-${type}-${index}" class="accordion-collapse collapse"
