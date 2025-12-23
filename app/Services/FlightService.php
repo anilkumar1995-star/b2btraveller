@@ -113,7 +113,7 @@ class FlightService
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 // $response = StaticResponseHelper::searchStaticResponse();
                 $response = StaticResponseHelper::flightroudtripsearchresponse();
-                $response = StaticResponseHelper::flightfailedsearchresponse();
+                // $response = StaticResponseHelper::flightfailedsearchresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "flight_search", "");
                 $response = $response['response'];
