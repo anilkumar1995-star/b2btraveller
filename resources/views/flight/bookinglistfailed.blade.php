@@ -1,21 +1,22 @@
-<?php $__env->startSection('title', 'Booking List'); ?>
-<?php $__env->startSection('pagetitle', 'Booking List'); ?>
+@extends('layouts.app')
+@section('title', 'Booking Failed List')
+@section('pagetitle', 'Booking Failed List')
 
 
-<?php $__env->startSection('content'); ?>
+@section('content')
     <main>
         <section>
             <div class="card">
                 <div class="card-header pb-0 d-flex justify-content-between mb-lg-n4 ">
                     <div class="card-title mb-5">
                         <h4 class="mb-0">
-                            <span><?php echo $__env->yieldContent('pagetitle'); ?> </span>
+                            <span>@yield('pagetitle') </span>
                         </h4>
                     </div>
                 </div>
                 <div class="card-body">
                     <div id="bookingTable" class="overflow-auto">
-                        <?php echo $__env->make('flight.booking-table', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                        @include('flight.booking-table-failed')
                     </div>
                 </div>
             </div>
@@ -24,10 +25,10 @@
 
     </main>
 
-<?php $__env->stopSection(); ?>
+@endsection
 
 
-<?php $__env->startPush('script'); ?>
+@push('script')
     <script>
         $(document).ready(function() {
 
@@ -48,6 +49,4 @@
             }
         });
     </script>
-<?php $__env->stopPush(); ?>
-
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\flight_b2b_travel\flight_b2b_travel\resources\views/flight/bookinglist.blade.php ENDPATH**/ ?>
+@endpush

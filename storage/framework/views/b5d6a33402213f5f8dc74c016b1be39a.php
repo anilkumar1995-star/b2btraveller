@@ -657,8 +657,8 @@
                 <!-- Left sidebar END -->
 
                 <!-- Main content START -->
-                <div class="col-xl-8 col-xxl-9">
-                    <ul class="nav nav-tabs mb-3 d-none w-100" id="roundTabs">
+                <div class="col-xl-8 col-xxl-9 position-relative">
+                    <ul class="nav nav-tabs mb-3 d-none w-100 sticky-top" style="top: 90px; z-index: 100;" id="roundTabs">
                         <li class="nav-item w-50 rounded">
                             <button class="nav-link active w-100" id="tabDeparture">Departure</button>
                         </li>

@@ -58,6 +58,11 @@
                         <div data-i18n="Booking List">Booking List</div>
                     </a>
                 </li>
+                <li class="menu-item {{ Request::is('flight/booking-list-failed') ? 'active' : '' }}">
+                    <a href="{{ url('flight/booking-list-failed') }}" class="menu-link">
+                        <div data-i18n="Failed List">Failed List</div>
+                    </a>
+                </li>
             </ul>
         </li>
 

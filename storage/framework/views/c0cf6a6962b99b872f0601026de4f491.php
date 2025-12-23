@@ -1,5 +1,5 @@
-<?php $__env->startSection('title', 'Booking List'); ?>
-<?php $__env->startSection('pagetitle', 'Booking List'); ?>
+<?php $__env->startSection('title', 'Booking Failed List'); ?>
+<?php $__env->startSection('pagetitle', 'Booking Failed List'); ?>
 
 
 <?php $__env->startSection('content'); ?>
@@ -15,7 +15,7 @@
                 </div>
                 <div class="card-body">
                     <div id="bookingTable" class="overflow-auto">
-                        <?php echo $__env->make('flight.booking-table', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
+                        <?php echo $__env->make('flight.booking-table-failed', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
                     </div>
                 </div>
             </div>
@@ -50,4 +50,4 @@
     </script>
 <?php $__env->stopPush(); ?>
 
-<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\flight_b2b_travel\flight_b2b_travel\resources\views/flight/bookinglist.blade.php ENDPATH**/ ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH C:\wamp64\www\flight_b2b_travel\flight_b2b_travel\resources\views/flight/bookinglistfailed.blade.php ENDPATH**/ ?>

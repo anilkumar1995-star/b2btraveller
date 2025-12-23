@@ -2093,10 +2093,6 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType) {
             $('#bookingData').addClass('d-none');
             $('.preloader').removeClass('d-none');
         },
-        complete: function () {
-            $('#bookingData').removeClass('d-none');
-            $('.preloader').addClass('d-none');
-        },
         success: function (response) {
             bookingResult[trip] = response;
             checkFinalBookingStatus(trip, journeyType);
@@ -2111,6 +2107,8 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType) {
 
 function checkFinalBookingStatus(trip, journeyType) {
     if (trip == 'departure' && journeyType == '1') {
+        $('#bookingData').removeClass('d-none');
+        $('.preloader').addClass('d-none');
         if (!bookingResult.departure) return;
 
         if (bookingResult.departure.status === 'success') {
@@ -2144,7 +2142,8 @@ function checkFinalBookingStatus(trip, journeyType) {
     }
 
     if (journeyType == '2') {
-
+        $('#bookingData').removeClass('d-none');
+        $('.preloader').addClass('d-none');
         if (!bookingResult.departure || !bookingResult.return) return;
 
         const depRes = bookingResult.departure;
