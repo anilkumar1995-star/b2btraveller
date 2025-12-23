@@ -13,7 +13,7 @@
     <!-- Card -->
     <div class="row">
         <div class="col-12">
-            <div class="card shadow-sm">
+            <div class="card shadow-sm mt-3">
 
                 <div class="card-body p-3 p-md-4">
 

@@ -52,6 +52,14 @@ class FlightController extends Controller
     {
         return view('flight.seatlay');
     }
+
+      public function viewTicket($id)
+    {
+        $booking = DB::table('bookings')->find($id);
+
+        return response()->json($booking);
+    }
+	
     public function bookingList(Request $request)
     {
         $userId = \Auth::user()->id;

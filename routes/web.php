@@ -137,6 +137,7 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::post('ticket', [FlightController::class, 'flightTicket'])->name('flight.ticket');
     Route::get('booking', [FlightController::class, 'flightBooking'])->name('flight.booking');
     Route::get('booking-list', [FlightController::class, 'bookingList'])->name('flight.bookingList');
+    Route::get('/booking/view/{id}', [FlightController::class, 'viewTicket']) ->name('flight.booking.view');
 });
 
 
