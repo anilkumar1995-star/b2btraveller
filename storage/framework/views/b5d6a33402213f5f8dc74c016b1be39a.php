@@ -806,7 +806,7 @@
                             results: $.map(data, function(item) {
                                 return {
                                     id: item.airport_code,
-                                    text: item.airport_name + ' - ' + item.airport_code
+                                    text: item.airport_name + ' - ' + item.airport_code + ' (' + item.city + ')'
                                 };
                             })
                         };
