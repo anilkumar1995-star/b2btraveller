@@ -179,6 +179,8 @@
                               {!! $b->is_refundable === 'true'
                                   ? '<span class="text-success">Refundable</span>'
                                   : '<span class="text-danger">Non-Refundable</span>' !!}
+                                  <br/>
+                                  <span class="badge bg-info">{{ $b->journey_type }}</span>
                           </td>
                           <td>
                               <span class="{{ $status['class'] }}">

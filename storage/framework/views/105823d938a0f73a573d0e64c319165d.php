@@ -82,6 +82,8 @@
                                   ? '<span class="text-success">Refundable</span>'
                                   : '<span class="text-danger">Non-Refundable</span>'; ?>
 
+                                  <br/>
+                                  <span class="badge bg-info"><?php echo e($b->journey_type); ?></span>
                           </td>
                           <td>
                               <span class="<?php echo e($status['class']); ?>">
