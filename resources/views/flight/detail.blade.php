@@ -60,7 +60,7 @@
                                             <label class="form-label">Cell Code<span class="text-danger">*</span></label>
                                             <select class="form-select required-field" name="cellcode">
                                                 <option value="">Select</option>
-                                                <option value="+91">+91</option>
+                                                <option value="+91" selected>+91</option>
                                                 <option value="+1">+1</option>
                                                 <option value="+44">+44</option>
                                             </select>
