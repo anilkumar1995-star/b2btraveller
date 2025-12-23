@@ -2106,43 +2106,6 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType) {
             bookingResult[trip] = { status: 'failed' };
             checkFinalBookingStatus(trip, journeyType);
         }
-        // success: function (response) {
-        //     if (response?.status == 'success') {
-
-        //         const bookingData = response?.data?.Response?.Response;
-
-        //         swal({
-        //             title: "Booking Successful!",
-        //             html: `
-        //             <p>${response?.message || "Your ticket has been booked successfully 🎉"}</p>
-        //             <p><strong>PNR:</strong> ${bookingData?.PNR || "Not Available"}</p>
-        //             <p><strong>Booking Id:</strong> ${bookingData?.BookingId || "Not Available"}</p>
-        //         `,
-        //             type: "success",
-        //             confirmButtonText: "OK, I got it",
-        //             allowOutsideClick: false,
-        //             allowEscapeKey: false
-        //         }).then(() => {
-        //             renderFareSummary(bookingData);
-        //             renderBookingDetails(bookingData);
-        //         });
-        //     } else {
-        //         swal({
-        //             title: "Error",
-        //             text: response.message || "Something went wrong while booking.",
-        //             type: "error"
-        //         }).then(() => {
-        //             window.location.href = "/flight/view";
-        //         });
-        //     }
-        // },
-        // error: function (err) {
-        //     swal({
-        //         title: "Error",
-        //         text: "Something went wrong while booking.",
-        //         type: "error"
-        //     });
-        // }
     });
 }
 
@@ -2157,7 +2120,7 @@ function checkFinalBookingStatus(trip, journeyType) {
             swal({
                 title: "Booking Successful!",
                 html: `
-                <p>"Your ticket has been booked successfully 🎉"}</p>
+                <p>Your ticket has been booked successfully 🎉</p>
                 <p><strong>PNR:</strong> ${dep?.PNR || "Not Available"}</p>
                 <p><strong>Booking Id:</strong> ${dep?.BookingId || "Not Available"}</p>
             `,
@@ -2203,26 +2166,41 @@ function checkFinalBookingStatus(trip, journeyType) {
             <p><strong>Return PNR:</strong> ${ret?.PNR || "Not Available"}</p>
         `,
                 type: "success",
-                confirmButtonText: "View Booking Details",
+                confirmButtonText: "👁️ Booking Details",
                 allowOutsideClick: false,
                 allowEscapeKey: false
             }).then(() => {
                 window.location.href = "/flight/booking-list";
+                localStorage.clear();
             });
         } else if (depRes.status === 'success' || retRes.status === 'success') {
-           swal({
+            let confirmedLeg = '';
+            let confirmedPNR = '';
+
+            if (depRes.status === 'success') {
+                confirmedLeg = 'Departure';
+                confirmedPNR = depRes?.data?.Response?.Response?.PNR || 'N/A';
+            } else if (retRes.status === 'success') {
+                confirmedLeg = 'Return';
+                confirmedPNR = retRes?.data?.Response?.Response?.PNR || 'N/A';
+            }
+
+            swal({
                 title: "Partial Booking Completed",
-                html: "One leg is confirmed. <br/> Please book the remaining leg separately.",
+                html: `${confirmedLeg} is confirmed ✅ <br/>
+                <p><strong>PNR:</strong> ${confirmedPNR}</p><br/>
+                 Please book the remaining leg separately.`,
                 type: "warning",
                 showCancelButton: true,
-                confirmButtonText: "View Booking Details",
+                confirmButtonText: "👁️ Booking Details",
                 cancelButtonText: "Search Again",
                 allowOutsideClick: false,
                 allowEscapeKey: false
             }).then((result) => {
                 if (result.value) {
                     window.location.href = "/flight/booking-list";
-                } else{
+                    localStorage.clear();
+                } else {
                     window.location.href = "/flight/view";
                 }
             });

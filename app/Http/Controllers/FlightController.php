@@ -150,8 +150,6 @@ class FlightController extends Controller
         $service = new FlightService();
         $response = $service->bookingFlight($request->all());
 
-
-        // return response()->json($response);
         if ($response['status'] != 'success') {
             return response()->json([
                 'status' => 'failed',
@@ -165,7 +163,7 @@ class FlightController extends Controller
         if (!$data) {
             return response()->json([
                 'status' => 'failed',
-                'message' => 'Invalid, Something went worng'
+                'message' => 'Invalid Data, Something went worng'
             ], 400);
         }
 
@@ -181,7 +179,6 @@ class FlightController extends Controller
         $seg        = $data['FlightItinerary']['Segments'] ?? null;
         $segments         = $seg[0] ?? null;
 
-        // NotSet = 0, Successful = 1, Failed = 2, OtherFare = 3, OtherClass = 4, BookedOther = 5, NotConfirmed = 6]
         $status = "";
         if ($data['Status'] = 0) {
             $status = "Not Set";
@@ -215,13 +212,14 @@ class FlightController extends Controller
 
         $flightNumber     = $segments['Airline']['FlightNumber'] ?? null;
         $journeyDate      = $segments['Origin']['DepTime'] ?? null;
+        $journeyTypee     = $data['FlightItinerary']['JourneyType'] == '2' ? 'roundtrip' : 'oneway';
 
         // Fare details
         $baseFare         = $fare['BaseFare'] ?? 0;
         $tax              = $fare['Tax'] ?? 0;
         $totalAmount      = ($fare['PublishedFare'] ?? 0);
 
-        // Store in DB
+    
         $booking = [
             'user_id'         => \Auth::user()->id,
             'pnr'             => $pnr,
@@ -231,6 +229,7 @@ class FlightController extends Controller
             'airline_code'    => $airlineCode . "-" .  $airlineName,
             'flight_number'   => $flightNumber,
             'journey_date'    => $journeyDate,
+            'journey_type'    => $journeyTypee,
 
             'base_fare'       => $baseFare,
             'tax'             => $tax,
@@ -324,6 +323,7 @@ class FlightController extends Controller
 
         $flightNumber     = $segments['Airline']['FlightNumber'] ?? null;
         $journeyDate      = $segments['Origin']['DepTime'] ?? null;
+        $journeyTypee     = $data['FlightItinerary']['JourneyType'] == '2' ? 'roundtrip' : 'oneway';
 
         // Fare details
         $baseFare         = $fare['BaseFare'] ?? 0;
@@ -340,6 +340,7 @@ class FlightController extends Controller
             'airline_code'    => $airlineCode . "-" .  $airlineName,
             'flight_number'   => $flightNumber,
             'journey_date'    => $journeyDate,
+            'journey_type'    => $journeyTypee,
 
             'base_fare'       => $baseFare,
             'tax'             => $tax,
