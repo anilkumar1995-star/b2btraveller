@@ -2135,7 +2135,7 @@ function checkFinalBookingStatus(trip, journeyType) {
         } else {
             swal({
                 title: "Error",
-                text: "Something went wrong while booking.",
+                text: bookingResult.departure.message || "Flight Booking Failed, Please search again",
                 type: "error"
             }).then(() => {
                 window.location.href = "/flight/view";

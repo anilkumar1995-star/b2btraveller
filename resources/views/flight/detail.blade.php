@@ -348,6 +348,20 @@
 
             const payload = JSON.parse(localStorage.getItem('payload'));
 
+            if (!payload) {
+                swal({
+                    title: "Session Expired",
+                    html: "Your booking session has expired.<br/>Please search flights again to continue.",
+                    type: "warning",
+                    confirmButtonText: "Search Flights",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+                return;
+            }
+
             if (payload.JourneyType == 1) {
                 const storedFlight = localStorage.getItem('selectedFlightDetails');
                 const resultIndex = localStorage.getItem('ResultIndex');
