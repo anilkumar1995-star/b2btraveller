@@ -20221,4 +20221,11 @@ class StaticResponseHelper
     static public function flightfailedbookingresponse(){
         return '{"code":"0x0202","status":"FAILURE","message":"Booking failed from supplier side."}';
     }
+    static public function bookingdetStaticResponse(){
+        return '{
+            "status": "success",
+            "message": "Flight search successfully",
+            "data":{
+            }';
+    }
 }

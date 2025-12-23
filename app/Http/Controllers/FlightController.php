@@ -53,10 +53,19 @@ class FlightController extends Controller
         return view('flight.seatlay');
     }
 
-    public function viewTicket($id)
+    public function viewTicket(Request $request)
     {
-        $booking = DB::table('bookings')->find($id);
+        $booking = DB::table('bookings')->where('id', $request->booking_id)->first();
 
+        if (!$booking) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Booking Details not found'
+            ]);
+        }
+        $service = new FlightService();
+        $response = $service->getDetailsFlight($booking);
+        dd($response);
         return response()->json($booking);
     }
 
