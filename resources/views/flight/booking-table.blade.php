@@ -21,106 +21,109 @@
           color: #fff !important;
           box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
       }
-       .custom-pagination .page-item .page-link {
-        border-radius: 8px !important;
-        padding: 6px 14px;
-        border: 1px solid #dcdcdc;
-        color: #333;
-        font-weight: 500;
-        background: #fff;
-        transition: 0.2s;
-    }
 
-    .custom-pagination .page-item .page-link:hover {
-        background: #eef4ff;
-        border-color: #9bb0ff;
-        color: #3154ff;
-    }
+      .custom-pagination .page-item .page-link {
+          border-radius: 8px !important;
+          padding: 6px 14px;
+          border: 1px solid #dcdcdc;
+          color: #333;
+          font-weight: 500;
+          background: #fff;
+          transition: 0.2s;
+      }
 
-    .custom-pagination .page-item.active .page-link {
-        background: #3154ff !important;
-        border-color: #3154ff !important;
-        color: #fff !important;
-        box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
-    }
+      .custom-pagination .page-item .page-link:hover {
+          background: #eef4ff;
+          border-color: #9bb0ff;
+          color: #3154ff;
+      }
 
-    .custom-pagination .page-item.disabled .page-link {
-        background: #f3f3f3;
-        color: #999;
-        border-color: #e1e1e1;
-    }
+      .custom-pagination .page-item.active .page-link {
+          background: #3154ff !important;
+          border-color: #3154ff !important;
+          color: #fff !important;
+          box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
+      }
 
-    .pagination {
-        margin-left: 5px !important;
-    }
+      .custom-pagination .page-item.disabled .page-link {
+          background: #f3f3f3;
+          color: #999;
+          border-color: #e1e1e1;
+      }
 
-    .barcode-card {
-        border: 1px solid #fdfdfdff;
-        border-radius: 14px !important;
-    }
-    .barcode-img {
-        max-height: 60px;
-        object-fit: contain;
-    }
+      .pagination {
+          margin-left: 5px !important;
+      }
+
+      .barcode-card {
+          border: 1px solid #fdfdfdff;
+          border-radius: 14px !important;
+      }
+
+      .barcode-img {
+          max-height: 60px;
+          object-fit: contain;
+      }
 
 
-    .ticket-card {
-        border: 1px solid #e5e7eb;
-    }
+      .ticket-card {
+          border: 1px solid #e5e7eb;
+      }
 
-    .ticket-card .row div {
-        font-size: 15px;
-    }
+      .ticket-card .row div {
+          font-size: 15px;
+      }
 
-    .small {
-        font-size: 13px !important;
-    }
+      .small {
+          font-size: 13px !important;
+      }
 
-    .shadow-sm {
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
-    }
+      .shadow-sm {
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+      }
 
-    .rounded-4 {
-        border-radius: 14px !important;
-    }
-    @media print {
+      .rounded-4 {
+          border-radius: 14px !important;
+      }
 
-    body {
-        margin: 0;
-        padding: 0;
-    }
+      @media print {
 
-    .container {
-        max-width: 100% !important;
-        width: 100% !important;
-    }
+          body {
+              margin: 0;
+              padding: 0;
+          }
 
-    .barcode-card {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-shadow: none !important;
-        page-break-inside: avoid;
-        break-inside: avoid;
-    }
+          .container {
+              max-width: 100% !important;
+              width: 100% !important;
+          }
 
-    .barcode-card .row {
-        display: flex !important;
-        flex-wrap: nowrap !important;
-    }
+          .barcode-card {
+              width: 100% !important;
+              max-width: 100% !important;
+              box-shadow: none !important;
+              page-break-inside: avoid;
+              break-inside: avoid;
+          }
 
-    .barcode-card .col-6 {
-        width: 50% !important;
-    }
+          .barcode-card .row {
+              display: flex !important;
+              flex-wrap: nowrap !important;
+          }
 
-    .barcode-img {
-        max-width: 100% !important;
-        height: auto !important;
-    }
+          .barcode-card .col-6 {
+              width: 50% !important;
+          }
 
-    img {
-        page-break-inside: avoid;
-    }
-}
+          .barcode-img {
+              max-width: 100% !important;
+              height: auto !important;
+          }
+
+          img {
+              page-break-inside: avoid;
+          }
+      }
   </style>
   <div class="card-datatable table-responsive p-2">
       <table class="table table-striped">
@@ -179,8 +182,8 @@
                               {!! $b->is_refundable === 'true'
                                   ? '<span class="text-success">Refundable</span>'
                                   : '<span class="text-danger">Non-Refundable</span>' !!}
-                                  <br/>
-                                  <span class="badge bg-info">{{ $b->journey_type }}</span>
+                              <br />
+                              <span class="badge bg-info">{{ $b->journey_type }}</span>
                           </td>
                           <td>
                               <span class="{{ $status['class'] }}">
@@ -195,25 +198,25 @@
 
                                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
                                       @if ($b->is_lcc !== 'true')
-                                    <li>
-                                        <a class="dropdown-item view-ticket-btn"
-                                            href="javascript:void(0)"
-                                            data-id="{{ $b->id }}"
-                                            data-bs-toggle="modal"
-                                            data-bs-target="#viewTicketModal">
-                                            🎫 View Ticket
-                                        </a>
-                                    </li>
+                                          <li>
+                                              <a class="dropdown-item" href="javascript:void(0)"
+                                                  data-id="{{ $b->id }}">
+                                                  🎫 View Ticket
+                                              </a>
+                                          </li>
                                       @endif
 
 
                                       <li>
-                                          <a class="dropdown-item booking-details" href="javascript:void(0)"  data-id="{{ $b->id }}">
+                                          <a class="dropdown-item view-ticket-btn" href="javascript:void(0)"
+                                              data-bs-toggle="modal" data-bs-target="#viewTicketModal"
+                                              data-id="{{ $b->id }}">
                                               📄 Booking Details
                                           </a>
                                       </li>
                                       <li>
-                                          <a class="dropdown-item cancel-flight" href="javascript:void(0)"  data-id="{{ $b->id }}">
+                                          <a class="dropdown-item cancel-flight" href="javascript:void(0)"
+                                              data-id="{{ $b->id }}">
                                               ✈️ Cancel Flight
                                           </a>
                                       </li>
@@ -236,52 +239,51 @@
   </div>
 
   <div class="modal fade" id="viewTicketModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-fullscreen">
-        <div class="modal-content">
+      <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
 
-            <div class="modal-header border-0">
-                <h5 class="modal-title fw-semibold">Flight Ticket</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
+              <div class="modal-header border-0">
+                  <h5 class="modal-title fw-semibold">Flight Ticket</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
 
-            <div class="modal-body bg-light" id="ticketContent">
+              <div class="modal-body bg-light" id="ticketContent">
 
-            </div>
+              </div>
 
-            <div class="text-center">
-                <button class="btn btn-success m-3" onclick="printTicket()">
-                    Print
-                </button>
-            </div>
+              <div class="text-center">
+                  <button class="btn btn-success m-3" onclick="printTicket()">
+                      Print
+                  </button>
+              </div>
 
-        </div>
-    </div>
-</div>
+          </div>
+      </div>
+  </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
 
-<script type="text/javascript">
-    $(document).on('click', '.view-ticket-btn', function() {
+  <script type="text/javascript">
+      $(document).on('click', '.view-ticket-btn', function() {
 
-        let bookingId = $(this).data('id');
+          let bookingId = $(this).data('id');
 
-        $('#viewTicketModal').modal('show');
+          $('#viewTicketModal').modal('show');
 
-        $("#ticketContent").html(`
+          $("#ticketContent").html(`
         <div class="p-5 text-center">
             <div class="spinner-border text-primary"></div>
             <div class="mt-2 fw-bold text-primary">Loading ticket...</div>
         </div>
     `);
 
-        $.ajax({
-            url: "booking/view/" + bookingId,
-            type: "GET",
-            success: function(booking) {
-                let html = `
+          $.ajax({
+              url: "booking/view/" + bookingId,
+              type: "GET",
+              success: function(booking) {
+                  let html = `
                 <div class="container">
 
-                    <!-- DATE -->
                     <div class="d-flex justify-content-between align-items-start mb-4">
                         <div class="small">
                             ${ new Date(booking.created_at).toLocaleDateString() }
@@ -467,38 +469,34 @@
                                 booking.passengers && booking.passengers.length > 0 
                                 ? 
                                 booking.passengers.map((p, index) => `
-                                    <div class="row mb-2">
-                                        <div class="col-5">
-                                            ${ p.name ?? `Passenger ${index+1}` }
-                                            <span class="small">${ p.type ?? "Adult" }</span>
-                                        </div>
-                                        <div class="col-2">${ p.seat ?? "–" }</div>
-                                        <div class="col-2">${ p.meal ?? "–" }</div>
-                                        <div class="col-3 fw-semibold">${ p.eticket ?? booking.pnr }</div>
-                                    </div>
-                                `).join("") 
+                                      <div class="row mb-2">
+                                          <div class="col-5">
+                                              ${ p.name ?? `Passenger ${index+1}` }
+                                              <span class="small">${ p.type ?? "Adult" }</span>
+                                          </div>
+                                          <div class="col-2">${ p.seat ?? "–" }</div>
+                                          <div class="col-2">${ p.meal ?? "–" }</div>
+                                          <div class="col-3 fw-semibold">${ p.eticket ?? booking.pnr }</div>
+                                      </div>
+                                  `).join("") 
 
                                 : 
                                 `
-                                    <div class="row mb-2">
-                                        <div class="col-5">
-                                            Passenger 1 <span class="small">Adult</span>
-                                        </div>
-                                        <div class="col-2">–</div>
-                                        <div class="col-2">–</div>
-                                        <div class="col-3 fw-semibold">${ booking.pnr }</div>
-                                    </div>
-                                `
+                                      <div class="row mb-2">
+                                          <div class="col-5">
+                                              Passenger 1 <span class="small">Adult</span>
+                                          </div>
+                                          <div class="col-2">–</div>
+                                          <div class="col-2">–</div>
+                                          <div class="col-3 fw-semibold">${ booking.pnr }</div>
+                                      </div>
+                                  `
                             }
 
                         </div>
 
 
                     </div>
-
-                    <!-- =======================
-                        STATIC SECTION START
-                    ========================-->
 
                     <div class="mt-4">
                         <div class="small fw-semibold  mb-2"
@@ -742,33 +740,28 @@
                         </div>
                         `;
 
-                                $("#ticketContent").html(html);
-                            },
-                            error: function() {
-                                $("#ticketContent").html(`
+                  $("#ticketContent").html(html);
+              },
+              error: function() {
+                  $("#ticketContent").html(`
                             <div class="p-4 text-danger fw-bold">Failed to load ticket!</div>
                         `);
-                            }
-                        });
+              }
+          });
 
 
-                    });
-
-
-    
-     function printTicket() {
-    const printContent = document.getElementById("ticketContent").innerHTML;
-    const originalContent = document.body.innerHTML;
-
-    document.body.innerHTML = printContent;
-    window.print();
-    document.body.innerHTML = originalContent;
-
-    location.reload(); // modal, JS & styles restore
-}
-
-    
-</script>
+      });
 
 
 
+      function printTicket() {
+          const printContent = document.getElementById("ticketContent").innerHTML;
+          const originalContent = document.body.innerHTML;
+
+          document.body.innerHTML = printContent;
+          window.print();
+          document.body.innerHTML = originalContent;
+
+          location.reload();
+      }
+  </script>

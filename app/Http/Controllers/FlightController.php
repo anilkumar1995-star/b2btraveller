@@ -53,13 +53,13 @@ class FlightController extends Controller
         return view('flight.seatlay');
     }
 
-      public function viewTicket($id)
+    public function viewTicket($id)
     {
         $booking = DB::table('bookings')->find($id);
 
         return response()->json($booking);
     }
-	
+
     public function bookingList(Request $request)
     {
         $userId = \Auth::user()->id;
@@ -82,6 +82,30 @@ class FlightController extends Controller
         }
 
         return view('flight.bookinglist', compact('bookings'));
+    }
+
+    public function bookingListFailed(Request $request)
+    {
+        $userId = \Auth::user()->id;
+
+        $bookings = DB::table('failed_bookings_list')
+            ->join('users', 'users.id', '=', 'failed_bookings_list.user_id')
+            ->where('failed_bookings_list.user_id', $userId)
+            ->select(
+                'failed_bookings_list.*',
+                'users.name as user_name',
+                'users.email as user_email',
+                'users.mobile as user_mobile'
+            )
+            ->orderBy('failed_bookings_list.id', 'DESC')
+            ->paginate(10);
+
+
+        if ($request->ajax()) {
+            return view('flight.booking-table-failed', compact('bookings'))->render();
+        }
+
+        return view('flight.bookinglistfailed', compact('bookings'));
     }
 
     public function apiLog(Request $request)
@@ -159,9 +183,23 @@ class FlightController extends Controller
         $response = $service->bookingFlight($request->all());
 
         if ($response['status'] != 'success') {
+            $up = [
+                'user_id'         => \Auth::user()->id,
+                'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
+                'tax'             => $request['passengers'][0]['Fare']['Tax'],
+                'total_amount'    => $request['passengers'][0]['Fare']['PublishedFare'],
+                'booking_status'  => $response['status'],
+                'message'         => $response['message'],
+                'raw_response'    => json_encode($response),
+                'created_at'      => now(),
+                'updated_at'      => now(),
+            ];
+            DB::table('failed_bookings_list')->insert($up);
+
+
             return response()->json([
-                'status' => 'failed',
-                'message' => 'Flight booking failed!'
+                'status' => $response['status'] ?? 'failed',
+                'message' => $response['message'] ?? 'Flight booking failed!'
             ], 400);
         }
 
@@ -188,19 +226,19 @@ class FlightController extends Controller
         $segments         = $seg[0] ?? null;
 
         $status = "";
-        if ($data['Status'] = 0) {
+        if ($data['Status'] == 0) {
             $status = "Not Set";
-        } else  if ($data['Status'] = 1) {
+        } else  if ($data['Status'] == 1) {
             $status = "Successful";
-        } else  if ($data['Status'] = 2) {
+        } else  if ($data['Status'] == 2) {
             $status = "Failed";
-        } else  if ($data['Status'] = 3) {
+        } else  if ($data['Status'] == 3) {
             $status = "OtherFare";
-        } else  if ($data['Status'] = 4) {
+        } else  if ($data['Status'] == 4) {
             $status = "OtherClass";
-        } else  if ($data['Status'] = 5) {
+        } else  if ($data['Status'] == 5) {
             $status = "BookedOther";
-        } else if ($data['Status'] = 6) {
+        } else if ($data['Status'] == 6) {
             $status = "NotConfirmed";
         }
 
@@ -227,7 +265,7 @@ class FlightController extends Controller
         $tax              = $fare['Tax'] ?? 0;
         $totalAmount      = ($fare['PublishedFare'] ?? 0);
 
-    
+
         $booking = [
             'user_id'         => \Auth::user()->id,
             'pnr'             => $pnr,
@@ -270,9 +308,22 @@ class FlightController extends Controller
 
         // dd($response);
         if ($response['status'] != 'success') {
+            $up = [
+                'user_id'         => \Auth::user()->id,
+                'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
+                'tax'             => $request['passengers'][0]['Fare']['Tax'],
+                'total_amount'    => $request['passengers'][0]['Fare']['PublishedFare'],
+                'booking_status'  => $response['status'],
+                'message'         => $response['message'],
+                'raw_response'    => json_encode($response),
+                'created_at'      => now(),
+                'updated_at'      => now(),
+            ];
+            DB::table('failed_bookings_list')->insert($up);
+
             return response()->json([
-                'status' => 'failed',
-                'message' => 'Flight booking failed!'
+                'status' => $response['status'] ?? 'failed',
+                'message' => $response['message'] ?? 'Flight booking failed!'
             ], 400);
         }
 
@@ -285,7 +336,7 @@ class FlightController extends Controller
                 'message' => 'Invalid, Something went worng'
             ], 400);
         }
-        
+
         // Extracting required fields
         $pnr              = $data['PNR'] ?? null;
         $bookingId        = $data['BookingId'] ?? null;
@@ -299,19 +350,19 @@ class FlightController extends Controller
 
         // NotSet = 0, Successful = 1, Failed = 2, OtherFare = 3, OtherClass = 4, BookedOther = 5, NotConfirmed = 6]
         $status = "";
-        if ($data['Status'] = 0) {
+        if ($data['Status'] == 0) {
             $status = "Not Set";
-        } else  if ($data['Status'] = 1) {
+        } else  if ($data['Status'] == 1) {
             $status = "Successful";
-        } else  if ($data['Status'] = 2) {
+        } else  if ($data['Status'] == 2) {
             $status = "Failed";
-        } else  if ($data['Status'] = 3) {
+        } else  if ($data['Status'] == 3) {
             $status = "OtherFare";
-        } else  if ($data['Status'] = 4) {
+        } else  if ($data['Status'] == 4) {
             $status = "OtherClass";
-        } else  if ($data['Status'] = 5) {
+        } else  if ($data['Status'] == 5) {
             $status = "BookedOther";
-        } else if ($data['Status'] = 6) {
+        } else if ($data['Status'] == 6) {
             $status = "NotConfirmed";
         }
 
