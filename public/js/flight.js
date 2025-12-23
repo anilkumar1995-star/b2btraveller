@@ -2119,8 +2119,7 @@ function checkFinalBookingStatus(trip, journeyType) {
 
             swal({
                 title: "Booking Successful!",
-                html: `
-                <p>Your ticket has been booked successfully 🎉</p>
+                html: `<p>Your ticket has been booked successfully 🎉</p>
                 <p><strong>PNR:</strong> ${dep?.PNR || "Not Available"}</p>
                 <p><strong>Booking Id:</strong> ${dep?.BookingId || "Not Available"}</p>
             `,
@@ -2136,7 +2135,7 @@ function checkFinalBookingStatus(trip, journeyType) {
         } else {
             swal({
                 title: "Error",
-                text: "Something went wrong while booking.",
+                text: bookingResult.departure.message || "Flight Booking Failed, Please search again",
                 type: "error"
             }).then(() => {
                 window.location.href = "/flight/view";

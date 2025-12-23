@@ -317,6 +317,20 @@
             const payload = JSON.parse(localStorage.getItem('payload'));
             const travelerDet = JSON.parse(localStorage.getItem('travelerDetails'));
 
+             if (!payload || !travelerDet) {
+                swal({
+                    title: "Data Missing",
+                    html: "Your booking session missing some info, <br/> Please try again",
+                    type: "error",
+                    confirmButtonText: "Search Flights",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+                return;
+            }
+
             if (travelerDet) {
                 if (payload.JourneyType == 1) {
                     const resultIndex = localStorage.getItem('ResultIndex');

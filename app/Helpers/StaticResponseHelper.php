@@ -20213,4 +20213,9 @@ class StaticResponseHelper
             }
         }';
     }
+
+
+    static public function flightfailedsearchresponse(){
+        return '{"code":"0x0202","status":"FAILURE","message":"Departure date of 2nd segment cant be less than arrival of 1st segment."}';
+    }
 }

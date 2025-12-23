@@ -137,6 +137,7 @@
             $('#bookingData').addClass('d-none');
             $('.preloader').removeClass('d-none');
 
+
             const payload = JSON.parse(localStorage.getItem('payload'));
             const traceId = localStorage.getItem('TraceId') || '';
 
@@ -145,6 +146,20 @@
             let selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
             let selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
             let selectedBaggage = JSON.parse(localStorage.getItem('selectedBaggage')) || [];
+
+            if (!payload || !traceId || !selectedFlightDetails) {
+                swal({
+                    title: "Session Expired ⚠️",
+                    html: "Your booking session has expired <br/> Please search flights again.",
+                    type: "error",
+                    confirmButtonText: "Search Flights",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+                return;
+            }
 
             if (payload.JourneyType == 1) {
                 hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals,
