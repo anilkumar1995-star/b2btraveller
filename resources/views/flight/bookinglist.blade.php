@@ -10,93 +10,93 @@
 
             <div class="row">
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card card-border-shadow-primary a h-90">
-                        <div class="card-body">
+                    <div class="card card-border-shadow-primary h-90">
+                        <div class="card-body bg-label-success">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
                                     <span class="avatar-initial rounded bg-label-primary">
-                                        <i class="ti ti-plane"></i>
+                                        <i class="ti ti-plane-departure"></i>
                                     </span>
                                 </div>
-                                <h4 class="mb-0 text-success" data-bs-toggle="tooltip" title=""
-                                    data-bs-original-title="Total Lcc = ₹ {{ number_format($total_booking_amount ?? 0, 2) }}"
+                                <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="₹ {{ number_format($totalonewaylcc ?? 0, 2) }}"
                                     id="total_booking_amount">
-                                    ₹0
-                                </h4>
+                                    ₹ {{ number_format($totalonewaylcc ?? 0, 2) }}
+                            </p>
                             </div>
-                            <small class="mb-1 fw-bold">Total LCC booking value</small>
+                            <small class="mb-1 fw-bold">Total oneway lcc bookings</small>
                             <p class="mb-0">
-                                <span class="text-heading fw-bold me-1" id="booking_count"> 0 </span>
-                                <small class="text-body-secondary">Total LCC Counts</small>
+                                <span class="text-heading fw-bold me-1" id="booking_count">{{ $totalonewaylccCount ?? 0 }}</span>
+                                <small class="text-body-secondary">Counts</small>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
                     <div class="card shadow-sm bg-light-success h-90">
-                        <div class="card-body">
+                        <div class="card-body bg-label-info">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
-                                    <span class="avatar-initial rounded bg-label-primary">
-                                        <i class="ti ti-plane"></i>
+                                    <span class="avatar-initial rounded bg-label-success">
+                                        <i class="ti ti-plane-arrival"></i>
                                     </span>
                                 </div>
-                                <h4 class="mb-0 text-success" data-bs-toggle="tooltip" title=""
-                                    data-bs-original-title="Total Lcc = ₹ {{ number_format($total_booking_amount ?? 0, 2) }}"
+                                <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="₹ {{ number_format($totalonewaynonlcc ?? 0, 2) }}"
                                     id="total_booking_amount">
-                                    ₹0
-                                </h4>
+                                    ₹ {{ $totalonewaynonlcc ?? 0 }}
+                              </p>
                             </div>
-                            <small class="mb-1 fw-bold">Total Non Lcc bookings</small>
+                            <small class="mb-1 fw-bold">Oneway non-lcc bookings</small>
                             <p class="mb-0">
-                                <span class="text-heading fw-bold me-1" id="booking_count"> 0 </span>
-                                <small class="text-body-secondary">Total Non Lcc Counts</small>
+                                <span class="text-heading fw-bold me-1" id="booking_count">{{ $totalonewaynonlccCount ?? 0 }}</span>
+                                <small class="text-body-secondary">Counts</small>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
                     <div class="card card-border-shadow-primary h-90">
-                        <div class="card-body">
+                        <div class="card-body bg-label-primary">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
-                                    <span class="avatar-initial rounded bg-label-primary">
-                                        <i class="ti ti-plane"></i>
+                                    <span class="avatar-initial rounded bg-label-warning">
+                                        <i class="ti ti-arrows-exchange"></i>
                                     </span>
                                 </div>
-                                <h4 class="mb-0 text-success" data-bs-toggle="tooltip" title=""
-                                    data-bs-original-title="Total Lcc = ₹ {{ number_format($total_booking_amount ?? 0, 2) }}"
+                                <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="₹ {{ number_format($totalroundtriplcc ?? 0, 2) }}"
                                     id="total_booking_amount">
-                                    ₹0
-                                </h4>
+                                    ₹{{ $totalroundtriplcc ?? 0 }}
+                                </p>
                             </div>
-                            <small class="mb-1 fw-bold">Total Oneway bookings</small>
+                            <small class="mb-1 fw-bold">Round Trip lcc bookings</small>
                             <p class="mb-0">
-                                <span class="text-heading fw-bold me-1" id="booking_count"> 0 </span>
-                                <small class="text-body-secondary">Total Oneway Counts</small>
+                                <span class="text-heading fw-bold me-1" id="booking_count"> {{ $totalroundtriplcc ?? 0 }} </span>
+                                <small class="text-body-secondary">Counts</small>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6 mb-3">
                     <div class="card card-border-shadow-primary h-90">
-                        <div class="card-body">
+                        <div class="card-body bg-label-danger">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
-                                    <span class="avatar-initial rounded bg-label-primary">
-                                        <i class="ti ti-plane"></i>
+                                    <span class="avatar-initial rounded bg-label-warning">
+                                        <i class="ti ti-plane-inflight"></i>
                                     </span>
                                 </div>
-                                <h4 class="mb-0 text-success" data-bs-toggle="tooltip" title=""
-                                    data-bs-original-title="Total Lcc = ₹ {{ number_format($total_booking_amount ?? 0, 2) }}"
+                                <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="₹ {{ number_format($totalroundtripnonlcc ?? 0, 2) }}"
                                     id="total_booking_amount">
-                                    ₹0
-                                </h4>
+                                    ₹{{ $totalroundtripnonlcc ?? 0 }}
+                                </p>
                             </div>
-                            <small class="mb-1 fw-bold">Total Round Trip bookings</small>
+                            <small class="mb-1 fw-bold">Roundtrip non-lcc bookings</small>
                             <p class="mb-0">
-                                <span class="text-heading fw-bold me-1" id="booking_count"> 0 </span>
-                                <small class="text-body-secondary">Total Roundtrip Counts</small>
+                                <span class="text-heading fw-bold me-1" id="booking_count"> {{ $totalroundtripnonlcc ?? 0 }} </span>
+                                <small class="text-body-secondary fs-13">Counts</small>
                             </p>
                         </div>
                     </div>

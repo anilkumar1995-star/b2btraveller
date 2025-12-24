@@ -71,34 +71,31 @@ class FlightController extends Controller
 
     public function bookingList(Request $request)
     {
-         if (\Myhelper::hasRole('admin')) {
-            $data['totallcc'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc','true')->sum('total_amount');
-            $data['totallccCount'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc','true')->count();
+        if (\Myhelper::hasRole('admin')) {
+            $data['totalonewaylcc'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc', 'true')->where('journey_type', 'oneway')->sum('total_amount');
+            $data['totalonewaylccCount'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc', 'true')->where('journey_type', 'oneway')->count();
+            $data['totalonewaynonlcc'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc', 'false')->where('journey_type', 'oneway')->sum('total_amount');
+            $data['totalonewaynonlccCount'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc', 'false')->where('journey_type', 'oneway')->count();
 
-            $data['totalnonlcc'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc','false')->sum('total_amount');
-            $data['totalnonlccCount'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc','false')->count();
-            $data['totaloneway'] = DB::table('bookings')->where('payment_status', 'success')->where('journey_type','true')->sum('total_amount');
-            $data['totalonewayCount'] = DB::table('bookings')->where('payment_status', 'success')->where('journey_type','true')->count();
-
-            $data['totalroundtrip'] = DB::table('bookings')->where('payment_status', 'success')->where('journey_type','false')->sum('total_amount');
-            $data['totalroundtripCount'] = DB::table('bookings')->where('payment_status', 'success')->where('journey_type','false')->count();
+            $data['totalroundtriplcc'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc', 'true')->where('journey_type', 'roundtrip')->sum('total_amount');
+            $data['totalroundtriplccCount'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc', 'true')->where('journey_type', 'roundtrip')->count();
+            $data['totalroundtripnonlcc'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc', 'false')->where('journey_type', 'roundtrip')->sum('total_amount');
+            $data['totalroundtripnonlccCount'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc', 'false')->where('journey_type', 'roundtrip')->count();
         } else {
-            $data['totallcc'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc','true')->sum('total_amount');
-            $data['totallccCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc','true')->count();
-             $data['totalnonlcc'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc','false')->sum('total_amount');
-             $data['totalnonlccCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc','false')->count();
+            $data['totalonewaylcc'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc', 'true')->where('journey_type', 'oneway')->sum('total_amount');
+            $data['totalonewaylccCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc', 'true')->where('journey_type', 'oneway')->count();
+            $data['totalonewaynonlcc'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc', 'false')->where('journey_type', 'oneway')->sum('total_amount');
+            $data['totalonewaynonlccCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc', 'false')->where('journey_type', 'oneway')->count();
 
-            $data['totaloneway'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('journey_type','true')->sum('total_amount');
-            $data['totalonewayCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('journey_type','true')->count();
-
-            $data['totalroundtrip'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('journey_type','false')->sum('total_amount');
-            $data['totalroundtripCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('journey_type','false')->count();
-
+            $data['totalroundtriplcc'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc', 'true')->where('journey_type', 'roundtrip')->sum('total_amount');
+            $data['totalroundtriplccCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc', 'true')->where('journey_type', 'roundtrip')->count();
+            $data['totalroundtripnonlcc'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc', 'false')->where('journey_type', 'roundtrip')->sum('total_amount');
+            $data['totalroundtripnonlccCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc', 'false')->where('journey_type', 'roundtrip')->count();
         }
         // dd($data);
         $userId = \Auth::user()->id;
 
-        $bookings = DB::table('bookings')
+        $data['bookings'] = DB::table('bookings')
             ->join('users', 'users.id', '=', 'bookings.user_id')
             ->where('bookings.user_id', $userId)
             ->select(
@@ -112,10 +109,10 @@ class FlightController extends Controller
 
 
         if ($request->ajax()) {
-            return view('flight.booking-table', compact('bookings'))->render();
+            return view('flight.booking-table')->with($data)->render();
         }
 
-        return view('flight.bookinglist', compact('bookings'));
+        return view('flight.bookinglist')->with($data);
     }
 
     public function bookingListFailed(Request $request)
