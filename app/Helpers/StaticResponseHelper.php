@@ -20312,7 +20312,18 @@ class StaticResponseHelper
                     "CreditNoteCreatedOn": null,
                     "Passenger": [
                     {
-                        "BarcodeDetails": null,
+                        "BarcodeDetails": {
+                            "Id": 0,
+                            "Barcode": [
+                            {
+                                "Index": 1,
+                                "Format": "PDF417",
+                                "Content": "M1PANDEY/SHIVANI       7CJ34Y CCUDELAI 2708 324Y000000000000",
+                                "BarCodeInBase64": null,
+                                "JourneyWayType": 3
+                            }
+                            ]
+                        },
                         "DocumentDetails": null,
                         "GuardianDetails": null,
                         "PaxId": 3315141,
