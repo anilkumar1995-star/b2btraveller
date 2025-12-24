@@ -465,10 +465,6 @@
 
           let html = `
             <div>
-                <div class="mb-3">
-                    ${new Date().toLocaleDateString()}
-                </div>
-
                 <div class="bg-white p-4 rounded shadow-sm">
 
                     <div class="d-flex justify-content-between mb-4">
@@ -485,7 +481,7 @@
                 <div class="row ticket-route">
 
 
-                    <div class="col-md-6 p-3 text-center ticket-route">
+                    <div class="col-sm-6 p-3 text-center ticket-route">
                         <div class="mt-2 border rounded p-1  bg-label-warning">
                             PNR<br>
                             <b>${booking.PNR || '-'}</b>
@@ -500,7 +496,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6 p-3 ticket-route">
+                    <div class="col-sm-6 p-3 ticket-route">
 
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="text-start">
@@ -616,7 +612,7 @@
 
                     <div class="row g-0">
 
-                        <div class="col-md-9 border-end">
+                        <div class="col-sm-9 border-end">
 
                             <div class="p-2 px-3 fw-semibold text-white" 
                                 style="background:#d7261e; border-radius:8px 8px 0 0;">
@@ -680,7 +676,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-3">
+                        <div class="col-sm-3">
 
                             <div class="p-2 fw-semibold text-white text-center" 
                                 style="background:#f8a900; border-radius:8px 8px 0 0;">
