@@ -292,16 +292,15 @@
                                           <li>
                                               <a class="dropdown-item" href="javascript:void(0)"
                                                   data-id="{{ $b->id }}">
-                                                  🎫 View Ticket
+                                                  🎫 Generate Ticket
                                               </a>
                                           </li>
                                       @endif
 
 
                                       <li>
-                                          <a class="dropdown-item view-ticket-btn" href="javascript:void(0)"
-                                              data-bs-toggle="modal" data-bs-target="#viewTicketModal"
-                                              data-id="{{ $b->id }}">
+                                          <a class="dropdown-item" href="javascript:void(0)"
+                                              onclick="openBookingDetails({{ $b->id }})">
                                               📄 Booking Details
                                           </a>
                                       </li>
@@ -355,24 +354,47 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
 
   <script type="text/javascript">
-      $(document).on('click', '.view-ticket-btn', function() {
-
-          let bookingId = $(this).data('id');
+      function openBookingDetails(bookingId) {
+          $('#ticketContent').html(`
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="mt-2">Fetching booking details...</p>
+                </div>
+            `);
 
           $('#viewTicketModal').modal('show');
 
-          $("#ticketContent").html(`
-        <div class="p-5 text-center">
-            <div class="spinner-border text-primary"></div>
-            <div class="mt-2 fw-bold text-primary">Loading ticket...</div>
-        </div>
-    `);
-
           $.ajax({
-              url: "booking/view/" + bookingId,
-              type: "GET",
-              success: function(booking) {
-                  let html = `
+              url: "/flight/booking-view",
+              type: "POST",
+              data: {
+                  booking_id: bookingId,
+                  _token: "{{ csrf_token() }}"
+              },
+              success: function(res) {
+                  if (res.status === 'success') {
+                      getDetails(res?.data?.Response?.FlightItinerary);
+                  } else {
+                      $('#ticketContent').html(`
+                        <div class="alert alert-danger text-center">
+                            ${res.message}
+                        </div>
+                    `);
+                  }
+              },
+              error: function() {
+                  $('#ticketContent').html(`
+                    <div class="alert alert-danger text-center">
+                        Unable to fetch booking details.
+                    </div>
+                `);
+              }
+          });
+      }
+
+      function getDetails(booking) {
+        console.log(booking);
+          let html = `
                 <div class="container">
 
                     <div class="d-flex justify-content-between align-items-start mb-4">
@@ -537,7 +559,7 @@
                                         "<span class='text-success'>Refundable</span>" :
                                     booking.is_refundable === "false" ?
                                         "<span class='text-danger'>Non-Refundable</span>" :
-                        
+
                                         "<span class='text-danger'>Non-Refundable</span>"
                                 }
                             </div>
@@ -560,28 +582,28 @@
                                 booking.passengers && booking.passengers.length > 0 
                                 ? 
                                 booking.passengers.map((p, index) => `
-                                      <div class="row mb-2">
-                                          <div class="col-5">
-                                              ${ p.name ?? `Passenger ${index+1}` }
-                                              <span class="small">${ p.type ?? "Adult" }</span>
-                                          </div>
-                                          <div class="col-2">${ p.seat ?? "–" }</div>
-                                          <div class="col-2">${ p.meal ?? "–" }</div>
-                                          <div class="col-3 fw-semibold">${ p.eticket ?? booking.pnr }</div>
-                                      </div>
-                                  `).join("") 
+                                                <div class="row mb-2">
+                                                    <div class="col-5">
+                                                        ${ p.name ?? `Passenger ${index+1}` }
+                                                        <span class="small">${ p.type ?? "Adult" }</span>
+                                                    </div>
+                                                    <div class="col-2">${ p.seat ?? "–" }</div>
+                                                    <div class="col-2">${ p.meal ?? "–" }</div>
+                                                    <div class="col-3 fw-semibold">${ p.eticket ?? booking.pnr }</div>
+                                                </div>
+                                            `).join("") 
 
                                 : 
                                 `
-                                      <div class="row mb-2">
-                                          <div class="col-5">
-                                              Passenger 1 <span class="small">Adult</span>
-                                          </div>
-                                          <div class="col-2">–</div>
-                                          <div class="col-2">–</div>
-                                          <div class="col-3 fw-semibold">${ booking.pnr }</div>
-                                      </div>
-                                  `
+                                                <div class="row mb-2">
+                                                    <div class="col-5">
+                                                        Passenger 1 <span class="small">Adult</span>
+                                                    </div>
+                                                    <div class="col-2">–</div>
+                                                    <div class="col-2">–</div>
+                                                    <div class="col-3 fw-semibold">${ booking.pnr }</div>
+                                                </div>
+                                            `
                             }
 
                         </div>
@@ -620,7 +642,7 @@
 
                             </div>
 
-                    
+
                         </div>
                           <div class="p-3 rounded-3 mb-2 bg-white">
                                 <span class="text-success">You have paid <span class="fw-bold text-dark">INR ${booking.total_amount}</span></span>
@@ -830,20 +852,8 @@
 
                         </div>
                         `;
-
-                  $("#ticketContent").html(html);
-              },
-              error: function() {
-                  $("#ticketContent").html(`
-                            <div class="p-4 text-danger fw-bold">Failed to load ticket!</div>
-                        `);
-              }
-          });
-
-
-      });
-
-
+          $('#ticketContent').html(html);
+      }
 
       function printTicket() {
           const printContent = document.getElementById("ticketContent").innerHTML;

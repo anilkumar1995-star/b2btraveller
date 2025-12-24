@@ -53,11 +53,20 @@ class FlightController extends Controller
         return view('flight.seatlay');
     }
 
-    public function viewTicket($id)
+    public function viewTicket(Request $request)
     {
-        $booking = DB::table('bookings')->find($id);
+        $booking = DB::table('bookings')->where('id', $request->booking_id)->first();
 
-        return response()->json($booking);
+        if (!$booking) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Booking Details not found'
+            ]);
+        }
+        $service = new FlightService();
+        $response = $service->getDetailsFlight($booking);
+      
+        return response()->json($response);
     }
 
     public function bookingList(Request $request)
@@ -301,7 +310,7 @@ class FlightController extends Controller
             'flight_number'   => $flightNumber,
             'journey_date'    => $journeyDate,
             'journey_type'    => $journeyTypee,
-
+            'raw_payload'     => json_encode($request->all()),
             'base_fare'       => $baseFare,
             'tax'             => $tax,
             'total_amount'    => $totalAmount,
@@ -425,7 +434,7 @@ class FlightController extends Controller
             'flight_number'   => $flightNumber,
             'journey_date'    => $journeyDate,
             'journey_type'    => $journeyTypee,
-
+            'raw_payload'     => json_encode($request->all()),
             'base_fare'       => $baseFare,
             'tax'             => $tax,
             'total_amount'    => $totalAmount,
