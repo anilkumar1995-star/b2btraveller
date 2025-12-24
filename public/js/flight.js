@@ -1154,6 +1154,7 @@ function generateTravelerForm(response) {
                                     <option value="">Select</option>
                                     <option value="Mr">Mr</option>
                                     <option value="Mrs">Mrs</option>
+                                    <option value="Mstr">Mstr (Male Infant)</option>
                                 </select>
                             </div>
                             <div class="col-md-9">
@@ -2106,6 +2107,7 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType) {
 }
 
 function checkFinalBookingStatus(trip, journeyType) {
+    console.log(trip, journeyType);
     if (trip == 'departure' && journeyType == '1') {
         $('#bookingData').removeClass('d-none');
         $('.preloader').addClass('d-none');

@@ -65,7 +65,7 @@ class FlightController extends Controller
         }
         $service = new FlightService();
         $response = $service->getDetailsFlight($booking);
-      
+
         return response()->json($response);
     }
 
@@ -191,7 +191,7 @@ class FlightController extends Controller
         $service = new FlightService();
         $response = $service->bookingFlight($request->all());
 
-        if ($response['status'] != 'success') {
+        if (strtolower($response['status']) != 'success') {
             $up = [
                 'user_id'         => \Auth::user()->id,
                 'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
@@ -291,10 +291,11 @@ class FlightController extends Controller
             'total_amount'    => $totalAmount,
             'is_refundable'    => $isrefund,
             'is_lcc'    => $islcc,
+            'api_type' => 'book',
 
             'payment_status'  => 'success',
             'booking_status'  => $status,
-
+            'ticket_status' => 'pending',
             'raw_response'    => json_encode($response['data']),
 
             'created_at'      => now(),
@@ -315,8 +316,7 @@ class FlightController extends Controller
         $service = new FlightService();
         $response = $service->FlightTicketView($request->all());
 
-        // dd($response);
-        if ($response['status'] != 'success') {
+        if (strtolower($response['status']) != 'success') {
             $up = [
                 'user_id'         => \Auth::user()->id,
                 'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
@@ -399,33 +399,52 @@ class FlightController extends Controller
         $totalAmount      = ($fare['PublishedFare'] ?? 0);
 
         // Store in DB
-        $booking = [
-            'user_id'         => \Auth::user()->id,
-            'pnr'             => $pnr,
-            'booking_id_api'  => $bookingId,
-            'origin'          => $origin . "-" .  $originName,
-            'destination'     => $destination . "-" .  $destinationName,
-            'airline_code'    => $airlineCode . "-" .  $airlineName,
-            'flight_number'   => $flightNumber,
-            'journey_date'    => $journeyDate,
-            'journey_type'    => $journeyTypee,
-            'raw_payload'     => json_encode($request->all()),
-            'base_fare'       => $baseFare,
-            'tax'             => $tax,
-            'total_amount'    => $totalAmount,
-            'is_refundable'    => $isrefund,
-            'is_lcc'    => $islcc,
+        $existingBooking = DB::table('bookings')
+            ->where('booking_id_api', $bookingId)
+            ->where('pnr', $pnr)
+            ->first();
 
-            'payment_status'  => 'success',
-            'booking_status'  => $status,
 
-            'raw_response'    => json_encode($response['data']),
+        if ($existingBooking) {
+            DB::table('bookings')
+                ->where('id', $existingBooking->id)
+                ->update([
+                    'base_fare'       => $baseFare,
+                    'tax'             => $tax,
+                    'total_amount'    => $totalAmount,
+                    'ticket_status'   => 'confirmed',
+                    'api_type'        => 'ticket',
+                    'raw_response'    => json_encode($response['data']),
+                    'updated_at'      => now(),
+                ]);
+        } else {
+            $booking = [
+                'user_id'         => \Auth::user()->id,
+                'pnr'             => $pnr,
+                'booking_id_api'  => $bookingId,
+                'origin'          => $origin . "-" .  $originName,
+                'destination'     => $destination . "-" .  $destinationName,
+                'airline_code'    => $airlineCode . "-" .  $airlineName,
+                'flight_number'   => $flightNumber,
+                'journey_date'    => $journeyDate,
+                'journey_type'    => $journeyTypee,
+                'base_fare'       => $baseFare,
+                'tax'             => $tax,
+                'total_amount'    => $totalAmount,
+                'is_refundable'    => $isrefund,
+                'is_lcc'    => $islcc,
 
-            'created_at'      => now(),
-            'updated_at'      => now(),
-        ];
-
-        DB::table('bookings')->insert($booking);
+                'payment_status'  => 'success',
+                'booking_status'  => $status,
+                'ticket_status' => 'confirmed',
+                'api_type' => 'ticket',
+                'raw_response'    => json_encode($response['data']),
+                'raw_payload'     => json_encode($request->all()),
+                'created_at'      => now(),
+                'updated_at'      => now(),
+            ];
+            DB::table('bookings')->insert($booking);
+        }
 
         return response()->json([
             'status' => 'success',
