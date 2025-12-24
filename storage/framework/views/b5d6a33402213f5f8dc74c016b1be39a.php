@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Booking Search'); ?>
 <?php $__env->startSection('pagetitle', 'Booking Search'); ?>
 
