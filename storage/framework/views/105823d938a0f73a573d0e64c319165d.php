@@ -126,8 +126,8 @@
       }
   </style>
   <div class="card-datatable table-responsive p-2">
-      <table class="table table-striped">
-          <thead class="bg-light text-center">
+      <table class="table table-striped"  id="bookingTable">
+          <thead class="bg-light">
               <tr>
                   <th>ID</th>
                   <th>User</th>
@@ -135,6 +135,7 @@
                   <th>Route</th>
                   <th>Amount</th>
                   <th>Type</th>
+                  <th>Ticket Status</th>
                   <th class="text-center">Action</th>
               </tr>
           </thead>
@@ -188,6 +189,12 @@
                               <br />
                               <span class="badge bg-info"><?php echo e($b->journey_type); ?></span>
                           </td>
+                          <td><?php echo $b->ticket_status == 'pending'
+                              ? '<span class="badge bg-warning">Pending</span>'
+                              : '<span class="badge bg-success">Confirmed</span>'; ?>
+
+
+                          </td>
                           <td>
                               <span class="<?php echo e($status['class']); ?>">
                                   <?php echo e($status['label']); ?>
@@ -201,10 +208,13 @@
                                   </button>
 
                                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo e($b->id); ?>">
-                                      <?php if($b->is_lcc !== 'true'): ?>
+
+                                      <?php if($b->is_lcc !== 'true' && $b->ticket_status === 'pending'): ?>
                                           <li>
-                                              <a class="dropdown-item" href="javascript:void(0)"
-                                                  data-id="<?php echo e($b->id); ?>">
+                                              <a class="dropdown-item  generate-ticket" href="javascript:void(0)"
+                                                  data-id="<?php echo e($b->id); ?>"
+                                                  data-journeytype = "<?php echo e($b->journey_type); ?>"
+                                                  data-payload='<?php echo json_encode(json_decode($b->raw_payload), 15, 512) ?>'>
                                                   🎫 Generate Ticket
                                               </a>
                                           </li>
@@ -266,7 +276,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
-
+  <script src="<?php echo e(asset('')); ?>js/flight.js"></script>
   <script type="text/javascript">
       function openBookingDetails(bookingId) {
           $('#ticketContent').html(`
@@ -307,7 +317,7 @@
       }
 
       function getDetails(booking) {
-        console.log(booking);
+          console.log(booking);
           let html = `
                 <div class="container">
 
@@ -496,28 +506,28 @@
                                 booking.passengers && booking.passengers.length > 0 
                                 ? 
                                 booking.passengers.map((p, index) => `
-                                                <div class="row mb-2">
-                                                    <div class="col-5">
-                                                        ${ p.name ?? `Passenger ${index+1}` }
-                                                        <span class="small">${ p.type ?? "Adult" }</span>
-                                                    </div>
-                                                    <div class="col-2">${ p.seat ?? "–" }</div>
-                                                    <div class="col-2">${ p.meal ?? "–" }</div>
-                                                    <div class="col-3 fw-semibold">${ p.eticket ?? booking.pnr }</div>
-                                                </div>
-                                            `).join("") 
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-5">
+                                                                                ${ p.name ?? `Passenger ${index+1}` }
+                                                                                <span class="small">${ p.type ?? "Adult" }</span>
+                                                                            </div>
+                                                                            <div class="col-2">${ p.seat ?? "–" }</div>
+                                                                            <div class="col-2">${ p.meal ?? "–" }</div>
+                                                                            <div class="col-3 fw-semibold">${ p.eticket ?? booking.pnr }</div>
+                                                                        </div>
+                                                                    `).join("") 
 
                                 : 
                                 `
-                                                <div class="row mb-2">
-                                                    <div class="col-5">
-                                                        Passenger 1 <span class="small">Adult</span>
-                                                    </div>
-                                                    <div class="col-2">–</div>
-                                                    <div class="col-2">–</div>
-                                                    <div class="col-3 fw-semibold">${ booking.pnr }</div>
-                                                </div>
-                                            `
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-5">
+                                                                                Passenger 1 <span class="small">Adult</span>
+                                                                            </div>
+                                                                            <div class="col-2">–</div>
+                                                                            <div class="col-2">–</div>
+                                                                            <div class="col-3 fw-semibold">${ booking.pnr }</div>
+                                                                        </div>
+                                                                    `
                             }
 
                         </div>
@@ -779,5 +789,30 @@
 
           location.reload();
       }
+
+      $(document).on('click', '.generate-ticket', function() {
+
+          const payload = $(this).data('payload');
+          let journeyType = $(this).data('journeytype');
+
+          swal({
+              title: "Generate Ticket?",
+              html: `
+            <p>Are you sure you want to generate the ticket?</p>
+            <small class="text-muted">Once generated, it cannot be reversed.</small>
+        `,
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonText: "Yes, Generate",
+              cancelButtonText: "Cancel",
+              allowOutsideClick: false,
+              allowEscapeKey: false
+          }).then((result) => {
+              if (result.value || result === true) {
+                  ViewTicketAjax(payload,'/flight/ticket','departure',journeyType === 'oneway' ? '1' : '2','table');
+              }
+          });
+
+      });
   </script>
 <?php /**PATH C:\wamp64\www\flight_b2b_travel\flight_b2b_travel\resources\views/flight/booking-table.blade.php ENDPATH**/ ?>

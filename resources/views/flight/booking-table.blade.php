@@ -129,6 +129,7 @@
       }
   </style>
 
+
      <div class="row">
             <div class="col-lg-3 col-sm-6">
                 <div class="card card-border-shadow-primary a h-90">
@@ -215,10 +216,10 @@
                 </div>
             </div>
     </div>
-                  
-      <div class="card-datatable table-responsive p-2">
-       <table class="table table-striped">
-          <thead class="bg-light text-center">
+
+    <div class="card-datatable table-responsive p-2">
+      <table class="table table-striped"  id="bookingTable">
+          <thead class="bg-light">
               <tr>
                   <th>ID</th>
                   <th>User</th>
@@ -226,6 +227,7 @@
                   <th>Route</th>
                   <th>Amount</th>
                   <th>Type</th>
+                  <th>Ticket Status</th>
                   <th class="text-center">Action</th>
               </tr>
           </thead>
@@ -276,6 +278,11 @@
                               <br />
                               <span class="badge bg-info">{{ $b->journey_type }}</span>
                           </td>
+                          <td>{!! $b->ticket_status == 'pending'
+                              ? '<span class="badge bg-warning">Pending</span>'
+                              : '<span class="badge bg-success">Confirmed</span>' !!}
+
+                          </td>
                           <td>
                               <span class="{{ $status['class'] }}">
                                   {{ $status['label'] }}
@@ -288,10 +295,13 @@
                                   </button>
 
                                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
-                                      @if ($b->is_lcc !== 'true')
+
+                                      @if ($b->is_lcc !== 'true' && $b->ticket_status === 'pending')
                                           <li>
-                                              <a class="dropdown-item" href="javascript:void(0)"
-                                                  data-id="{{ $b->id }}">
+                                              <a class="dropdown-item  generate-ticket" href="javascript:void(0)"
+                                                  data-id="{{ $b->id }}"
+                                                  data-journeytype = "{{ $b->journey_type }}"
+                                                  data-payload='@json(json_decode($b->raw_payload))'>
                                                   🎫 Generate Ticket
                                               </a>
                                           </li>
@@ -352,7 +362,7 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
-
+  <script src="{{ asset('') }}js/flight.js"></script>
   <script type="text/javascript">
       function openBookingDetails(bookingId) {
 
@@ -487,6 +497,7 @@ function getDetails(booking) {
                     </div>
                 </div>
 
+<<<<<<< HEAD
                 <!-- ROUTE -->
                 <div class="col-md-6 p-3 border-start border-end">
                     <div class="row">
@@ -496,6 +507,12 @@ function getDetails(booking) {
                             ${departTime ? new Date(departTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}
                             <div class="small">${originAirport.AirportName || ''}</div>
                         </div>
+=======
+      function getDetails(booking) {
+          console.log(booking);
+          let html = `
+                <div class="container">
+>>>>>>> 30870fcf4559047ec66cf265d3a3841f5d9a7c2a
 
                         <div class="col-6 text-end">
                             <b>${destAirport.CityName || ''}</b><br>
@@ -519,8 +536,185 @@ function getDetails(booking) {
                     <div class="small">
                         ${booking.IsLCC ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'}
                     </div>
+<<<<<<< HEAD
                     <div class="small">
                         ${booking.NonRefundable ? '<span class="text-danger">Non-Refundable</span>' : '<span class="text-success">Refundable</span>'}
+=======
+
+                    <!-- MAIN TICKET -->
+                    <div class="ticket-card bg-white p-4 rounded-4 shadow-sm mt-4">
+
+                        <h4 class="fw-semibold mb-1">${ booking.origin } to ${ booking.destination }</h4>
+
+                        <div class="mb-3 small">
+                            ${ new Date(booking.journey_date).toLocaleString() }
+                        </div>
+
+                        <div class="row g-0 border rounded-4 overflow-hidden">
+
+                            <div class="col-md-3 p-3 d-flex flex-column justify-content-center">
+                             <div class="d-flex align-items-center mb-2">
+                                    <img src="https://upload.wikimedia.org/wikipedia/en/1/15/SpiceJet_logo.png"
+                                        style="height:40px;" alt="airline">
+                                </div>
+
+                                <div class="fw-semibold fs-5">${ booking.airline_code }</div>
+                                <div class="mb-2">${ booking.flight_number }</div>
+
+                                    <div class="d-flex border rounded overflow-hidden" style="width:150px;">
+
+                                    <div class="bg-primary bg-opacity-10 px-2 py-1 d-flex align-items-center" style="width:40%;">
+                                        <span class="small text-dark fw-semibold">PNR</span>
+                                    </div>
+
+                                    <div class="px-2 py-1 d-flex align-items-center" style="width:60%; white-space:nowrap;">
+                                        <span class="fw-bold text-primary">${ booking.pnr }</span>
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+
+                        <!-- MIDDLE BLOCK -->
+                            <div class="col-md-6 p-4 border-start border-end">
+
+                                <div class="row text-center">
+
+                                    <div class="col-6 text-start">
+
+                                        <div class="fw-semibold" style="font-size:18px;">
+                                            ${ booking.origin ?? "Ahmedabad" }
+                                        </div>
+
+                                        <div>
+                                            ${ (booking.origin_code ?? "AMD") }
+                                            <span class="fw-bold text-dark">
+                                                ${ booking.depart_time ?? "18:10 hrs" }
+                                            </span>
+                                        </div>
+
+                                        <div class="small">
+                                            ${ booking.journey_date 
+                                                ? new Date(booking.journey_date).toLocaleDateString("en-GB",{day:"2-digit",month:"short"})
+                                                : "Wed, 22 Oct" }
+                                        </div>
+
+                                        <div class="mt-2 small">
+                                            ${ booking.origin_airport ?? "Sardar Vallabhbhai Patel<br>International Airport Terminal 2" }
+                                        </div>
+
+                                    </div>
+
+
+                                    <div class="col-6 text-end">
+
+                                        <div class="fw-semibold" style="font-size:18px;">
+                                            ${ booking.destination ?? "Varanasi" }
+                                        </div>
+
+                                        <div>
+                                            ${ (booking.destination_code ?? "VNS") }
+                                            <span class="fw-bold text-dark">
+                                                ${ booking.arrival_time ?? "20:00 hrs" }
+                                            </span>
+                                        </div>
+
+                                        <div class="small">
+                                            ${ booking.journey_date 
+                                                ? new Date(booking.journey_date).toLocaleDateString("en-GB",{day:"2-digit",month:"short"})
+                                                : "Wed, 22 Oct" }
+                                        </div>
+
+                                        <div class="mt-2 small">
+                                            ${ booking.destination_airport ?? "Varanasi Airport" }
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- Duration dots -->
+                                <div class="text-center my-3 small">
+                                    ${ booking.duration ?? "1h 50m" } <br>
+                                    <span style="letter-spacing:4px;">• • • • ● • • • •</span>
+                                </div>
+
+                            </div>
+
+
+                        <div class="col-md-3 p-3">
+
+                            <!-- LCC / Non-LCC -->
+                            <div class="small mb-2">
+                                ${
+                                    booking.is_lcc === "true" ? 
+                                        "<span class='text-success'>LCC</span>" :
+                                    booking.is_lcc === "false" ?
+                                        "<span class='text-danger'>Non-LCC</span>" :
+                                        "<span class='text-success'>LCC</span>"
+                                }
+                            </div>
+
+                            <!-- Refundable / Non-Refundable -->
+                            <div class="small">
+                                ${
+                                    booking.is_refundable === "true" ? 
+                                        "<span class='text-success'>Refundable</span>" :
+                                    booking.is_refundable === "false" ?
+                                        "<span class='text-danger'>Non-Refundable</span>" :
+
+                                        "<span class='text-danger'>Non-Refundable</span>"
+                                }
+                            </div>
+
+                        </div>
+
+
+                        </div>
+
+                    <div class="pt-3">
+
+                        <div class="row fw-semibold small mb-2">
+                            <div class="col-5">TRAVELLER</div>
+                            <div class="col-2">SEAT</div>
+                            <div class="col-2">MEAL</div>
+                            <div class="col-3">E-TICKET NO</div>
+                        </div>
+
+                            ${
+                                booking.passengers && booking.passengers.length > 0 
+                                ? 
+                                booking.passengers.map((p, index) => `
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-5">
+                                                                                ${ p.name ?? `Passenger ${index+1}` }
+                                                                                <span class="small">${ p.type ?? "Adult" }</span>
+                                                                            </div>
+                                                                            <div class="col-2">${ p.seat ?? "–" }</div>
+                                                                            <div class="col-2">${ p.meal ?? "–" }</div>
+                                                                            <div class="col-3 fw-semibold">${ p.eticket ?? booking.pnr }</div>
+                                                                        </div>
+                                                                    `).join("") 
+
+                                : 
+                                `
+                                                                        <div class="row mb-2">
+                                                                            <div class="col-5">
+                                                                                Passenger 1 <span class="small">Adult</span>
+                                                                            </div>
+                                                                            <div class="col-2">–</div>
+                                                                            <div class="col-2">–</div>
+                                                                            <div class="col-3 fw-semibold">${ booking.pnr }</div>
+                                                                        </div>
+                                                                    `
+                            }
+
+                        </div>
+
+
+>>>>>>> 30870fcf4559047ec66cf265d3a3841f5d9a7c2a
                     </div>
                 </div>
             </div>
@@ -694,4 +888,29 @@ function getDetails(booking) {
 
           location.reload();
       }
+
+      $(document).on('click', '.generate-ticket', function() {
+
+          const payload = $(this).data('payload');
+          let journeyType = $(this).data('journeytype');
+
+          swal({
+              title: "Generate Ticket?",
+              html: `
+            <p>Are you sure you want to generate the ticket?</p>
+            <small class="text-muted">Once generated, it cannot be reversed.</small>
+        `,
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonText: "Yes, Generate",
+              cancelButtonText: "Cancel",
+              allowOutsideClick: false,
+              allowEscapeKey: false
+          }).then((result) => {
+              if (result.value || result === true) {
+                  ViewTicketAjax(payload,'/flight/ticket','departure',journeyType === 'oneway' ? '1' : '2','table');
+              }
+          });
+
+      });
   </script>
