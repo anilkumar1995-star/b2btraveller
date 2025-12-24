@@ -57,6 +57,11 @@
                         <div data-i18n="Booking List">Booking List</div>
                     </a>
                 </li>
+                <li class="menu-item <?php echo e(Request::is('flight/booking-list-failed') ? 'active' : ''); ?>">
+                    <a href="<?php echo e(url('flight/booking-list-failed')); ?>" class="menu-link">
+                        <div data-i18n="Failed List">Failed List</div>
+                    </a>
+                </li>
             </ul>
         </li>
 
