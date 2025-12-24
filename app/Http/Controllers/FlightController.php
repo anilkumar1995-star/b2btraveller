@@ -404,10 +404,10 @@ class FlightController extends Controller
             ->where('pnr', $pnr)
             ->first();
 
-
         if ($existingBooking) {
-            DB::table('bookings')
-                ->where('id', $existingBooking->id)
+            $up = DB::table('bookings')
+                ->where('booking_id_api', $existingBooking->booking_id_api)
+                ->where('pnr', $existingBooking->pnr)
                 ->update([
                     'base_fare'       => $baseFare,
                     'tax'             => $tax,
@@ -448,7 +448,7 @@ class FlightController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Flight Booking Successfully',
+            'message' => 'Flight Ticket Done Successfully',
             'data' => $response['data']
         ]);
         // return response()->json($response);

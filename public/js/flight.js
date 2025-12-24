@@ -2082,7 +2082,7 @@ let bookingResult = {
     return: null
 };
 
-function ViewTicketAjax(payload, apiUrl, trip, journeyType) {
+function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func') {
     $('#bookingData').addClass('d-none');
     $('.preloader').removeClass('d-none');
     $.ajax({
@@ -2096,18 +2096,18 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType) {
         },
         success: function (response) {
             bookingResult[trip] = response;
-            checkFinalBookingStatus(trip, journeyType);
+            checkFinalBookingStatus(trip, journeyType, $val);
         },
 
         error: function () {
             bookingResult[trip] = { status: 'failed' };
-            checkFinalBookingStatus(trip, journeyType);
+            checkFinalBookingStatus(trip, journeyType.$val);
         }
     });
 }
 
-function checkFinalBookingStatus(trip, journeyType) {
-    console.log(trip, journeyType);
+function checkFinalBookingStatus(trip, journeyType, source) {
+
     if (trip == 'departure' && journeyType == '1') {
         $('#bookingData').removeClass('d-none');
         $('.preloader').addClass('d-none');
@@ -2128,6 +2128,10 @@ function checkFinalBookingStatus(trip, journeyType) {
                 allowOutsideClick: false,
                 allowEscapeKey: false
             }).then(() => {
+                if (source === 'table') {
+                    location.reload();
+                    return;
+                }
                 renderFareSummary(dep);
                 renderBookingDetails(dep);
             });
