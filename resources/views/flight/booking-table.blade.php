@@ -365,86 +365,181 @@
   <script src="{{ asset('') }}js/flight.js"></script>
   <script type="text/javascript">
       function openBookingDetails(bookingId) {
-          $('#ticketContent').html(`
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary"></div>
-                    <p class="mt-2">Fetching booking details...</p>
+
+    $('#ticketContent').html(`
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-2">Fetching booking details...</p>
+        </div>
+    `);
+
+    $('#viewTicketModal').modal('show');
+
+    $.ajax({
+        url: "/flight/booking-view",
+        type: "POST",
+        data: {
+            booking_id: bookingId,
+            _token: "{{ csrf_token() }}"
+        },
+        success: function (res) {
+
+            if (res.status !== 'success') {
+                $('#ticketContent').html(`<div class="alert alert-danger">${res.message}</div>`);
+                return;
+            }
+
+            // ✅ EXACT OBJECT YOU SHARED
+            const booking = res?.data?.Response?.FlightItinerary;
+
+            if (!booking) {
+                $('#ticketContent').html(`<div class="alert alert-danger">Invalid booking data</div>`);
+                return;
+            }
+
+            getDetails(booking);
+        },
+        error: function () {
+            $('#ticketContent').html(`
+                <div class="alert alert-danger text-center">
+                    Unable to fetch booking details.
                 </div>
             `);
+        }
+    });
+}
 
-          $('#viewTicketModal').modal('show');
 
-          $.ajax({
-              url: "/flight/booking-view",
-              type: "POST",
-              data: {
-                  booking_id: bookingId,
-                  _token: "{{ csrf_token() }}"
-              },
-              success: function(res) {
-                  if (res.status === 'success') {
-                      getDetails(res?.data?.Response?.FlightItinerary);
-                  } else {
-                      $('#ticketContent').html(`
-                        <div class="alert alert-danger text-center">
-                            ${res.message}
-                        </div>
-                    `);
-                  }
-              },
-              error: function() {
-                  $('#ticketContent').html(`
-                    <div class="alert alert-danger text-center">
-                        Unable to fetch booking details.
+function getDetails(booking) {
+
+    console.log("BOOKING OBJECT", booking);
+
+    const segments   = booking?.Segments || [];
+    const passengers = booking?.Passenger || [];
+
+    const firstSeg = segments[0] || {};
+    const lastSeg  = segments[segments.length - 1] || {};
+
+    const originAirport = firstSeg?.Origin?.Airport || {};
+    const destAirport   = lastSeg?.Destination?.Airport || {};
+
+    const departTime  = firstSeg?.Origin?.DepTime;
+    const arrivalTime = lastSeg?.Destination?.ArrTime;
+
+    let html = `
+    <div class="container">
+
+        <!-- DATE -->
+        <div class="mb-3 small">
+            ${new Date().toLocaleDateString()}
+        </div>
+
+        <!-- HEADER -->
+        <div class="d-flex justify-content-between mb-4">
+            <img src="/images/logo.png" style="height:38px;">
+            <div class="text-end">
+                <div class="fw-bold">Flight Ticket (One way)</div>
+                <div class="small">
+                    Booking ID: <b>${booking.BookingId || '-'}</b>
+                </div>
+            </div>
+        </div>
+
+        <!-- BARCODE -->
+        <div class="p-4 bg-white rounded shadow-sm mb-4">
+            <div class="fw-semibold mb-2">
+                Barcode(s) for your journey
+                <span class="text-primary">
+                    ${originAirport.AirportName || 'Origin'} to ${destAirport.AirportName || 'Destination'}
+                </span>
+            </div>
+            <hr>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="small text-muted">Passenger</div>
+                    <div class="fw-bold">PNR: ${booking.PNR || '-'}</div>
+                </div>
+
+                <div>
+                    ${
+                        passengers?.[0]?.BarcodeDetails?.Barcode?.[0]?.Content
+                        ? `
+                        <img 
+                            src="https://bwipjs-api.metafloor.com/?bcid=pdf417&text=${encodeURIComponent(
+                                passengers[0].BarcodeDetails.Barcode[0].Content
+                            )}&scale=2&height=10"
+                            style="height:60px;"
+                        >`
+                        : `<span class="small text-muted">Barcode not available</span>`
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- MAIN TICKET -->
+        <div class="bg-white p-4 rounded shadow-sm">
+
+            <h4>${originAirport.AirportName || 'Origin'} to ${destAirport.AirportName || 'Destination'}</h4>
+
+            <div class="small mb-3">
+                ${departTime ? new Date(departTime).toLocaleString() : ''}
+            </div>
+
+            <div class="row border rounded">
+
+                <!-- AIRLINE -->
+                <div class="col-md-3 p-3 text-center">
+                    <div class="fw-semibold">${booking.ValidatingAirlineCode || 'AI'}</div>
+                    <div class="mt-2 border rounded p-1">
+                        <small>PNR</small><br>
+                        <b>${booking.PNR || '-'}</b>
                     </div>
-                `);
-              }
-          });
-      }
+                </div>
 
+<<<<<<< HEAD
+                <!-- ROUTE -->
+                <div class="col-md-6 p-3 border-start border-end">
+                    <div class="row">
+                        <div class="col-6">
+                            <b>${originAirport.CityName || ''}</b><br>
+                            ${originAirport.AirportCode || ''}
+                            ${departTime ? new Date(departTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}
+                            <div class="small">${originAirport.AirportName || ''}</div>
+                        </div>
+=======
       function getDetails(booking) {
           console.log(booking);
           let html = `
                 <div class="container">
+>>>>>>> 30870fcf4559047ec66cf265d3a3841f5d9a7c2a
 
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <div class="small">
-                            ${ new Date(booking.created_at).toLocaleDateString() }
+                        <div class="col-6 text-end">
+                            <b>${destAirport.CityName || ''}</b><br>
+                            ${destAirport.AirportCode || ''}
+                            ${arrivalTime ? new Date(arrivalTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}
+                            <div class="small">${destAirport.AirportName || ''}</div>
                         </div>
                     </div>
 
-                    <!-- HEADER -->
-                    <div class="d-flex justify-content-between align-items-start mb-4">
-                        <img src="{{ asset('/images/logo.png') }}" style="height:38px; margin-bottom:20px;" />
-
-                        <div class="text-end">
-                            <div class="fw-bold">Flight Ticket <span>(One way)</span></div>
-                            <div class="small">
-                                Booking ID:
-                                <span class="fw-bold text-dark">${ booking.booking_id_api }</span>
-                            </div>
-                        </div>
+                    <div class="text-center my-3 small">
+                        ${
+                            lastSeg?.AccumulatedDuration
+                                ? Math.floor(lastSeg.AccumulatedDuration / 60) + 'h ' + (lastSeg.AccumulatedDuration % 60) + 'm'
+                                : '—'
+                        }
                     </div>
+                </div>
 
-                    <!-- BARCODE -->
-                    <div class="barcode-card p-4 bg-white rounded-4 shadow-sm">
-
-                        <div class="mb-3 fw-semibold" style="font-size:15px;">
-                            Barcode(s) for your journey
-                            <span class="text-primary">${ booking.origin }  to  ${ booking.destination }</span> on
-                            <span class="text-primary">${ booking.airline_code }</span>
-                        </div>
-
-                        <hr>
-
-                        <div class="row align-items-center mb-4">
-                            <div class="col-6"><div style="font-size:17px;">Passenger 1</div></div>
-                            <div class="col-6 d-flex justify-content-end align-items-center">
-                                <img src="{{ asset('mmt-logo.png') }}" class="barcode-img">
-                            </div>
-                        </div>
-
+                <!-- FLAGS -->
+                <div class="col-md-3 p-3">
+                    <div class="small">
+                        ${booking.IsLCC ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'}
                     </div>
+<<<<<<< HEAD
+                    <div class="small">
+                        ${booking.NonRefundable ? '<span class="text-danger">Non-Refundable</span>' : '<span class="text-success">Refundable</span>'}
+=======
 
                     <!-- MAIN TICKET -->
                     <div class="ticket-card bg-white p-4 rounded-4 shadow-sm mt-4">
@@ -619,84 +714,41 @@
                         </div>
 
 
+>>>>>>> 30870fcf4559047ec66cf265d3a3841f5d9a7c2a
                     </div>
+                </div>
+            </div>
 
-                    <div class="mt-4">
-                        <div class="small fw-semibold  mb-2"
-                            style="border-left:4px solid #2a7c6f; padding-left:10px;">
-                            YOU HAVE ALSO BOUGHT
+            <!-- PASSENGERS -->
+            <div class="pt-3">
+                <div class="row fw-semibold small mb-2">
+                    <div class="col-6">TRAVELLER</div>
+                    <div class="col-3">SEAT</div>
+                    <div class="col-3">E-TICKET</div>
+                </div>
+
+                ${
+                    passengers.map(p => `
+                        <div class="row mb-2">
+                            <div class="col-6">${p.Title || ''} ${p.FirstName || ''} ${p.LastName || ''}</div>
+                            <div class="col-3">${p.SeatDynamic?.map(s => s.Code).join(', ') || '–'}</div>
+                            <div class="col-3 fw-semibold">${booking.PNR || '-'}</div>
                         </div>
+                    `).join('')
+                }
+            </div>
 
-                        <div class="p-4 bg-white rounded-4 shadow-sm border mb-3">
+            <!-- PAYMENT -->
+            <div class="mt-4 p-3 bg-white rounded">
+                <span class="text-success">
+                    You have paid <b>INR ${booking?.Fare?.PublishedFare || '-'}</b>
+                </span>
+            </div>
 
-                            <div class="d-flex mb-3">
+        </div>
 
-                                <img src="{{ asset('/images/restricted/reliance.png') }}" style="height:100px;" class="me-3">
-
-                                <div class="flex-grow-1">
-
-                                    <div class="fw-semibold mb-1">TRIP SECURE</div>
-
-                                    <div class="mb-2">
-                                        You have purchased Trip Secure powered by Across Assist and Reliance General Insurance.
-                                    </div>
-
-                                    <div class="small tex-muted">
-                                        <strong>Reference Nos. :</strong><br>
-                                        MTMINFDF41527305154906-P1C1X1<br>
-                                        MTMINFDF41527305154906-P2C1X1<br>
-                                        MTMINFDF41527305154906-P3C1X1
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-
-                        </div>
-                          <div class="p-3 rounded-3 mb-2 bg-white">
-                                <span class="text-success">You have paid <span class="fw-bold text-dark">INR ${booking.total_amount}</span></span>
-
-                                <span class="ms-3 px-2 py-1 rounded-2"
-                                    style="background:#e8eaef; font-size:12px;">
-                                    You saved INR 710
-                                </span>
-                            </div>
-
-
-                        <div class="rounded-4 overflow-hidden border">
-
-                            <div class="p-3 d-flex justify-content-between align-items-center"
-                                style="background:#eef3ff;">
-                                <div class="fw-semibold small">
-                                    <img src="{{ asset('/images/restricted/digiyatra.png') }}"
-                                        style="height:20px;" class="me-2">
-                                    DIGI YATRA
-                                </div>
-
-                                <img src="{{ asset('/images/restricted/digiyatra2.jpeg') }}"
-                                    style="height:30px;">
-                            </div>
-
-                            <div class="p-3" style="background:#e8ffec; font-size:14px;">
-
-                                <div class="fw-semibold mb-2">Avoid Long Queues at the Airport with DigiYatra</div>
-
-                                <div class="mb-2">
-                                    Use DigiYatra — the Ministry of Civil Aviation’s mobile app.
-                                </div>
-
-                                <div class="mb-1"><strong>Step 1:</strong> Verify identity using Aadhaar</div>
-                                <div class="mb-3"><strong>Step 2:</strong> Update boarding pass</div>
-
-                                <a href="#" class="fw-semibold text-primary">Know More</a>
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                    <!-- ITEMS NOT ALLOWED SECTION -->
+        <!-- ================= STATIC SECTION ================= -->
+        <!-- ITEMS NOT ALLOWED SECTION -->
                     <div class="mt-4 p-4 bg-white rounded-4 shadow-sm border">
 
                         <div class="row g-0">
@@ -790,80 +842,41 @@
 
                     </div>
 
-                    <!-- IMPORTANT INFORMATION -->
-                    <div class="mt-4 p-4 bg-white rounded-4 shadow-sm border"
-                        style="border-left:4px solid #c2c2c2;">
 
-                        <h6 class="fw-semibold mb-3">IMPORTANT INFORMATION</h6>
+        <!-- DIGI YATRA -->
+        <div class="rounded-4 overflow-hidden border mt-4">
+            <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
+                <div class="fw-semibold small">
+                    <img src="/images/restricted/digiyatra.png" style="height:20px;" class="me-2">
+                    DIGI YATRA
+                </div>
+                <img src="/images/restricted/digiyatra2.jpeg" style="height:30px;">
+            </div>
+            <div class="p-3" style="background:#e8ffec; font-size:14px;">
+                <div class="fw-semibold mb-2">Avoid Long Queues at the Airport with DigiYatra</div>
+                <div class="mb-1"><strong>Step 1:</strong> Verify identity using Aadhaar</div>
+                <div class="mb-3"><strong>Step 2:</strong> Update boarding pass</div>
+            </div>
+        </div>
 
-                        <ul class="small" style="line-height:1.7;">
+        <!-- IMPORTANT INFO -->
+        <div class="mt-4 p-4 bg-white rounded-4 shadow-sm border"
+             style="border-left:4px solid #c2c2c2;">
+            <h6 class="fw-semibold mb-3">IMPORTANT INFORMATION</h6>
+            <ul class="small">
+                <li>Reach airport 3 hours before departure</li>
+                <li>Carry valid government ID</li>
+                <li>Do not share OTP or CVV</li>
+            </ul>
+        </div>
 
-                            <li><strong>Check-in Time :</strong> Reach airport 3 hours before departure.</li>
+    </div>
+    `;
 
-                            <li><strong>DGCA passenger charter :</strong> 
-                                <a href="#" class="text-primary">Here</a>
-                            </li>
+    $('#ticketContent').html(html);
+}
 
-                            <li><strong>Baggage Info :</strong>
-                                1 Check-in + 1 Cabin bag allowed.
-                            </li>
 
-                            <li><strong>Unaccompanied Minors :</strong> Rules apply.</li>
-
-                            <li><strong>Valid ID :</strong> Carry Aadhaar, PAN, DL etc.</li>
-
-                            <li>Do not share OTP, CVV, Password with anyone.</li>
-
-                        </ul>
-                    </div>
-
-                    <!-- CONTACTS & HOTEL -->
-                    <div class="mt-4 text-center small">
-
-                    You can view all <a href="#" class="text-primary">cancellation, date change and baggage related information here</a>,
-                                        If you want to manage your booking, you can visit MyTrips section using this
-                                        <a href="#" class="text-primary">link</a>
-                                <div class="mt-4 p-3 bg-white rounded-4 shadow-sm border text-start">
-
-                                    <div class="mb-2 fw-semibold">
-                                        Contact MakeMyTrip <span class="text-dark">+91124 4628747</span>
-                                    </div>
-
-                                    <div class="fw-semibold">
-                                        Contact SPICE JET <span class="text-dark">0124-4983410</span>
-                                    </div>
-
-                                    <a href="#" class="mt-2 d-block text-primary">Click here to know more</a>
-                                </div>
-
-                                <div class="mt-4 p-3 bg-white rounded-4 shadow-sm border text-start">
-
-                                    <div class="d-flex">
-                                        <img src="{{ asset('/images/restricted/hotel.jpeg') }}"
-                                            style="height:100px; border-radius:8px;">
-
-                                        <div class="ms-3">
-                                            <div class="fw-semibold text-dark mb-1" style="font-size:18px;">
-                                                Enjoy the Perfect Stay with Sarovar Hotels!
-                                            </div>
-
-                                            <a href="#" class="btn btn-primary btn-sm px-3">EXPLORE STAYS</a>
-                                        </div>
-
-                                        <div class="ms-auto">
-                                            <img src="{{ asset('/images/restricted/sarover.png') }}">
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <!-- STATIC END -->
-
-                        </div>
-                        `;
-          $('#ticketContent').html(html);
-      }
 
       function printTicket() {
           const printContent = document.getElementById("ticketContent").innerHTML;
