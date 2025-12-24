@@ -1,17 +1,33 @@
 <?php
-
 namespace App\Helpers;
 
-use App\Models\Api;
-use App\Models\Apilog;
-use App\Models\PortalSetting;
-use App\Models\User;
-use App\Models\UserOTPS;
+use App\Models\ServiceCredential;
 use Illuminate\Support\Facades\DB;
 
 class AndroidCommonHelper
 {
-    public static function transcode()
+    
+    public static function CheckServiceStatus($type)
+    {
+        //Check Service Status From API
+        switch ($type) {
+            case 'travels':
+                $checkAPIS = ServiceCredential::where('code', 'flight')->first();
+                break;
+
+            default:
+                $checkAPIS = false;
+
+        }
+
+        if ($checkAPIS && $checkAPIS->is_active == 1) {
+            return ["status" => true, "message" => "", "apidata" => $checkAPIS];
+        } else {
+            return ["status" => false, "message" => "Service is down, Please contact to administrator"];
+        }
+    }
+
+     public static function transcode()
     {
         $code = \DB::table('portal_settings')->where('code', 'transactioncode')->first(['value']);
         if ($code) {
@@ -53,7 +69,7 @@ class AndroidCommonHelper
         $senderId = "IPTLNB";
 
         // $sentOtp = false;
-        $txnId = AndroidCommonHelper::makeTxnId("SMS", 4);
+        $txnId = AndroidComonHelper::makeTxnId("SMS", 4);
 
         $company = DB::table('companies')->where('website', $_SERVER['HTTP_HOST'])->first();
         $sentOtp = false;
@@ -211,49 +227,6 @@ class AndroidCommonHelper
             }
         } else {
             return false;
-        }
-    }
-
-    public static function CheckServiceStatus($type)
-    {
-        //Check Service Status From API
-        switch ($type) {
-            case 'travels':
-                $checkAPIS = Api::where('code', 'generateUrl')->first();
-                break;
-            case 'iydaaeps':
-                $checkAPIS = Api::where('code', 'iydaAEPS')->first();
-                break;
-            case 'iydarecharge':
-                $checkAPIS = Api::where('code', 'iydaRecharge')->first();
-                break;
-            case 'iydapayout':
-                $checkAPIS = Api::where('code', 'iydaPayout')->first();
-                break;
-            case 'iydaaffiliate':
-                $checkAPIS = Api::where('code', 'iydaAffiliate')->first();
-                break;
-            case 'iydabillpayment':
-                $checkAPIS = Api::where('code', 'iydaBillpay')->first();
-                break;
-            case 'iydaaepssdk':
-                $checkAPIS = Api::where('code', 'iydaAepsSdk')->first();
-                break;
-            case 'iydapancard':
-                $checkAPIS = Api::where('code', 'iydaPANCard')->first();
-
-            case 'iydaverification':
-                $checkAPIS = Api::where('code', 'iydaVerification')->first();
-                break;
-
-            default:
-                $checkAPIS = false;
-        }
-
-        if ($checkAPIS && $checkAPIS->status == 1) {
-            return ["status" => true, "message" => "", "apidata" => $checkAPIS];
-        } else {
-            return ["status" => false, "message" => "Service is down, Please contact to administrator"];
         }
     }
 }

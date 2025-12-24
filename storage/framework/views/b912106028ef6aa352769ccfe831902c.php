@@ -69,8 +69,8 @@
                                                     <input type="tel" maxlength="10"
                                                         <?php echo e(Myhelper::hasNotRole('admin') ? 'disabled=""' : 'name=mobile'); ?>
 
-                                                        required="" value="<?php echo e($user->mobile); ?>"
-                                                        class="form-control my-1" placeholder="Enter Value">
+                                                        required="" value="<?php echo e($user->mobile); ?>" class="form-control my-1"
+                                                        placeholder="Enter Value">
                                                 </div>
                                                 <div class="form-group col-md-4 my-1">
                                                     <label>Email</label>
@@ -136,90 +136,7 @@
                                         </form>
                                     </div>
 
-                                    <div class="tab-pane fade " id="navs-justified-kyc" role="tabpanel">
-                                        <form id="kycForm" action="<?php echo e(route('profileUpdate')); ?>" method="post"
-                                            enctype="multipart/form-data">
-                                            <?php echo e(csrf_field()); ?>
 
-                                            <input type="hidden" name="id" value="<?php echo e($user->id); ?>">
-                                            <input type="hidden" name="actiontype" value="profile">
-                                            <div class="row">
-                                                <div class="form-group col-md-4 my-1">
-                                                    <label>Shop Name</label>
-                                                    <input type="text" name="shopname" class="form-control my-1"
-                                                        value="<?php echo e($user->shopname); ?>" required=""
-                                                        placeholder="Enter Value">
-                                                </div>
-
-                                                <div class="form-group col-md-4 my-1">
-                                                    <label>GST Number</label>
-                                                    <input type="text" name="gstin" class="form-control my-1"
-                                                        value="<?php echo e($user->gstin); ?>" placeholder="Enter Value">
-                                                </div>
-                                                <div class="form-group col-md-4 my-1">
-                                                    <label>Aadhaar Card Number</label>
-                                                    <input type="text" name="aadharcard" class="form-control my-1"
-                                                        value="<?php echo e($user->aadharcard); ?>" required=""
-                                                        placeholder="Enter Value" maxlength="12" minlength="12"
-                                                        <?php if(Myhelper::hasNotRole('admin') && $user->kyc == 'verified'): ?> disabled="" <?php endif; ?>>
-                                                </div>
-                                                <div class="form-group col-md-4 my-1">
-                                                    <label>PAN Card Number</label>
-                                                    <input type="text" name="pancard" class="form-control my-1"
-                                                        value="<?php echo e($user->pancard); ?>" required=""
-                                                        placeholder="Enter Value"
-                                                        <?php if(Myhelper::hasNotRole('admin') && $user->kyc == 'verified'): ?> disabled="" <?php endif; ?>>
-                                                </div>
-
-                                                
-
-                                                <?php if(Myhelper::hasRole('admin')): ?>
-                                                    <div class="form-group col-md-4 my-1">
-                                                        <label>Security PIN</label>
-                                                        <input type="password" name="mpin" autocomplete="off"
-                                                            class="form-control my-1" required="">
-                                                    </div>
-                                                <?php endif; ?>
-
-                                                <?php if($user->profile): ?>
-                                                    <li class="col-md-4 col-6 pl-2 pr-0 pb-3">
-                                                        <a href="<?php echo e(Imagehelper::getImageUrl() . $user->profile); ?>"><img
-                                                                src="<?php echo e(Imagehelper::getImageUrl() . $user->profile); ?>"
-                                                                alt="Profile Photo"
-                                                                style="width:100px !important;height: 80px;"
-                                                                class="img-fluid w-100" /></a>
-                                                        <h6 class="mt-2">Passport Size Photo</h6>
-                                                    </li>
-                                                <?php else: ?>
-                                                    <div class="form-group col-md-4 my-1">
-                                                        <label>Passport size photo (For ID Card)</label>
-                                                        <input type="file" class="form-control my-1"
-                                                            autocomplete="off" name="profiles"
-                                                            placeholder="Upload Image for ID Card" required>
-                                                        Note :- <span><small> <br>* Image will be uploaded only once, Kindly
-                                                                upload the proper image <br>* Size: 60px X 80px (passport
-                                                                size) </small> </span>
-                                                    </div>
-                                                    
-                                                <?php endif; ?>
-
-                                                <?php if((Auth::id() == $user->id && Myhelper::can('profile_edit')) || Myhelper::can('member_profile_edit')): ?>
-                                                    <div class="col-sm-12">
-                                                        <button class="btn btn-primary mt-2 pull-right" type="submit"
-                                                            data-loading-text="<i class='fa fa-spin fa-spinner'></i> Updating...">Update
-                                                            Profile</button>
-
-                                                    </div>
-                                                <?php endif; ?>
-                                            </div>
-
-                                            
-
-
-
-                                            
-                                        </form>
-                                    </div>
 
                                     <div class="tab-pane fade " id="navs-justified-password" role="tabpanel">
                                         <form id="passwordForm" action="<?php echo e(route('profileUpdate')); ?>" method="post"
@@ -316,115 +233,11 @@
                                         </form>
 
                                     </div>
-
-                                    <div class="tab-pane fade " id="navs-justified-bank" role="tabpanel">
-                                        <form id="bankForm" action="<?php echo e(route('profileUpdate')); ?>" method="post">
-
-                                            <?php echo e(csrf_field()); ?>
-
-                                            <input type="hidden" name="id" value="<?php echo e($user->id); ?>">
-                                            <input type="hidden" name="actiontype" value="bankdata">
-
-
-                                            <div class="row">
-                                                <div class="form-group col-md-4 my-1">
-                                                    <label>Account Number</label>
-                                                    <input type="text" name="account" class="form-control my-1"
-                                                        value="<?php echo e(@$user->userbanks['accountNo']); ?>" required=""
-                                                        placeholder="Enter Value"
-                                                        <?php if((@$user->userbanks['accountNo'] != null || @$user->userbanks['accountNo'] != '') && \Myhelper::hasNotRole('admin')): ?> readonly <?php endif; ?>>
-                                                </div>
-
-                                                <div class="form-group col-md-4 my-1">
-                                                    <label>Bank Name</label>
-                                                    <input type="text" name="bank" class="form-control my-1"
-                                                        value="<?php echo e(@$user->userbanks['bankName']); ?>"
-                                                        placeholder="Enter Value"
-                                                        <?php if((@$user->userbanks['accountNo'] != null || @$user->userbanks['accountNo'] != '') && \Myhelper::hasNotRole('admin')): ?> readonly <?php endif; ?>>
-                                                </div>
-
-                                                <div class="form-group col-md-4 my-1">
-                                                    <label>IFSC Code</label>
-                                                    <input type="text" name="ifsc" class="form-control my-1"
-                                                        value="<?php echo e(@$user->userbanks['ifscCode']); ?>" required=""
-                                                        placeholder="Enter Value"
-                                                        <?php if((@$user->userbanks['accountNo'] != null || @$user->userbanks['accountNo'] != '') && \Myhelper::hasNotRole('admin')): ?> readonly <?php endif; ?>>
-                                                </div>
-                                            </div>
-
-                                            <?php if(@$user->userbanks['accountNo'] == null || @$user->userbanks['accountNo'] == '' || \Myhelper::hasRole('admin')): ?>
-                                                <div class="row">
-                                                    <div class="form-group col-md-4 my-1">
-                                                        <label>Security PIN</label>
-                                                        <input type="password" name="mpin" autocomplete="off"
-                                                            class="form-control my-1" required=""
-                                                            placeholder="Enter security pin">
-                                                    </div>
-                                                </div>
+                                    
 
 
 
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <button class="btn btn-primary mt-2 pull-right" type="submit"
-                                                            data-loading-text="<i class='fa fa-spin fa-spinner'></i> Changing...">Update</button>
-                                                    </div>
-                                                </div>
-                                            <?php endif; ?>
-
-
-                                        </form>
-                                    </div>
-
-
-
-                                    <div class="tab-pane fade my-1" id="navs-justified-certificate" role="tabpanel">
-                                        <form id="certificateForm" action="<?php echo e(route('profileUpdate')); ?>" method="post">
-                                            <?php echo e(csrf_field()); ?>
-
-                                            <?php if(\Myhelper::hasRole('admin')): ?>
-                                                <input type="hidden" name="id" value="<?php echo e($user->id); ?>">
-                                                <input type="hidden" name="actiontype" value="certificate">
-                                                <div class="row">
-                                                    <div class="form-group col-md-4 my-1">
-                                                        <label>CMO (Cheif Marketing Officer)</label>
-                                                        <input type="text" name="cmo" id="cmo"
-                                                            class="form-control my-1" required=""
-                                                            placeholder="Enter CMO name"
-                                                            value="<?php echo e(@json_decode(@$user->bene_id1)->cmo); ?>">
-                                                    </div>
-                                                    <div class="form-group col-md-4 my-1">
-                                                        <label>COO (Cheif Operating Officer)</label>
-                                                        <input type="text" name="coo" class="form-control my-1"
-                                                            required="" placeholder="Enter COO name"
-                                                            value="<?php echo e(@json_decode(@$user->bene_id1)->coo); ?>">
-                                                    </div>
-
-                                                    <div class="col-md-4">
-                                                        <button class="btn btn-primary pull-right" style="margin-top:30px"
-                                                            type="submit"
-                                                            data-loading-text="<i class='fa fa-spin fa-spinner'></i> Changing...">Update</button>
-
-                                                    </div>
-                                                </div>
-                                        </form>
-                                        <?php endif; ?>
-
-                                        <div class="row">
-                                            <div class="form-group col-md-4 my-1">
-                                                <label><i class="fa fa-eye fa-sm"></i> Certificate</label>
-                                                <a target="_blank" href=<?php echo e(url('/') . '/certificate'); ?>>(Click here to
-                                                    view certificate)</a>
-                                            </div>
-                                            <div class="form-group col-md-4 my-1">
-                                                <label><i class="fa fa-eye fa-sm"></i> ID Card</label>
-                                                <a target="_blank" href=<?php echo e(url('/') . '/idcard'); ?>>(Click here to view ID
-                                                    Card)</a>
-                                            </div>
-                                        </div>
-
-
-                                    </div>
+                                    
 
 
                                     <?php if(\Myhelper::hasRole('admin')): ?>
@@ -467,120 +280,8 @@
                                             </form>
                                         </div>
 
-                                        <div class="tab-pane fade my-1" id="navs-justified-mapping" role="tabpanel">
-                                            <form id="memberForm" action="<?php echo e(route('profileUpdate')); ?>" method="post">
-                                                <?php echo e(csrf_field()); ?>
 
-                                                <input type="hidden" name="id" value="<?php echo e($user->id); ?>">
-                                                <input type="hidden" name="actiontype" value="certificate">
-                                                <div class="row">
-                                                    <div class="form-group col-md-4 my-1">
-                                                        <label>Parent Member</label>
-                                                        <select name="parent_id" class="form-control my-1"
-                                                            required="">
-                                                            <option value="">Select Member</option>
-                                                            <?php $__currentLoopData = $parents; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $parent): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                                                                <option value="<?php echo e($parent->id); ?>"><?php echo e($parent->name); ?>
 
-                                                                    (<?php echo e($parent->mobile); ?>)
-                                                                    (<?php echo e($parent->role->name); ?>)
-                                                                </option>
-                                                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-                                                        </select>
-                                                    </div>
-                                                    <?php if(Myhelper::hasRole('admin')): ?>
-                                                        <div class="form-group col-md-4 my-1">
-                                                            <label>Security PIN</label>
-                                                            <input type="password" name="mpin" autocomplete="off"
-                                                                class="form-control my-1" required="">
-                                                        </div>
-                                                    <?php endif; ?>
-                                                </div>
-                                                <div class="row">
-                                                    <div class="col-sm-12">
-                                                        <button class="btn btn-primary mt-2 pull-right" type="submit"
-                                                            data-loading-text="<i class='fa fa-spin fa-spinner'></i> Changing...">Change</button>
-
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-
-                                        <div class="tab-pane fade my-1" id="navs-justified-capping" role="tabpanel">
-                                            <form id="walletLockForm" action="" method="POST">
-                                                <?php echo csrf_field(); ?>
-                                                <input type="hidden" name="user_id" value="<?php echo e($user->id); ?>">
-                                                <div class="row">
-                                                    <div class="form-group col-md-3 my-1">
-                                                        <label>Lock Amount</label>
-                                                        <input type="text" name="amount" class="form-control"
-                                                            placeholder="Enter Amount" required>
-                                                    </div>
-                                                    <div class="form-group col-md-3 my-1">
-                                                        <label>Wallet Type</label>
-                                                        <select name="wallet_type" class="form-control" required>
-                                                            <option value="">Select Wallet</option>
-                                                            <option value="main">Main</option>
-                                                            <option value="aeps" disabled>AEPS</option>
-                                                            <option value="cc" disabled>CC</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group col-md-3 my-1">
-                                                        <label>Status</label>
-                                                        <select name="status" class="form-control" required>
-                                                            <option value="pending">Pending</option>
-                                                            <option value="approved">Approved</option>
-                                                            <option value="rejected">Rejected</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="form-group col-md-3 my-1">
-                                                        <label>Remark</label>
-                                                        <input type="text" name="remark" class="form-control"
-                                                            placeholder="Enter Remark" required>
-                                                    </div>
-                                                    <div class="col-md-12 mt-2">
-                                                        <button class="btn btn-primary pull-right" type="submit">Add
-                                                            Amount</button>
-                                                    </div>
-                                                </div>
-                                            </form>
-
-                                            <div class="row mt-4">
-                                                <div class="col-12 col-xl-12 col-sm-12 order-1 order-lg-2 mb-4 mb-lg-0">
-                                                    <div class="card">
-                                                        <div
-                                                            class="card-header d-flex justify-content-between align-items-center mb-3">
-                                                            <h5 class="card-title mb-0">Capping Balance Log</h5>
-                                                        </div>
-                                                        <div class="card-body">
-                                                            <div class="card-datatable table-responsive">
-                                                                <table width="100%" class="table border-top mb-5"
-                                                                    id="datatable" role="grid"
-                                                                    aria-describedby="user-capping-amount-info">
-                                                                    <thead class="text-center bg-light">
-                                                                        <tr>
-                                                                            <th>ID</th>
-                                                                            <th>User</th>
-                                                                            <th>Wallet Type</th>
-                                                                            <th>Amount</th>
-                                                                            <th>Status</th>
-                                                                            <th>Updated By</th>
-                                                                            <th>Approved By</th>
-                                                                            <th>Remark</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-
-                                                                    </tbody>
-                                                                </table>
-
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                            </div>
-                                        </div>
                                     <?php endif; ?>
                                 </div>
                             </div>
@@ -595,44 +296,7 @@
     </div>
 
     
-    <div class="modal fade" id="cappingModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Change Status</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form id="cappingStatusForm" method="POST" action="">
-                        <?php echo csrf_field(); ?>
-                        <input type="hidden" name="Id">
-                        <input type="hidden" name="userId">
-                        <input type="hidden" name="capAmount">
-                        <input type="hidden" name="walletType">
-
-                        <div class="mb-2">
-                            <label for="newStatus">Approved By Name</label>
-                            <input class="form-control" type="text" name="approved_by"
-                                placeholder="Approved By Name" />
-                        </div>
-
-                        <div class="mb-2">
-                            <label for="newStatus">Select Status</label>
-                            <select class="form-control" name="newStatus" id="newStatus" required>
-                                <option value="">Select</option>
-                                <option value="pending">Pending</option>
-                                <option value="approved">Approved</option>
-                                <option value="rejected">Reject</option>
-                            </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Update Status</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
 <?php $__env->stopSection(); ?>
 
@@ -640,79 +304,7 @@
 <?php $__env->startPush('script'); ?>
     <script type="text/javascript">
         $(document).ready(function() {
-            var url = "<?php echo e(url('statement/fetch')); ?>/cappingbalance/0";
-            var onDraw = function() {};
-            var options = [{
-                    "data": "id",
-                    render: function(data, type, full, meta) {
-                        return `<div>
-                            <span class='text-inverse m-l-10'><b>` + full.id + `</b> </span>
-                            <div class="clearfix"></div>
-                        </div><span style='font-size:13px' class="pull=right">` + full.created_at + `</span>`;
-                    }
-
-                },
-                {
-                    "data": "wallet_type",
-                    render: function(data, type, full, meta) {
-                        return full.user.name + ` ( ` + full.user.id + ` )<br>` + full.user.mobile +
-                            ` <br>` + full.user.role.name;
-                    }
-                },
-                {
-                    "data": "wallet_type",
-                    render: function(data, type, full, meta) {
-                        return full.wallet_type;
-                    }
-                },
-                {
-                    "data": "amount",
-                    render: function(data, type, full, meta) {
-                        return full.amount;
-                    }
-                },
-                {
-                    "data": "status",
-                    render: function(data, type, full, meta) {
-
-                        var out = `<span class="badge ${full.status == 'approved'? 'bg-success badge-success' : full.status=='pending'? 'bg-warning badge-warning': 'bg-danger badge-danger'}">
-                                    ${full.status}</span>`;
-
-                        if (full.status == 'pending') {
-                            out +=
-                                `<br><button class="btn btn-primary btn-sm mt-1" onclick="changeStatus('${full?.id}', '${full?.wallet_type}', '${full?.user_id}', '${full?.amount}', '${full?.status}')"><i class="ti ti-reload ti-xs"></i> Status</button>`;
-                        } else if (full.status == 'approved') {
-                            out += `<br/><button class="btn btn-success btn-sm mt-1" type="button"><i class="ti ti-check"></i></button>`;
-                        } else {
-                            out += `<br/><button class="btn btn-danger btn-sm mt-1" type="button"><i class="ti ti-x mt-1"></i></button>`;
-                        }
-
-                        return out;
-                    }
-                },
-                {
-                    "data": "updated_by",
-                    render: function(data, type, full, meta) {
-                        return full.updated_by ? `${full.user.name} ${full.user.id}` : '-';
-                    }
-                },
-                {
-                    "data": "updated_by",
-                    render: function(data, type, full, meta) {
-                        return full.approved_by;
-                    }
-                },
-                {
-                    "data": "remark",
-                    render: function(data, type, full, meta) {
-                        return `${full.remark ? full.remark : '-'}`;
-                    }
-                }
-            ];
-
-            datatableSetup(url, options, onDraw);
-
-
+          
             $('[name="state"]').val('<?php echo e($user->state); ?>').trigger('change');
             $('[name="gender"]').val('<?php echo e($user->gender); ?>').trigger('change');
             <?php if(\Myhelper::hasRole('admin')): ?>

@@ -65,7 +65,6 @@ class AuthService
 
         $url = $this->setFullUrl('authenticate');
 
-
         $baseUrl = url('/');
         if ($baseUrl == 'http://127.0.0.1:8000') {
             $result = $this->getStaticResponse();

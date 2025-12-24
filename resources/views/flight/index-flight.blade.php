@@ -31,6 +31,11 @@
             }
         }
 
+
+        .select2-container--default {
+            width: 100% !important;
+        }
+
         .select2-container--default .select2-selection--single {
             border: 1px solid #dbdade !important;
             height: 38px !important;
@@ -67,8 +72,8 @@
 
                 <!-- Booking from START -->
                 <form
-                    style="background-image: url('{{ asset('images/01.jpg') }}'); background-position: center center; background-repeat: no-repeat; background-size: cover;"
-                    id="flightSearchForm" class="bg-mode position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
+                    style="background-image: url('{{ asset('images/1.png') }}'); background-position: center center; background-repeat: no-repeat; background-size: cover;"
+                    id="flightSearchForm" class="bg-mode bg-white position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
                     @csrf
                     <!-- Svg decoration -->
                     <figure class="position-absolute top-0 start-0 h-100 ms-n2 ms-sm-n1">
@@ -121,9 +126,10 @@
 
                         <!-- Ticket class -->
                         <div class="col-lg-3 ms-auto">
+
+                            <label>Cabin Class</label>
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select js-choice select" name="FlightCabinClass" id="FlightCabinClass"
-                                    required>
+                                <select class="form-select  select" name="FlightCabinClass" id="FlightCabinClass" required>
                                     <option value="">Select Class</option>
                                     <option value="1">All Class</option>
                                     <option value="2" selected>Economy</option>
@@ -137,8 +143,10 @@
 
                         <!-- Ticket Travelers -->
                         <div class="col-lg-3 ms-auto">
+
+                            <label>Adult Count</label>
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select js-choice select" name="AdultCount" id="AdultCount" required>
+                                <select class="form-select  select" name="AdultCount" id="AdultCount" required>
                                     <option value="">Select Adult (18+ Yr)</option>
                                     <option value="1" selected>1</option>
                                     <option value="2">2</option>
@@ -153,8 +161,10 @@
                             </div>
                         </div>
                         <div class="col-lg-3 ms-auto">
+
+                            <label>Child Count</label>
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select js-choice select" name="ChildCount" id="ChildCount" required>
+                                <select class="form-select  select" name="ChildCount" id="ChildCount" required>
                                     <option value="">Select Child (2-18 Yr)</option>
                                     <option value="0" selected>0</option>
                                     <option value="1">1</option>
@@ -168,8 +178,9 @@
                             </div>
                         </div>
                         <div class="col-lg-3 ms-auto">
+                            <label>Infant Count</label>
                             <div class="form-control-bg-light form-fs-md">
-                                <select class="form-select js-choice select" name="InfantCount" id="InfantCount" required>
+                                <select class="form-select  select" name="InfantCount" id="InfantCount" required>
                                     <option value="">Select Infant (0-2 Yr)</option>
                                     <option value="0" selected>0</option>
                                     <option value="1">1</option>
@@ -182,7 +193,7 @@
                         </div>
 
                         <!-- Tab content START -->
-                        <div class="tab-content mt-4" id="pills-tabContent">
+                        <div class="tab-content pt-0 px-3" id="pills-tabContent">
                             <!-- One way tab START -->
                             <div class="tab-pane fade show active" id="pills-one-way" role="tabpanel"
                                 aria-labelledby="pills-one-way-tab">
@@ -192,15 +203,10 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-geo-alt me-2"></i>Origin</label>
-                                            <select class="form-select js-choice select" data-search-enabled="true"
-                                                name="Origin" id="Origin">
+                                            <select class="form-select  select" data-search-enabled="true" name="Origin"
+                                                id="Origin">
                                                 <option value="">Select location</option>
-                                                @foreach ($cityList as $city)
-                                                    <option value="{{ $city->airport_code }}">
-                                                        {{ $city->airport_name }} -
-                                                        {{ $city->airport_code }}
-                                                    </option>
-                                                @endforeach
+
                                             </select>
 
                                         </div>
@@ -217,15 +223,10 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-send me-2"></i>Destination</label>
-                                            <select class="form-select js-choice select" data-search-enabled="true"
+                                            <select class="form-select  select" data-search-enabled="true"
                                                 id="Destination" name="Destination">
                                                 <option value="">Select location</option>
-                                                @foreach ($cityList as $city)
-                                                    <option value="{{ $city->airport_code }}">
-                                                        {{ $city->airport_name }} -
-                                                        {{ $city->airport_code }}
-                                                    </option>
-                                                @endforeach
+
                                             </select>
                                         </div>
                                     </div>
@@ -261,17 +262,9 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-geo-alt me-2"></i>Origin</label>
-                                            <select class="form-select js-choice select w-100" data-search-enabled="true"
+                                            <select class="form-select  select w-100" data-search-enabled="true"
                                                 name="Origin" id="roundOrigin">
                                                 <option value="">Select location</option>
-
-                                                {{-- <option value="DEL" selected>DEL</option> --}}
-                                                @foreach ($cityList as $city)
-                                                    <option value="{{ $city->airport_code }}">
-                                                        {{ $city->airport_name }} -
-                                                        {{ $city->airport_code }}
-                                                    </option>
-                                                @endforeach
                                             </select>
                                         </div>
 
@@ -287,16 +280,9 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100"><i class="bi bi-send me-2"></i>Destination</label>
-                                            <select class="form-select js-choice select w-100" data-search-enabled="true"
+                                            <select class="form-select  select w-100" data-search-enabled="true"
                                                 id="roundDestination" name="Destination">
                                                 <option value="">Select location</option>
-                                                {{-- <option value="CCU" selected>CCU</option> --}}
-                                                @foreach ($cityList as $city)
-                                                    <option value="{{ $city->airport_code }}">
-                                                        {{ $city->airport_name }} -
-                                                        {{ $city->airport_code }}
-                                                    </option>
-                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
@@ -361,7 +347,7 @@
 
                         <!-- Offcanvas body -->
                         <div class="offcanvas-body flex-column p-3 p-xl-0">
-                            <form class="rounded-3 shadow">
+                            <form class="rounded-3 shadow-sm">
                                 <!-- Popular filters START -->
                                 <div class="card card-body rounded-0 rounded-top p-4">
                                     <!-- Title -->
@@ -684,8 +670,8 @@
                 <!-- Left sidebar END -->
 
                 <!-- Main content START -->
-                <div class="col-xl-8 col-xxl-9">
-                    <ul class="nav nav-tabs mb-3 d-none w-100" id="roundTabs">
+                <div class="col-xl-8 col-xxl-9 position-relative">
+                    <ul class="nav nav-tabs mb-3 d-none w-100 sticky-top" style="top: 90px; z-index: 100;" id="roundTabs">
                         <li class="nav-item w-50 rounded">
                             <button class="nav-link active w-100" id="tabDeparture">Departure</button>
                         </li>
@@ -701,7 +687,19 @@
                 <!-- Main content END -->
             </div> <!-- Row END -->
 
+
         </section>
+
+        <div id="roundSummaryCard"
+            class="card shadow-lg position-fixed bottom-0 start-50 translate-middle-x bg-primary text-white d-none"
+            style="width:100%; z-index:9050;">
+
+            <div class="card-body">
+                <div class="row g-3 align-items-center" id="summaryDetails">
+
+                </div>
+            </div>
+        </div>
 
     </main>
 
@@ -759,9 +757,9 @@
 
 @push('script')
     <script src="{{ asset('') }}js/flight.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    {{-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css"> --}}
 
-    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    {{-- <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script> --}}
 
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -801,6 +799,33 @@
             priceSlider.noUiSlider.on('update', function(values) {
                 $('#min-price').text(Math.floor(values[0]));
                 $('#max-price').text(Math.floor(values[1]));
+            });
+
+
+            $('#Origin, #Destination, #roundOrigin, #roundDestination').select2({
+                placeholder: 'Type at least 3 characters',
+                minimumInputLength: 3,
+                ajax: {
+                    url: "{{ route('search.city') }}",
+                    dataType: 'json',
+                    delay: 300,
+                    data: function(params) {
+                        return {
+                            query: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.airport_code,
+                                    text: item.airport_name + ' - ' + item.airport_code + ' (' + item.city + ')'
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
             });
         });
     </script>
