@@ -60,19 +60,19 @@
             </ul>
         </li>
 
-        <li class="menu-item <?php echo e(Request::is('flight/*') ? 'active open' : ''); ?>">
+        <li class="menu-item <?php echo e(Request::is('bus/*') ? 'active open' : ''); ?>">
             <a href="#menu-design" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-bus"></i>
                 <div data-i18n="Bus">Bus</div>
             </a>
-            <ul class="menu-sub" id="menu-design <?php echo e(Request::is('flight/*') ? 'show' : ''); ?>">
+            <ul class="menu-sub" id="menu-design <?php echo e(Request::is('bus/*') ? 'show' : ''); ?>">
 
-                <li class="menu-item <?php echo e(Request::is('flight/view') ? 'active' : ''); ?>">
+                <li class="menu-item <?php echo e(Request::is('bus/view') ? 'active' : ''); ?>">
                     <a href="<?php echo e(route('flight.view')); ?>" class="menu-link">
                         <div data-i18n="Bus Booking">Bus Booking</div>
                     </a>
                 </li>
-                <li class="menu-item <?php echo e(Request::is('flight/booking-list') ? 'active' : ''); ?>">
+                <li class="menu-item <?php echo e(Request::is('bus/booking-list') ? 'active' : ''); ?>">
                     <a href="<?php echo e(url('flight/booking-list')); ?>" class="menu-link">
                         <div data-i18n="Booking List">Booking List</div>
                     </a>
@@ -80,19 +80,19 @@
             </ul>
         </li>
 
-        <li class="menu-item <?php echo e(Request::is('flight/*') ? 'active open' : ''); ?>">
+        <li class="menu-item <?php echo e(Request::is('hotel/*') ? 'active open' : ''); ?>">
             <a href="#menu-design" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-building"></i>
                 <div data-i18n="Hotel">Hotel</div>
             </a>
-            <ul class="menu-sub" id="menu-design <?php echo e(Request::is('flight/*') ? 'show' : ''); ?>">
+            <ul class="menu-sub" id="menu-design <?php echo e(Request::is('hotel/*') ? 'show' : ''); ?>">
 
-                <li class="menu-item <?php echo e(Request::is('flight/view') ? 'active' : ''); ?>">
+                <li class="menu-item <?php echo e(Request::is('hotel/view') ? 'active' : ''); ?>">
                     <a href="<?php echo e(route('flight.view')); ?>" class="menu-link">
                         <div data-i18n="Hotel Booking">Hotel Booking</div>
                     </a>
                 </li>
-                <li class="menu-item <?php echo e(Request::is('flight/booking-list') ? 'active' : ''); ?>">
+                <li class="menu-item <?php echo e(Request::is('hotel/booking-list') ? 'active' : ''); ?>">
                     <a href="<?php echo e(url('flight/booking-list')); ?>" class="menu-link">
                         <div data-i18n="Booking List">Booking List</div>
                     </a>
