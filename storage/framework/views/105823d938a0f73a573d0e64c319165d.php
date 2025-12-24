@@ -205,7 +205,7 @@
                                           <li>
                                               <a class="dropdown-item" href="javascript:void(0)"
                                                   data-id="<?php echo e($b->id); ?>">
-                                                  🎫 View Ticket
+                                                  🎫 Generate Ticket
                                               </a>
                                           </li>
                                       <?php endif; ?>

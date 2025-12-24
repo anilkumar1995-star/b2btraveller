@@ -285,7 +285,7 @@ class FlightController extends Controller
             'flight_number'   => $flightNumber,
             'journey_date'    => $journeyDate,
             'journey_type'    => $journeyTypee,
-
+            'raw_payload'     => json_encode($request->all()),
             'base_fare'       => $baseFare,
             'tax'             => $tax,
             'total_amount'    => $totalAmount,
@@ -409,7 +409,7 @@ class FlightController extends Controller
             'flight_number'   => $flightNumber,
             'journey_date'    => $journeyDate,
             'journey_type'    => $journeyTypee,
-
+            'raw_payload'     => json_encode($request->all()),
             'base_fare'       => $baseFare,
             'tax'             => $tax,
             'total_amount'    => $totalAmount,

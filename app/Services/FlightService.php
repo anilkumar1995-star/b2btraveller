@@ -411,7 +411,7 @@ class FlightService
                 $response = $response['response'];
             }
 
-            dd($response);
+            dd($response, $payload, $url);
 
             if (is_string($response)) {
                 $response = json_decode(($response), true);
