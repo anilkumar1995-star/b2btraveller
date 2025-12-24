@@ -74,10 +74,6 @@
           font-size: 15px;
       }
 
-      .small {
-          font-size: 13px !important;
-      }
-
       .shadow-sm {
           box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
       }
@@ -256,7 +252,7 @@
           <div class="modal-content">
 
               <div class="modal-header border-0">
-                  <h5 class="modal-title fw-semibold">Flight Ticket</h5>
+                  <h4 class="modal-title fw-semibold">Flight Ticket</h4>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
 
@@ -274,17 +270,139 @@
       </div>
   </div>
 
+  <style>
+      .ticket-route {
+          background: #f8fafc;
+          border-radius: 10px;
+          border: 1px dashed #c7d2fe;
+      }
+
+      .city-code {
+          font-size: 26px;
+          font-weight: 700;
+          letter-spacing: 2px;
+      }
+
+      .city-name {
+          font-size: 12px;
+          color: #6b7280;
+      }
+
+      .route-line {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          color: #2563eb;
+          font-size: 18px;
+      }
+
+      .route-line span {
+          width: 50px;
+          height: 1px;
+          background: #94a3b8;
+      }
+  </style>
+  <style>
+      .passenger-section {
+          background: #fff;
+          border-radius: 12px;
+      }
+
+      .passenger-head {
+          font-weight: 700;
+          padding: 10px;
+          border-bottom: 2px solid #2563eb;
+          margin-bottom: 12px;
+      }
+
+      .passenger-card {
+          border: 1px dashed #c7d2fe;
+          border-radius: 12px;
+          padding: 14px;
+          margin-bottom: 16px;
+          background: #f8fafc;
+      }
+
+      .passenger-name {
+          font-size: 16px;
+          font-weight: 700;
+      }
+
+      .lead-pax {
+          background: #2563eb;
+          color: #fff;
+          font-size: 15px;
+          padding: 2px 6px;
+          border-radius: 6px;
+          margin-left: 6px;
+      }
+
+      .passenger-pnr {
+          font-weight: 700;
+          letter-spacing: 1px;
+      }
+
+      .seat-box {
+          background: #fff;
+          padding: 10px;
+          border-radius: 8px;
+          margin-top: 10px;
+      }
+
+      .seat-title {
+          font-weight: 600;
+          margin-bottom: 6px;
+      }
+
+      .seat-row {
+          display: grid;
+          grid-template-columns: 1fr auto 2fr auto;
+          gap: 8px;
+          font-size: 16px;
+          border-bottom: 1px dashed #e5e7eb;
+          padding: 6px 0;
+      }
+
+      .seat-row:last-child {
+          border-bottom: none;
+      }
+
+      .seat-code {
+          font-weight: 700;
+          color: #2563eb;
+      }
+
+      .fare-box {
+          display: flex;
+          justify-content: space-between;
+          margin-top: 10px;
+          font-size: 17px;
+      }
+
+      .fare-total {
+          font-weight: 800;
+      }
+
+      .contact-box {
+          margin-top: 10px;
+          border-top: 1px dashed #e5e7eb;
+          padding-top: 8px;
+      }
+  </style>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
+
+  <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
   <script src="{{ asset('') }}js/flight.js"></script>
   <script type="text/javascript">
       function openBookingDetails(bookingId) {
 
           $('#ticketContent').html(`
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary"></div>
-            <p class="mt-2">Fetching booking details...</p>
-        </div>
-    `);
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="mt-2">Fetching booking details...</p>
+                </div>
+            `);
 
           $('#viewTicketModal').modal('show');
 
@@ -323,9 +441,9 @@
       }
 
 
+
       function getDetails(booking) {
 
-          console.log("BOOKING OBJECT", booking);
 
           const segments = booking?.Segments || [];
           const passengers = booking?.Passenger || [];
@@ -340,238 +458,321 @@
           const arrivalTime = lastSeg?.Destination?.ArrTime;
 
           let html = `
-    <div class="container">
-
-
-        <div class="mb-3 small">
-            ${new Date().toLocaleDateString()}
-        </div>
-
-
-        <div class="d-flex justify-content-between mb-4">
-            <img src="/images/logo.png" style="height:38px;">
-            <div class="text-end">
-                <div class="fw-bold">Flight Ticket (One way)</div>
-                <div class="small">
-                    Booking ID: <b>${booking.BookingId || '-'}</b>
+            <div>
+                <div class="mb-3">
+                    ${new Date().toLocaleDateString()}
                 </div>
-            </div>
-        </div>
 
+                <div class="bg-white p-4 rounded shadow-sm">
 
-        <div class="bg-white p-4 rounded shadow-sm">
-
-            <h4>${originAirport.AirportName || 'Origin'} to ${destAirport.AirportName || 'Destination'}</h4>
-
-            <div class="small mb-3">
-                ${departTime ? new Date(departTime).toLocaleString() : ''}
-            </div>
-
-            <div class="row border rounded">
-
-
-                <div class="col-md-3 p-3 text-center">
-                    <div class="fw-semibold">${booking.ValidatingAirlineCode || 'AI'}</div>
-                    <div class="mt-2 border rounded p-1">
-                        <small>PNR</small><br>
-                        <b>${booking.PNR || '-'}</b>
+                    <div class="d-flex justify-content-between mb-4">
+                    <img src="/images/logo.png" style="height:58px;">
+                    <div class="text-end">
+                        <div class="fw-bold">Flight Ticket (${booking.JourneyType == '1' ? 'One-way' : 'Roundtrip'})</div>
+                        <div>
+                           <h4> Booking ID: ${booking.BookingId || '-'}</h4>
+                        </div>
                     </div>
                 </div>
+                <h4>${originAirport.AirportName || 'Origin'} to ${destAirport.AirportName || 'Destination'}</h4>
+
+                <div class="row ticket-route">
 
 
-                <div class="col-md-6 p-3 border-start border-end">
-                    <div class="row">
-                        <div class="col-6">
-                            <b>${originAirport.CityName || ''}</b><br>
-                            ${originAirport.AirportCode || ''}
-                            ${departTime ? new Date(departTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}
-                            <div class="small">${originAirport.AirportName || ''}</div>
+                    <div class="col-md-6 p-3 text-center ticket-route">
+                        <div class="mt-2 border rounded p-1  bg-label-warning">
+                            PNR<br>
+                            <b>${booking.PNR || '-'}</b>
                         </div>
 
-                        <div class="col-6 text-end">
-                            <b>${destAirport.CityName || ''}</b><br>
-                            ${destAirport.AirportCode || ''}
-                            ${arrivalTime ? new Date(arrivalTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}
-                            <div class="small">${destAirport.AirportName || ''}</div>
+                        <br/>
+                        <div>
+                            ${booking.IsLCC ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'}
+                        </div>
+                        <div>
+                            ${booking.NonRefundable ? '<span class="text-danger">Non-Refundable</span>' : '<span class="text-success">Refundable</span>'}
                         </div>
                     </div>
 
-                    <div class="text-center my-3 small">
-                        ${
-                            lastSeg?.AccumulatedDuration
-                                ? Math.floor(lastSeg.AccumulatedDuration / 60) + 'h ' + (lastSeg.AccumulatedDuration % 60) + 'm'
-                                : '—'
-                        }
-                    </div>
-                </div>
+                    <div class="col-md-6 p-3 ticket-route">
 
-
-                <div class="col-md-3 p-3">
-                    <div class="small">
-                        ${booking.IsLCC ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'}
-                    </div>
-                    <div class="small">
-                        ${booking.NonRefundable ? '<span class="text-danger">Non-Refundable</span>' : '<span class="text-success">Refundable</span>'}
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="pt-3">
-                <div class="row fw-semibold small mb-2">
-                    <div class="col-6">TRAVELLER</div>
-                    <div class="col-3">SEAT</div>
-                    <div class="col-3">E-TICKET</div>
-                </div>
-
-                ${
-                    passengers.map(p => `
-                          <div class="row mb-2">
-                              <div class="col-6">${p.Title || ''} ${p.FirstName || ''} ${p.LastName || ''}</div>
-                              <div class="col-3">${p.SeatDynamic?.map(s => s.Code).join(', ') || '–'}</div>
-                              <div class="col-3 fw-semibold">${booking.PNR || '-'}</div>
-                          </div>
-                      `).join('')
-                }
-            </div>
-
-
-            <div class="mt-4 p-3 bg-white rounded">
-                <span class="text-success">
-                    You have paid <b>INR ${booking?.Fare?.PublishedFare || '-'}</b>
-                </span>
-            </div>
-
-        </div>
-
-
-                    <div class="mt-4 p-4 bg-white rounded-4 shadow-sm border">
-
-                        <div class="row g-0">
-
-                            <div class="col-md-9 border-end">
-
-                                <div class="p-2 px-3 fw-semibold text-white" 
-                                    style="background:#d7261e; border-radius:8px 8px 0 0;">
-                                    Items not allowed in the aircraft
-                                </div>
-
-                                <div class="p-3">
-                                    <div class="d-flex flex-wrap gap-4">
-
-                                        <div class="text-center" style="width:100px;">
-                                            <img src="{{ asset('/images/restricted/lighter.jpeg') }}" style="height:50px;">
-                                            <div class="small mt-1">LIGHTERS,<br>MATCHSTICKS</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:120px;">
-                                            <img src="{{ asset('/images/restricted/flame.jpeg') }}" style="height:50px;">
-                                            <div class="small mt-1">FLAMMABLE<br>LIQUIDS</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:100px;">
-                                            <img src="{{ asset('/images/restricted/toxic.png') }}" style="height:50px;">
-                                            <div class="small mt-1">TOXIC</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:100px;">
-                                            <img src="{{ asset('/images/restricted/corrosive.jpeg') }}" style="height:50px;">
-                                            <div class="small mt-1">CORROSIVES</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:100px;">
-                                            <img src="{{ asset('/images/restricted/paper.png') }}" style="height:50px;">
-                                            <div class="small mt-1">PEPPER<br>SPRAY</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:120px;">
-                                            <img src="{{ asset('/images/restricted/gas.png') }}" style="height:50px;">
-                                            <div class="small mt-1">FLAMMABLE<br>GAS</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:100px;">
-                                            <img src="{{ asset('/images/restricted/cigrate.jpeg') }}" style="height:50px;">
-                                            <div class="small mt-1">E-CIGARETTE</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:120px;">
-                                            <img src="{{ asset('/images/restricted/infection.png') }}" style="height:50px;">
-                                            <div class="small mt-1">INFECTIOUS<br>SUBSTANCES</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:130px;">
-                                            <img src="{{ asset('/images/restricted/redio.jpeg') }}" style="height:50px;">
-                                            <div class="small mt-1">RADIOACTIVE<br>MATERIALS</div>
-                                        </div>
-
-                                        <div class="text-center" style="width:130px;">
-                                            <img src="{{ asset('/images/restricted/explosive.jpeg') }}" style="height:50px;">
-                                            <div class="small mt-1">EXPLOSIVES<br>AMMUNITION</div>
-                                        </div>
-
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-start">
+                                <div class="city-code">${originAirport.AirportCode || ''}</div>
+                                <div class="city-name">${originAirport.CityName || ''}</div>
+                                <div>
+                                        ${departTime ? new Date(departTime).toLocaleDateString() : ''}<br>
+                                        <strong>
+                                            ${departTime ? new Date(departTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}
+                                        </strong>
                                     </div>
-                                </div>
                             </div>
 
-                            <div class="col-md-3">
+                            <div class="text-center">
+                                <h5>${
+                                        lastSeg?.AccumulatedDuration
+                                            ? Math.floor(lastSeg.AccumulatedDuration / 60) + 'h ' + (lastSeg.AccumulatedDuration % 60) + 'm'
+                                            : '—'
+                                    }</h5>
+                                    <hr/>
+                                
+                                    <div class="route-line">
+                                        <span></span>
+                                        ✈️
+                                        <span></span>
+                                    </div>
+                            </div>
+                            <div class="text-end">
+                                <div class="city-code">${destAirport.AirportCode || ''}</div>
+                                <div class="city-name">${destAirport.CityName || ''}</div>
+                                    <div class="text-end">
+                                ${arrivalTime ? new Date(arrivalTime).toLocaleDateString() : ''}<br>
+                                <strong>
+                                    ${arrivalTime ? new Date(arrivalTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}
+                                </strong>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-                                <div class="p-2 fw-semibold text-white text-center" 
-                                    style="background:#f8a900; border-radius:8px 8px 0 0;">
-                                    Items allowed only<br>in Hand Baggage
-                                </div>
 
-                                <div class="p-4 text-center">
+                    <div class="pt-3 passenger-section">
 
-                                    <div class="mb-4">
-                                        <img src="{{ asset('/images/restricted/lithium.png') }}" style="height:50px;">
-                                        <div class="small mt-1">LITHIUM<br>BATTERIES</div>
+                        <div class="passenger-head">
+                            PASSENGER DETAILS
+                        </div>
+
+                        ${passengers.map((p, index) => `
+                                    <div class="passenger-card">
+
+                                        <div class="row align-items-center mb-2">
+                                            <div class="col-8 passenger-name">
+                                                ${p.Title} ${p.FirstName} ${p.LastName}
+                                                ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
+                                            </div>
+
+                                            <div class="col-4 text-end passenger-pnr">
+                                                E-Ticket: ${booking.PNR || '-'}
+                                            </div>
+                                        </div>
+
+                                        <div class="row text-muted mb-2">
+                                            <div class="col-4"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
+                                            <div class="col-4"><b>Gender:</b> ${p.Gender == 1 ? 'Male' : 'Female'}</div>
+                                            <div class="col-4"><b>Nationality:</b> ${p.Nationality}</div>
+                                        </div>
+
+                                        <div class="seat-box">
+                                            <div class="seat-title">Seat Details</div>
+                                            ${
+                                                p.SeatDynamic?.map(s => `
+                            <div class="seat-row">
+                                <span>${s.Origin} → ${s.Destination}</span>
+                                <span class="seat-code">${s.Code}</span>
+                                <span class="seat-type">${s.Text}</span>
+                                <span>₹${s.Price}</span>
+                            </div>
+                        `).join('') || '<div class="seat-row">No seat selected</div>'
+                                            }
+                                        </div>
+
+                                        <div class="fare-box">
+                                            <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
+                                            <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
+                                            <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
+                                            <div class="fare-total">
+                                                Total: ₹${p.Fare.PublishedFare}
+                                            </div>
+                                        </div>
+
+                                        <div class="contact-box">
+                                            <div><b>Mobile:</b> ${p.ContactNo}</div>
+                                            <div><b>Email:</b> ${p.Email}</div>
+                                            <div><b>City:</b> ${p.City}, ${p.CountryCode}</div>
+                                        </div>
+
+                                        <div class="barcode text-center mt-3">
+                                            <canvas id="barcodeCanvas${index}"></canvas>
+                                        </div>
+
+                                    </div>
+                                    `).join('')
+                    }
+                </div>
+                    <div class="mt-4 p-3 bg-white rounded text-end">
+                        <span class="text-success">
+                            You have paid <h4>INR ${booking?.Fare?.PublishedFare || '-'}</h4>
+                        </span>
+                    </div>
+
+                      <div class="ticket-route">
+
+                    <div class="row g-0">
+
+                        <div class="col-md-9 border-end">
+
+                            <div class="p-2 px-3 fw-semibold text-white" 
+                                style="background:#d7261e; border-radius:8px 8px 0 0;">
+                                Items not allowed in the aircraft
+                            </div>
+
+                            <div class="p-3">
+                                <div class="d-flex flex-wrap gap-4">
+
+                                    <div class="text-center" style="width:100px;">
+                                        <img src="{{ asset('/images/restricted/lighter.jpeg') }}" style="height:50px;">
+                                        <div class="mt-1">LIGHTERS,<br>MATCHSTICKS</div>
                                     </div>
 
-                                    <div>
-                                        <img src="{{ asset('/images/restricted/powerbank.png') }}" style="height:50px;">
-                                        <div class="small mt-1">POWER<br>BANKS</div>
+                                    <div class="text-center" style="width:120px;">
+                                        <img src="{{ asset('/images/restricted/flame.jpeg') }}" style="height:50px;">
+                                        <div class="mt-1">FLAMMABLE<br>LIQUIDS</div>
+                                    </div>
+
+                                    <div class="text-center" style="width:100px;">
+                                        <img src="{{ asset('/images/restricted/toxic.png') }}" style="height:50px;">
+                                        <div class="mt-1">TOXIC</div>
+                                    </div>
+
+                                    <div class="text-center" style="width:100px;">
+                                        <img src="{{ asset('/images/restricted/corrosive.jpeg') }}" style="height:50px;">
+                                        <div class="mt-1">CORROSIVES</div>
+                                    </div>
+
+                                    <div class="text-center" style="width:100px;">
+                                        <img src="{{ asset('/images/restricted/paper.png') }}" style="height:50px;">
+                                        <div class="mt-1">PEPPER<br>SPRAY</div>
+                                    </div>
+
+                                    <div class="text-center" style="width:120px;">
+                                        <img src="{{ asset('/images/restricted/gas.png') }}" style="height:50px;">
+                                        <div class="mt-1">FLAMMABLE<br>GAS</div>
+                                    </div>
+
+                                    <div class="text-center" style="width:100px;">
+                                        <img src="{{ asset('/images/restricted/cigrate.jpeg') }}" style="height:50px;">
+                                        <div class="mt-1">E-CIGARETTE</div>
+                                    </div>
+
+                                    <div class="text-center" style="width:120px;">
+                                        <img src="{{ asset('/images/restricted/infection.png') }}" style="height:50px;">
+                                        <div class="mt-1">INFECTIOUS<br>SUBSTANCES</div>
+                                    </div>
+
+                                    <div class="text-center" style="width:130px;">
+                                        <img src="{{ asset('/images/restricted/redio.jpeg') }}" style="height:50px;">
+                                        <div class="mt-1">RADIOACTIVE<br>MATERIALS</div>
+                                    </div>
+
+                                    <div class="text-center" style="width:130px;">
+                                        <img src="{{ asset('/images/restricted/explosive.jpeg') }}" style="height:50px;">
+                                        <div class="mt-1">EXPLOSIVES<br>AMMUNITION</div>
                                     </div>
 
                                 </div>
                             </div>
                         </div>
 
+                        <div class="col-md-3">
+
+                            <div class="p-2 fw-semibold text-white text-center" 
+                                style="background:#f8a900; border-radius:8px 8px 0 0;">
+                                Items allowed only<br>in Hand Baggage
+                            </div>
+
+                            <div class="p-4 text-center">
+
+                                <div class="mb-4">
+                                    <img src="{{ asset('/images/restricted/lithium.png') }}" style="height:50px;">
+                                    <div class="mt-1">LITHIUM<br>BATTERIES</div>
+                                </div>
+
+                                <div>
+                                    <img src="{{ asset('/images/restricted/powerbank.png') }}" style="height:50px;">
+                                    <div class="mt-1">POWER<br>BANKS</div>
+                                </div>
+
+                            </div>
+                        </div>
                     </div>
 
-
-        <div class="rounded-4 overflow-hidden border mt-4">
-            <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
-                <div class="fw-semibold small">
-                    <img src="/images/restricted/digiyatra.png" style="height:20px;" class="me-2">
-                    DIGI YATRA
                 </div>
-                <img src="/images/restricted/digiyatra2.jpeg" style="height:30px;">
+
+                
+                
+                <div class="rticket-route mt-4">
+                    <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
+                        <div class="fw-semibold ">
+                            <img src="/images/restricted/digiyatra.png" style="height:20px;" class="me-2">
+                            DIGI YATRA
+                        </div>
+                        <img src="/images/restricted/digiyatra2.jpeg" style="height:30px;">
+                    </div>
+                    <div class="p-3" style="background:#e8ffec; font-size:14px;">
+                        <div class="fw-semibold mb-2">Avoid Long Queues at the Airport with DigiYatra</div>
+                        <div class="mb-1"><strong>Step 1:</strong> Verify identity using Aadhaar</div>
+                        <div class="mb-3"><strong>Step 2:</strong> Update boarding pass</div>
+                    </div>
+                </div>
+
+
+                <div class="ticket-route mt-4"
+                    style="border-left:4px solid #c2c2c2;">
+                    <h6 class="fw-semibold mb-3">IMPORTANT INFORMATION</h6>
+                    <ul class="">
+                        <li>Reach airport 3 hours before departure</li>
+                        <li>Carry valid government ID</li>
+                        <li>Do not share OTP or CVV</li>
+                    </ul>
+                </div>
+                </div>
+
+
+              
+
+
+
             </div>
-            <div class="p-3" style="background:#e8ffec; font-size:14px;">
-                <div class="fw-semibold mb-2">Avoid Long Queues at the Airport with DigiYatra</div>
-                <div class="mb-1"><strong>Step 1:</strong> Verify identity using Aadhaar</div>
-                <div class="mb-3"><strong>Step 2:</strong> Update boarding pass</div>
-            </div>
-        </div>
+            `;
 
-
-        <div class="mt-4 p-4 bg-white rounded-4 shadow-sm border"
-             style="border-left:4px solid #c2c2c2;">
-            <h6 class="fw-semibold mb-3">IMPORTANT INFORMATION</h6>
-            <ul class="small">
-                <li>Reach airport 3 hours before departure</li>
-                <li>Carry valid government ID</li>
-                <li>Do not share OTP or CVV</li>
-            </ul>
-        </div>
-
-    </div>
-    `;
 
           $('#ticketContent').html(html);
+
+          setTimeout(() => {
+              passengers.forEach((p, index) => {
+                  let barcode = booking.PNR;
+                  if (p.BarcodeDetails && p.BarcodeDetails.Barcode && p.BarcodeDetails.Barcode.length >
+                      0) {
+                      barcode = p.BarcodeDetails.Barcode[0].Content ?? "N/A";
+                  }
+                  makeBarcode(index, barcode);
+              });
+          }, 100);
       }
 
 
+      function makeBarcode(i, barcode) {
+          const canvas = document.getElementById("barcodeCanvas" + i);
+
+          if (!canvas) return;
+
+          try {
+              bwipjs.toCanvas(canvas, {
+                  bcid: 'pdf417',
+                  text: barcode,
+                  scale: 2,
+                  height: 8,
+                  columns: 6,
+                  rows: 3,
+                  includetext: false,
+                  paddingwidth: 10,
+                  paddingheight: 10,
+              });
+          } catch (e) {
+              $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
+          }
+      }
 
       function printTicket() {
           const printContent = document.getElementById("ticketContent").innerHTML;
