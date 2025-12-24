@@ -156,7 +156,7 @@
                   <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
               <?php else: ?>
                   <tr>
-                      <td colspan="7" class="text-center text-danger">No Bookings Details found.</td>
+                      <td colspan="5" class="text-center text-danger">No Bookings Details found.</td>
                   </tr>
               <?php endif; ?>
           </tbody>
