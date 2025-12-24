@@ -282,9 +282,7 @@
               },
               success: function(res) {
                   if (res.status === 'success') {
-                      console.log(res);
-                      return;
-                      getDetails(res);
+                      getDetails(res?.data?.Response?.FlightItinerary);
                   } else {
                       $('#ticketContent').html(`
                         <div class="alert alert-danger text-center">
@@ -304,6 +302,7 @@
       }
 
       function getDetails(booking) {
+        console.log(booking);
           let html = `
                 <div class="container">
 

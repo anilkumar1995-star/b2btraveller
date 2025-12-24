@@ -403,7 +403,6 @@ class FlightService
 
             $url = $this->setFullUrl('bookingDetails');
 
-
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 $response = StaticResponseHelper::bookingdetStaticResponse();
@@ -420,7 +419,7 @@ class FlightService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Booking Details get successfully", 'data' => $response['data']];
             } else {
                 return [
