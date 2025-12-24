@@ -306,8 +306,8 @@ class FlightService
             // dd($response, $payload);
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = StaticResponseHelper::flightfailedbookingresponse();
-                // $response = StaticResponseHelper::flightBookStaticResponse();
+                // $response = StaticResponseHelper::flightfailedbookingresponse();
+                $response = StaticResponseHelper::flightBookStaticResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
                 $response = $response['response'];
