@@ -459,10 +459,6 @@
 
           let html = `
             <div>
-                <div class="mb-3">
-                    ${new Date().toLocaleDateString()}
-                </div>
-
                 <div class="bg-white p-4 rounded shadow-sm">
 
                     <div class="d-flex justify-content-between mb-4">
