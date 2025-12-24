@@ -274,7 +274,7 @@
           $('#viewTicketModal').modal('show');
 
           $.ajax({
-              url: "/flight/booking/view",
+              url: "/flight/booking-view",
               type: "POST",
               data: {
                   booking_id: bookingId,
