@@ -389,15 +389,16 @@ class FlightService
             $token = $this->authService->getToken();
 
 
-            $res = json_decode($data->raw_response);
-            $det = $res->data->Response->Response->FlightItinerary->Passenger[0];
-
+            $res = json_decode($data->raw_response, true);
+       
+            $det = $res['Response']['Response']['FlightItinerary']['Passenger'][0];
+   
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "BookingId" => $data->booking_id_api,
-                "FirstName" => $det->FirstName,
-                "LastName" => $det->LastName,
+                "FirstName" => $det['FirstName'],
+                "LastName" => $det['LastName'],
             ];
 
             $url = $this->setFullUrl('bookingDetails');
@@ -410,8 +411,6 @@ class FlightService
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "booking_details", "");
                 $response = $response['response'];
             }
-
-            dd($response, $payload, $url);
 
             if (is_string($response)) {
                 $response = json_decode(($response), true);
