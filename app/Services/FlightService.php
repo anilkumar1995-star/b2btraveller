@@ -391,7 +391,7 @@ class FlightService
 
             $res = json_decode($data->raw_response);
             $det = $res->data->Response->Response->FlightItinerary->Passenger[0];
-            
+
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
@@ -407,11 +407,11 @@ class FlightService
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 $response = StaticResponseHelper::bookingdetStaticResponse();
             } else {
-
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "booking_details", "");
                 $response = $response['response'];
             }
 
+            dd($response);
 
             if (is_string($response)) {
                 $response = json_decode(($response), true);
