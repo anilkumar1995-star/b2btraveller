@@ -392,11 +392,11 @@ class FlightService
             $res = json_decode($data->raw_response, true);
        
             $det = $res['Response']['Response']['FlightItinerary']['Passenger'][0];
-   
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "BookingId" => $data->booking_id_api,
+                "PNR" => $data->pnr,
                 "FirstName" => $det['FirstName'],
                 "LastName" => $det['LastName'],
             ];
