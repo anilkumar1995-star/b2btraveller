@@ -124,101 +124,15 @@
               page-break-inside: avoid;
           }
       }
+
       action-btn {
           background-color: rgba(49, 84, 255, 0.1);
       }
   </style>
 
-     <div class="row">
-            <div class="col-lg-3 col-sm-6">
-                <div class="card card-border-shadow-primary a h-90">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="avatar me-3">
-                                <span class="avatar-initial rounded bg-label-primary">
-                                    <i class="ti ti-plane"></i>
-                                </span>
-                            </div>
-                            <h4 class="mb-0 text-success" data-bs-toggle="tooltip" title=""
-                            data-bs-original-title="Total Lcc = ₹ <?php echo e(number_format($total_booking_amount ?? 0, 2)); ?>" id="total_booking_amount">
-                                ₹0
-                            </h4>
-                        </div>
-                        <small class="mb-1 fw-bold">Total LCC booking value</small><p class="mb-0">
-                            <span class="text-heading fw-bold me-1" id="booking_count"> 0 </span>
-                            <small class="text-body-secondary">Total LCC Counts</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6">
-                <div class="card shadow-sm bg-light-success h-90">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="avatar me-3">
-                                <span class="avatar-initial rounded bg-label-primary">
-                                    <i class="ti ti-plane"></i>
-                                </span>
-                            </div>
-                            <h4 class="mb-0 text-success" data-bs-toggle="tooltip" title=""
-                            data-bs-original-title="Total Lcc = ₹ <?php echo e(number_format($total_booking_amount ?? 0, 2)); ?>" id="total_booking_amount">
-                                ₹0
-                            </h4>
-                        </div>
-                        <small class="mb-1 fw-bold">Total Non Lcc bookings</small><p class="mb-0">
-                            <span class="text-heading fw-bold me-1" id="booking_count"> 0 </span>
-                            <small class="text-body-secondary">Total Non Lcc Counts</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-             <div class="col-lg-3 col-sm-6">
-                <div class="card card-border-shadow-primary h-90">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="avatar me-3">
-                                <span class="avatar-initial rounded bg-label-primary">
-                                    <i class="ti ti-plane"></i>
-                                </span>
-                            </div>
-                            <h4 class="mb-0 text-success" data-bs-toggle="tooltip" title=""
-                            data-bs-original-title="Total Lcc = ₹ <?php echo e(number_format($total_booking_amount ?? 0, 2)); ?>" id="total_booking_amount">
-                                ₹0
-                            </h4>
-                        </div>
-                        <small class="mb-1 fw-bold">Total Oneway bookings</small><p class="mb-0">
-                            <span class="text-heading fw-bold me-1" id="booking_count"> 0 </span>
-                            <small class="text-body-secondary">Total Oneway Counts</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-sm-6 mb-3">
-                <div class="card card-border-shadow-primary h-90">
-                    <div class="card-body">
-                        <div class="d-flex align-items-center mb-2">
-                            <div class="avatar me-3">
-                                <span class="avatar-initial rounded bg-label-primary">
-                                    <i class="ti ti-plane"></i>
-                                </span>
-                            </div>
-                            <h4 class="mb-0 text-success" data-bs-toggle="tooltip" title=""
-                            data-bs-original-title="Total Lcc = ₹ <?php echo e(number_format($total_booking_amount ?? 0, 2)); ?>" id="total_booking_amount">
-                                ₹0
-                            </h4>
-                        </div>
-                        <small class="mb-1 fw-bold">Total Round Trip bookings</small><p class="mb-0">
-                            <span class="text-heading fw-bold me-1" id="booking_count"> 0 </span>
-                            <small class="text-body-secondary">Total Roundtrip Counts</small>
-                        </p>
-                    </div>
-                </div>
-            </div>
-    </div>
-                  
-      <div class="card-datatable table-responsive p-2">
-       <table class="table table-striped">
-          <thead class="bg-light text-center">
+  <div class="card-datatable table-responsive p-2">
+      <table class="table table-striped" id="bookingTable">
+          <thead class="bg-light">
               <tr>
                   <th>ID</th>
                   <th>User</th>
@@ -226,6 +140,7 @@
                   <th>Route</th>
                   <th>Amount</th>
                   <th>Type</th>
+                  <th>Ticket Status</th>
                   <th class="text-center">Action</th>
               </tr>
           </thead>
@@ -279,6 +194,12 @@
                               <br />
                               <span class="badge bg-info"><?php echo e($b->journey_type); ?></span>
                           </td>
+                          <td><?php echo $b->ticket_status == 'pending'
+                              ? '<span class="badge bg-warning">Pending</span>'
+                              : '<span class="badge bg-success">Confirmed</span>'; ?>
+
+
+                          </td>
                           <td>
                               <span class="<?php echo e($status['class']); ?>">
                                   <?php echo e($status['label']); ?>
@@ -292,10 +213,13 @@
                                   </button>
 
                                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo e($b->id); ?>">
-                                      <?php if($b->is_lcc !== 'true'): ?>
+
+                                      <?php if($b->is_lcc !== 'true' && $b->ticket_status === 'pending'): ?>
                                           <li>
-                                              <a class="dropdown-item" href="javascript:void(0)"
-                                                  data-id="<?php echo e($b->id); ?>">
+                                              <a class="dropdown-item  generate-ticket" href="javascript:void(0)"
+                                                  data-id="<?php echo e($b->id); ?>"
+                                                  data-journeytype = "<?php echo e($b->journey_type); ?>"
+                                                  data-payload='<?php echo json_encode(json_decode($b->raw_payload), 15, 512) ?>'>
                                                   🎫 Generate Ticket
                                               </a>
                                           </li>
@@ -357,79 +281,79 @@
   </div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
-
+  <script src="<?php echo e(asset('')); ?>js/flight.js"></script>
   <script type="text/javascript">
       function openBookingDetails(bookingId) {
 
-    $('#ticketContent').html(`
+          $('#ticketContent').html(`
         <div class="text-center py-5">
             <div class="spinner-border text-primary"></div>
             <p class="mt-2">Fetching booking details...</p>
         </div>
     `);
 
-    $('#viewTicketModal').modal('show');
+          $('#viewTicketModal').modal('show');
 
-    $.ajax({
-        url: "/flight/booking-view",
-        type: "POST",
-        data: {
-            booking_id: bookingId,
-            _token: "<?php echo e(csrf_token()); ?>"
-        },
-        success: function (res) {
+          $.ajax({
+              url: "/flight/booking-view",
+              type: "POST",
+              data: {
+                  booking_id: bookingId,
+                  _token: "<?php echo e(csrf_token()); ?>"
+              },
+              success: function(res) {
 
-            if (res.status !== 'success') {
-                $('#ticketContent').html(`<div class="alert alert-danger">${res.message}</div>`);
-                return;
-            }
+                  if (res.status !== 'success') {
+                      $('#ticketContent').html(`<div class="alert alert-danger">${res.message}</div>`);
+                      return;
+                  }
 
-            // ✅ EXACT OBJECT YOU SHARED
-            const booking = res?.data?.Response?.FlightItinerary;
+                  // ✅ EXACT OBJECT YOU SHARED
+                  const booking = res?.data?.Response?.FlightItinerary;
 
-            if (!booking) {
-                $('#ticketContent').html(`<div class="alert alert-danger">Invalid booking data</div>`);
-                return;
-            }
+                  if (!booking) {
+                      $('#ticketContent').html(`<div class="alert alert-danger">Invalid booking data</div>`);
+                      return;
+                  }
 
-            getDetails(booking);
-        },
-        error: function () {
-            $('#ticketContent').html(`
+                  getDetails(booking);
+              },
+              error: function() {
+                  $('#ticketContent').html(`
                 <div class="alert alert-danger text-center">
                     Unable to fetch booking details.
                 </div>
             `);
-        }
-    });
-}
+              }
+          });
+      }
 
 
-function getDetails(booking) {
+      function getDetails(booking) {
 
-    console.log("BOOKING OBJECT", booking);
+          console.log("BOOKING OBJECT", booking);
 
-    const segments   = booking?.Segments || [];
-    const passengers = booking?.Passenger || [];
+          const segments = booking?.Segments || [];
+          const passengers = booking?.Passenger || [];
 
-    const firstSeg = segments[0] || {};
-    const lastSeg  = segments[segments.length - 1] || {};
+          const firstSeg = segments[0] || {};
+          const lastSeg = segments[segments.length - 1] || {};
 
-    const originAirport = firstSeg?.Origin?.Airport || {};
-    const destAirport   = lastSeg?.Destination?.Airport || {};
+          const originAirport = firstSeg?.Origin?.Airport || {};
+          const destAirport = lastSeg?.Destination?.Airport || {};
 
-    const departTime  = firstSeg?.Origin?.DepTime;
-    const arrivalTime = lastSeg?.Destination?.ArrTime;
+          const departTime = firstSeg?.Origin?.DepTime;
+          const arrivalTime = lastSeg?.Destination?.ArrTime;
 
-    let html = `
+          let html = `
     <div class="container">
 
-        <!-- DATE -->
+
         <div class="mb-3 small">
             ${new Date().toLocaleDateString()}
         </div>
 
-        <!-- HEADER -->
+
         <div class="d-flex justify-content-between mb-4">
             <img src="/images/logo.png" style="height:38px;">
             <div class="text-end">
@@ -440,39 +364,7 @@ function getDetails(booking) {
             </div>
         </div>
 
-        <!-- BARCODE -->
-        <div class="p-4 bg-white rounded shadow-sm mb-4">
-            <div class="fw-semibold mb-2">
-                Barcode(s) for your journey
-                <span class="text-primary">
-                    ${originAirport.AirportName || 'Origin'} to ${destAirport.AirportName || 'Destination'}
-                </span>
-            </div>
-            <hr>
 
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <div class="small text-muted">Passenger</div>
-                    <div class="fw-bold">PNR: ${booking.PNR || '-'}</div>
-                </div>
-
-                <div>
-                    ${
-                        passengers?.[0]?.BarcodeDetails?.Barcode?.[0]?.Content
-                        ? `
-                        <img 
-                            src="https://bwipjs-api.metafloor.com/?bcid=pdf417&text=${encodeURIComponent(
-                                passengers[0].BarcodeDetails.Barcode[0].Content
-                            )}&scale=2&height=10"
-                            style="height:60px;"
-                        >`
-                        : `<span class="small text-muted">Barcode not available</span>`
-                    }
-                </div>
-            </div>
-        </div>
-
-        <!-- MAIN TICKET -->
         <div class="bg-white p-4 rounded shadow-sm">
 
             <h4>${originAirport.AirportName || 'Origin'} to ${destAirport.AirportName || 'Destination'}</h4>
@@ -483,7 +375,7 @@ function getDetails(booking) {
 
             <div class="row border rounded">
 
-                <!-- AIRLINE -->
+
                 <div class="col-md-3 p-3 text-center">
                     <div class="fw-semibold">${booking.ValidatingAirlineCode || 'AI'}</div>
                     <div class="mt-2 border rounded p-1">
@@ -492,7 +384,7 @@ function getDetails(booking) {
                     </div>
                 </div>
 
-                <!-- ROUTE -->
+
                 <div class="col-md-6 p-3 border-start border-end">
                     <div class="row">
                         <div class="col-6">
@@ -519,7 +411,7 @@ function getDetails(booking) {
                     </div>
                 </div>
 
-                <!-- FLAGS -->
+
                 <div class="col-md-3 p-3">
                     <div class="small">
                         ${booking.IsLCC ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'}
@@ -530,7 +422,7 @@ function getDetails(booking) {
                 </div>
             </div>
 
-            <!-- PASSENGERS -->
+
             <div class="pt-3">
                 <div class="row fw-semibold small mb-2">
                     <div class="col-6">TRAVELLER</div>
@@ -540,16 +432,16 @@ function getDetails(booking) {
 
                 ${
                     passengers.map(p => `
-                        <div class="row mb-2">
-                            <div class="col-6">${p.Title || ''} ${p.FirstName || ''} ${p.LastName || ''}</div>
-                            <div class="col-3">${p.SeatDynamic?.map(s => s.Code).join(', ') || '–'}</div>
-                            <div class="col-3 fw-semibold">${booking.PNR || '-'}</div>
-                        </div>
-                    `).join('')
+                          <div class="row mb-2">
+                              <div class="col-6">${p.Title || ''} ${p.FirstName || ''} ${p.LastName || ''}</div>
+                              <div class="col-3">${p.SeatDynamic?.map(s => s.Code).join(', ') || '–'}</div>
+                              <div class="col-3 fw-semibold">${booking.PNR || '-'}</div>
+                          </div>
+                      `).join('')
                 }
             </div>
 
-            <!-- PAYMENT -->
+
             <div class="mt-4 p-3 bg-white rounded">
                 <span class="text-success">
                     You have paid <b>INR ${booking?.Fare?.PublishedFare || '-'}</b>
@@ -558,8 +450,7 @@ function getDetails(booking) {
 
         </div>
 
-        <!-- ================= STATIC SECTION ================= -->
-        <!-- ITEMS NOT ALLOWED SECTION -->
+
                     <div class="mt-4 p-4 bg-white rounded-4 shadow-sm border">
 
                         <div class="row g-0">
@@ -654,7 +545,6 @@ function getDetails(booking) {
                     </div>
 
 
-        <!-- DIGI YATRA -->
         <div class="rounded-4 overflow-hidden border mt-4">
             <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
                 <div class="fw-semibold small">
@@ -670,7 +560,7 @@ function getDetails(booking) {
             </div>
         </div>
 
-        <!-- IMPORTANT INFO -->
+
         <div class="mt-4 p-4 bg-white rounded-4 shadow-sm border"
              style="border-left:4px solid #c2c2c2;">
             <h6 class="fw-semibold mb-3">IMPORTANT INFORMATION</h6>
@@ -684,8 +574,8 @@ function getDetails(booking) {
     </div>
     `;
 
-    $('#ticketContent').html(html);
-}
+          $('#ticketContent').html(html);
+      }
 
 
 
@@ -699,5 +589,31 @@ function getDetails(booking) {
 
           location.reload();
       }
+
+      $(document).on('click', '.generate-ticket', function() {
+
+          const payload = $(this).data('payload');
+          let journeyType = $(this).data('journeytype');
+
+          swal({
+              title: "Generate Ticket?",
+              html: `
+            <p>Are you sure you want to generate the ticket?</p>
+            <small class="text-muted">Once generated, it cannot be reversed.</small>
+        `,
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonText: "Yes, Generate",
+              cancelButtonText: "Cancel",
+              allowOutsideClick: false,
+              allowEscapeKey: false
+          }).then((result) => {
+              if (result.value || result === true) {
+                  ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
+                      '2', 'table');
+              }
+          });
+
+      });
   </script>
 <?php /**PATH D:\wampp\www\b2btraveller\resources\views/flight/booking-table.blade.php ENDPATH**/ ?>
