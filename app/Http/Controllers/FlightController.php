@@ -66,7 +66,7 @@ class FlightController extends Controller
         $service = new FlightService();
         $response = $service->getDetailsFlight($booking);
       
-        return response()->json($booking);
+        return response()->json($response);
     }
 
     public function bookingList(Request $request)
