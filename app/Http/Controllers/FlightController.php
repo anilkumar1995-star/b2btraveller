@@ -62,6 +62,31 @@ class FlightController extends Controller
 
     public function bookingList(Request $request)
     {
+         if (\Myhelper::hasRole('admin')) {
+            $data['totallcc'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc','true')->sum('total_amount');
+            $data['totallccCount'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc','true')->count();
+
+            $data['totalnonlcc'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc','false')->sum('total_amount');
+            $data['totalnonlccCount'] = DB::table('bookings')->where('payment_status', 'success')->where('is_lcc','false')->count();
+            $data['totaloneway'] = DB::table('bookings')->where('payment_status', 'success')->where('journey_type','true')->sum('total_amount');
+            $data['totalonewayCount'] = DB::table('bookings')->where('payment_status', 'success')->where('journey_type','true')->count();
+
+            $data['totalroundtrip'] = DB::table('bookings')->where('payment_status', 'success')->where('journey_type','false')->sum('total_amount');
+            $data['totalroundtripCount'] = DB::table('bookings')->where('payment_status', 'success')->where('journey_type','false')->count();
+        } else {
+            $data['totallcc'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc','true')->sum('total_amount');
+            $data['totallccCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc','true')->count();
+             $data['totalnonlcc'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc','false')->sum('total_amount');
+             $data['totalnonlccCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('is_lcc','false')->count();
+
+            $data['totaloneway'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('journey_type','true')->sum('total_amount');
+            $data['totalonewayCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('journey_type','true')->count();
+
+            $data['totalroundtrip'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('journey_type','false')->sum('total_amount');
+            $data['totalroundtripCount'] = DB::table('bookings')->where('user_id', auth()->id())->where('payment_status', 'success')->where('journey_type','false')->count();
+
+        }
+        // dd($data);
         $userId = \Auth::user()->id;
 
         $bookings = DB::table('bookings')
