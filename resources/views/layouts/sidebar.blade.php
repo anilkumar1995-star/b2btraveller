@@ -58,6 +58,11 @@
                         <div data-i18n="Booking List">Booking List</div>
                     </a>
                 </li>
+                <li class="menu-item {{ Request::is('flight/booking-list-failed') ? 'active' : '' }}">
+                    <a href="{{ url('flight/booking-list-failed') }}" class="menu-link">
+                        <div data-i18n="Failed List">Failed List</div>
+                    </a>
+                </li>
             </ul>
         </li>
 
@@ -165,7 +170,8 @@
 
             </ul>
         </li>
-        @endif
+        @endif            
+
 
         <li class="menu-item {{ Request::is('profile/*') ? 'active open' : '' }}">
             <a href="#accountSetting" class="menu-link menu-toggle">
@@ -180,5 +186,20 @@
                 </li>
             </ul>
         </li>
+         @if (Myhelper::hasRole('admin'))
+            <li class="menu-item {{ Request::is('api/*') ? 'active open' : '' }}">
+            <a href="#apilog" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-activity"></i>
+                <div data-i18n="API Log">API Logs</div>
+            </a>
+            <ul class="menu-sub {{ Request::is('api/*') ? 'show' : '' }}" id="apilog">
+                <li class="menu-item {{ Request::is('api/log') ? 'active' : '' }}">
+                    <a href="{{ route('apilog') }}" class="menu-link">
+                        <div data-i18n="Api Log">Api Logs</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+        @endif
     </ul>
 </aside>

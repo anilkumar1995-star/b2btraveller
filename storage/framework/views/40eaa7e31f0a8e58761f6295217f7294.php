@@ -9,13 +9,29 @@
 
     <!-- Enhanced Vuexy-style Travel Dashboard Body with Banner, Better Cards, Clean Layout -->
 
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="row mb-2 justify-content-end">
+                <div class="col-auto">
+                    <div id="reportrange"
+                        class="d-inline-flex align-items-center gap-1 border rounded px-2 py-1 bg-white cursor-pointer">
+                        <i class="fa fa-calendar"></i>&nbsp;
+                        <span></span> <i class="fa fa-caret-down"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Hero Banner -->
     <div class="banner mb-4 p-4 rounded-4 text-white rounded"
         style="background: linear-gradient(135deg, #6366f1, #3b82f6); box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
         <div class="d-flex justify-content-between align-items-center">
             <div>
                 <h2 class="fw-bold mb-1 text-white">Welcome Back, <?php echo e(Auth::user()->name); ?> 🏆</h2>
-                <p class="mb-0 text-white">Effortlessly plan, track, and manage your travel bookings with complete control.</p>
+                <p class="mb-0 text-white">Effortlessly plan, track, and manage your travel bookings with complete
+                    control.
+                </p>
             </div>
             <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" width="80" />
         </div>
@@ -23,25 +39,42 @@
 
     <div class="content-wrapper">
         <!-- Content -->
-        <div class="row">
+        <div class="row g-2">
             <!-- Card Border Shadow -->
             <div class="col-lg-3 col-sm-6">
                 <div class="card card-border-shadow-primary h-100">
                     <div class="card-body">
+
                         <div class="d-flex align-items-center mb-2">
-                            <div class="avatar me-4">
-                                <span class="avatar-initial rounded bg-label-primary"><i class="ti ti-plane"></i></span>
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-primary">
+                                    <i class="ti ti-plane"></i>
+                                </span>
                             </div>
-                            <h4 class="mb-0">0</h4>
+
+                            <h4 class="mb-0" id="total_booking_amount">
+                                ₹0
+                            </h4>
                         </div>
-                        <p class="mb-1">Today's Bookings</p>
-                        <p class="mb-0">
-                            <span class="text-heading fw-medium me-2">+0%</span>
-                            <small class="text-body-secondary">than last week</small>
+
+                        <p class="mb-1 fw-medium">
+                            Confirmed booking value
                         </p>
+
+                        <p class="mb-0">
+                            <span class="text-heading fw-bold me-1" id="booking_count">
+                                0
+                            </span>
+                            <small class="text-body-secondary">
+                                Total Travel Bookings
+
+                            </small>
+                        </p>
+
                     </div>
                 </div>
             </div>
+
             <div class="col-lg-3 col-sm-6">
                 <div class="card card-border-shadow-warning h-100">
                     <div class="card-body">
@@ -83,7 +116,7 @@
                             <div class="avatar me-4">
                                 <span class="avatar-initial rounded bg-label-info">₹</span>
                             </div>
-                            <h4 class="mb-0">0</h4>
+                            <h4 class="mb-0" id="total_revenue_amount"></h4>
                         </div>
                         <p class="mb-1">Total Revenue</p>
                         <p class="mb-0">
@@ -107,75 +140,78 @@
 
             <!-- Left side section -->
             <div class="col-lg-7">
-
                 <!-- Revenue Chart Box -->
                 <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-2">
                         <h5 class="fw-bold">Revenue Overview</h5>
-                        <span class="text-muted small">Last 30 days</span>
+
                     </div>
-                    <div
-                        style="height:270px; background:#f8faff; border-radius:12px; display:flex; align-items:center; justify-content:center; color:#9ca3af;">
-                        <img src="https://quickchart.io/chart?c={type:'bar',data:{labels:['Week 1','Week 2','Week 3','Week 4'],datasets:[{label:'Revenue',data:[40,55,32,70]}]}}"
-                            style="max-width:100%; height:100%; object-fit:contain; opacity:0.9;" />
+
+                    <div class="d-flex align-items-center justify-content-center"
+                        style="height:270px; background:#f8faff; border-radius:12px;">
+
+                        <img id="revenueChart" style="max-width:100%; height:100%; object-fit:contain; display:none;" />
+
+                        <div id="noRevenueData" class="text-center text-muted">
+                            <i class="bi bi-bar-chart" style="font-size:32px;"></i>
+                            <p class="mt-2 mb-0 fw-semibold">No revenue data available</p>
+                            <small>Selected date range has no bookings</small>
+                        </div>
+
                     </div>
                 </div>
+
+
 
             </div>
 
             <!-- Right Section -->
             <div class="col-lg-5">
 
-                <!-- Recent Bookings -->
                 <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
-                    <h5 class="fw-bold mb-4">Recent Bookings</h5>
+                    <h5 class="fw-bold mb-4">All Recent Bookings</h5>
+
                     <div class="list-group">
-                        <div class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong>Shivani P.</strong> | 🏨
-                                    <small class="text-muted">GOA • Hotel • 22 Dec</small>
+                        <?php $__empty_1 = true; $__currentLoopData = $recentBookings; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $booking): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                            <div class="list-group-item border-0 px-0">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong><?php echo e($booking->user_name); ?></strong>
+                                        |
+                                        ✈️
+                                        <small class="text-muted">
+                                            <?php echo e($booking->origin); ?>
+
+                                            →
+                                            <?php echo e($booking->destination); ?>
+
+                                            •
+                                            <?php echo e(\Carbon\Carbon::parse($booking->journey_date)->format('d M')); ?>
+
+                                        </small>
+                                    </div>
+
+                                    <?php if($booking->payment_status == 'success'): ?>
+                                        <span class="badge bg-success">Confirmed</span>
+                                    <?php elseif($booking->payment_status == 'pending'): ?>
+                                        <span class="badge bg-warning">Pending</span>
+                                    <?php else: ?>
+                                        <span class="badge bg-danger">Cancelled</span>
+                                    <?php endif; ?>
                                 </div>
-                                <span class="badge bg-success">Confirmed</span>
                             </div>
 
-
-                        </div>
-                        <hr />
-                        <div class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong>Asha R.</strong> | 🏨
-                                    <small class="text-muted">GOA • Hotel • 22 Dec</small>
-                                </div>
-                                <span class="badge bg-success">Confirmed</span>
-                            </div>
-                        </div>
-                        <hr />
-                        <div class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong>Vikram P.</strong> | ✈️
-                                    <small class="text-muted">MUM • Flight • 14 Dec</small>
-                                </div>
-                                <span class="badge bg-warning">Pending</span>
-                            </div>
-                        </div>
-                        <hr />
-                        <div class="list-group-item border-0 px-0">
-                            <div class="d-flex justify-content-between">
-                                <div>
-                                    <strong>Neha S.</strong> | 🚌
-                                    <small class="text-muted">DEL • Bus • 16 Dec</small>
-                                </div>
-                                <span class="badge bg-danger">Cancelled</span>
-                            </div>
-                        </div>
+                            <?php if(!$loop->last): ?>
+                                <hr />
+                            <?php endif; ?>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                            <p class="text-muted text-center mb-0">
+                                No recent bookings found
+                            </p>
+                        <?php endif; ?>
                     </div>
                 </div>
 
-                <!-- Activity Log -->
-                
 
             </div>
 
@@ -214,7 +250,7 @@
 
         .booking-slide {
             position: absolute;
-            right: 70px;
+            right: 55px;
             top: 50%;
             transform: translateY(-50%) translateX(20px);
             width: 230px;
@@ -306,31 +342,6 @@
 
     <script>
         $(document).ready(function() {
-
-            // $("#generateUrlBtn").click(function() {
-
-            //     $.ajax({
-            //         url: "traveller-generate-url",
-            //         method: "GET",
-
-            //         success: function(res) {
-            //             console.log(res);
-            //             if (res.status) {
-
-            //                 notify("URL generated successfully!", 'success');
-            //                 window.open(res.url, '_blank');
-            //             } else {
-            //                 notify("Failed to generate URL.", 'warning');
-            //             }
-            //         },
-
-            //         error: function(xhr) {
-            //             notify("An error occurred while generating the URL.", 'error');
-            //         }
-            //     });
-
-            // });
-
             <?php if(Myhelper::hasNotRole('admin') && Auth::user()->resetpwd == 'default'): ?>
                 $('#pwdModal').modal('show');
             <?php endif; ?>
@@ -406,7 +417,142 @@
                     });
                 }
             });
+
+            const getDashboardData = (start, end) => {
+
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+                $.ajax({
+                    url: "<?php echo e(route('home')); ?>",
+                    type: "POST",
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    data: {
+                        fromDate: start?.format('YYYY-MM-DD') || '',
+                        toDate: end.format('YYYY-MM-DD') || '',
+                    },
+                    beforeSend: function() {
+                        swal({
+                            title: 'Wait!',
+                            text: 'We are processing your request.',
+                            allowOutsideClick: () => !swal.isLoading(),
+                            onOpen: () => {
+                                swal.showLoading()
+                            }
+                        });
+                    },
+                    complete: function() {
+                        swal.close();
+                    },
+                    success: function(resp) {
+                        swal.close();
+                        $('#total_revenue_amount').html(parseFloat(resp.totalRevenueAmount)
+                            .toLocaleString('en-IN', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }));
+                        $('#total_booking_amount').html('₹' + parseFloat(resp.bookingSuccessAmount)
+                            .toLocaleString('en-IN', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2
+                            }));
+                        $('#booking_count').html(resp.bookingCount);
+                        // $('#revenueDateRange').html(resp.fromDate + '<b> to </b>' + resp.toDate);
+                        updateRevenueChart(resp.revenueLabels, resp.revenueValues);
+
+                    },
+                    error: function(xhr, status, error) {
+                        swal.close();
+                        notify('Something went wrong', 'danger');
+                    }
+                });
+
+            }
+
+            $(function() {
+
+                var start = moment();
+                var end = moment();
+
+                $('#reportrange').daterangepicker({
+                    startDate: start,
+                    endDate: end,
+                    ranges: {
+                        'Today': [moment(), moment()],
+                        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                        'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                        'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                        'This Month': [moment().startOf('month'), moment().endOf('month')],
+                        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment()
+                            .subtract(1, 'month').endOf('month')
+                        ]
+                    }
+                }, getDashboardData);
+
+                getDashboardData(start, end);
+
+            });
         });
+
+        function updateRevenueChart(labels, values) {
+
+            if (!values || values.length === 0) {
+                $('#revenueChart').hide();
+                $('#noRevenueData').show();
+                return;
+            }
+
+            $('#noRevenueData').hide();
+            $('#revenueChart').show();
+
+            var chartConfig = {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue',
+                        data: values.map(v => Number(v)),
+                        backgroundColor: '#6366f1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    interaction: {
+                        mode: 'nearest',
+                        intersect: true
+                    },
+                    plugins: {
+                        legend: {
+                            display: true
+                        },
+                        tooltip: {
+                            enabled: true,
+                            callbacks: {
+                                title: function(context) {
+                                    return context[0].label;
+                                },
+                                label: function(context) {
+                                    return '₹ ' + context.raw;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: function(value) {
+                                    return '₹' + value;
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            var url = "https://quickchart.io/chart?c=" + encodeURIComponent(JSON.stringify(chartConfig));
+            $('#revenueChart').attr('src', url);
+        }
     </script>
 <?php $__env->stopPush(); ?>
 

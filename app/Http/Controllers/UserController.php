@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\AndroidCommonHelper;
+use App\Helpers\AndroidComonHelper;
 use App\Helpers\ResponseHelper;
 use Illuminate\Http\Request;
 use App\User;
@@ -88,8 +89,8 @@ class UserController extends Controller
     public function login(Request $post)
     {
 
-        if (!empty($request['g-recaptcha-response'])) {
-            $Response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . env('re_Captcha_SecretKey') . "&response={$request['g-recaptcha-response']}");
+        if (!empty($post['g-recaptcha-response'])) {
+            $Response = file_get_contents("https://www.google.com/recaptcha/api/siteverify?secret=" . env('re_Captcha_SecretKey') . "&response={$post['g-recaptcha-response']}");
             $Return = json_decode($Response);
             if ($Return->success == false) {
                 return response()->json(['status' => "Your are a robot"], 400);
@@ -280,7 +281,6 @@ class UserController extends Controller
 
             $arr = ["mobile" => $post->mobile, "var2" => $otp];
             $sms = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
-
             try {
                 $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Reset TPIN"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Reset TPIN");
             } catch (\Exception $e) {
@@ -561,7 +561,37 @@ class UserController extends Controller
                 }
                 \DB::table('user_permissions')->insert($inserts);
             }
+                $otpmailid   = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
+                    $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
 
+                    $mailData = [
+                        'name'     => $response->name,
+                        'username' => $response->mobile,   
+                        'mydata'   => [
+                            'company' => $response->company,
+                            'supportnumber' => $response->company->supportnumber ?? ''
+                        ]
+                    ];
+
+                    try {
+                        $mail = \Myhelper::mail(
+                            'mail.member',           
+                            $mailData,
+                            $response->email,
+                            $response->name,
+                            $otpmailid->value,
+                            $otpmailname->value,
+                            'Account Created Successfully'
+                        );
+                    } catch (\Exception $e) {
+                        $mail = "fail";
+                    }
+
+                    $arr = [
+                        "mobile" => $post->mobile,
+                        "var2"   => $post->mobile,
+                        "var3"   => $post->mobile
+                    ];
             $arr = ["mobile" => $post->mobile, "var2" => $post->mobile, "var3" => $post->mobile];
             $sms = AndroidCommonHelper::sendEmailAndOtp("activateAccount", $arr);
 

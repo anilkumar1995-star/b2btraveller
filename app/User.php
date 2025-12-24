@@ -37,7 +37,7 @@ class User extends Authenticatable
      *
      * @var array
      */
-    protected $fillable = ['agentcode', 'name', 'email', 'mobile', 'password', 'remember_token', 'nsdlwallet','otpdate', 'lockedamount', 'cclockedamount', 'aepslockedamount', 'role_id', 'parent_id', 'company_id', 'scheme_id', 'status', 'address', 'shopname', 'gstin', 'city', 'state', 'pincode', 'pancard', 'aadharcard', 'pancardpic', 'aadharcardpic','aadharcardbackpic','gstpic', 'profile', 'kyc', 'callbackurl', 'remark', 'resetpwd', 'otpverify', 'otpresend', 'account', 'bank', 'ifsc', 'bene_id1', 'apptoken', 'agntpic', 'signature', 'shop_photo', 'livepic'];
+    protected $fillable = ['agentcode', 'name', 'email', 'mobile','gender','mpin', 'password', 'remember_token', 'nsdlwallet','otpdate', 'lockedamount', 'cclockedamount', 'aepslockedamount', 'role_id', 'parent_id', 'company_id', 'scheme_id', 'status', 'address', 'shopname', 'gstin', 'city', 'state', 'pincode', 'pancard', 'aadharcard', 'pancardpic', 'aadharcardpic','aadharcardbackpic','gstpic', 'profile', 'kyc', 'callbackurl', 'remark', 'resetpwd', 'otpverify', 'otpresend', 'account', 'bank', 'ifsc', 'bene_id1', 'apptoken', 'agntpic', 'signature' , 	'shop_photo' , 	'livepic'];
 
     /**
      * The attributes that should be hidden for arrays.

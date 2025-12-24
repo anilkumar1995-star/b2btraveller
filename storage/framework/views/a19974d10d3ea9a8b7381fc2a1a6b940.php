@@ -146,3 +146,4 @@ If you have any questions about this Privacy Policy, You can contact us:
 By visiting this page on our website: sahajmoney.org
 
 By mail: support@sahajmoney.org
+<?php /**PATH D:\wampp\www\b2btraveller\resources\views/privecy-policy.blade.php ENDPATH**/ ?>
