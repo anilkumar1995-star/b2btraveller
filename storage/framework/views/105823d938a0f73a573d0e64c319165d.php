@@ -230,7 +230,8 @@
                                       </li>
                                       <li>
                                           <a class="dropdown-item cancel-flight" href="javascript:void(0)"
-                                              data-bookingidcancel="<?php echo e($b->booking_id_api); ?>">
+                                              data-bookingidcancel="<?php echo e($b->booking_id_api); ?>"
+                                              data-ticketstatus="<?php echo e($b->ticket_status); ?>">
                                               ✈️ Cancel Flight
                                           </a>
                                       </li>
@@ -509,7 +510,7 @@
                 <div class="bg-white p-4 rounded shadow-sm">
 
                     <div class="d-flex justify-content-between mb-4">
-                    <img src="/images/logo.png" style="height:58px;">
+                    <img src="<?php echo e(asset('images/logo.png')); ?>" style="height:58px;">
                     <div class="text-end">
                         <div class="fw-bold">Flight Ticket (${booking.JourneyType == '1' ? 'One-way' : 'Roundtrip'})</div>
                         <div>
@@ -585,29 +586,29 @@
                         </div>
 
                         ${passengers.map((p, index) => `
-                                                            <div class="passenger-card">
+                                                                  <div class="passenger-card">
 
-                                                                <div class="row align-items-center mb-2">
-                                                                    <div class="col-8 passenger-name">
-                                                                        ${p.Title} ${p.FirstName} ${p.LastName}
-                                                                        ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
-                                                                    </div>
+                                                                      <div class="row align-items-center mb-2">
+                                                                          <div class="col-8 passenger-name">
+                                                                              ${p.Title} ${p.FirstName} ${p.LastName}
+                                                                              ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
+                                                                          </div>
 
-                                                                    <div class="col-4 text-end passenger-pnr">
-                                                                        E-Ticket: ${booking.PNR || '-'}
-                                                                    </div>
-                                                                </div>
+                                                                          <div class="col-4 text-end passenger-pnr">
+                                                                              E-Ticket: ${booking.PNR || '-'}
+                                                                          </div>
+                                                                      </div>
 
-                                                                <div class="row text-muted mb-2">
-                                                                    <div class="col-4"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
-                                                                    <div class="col-4"><b>Gender:</b> ${p.Gender == 1 ? 'Male' : 'Female'}</div>
-                                                                    <div class="col-4"><b>Nationality:</b> ${p.Nationality}</div>
-                                                                </div>
+                                                                      <div class="row text-muted mb-2">
+                                                                          <div class="col-4"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
+                                                                          <div class="col-4"><b>Gender:</b> ${p.Gender == 1 ? 'Male' : 'Female'}</div>
+                                                                          <div class="col-4"><b>Nationality:</b> ${p.Nationality}</div>
+                                                                      </div>
 
-                                                                <div class="seat-box">
-                                                                    <div class="seat-title">Seat Details</div>
-                                                                    ${
-                                                                        p.SeatDynamic?.map(s => `
+                                                                      <div class="seat-box">
+                                                                          <div class="seat-title">Seat Details</div>
+                                                                          ${
+                                                                              p.SeatDynamic?.map(s => `
                                                     <div class="seat-row">
                                                         <span>${s.Origin} → ${s.Destination}</span>
                                                         <span class="seat-code">${s.Code}</span>
@@ -615,35 +616,35 @@
                                                         <span>₹${s.Price}</span>
                                                     </div>
                                                 `).join('') || '<div class="seat-row">No seat selected</div>'
-                                                                    }
-                                                                </div>
+                                                                          }
+                                                                      </div>
 
-                                                                <div class="ssr-box mt-3">
-                                                                        <div class="seat-title">Special Service Requests (SSR)</div>
-                                                                        ${renderSSR(p.Ssr)}
-                                                                    </div>
+                                                                      <div class="ssr-box mt-3">
+                                                                              <div class="seat-title">Special Service Requests (SSR)</div>
+                                                                              ${renderSSR(p.Ssr)}
+                                                                          </div>
 
-                                                                <div class="fare-box">
-                                                                    <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
-                                                                    <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
-                                                                    <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
-                                                                    <div class="fare-total">
-                                                                        Total: ₹${p.Fare.PublishedFare}
-                                                                    </div>
-                                                                </div>
+                                                                      <div class="fare-box">
+                                                                          <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
+                                                                          <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
+                                                                          <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
+                                                                          <div class="fare-total">
+                                                                              Total: ₹${p.Fare.PublishedFare}
+                                                                          </div>
+                                                                      </div>
 
-                                                                <div class="contact-box">
-                                                                    <div><b>Mobile:</b> ${p.ContactNo}</div>
-                                                                    <div><b>Email:</b> ${p.Email}</div>
-                                                                    <div><b>City:</b> ${p.City}, ${p.CountryCode}</div>
-                                                                </div>
+                                                                      <div class="contact-box">
+                                                                          <div><b>Mobile:</b> ${p.ContactNo}</div>
+                                                                          <div><b>Email:</b> ${p.Email}</div>
+                                                                          <div><b>City:</b> ${p.City}, ${p.CountryCode}</div>
+                                                                      </div>
 
-                                                                <div class="barcode text-center mt-3">
-                                                                    <canvas id="barcodeCanvas${index}"></canvas>
-                                                                </div>
+                                                                      <div class="barcode text-center mt-3">
+                                                                          <canvas id="barcodeCanvas${index}"></canvas>
+                                                                      </div>
 
-                                                            </div>
-                                                            `).join('')
+                                                                  </div>
+                                                                  `).join('')
                     }
                 </div>
                     <div class="mt-4 p-3 bg-white rounded text-end">
@@ -750,10 +751,10 @@
                 <div class="rticket-route mt-4">
                     <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
                         <div class="fw-semibold ">
-                            <img src="/images/restricted/digiyatra.png" style="height:20px;" class="me-2">
+                            <img src="<?php echo e(asset('images/restricted/digiyatra.png')); ?>" style="height:20px;" class="me-2">
                             DIGI YATRA
                         </div>
-                        <img src="/images/restricted/digiyatra2.jpeg" style="height:30px;">
+                        <img src="<?php echo e(asset('images/restricted/digiyatra2.jpeg')); ?>" style="height:30px;">
                     </div>
                     <div class="p-3" style="background:#e8ffec; font-size:14px;">
                         <div class="fw-semibold mb-2">Avoid Long Queues at the Airport with DigiYatra</div>
@@ -861,6 +862,19 @@
       $(document).on('click', '.cancel-flight', function() {
 
           const bookingId = $(this).data('bookingidcancel');
+          const ticketStatus = $(this).data('ticketstatus');
+
+          if (ticketStatus !== 'confirmed') {
+              swal({
+                  title: 'Ticket Not Confirmed',
+                  text: 'Please Generate the ticket before cancellation.',
+                  type: 'warning',
+                  confirmButtonText: 'OK',
+                  allowOutsideClick: false,
+                  allowEscapeKey: false
+              });
+              return;
+          }
 
           const encoded = btoa(JSON.stringify(bookingId));
           swal({

@@ -32,7 +32,7 @@
 
                     <div class="col-md-6 h-100">
                         <?php $__currentLoopData = $finalDet['Passenger']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                        <?php dd($p['Ticket']['TicketId']); ?>;
+                 
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" name="ticket_ids[]"
                                     value="<?php echo e($p['Ticket']['TicketId']); ?>" checked required>
