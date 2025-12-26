@@ -207,7 +207,8 @@
 
                                       @if ($b->is_lcc !== 'true' && $b->ticket_status === 'pending')
                                           <li>
-                                              <a class="dropdown-item  generate-ticket" href="javascript:void(0)"
+                                              {{-- <a class="dropdown-item  generate-ticket" href="javascript:void(0)" --}}
+                                              <a class="dropdown-item" href="javascript:void(0)"
                                                   data-id="{{ $b->id }}"
                                                   data-journeytype = "{{ $b->journey_type }}"
                                                   data-payload='@json(json_decode($b->raw_payload))'>
