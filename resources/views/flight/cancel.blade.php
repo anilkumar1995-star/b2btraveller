@@ -28,6 +28,7 @@
                 <h6>Select Passengers</h6>
                 <div class="row">
 
+
                     <div class="col-md-6 h-100">
                         @foreach ($finalDet['Passenger'] as $p)
                             <div class="form-check mb-2">
