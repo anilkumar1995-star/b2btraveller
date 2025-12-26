@@ -53,6 +53,8 @@ class FlightService
             return $this->baseUrl . '/v1/service/traveller/flight/ticket/llc';
         } else if ($method == 'bookingDetails') {
             return $this->baseUrl . '/v1/service/traveller/flight/booking/details';
+        } else if ($method == 'cancelFlight') {
+            return $this->baseUrl . '/v1/service/traveller/flight/booking/cancel';
         }
         return "";
     }
@@ -426,6 +428,54 @@ class FlightService
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
                     'message' => $response['message'] ?? 'Booking Details get failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
+    }
+
+    public function cancelflight($data)
+    {
+        try {
+            $token = $this->authService->getToken();
+
+            $payload = [
+                "EndUserIp" => $this->ip,
+                "TokenId" => $token,
+                "BookingId" => $data['payload']['BookingId'],
+                "RequestType" => $data['payload']['RequestType'],
+                "CancellationType" => $data['payload']['CancellationType'],
+                "Sectors" => $data['payload']['Sectors'][0],
+                "TicketId" => $data['payload']['TicketId'],
+                "Remarks" => $data['payload']['Remarks']
+            ];
+
+            $url = $this->setFullUrl('cancelFlight');
+
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = StaticResponseHelper::bookingdetStaticResponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "booking_details", "");
+                $response = $response['response'];
+            }
+
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
+
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Flight Cancellation successfully", 'data' => $response['data']];
+            } else {
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Flight Cancellation failed'
                 ];
             }
         } catch (Exception $e) {

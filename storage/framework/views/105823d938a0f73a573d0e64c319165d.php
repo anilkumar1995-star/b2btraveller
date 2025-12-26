@@ -230,7 +230,7 @@
                                       </li>
                                       <li>
                                           <a class="dropdown-item cancel-flight" href="javascript:void(0)"
-                                              data-id="<?php echo e($b->id); ?>">
+                                              data-bookingidcancel="<?php echo e($b->booking_id_api); ?>">
                                               ✈️ Cancel Flight
                                           </a>
                                       </li>
@@ -403,8 +403,6 @@
           font-size: 15px;
       }
   </style>
-
-  
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
 
@@ -587,29 +585,29 @@
                         </div>
 
                         ${passengers.map((p, index) => `
-                                                    <div class="passenger-card">
+                                                            <div class="passenger-card">
 
-                                                        <div class="row align-items-center mb-2">
-                                                            <div class="col-8 passenger-name">
-                                                                ${p.Title} ${p.FirstName} ${p.LastName}
-                                                                ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
-                                                            </div>
+                                                                <div class="row align-items-center mb-2">
+                                                                    <div class="col-8 passenger-name">
+                                                                        ${p.Title} ${p.FirstName} ${p.LastName}
+                                                                        ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
+                                                                    </div>
 
-                                                            <div class="col-4 text-end passenger-pnr">
-                                                                E-Ticket: ${booking.PNR || '-'}
-                                                            </div>
-                                                        </div>
+                                                                    <div class="col-4 text-end passenger-pnr">
+                                                                        E-Ticket: ${booking.PNR || '-'}
+                                                                    </div>
+                                                                </div>
 
-                                                        <div class="row text-muted mb-2">
-                                                            <div class="col-4"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
-                                                            <div class="col-4"><b>Gender:</b> ${p.Gender == 1 ? 'Male' : 'Female'}</div>
-                                                            <div class="col-4"><b>Nationality:</b> ${p.Nationality}</div>
-                                                        </div>
+                                                                <div class="row text-muted mb-2">
+                                                                    <div class="col-4"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
+                                                                    <div class="col-4"><b>Gender:</b> ${p.Gender == 1 ? 'Male' : 'Female'}</div>
+                                                                    <div class="col-4"><b>Nationality:</b> ${p.Nationality}</div>
+                                                                </div>
 
-                                                        <div class="seat-box">
-                                                            <div class="seat-title">Seat Details</div>
-                                                            ${
-                                                                p.SeatDynamic?.map(s => `
+                                                                <div class="seat-box">
+                                                                    <div class="seat-title">Seat Details</div>
+                                                                    ${
+                                                                        p.SeatDynamic?.map(s => `
                                                     <div class="seat-row">
                                                         <span>${s.Origin} → ${s.Destination}</span>
                                                         <span class="seat-code">${s.Code}</span>
@@ -617,35 +615,35 @@
                                                         <span>₹${s.Price}</span>
                                                     </div>
                                                 `).join('') || '<div class="seat-row">No seat selected</div>'
-                                                            }
-                                                        </div>
+                                                                    }
+                                                                </div>
 
-                                                        <div class="ssr-box mt-3">
-                                                                <div class="seat-title">Special Service Requests (SSR)</div>
-                                                                ${renderSSR(p.Ssr)}
+                                                                <div class="ssr-box mt-3">
+                                                                        <div class="seat-title">Special Service Requests (SSR)</div>
+                                                                        ${renderSSR(p.Ssr)}
+                                                                    </div>
+
+                                                                <div class="fare-box">
+                                                                    <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
+                                                                    <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
+                                                                    <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
+                                                                    <div class="fare-total">
+                                                                        Total: ₹${p.Fare.PublishedFare}
+                                                                    </div>
+                                                                </div>
+
+                                                                <div class="contact-box">
+                                                                    <div><b>Mobile:</b> ${p.ContactNo}</div>
+                                                                    <div><b>Email:</b> ${p.Email}</div>
+                                                                    <div><b>City:</b> ${p.City}, ${p.CountryCode}</div>
+                                                                </div>
+
+                                                                <div class="barcode text-center mt-3">
+                                                                    <canvas id="barcodeCanvas${index}"></canvas>
+                                                                </div>
+
                                                             </div>
-
-                                                        <div class="fare-box">
-                                                            <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
-                                                            <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
-                                                            <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
-                                                            <div class="fare-total">
-                                                                Total: ₹${p.Fare.PublishedFare}
-                                                            </div>
-                                                        </div>
-
-                                                        <div class="contact-box">
-                                                            <div><b>Mobile:</b> ${p.ContactNo}</div>
-                                                            <div><b>Email:</b> ${p.Email}</div>
-                                                            <div><b>City:</b> ${p.City}, ${p.CountryCode}</div>
-                                                        </div>
-
-                                                        <div class="barcode text-center mt-3">
-                                                            <canvas id="barcodeCanvas${index}"></canvas>
-                                                        </div>
-
-                                                    </div>
-                                                    `).join('')
+                                                            `).join('')
                     }
                 </div>
                     <div class="mt-4 p-3 bg-white rounded text-end">
@@ -854,6 +852,29 @@
               if (result.value || result === true) {
                   ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
                       '2', 'table');
+              }
+          });
+
+      });
+
+
+      $(document).on('click', '.cancel-flight', function() {
+
+          const bookingId = $(this).data('bookingidcancel');
+
+          const encoded = btoa(JSON.stringify(bookingId));
+          swal({
+              title: 'Cancel this flight?',
+              text: 'Cancellation charges may apply.',
+              type: 'warning',
+              showCancelButton: true,
+              confirmButtonText: 'Yes, Cancel Flight',
+              allowOutsideClick: false,
+              allowEscapeKey: false,
+              cancelButtonText: 'No',
+          }).then((result) => {
+              if (result.value) {
+                  window.location.href = `/flight/cancel/${encoded}`;
               }
           });
 
