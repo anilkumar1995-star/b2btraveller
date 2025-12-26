@@ -73,7 +73,7 @@
                             </div>
                             <span class="mb-1 fw-bold">Roundtrip LCC Bookings</span>
                             <p class="mb-0">
-                                <span class="text-heading fw-bold me-1" id="booking_count"> <?php echo e($totalroundtriplcc ?? 0); ?> </span>
+                                <span class="text-heading fw-bold me-1" id="booking_count"> <?php echo e($totalroundtriplccCount ?? 0); ?> </span>
                                 <span class="text-body-secondary">Counts</span>
                             </p>
                         </div>

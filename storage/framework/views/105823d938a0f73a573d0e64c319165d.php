@@ -840,16 +840,16 @@
           swal({
               title: "Generate Ticket?",
               html: `
-            <p>Are you sure you want to generate the ticket?</p>
-            <small class="text-muted">Once generated, it cannot be reversed.</small>
-        `,
-              type: "warning",
-              showCancelButton: true,
-              confirmButtonText: "Yes, Generate",
-              cancelButtonText: "Cancel",
-              allowOutsideClick: false,
-              allowEscapeKey: false
-          }).then((result) => {
+                <p>Are you sure you want to generate the ticket?</p>
+                <small class="text-muted">Once generated, it cannot be reversed.</small>
+            `,
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Generate",
+                cancelButtonText: "Cancel",
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            }).then((result) => {
               if (result.value || result === true) {
                   ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
                       '2', 'table');

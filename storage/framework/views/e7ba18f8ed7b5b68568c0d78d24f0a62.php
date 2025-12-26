@@ -33,7 +33,6 @@
 
                     <div class="col-md-6 h-100">
                         <?php $__currentLoopData = $finalDet['Passenger']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $p): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-                 
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" name="ticket_ids[]"
                                     value="<?php echo e($p['Ticket']['TicketId']); ?>" checked required>
@@ -190,13 +189,36 @@
                 success: function(res) {
 
                     if (res.status === 'success') {
+                        const response = res.data?.Response?.[0];
+
+                        let details = `
+                            <div class="text-ceneter">
+                                <p>
+                                    <span>Change Request ID:</span>
+                                    <strong class="text-primary">${response?.ChangeRequestId ?? '-'}</strong>
+                                </p>
+
+                                <p>
+                                    <span>Ticket ID:</span>
+                                    <strong class="text-success">${response?.TicketId ?? '-'}</strong>
+                                </p>
+
+                                <p>
+                                    <span>Status:</span>
+                                    <strong class="text-success">
+                                        ${res?.message ?? 'Successful'}
+                                    </strong>
+                                </p>
+                            </div>
+                        `;
+
                         swal({
                             type: 'success',
-                            title: 'Cancelled Successfully',
-                            text: res.message
+                            html: details,
                         }).then(() => {
                             window.location.href = '/flight/booking-list';
                         });
+
                     } else {
                         swal('Error', res.message, 'error');
                     }
