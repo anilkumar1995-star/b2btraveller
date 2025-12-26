@@ -6,11 +6,9 @@
 <?php $__env->startSection('content'); ?>
     <main>
         <section>
-
-
             <div class="row">
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card card-border-shadow-primary h-90">
+                    <div class="card border h-100">
                         <div class="card-body bg-label-success">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
@@ -25,17 +23,17 @@
 
                             </p>
                             </div>
-                            <small class="mb-1 fw-bold">Total oneway lcc bookings</small>
+                            <span class="mb-1 fw-bold">Oneway LCC Bookings</span>
                             <p class="mb-0">
                                 <span class="text-heading fw-bold me-1" id="booking_count"><?php echo e($totalonewaylccCount ?? 0); ?></span>
-                                <small class="text-body-secondary">Counts</small>
+                                <span class="text-body-secondary">Counts</span>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card shadow-sm bg-light-success h-90">
-                        <div class="card-body bg-label-info">
+                    <div class="card border h-100">
+                        <div class="card-body bg-label-primary">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
                                     <span class="avatar-initial rounded bg-label-success">
@@ -49,17 +47,17 @@
 
                               </p>
                             </div>
-                            <small class="mb-1 fw-bold">Oneway non-lcc bookings</small>
+                            <span class="mb-1 fw-bold">Total Oneway Non-LCC</span>
                             <p class="mb-0">
                                 <span class="text-heading fw-bold me-1" id="booking_count"><?php echo e($totalonewaynonlccCount ?? 0); ?></span>
-                                <small class="text-body-secondary">Counts</small>
+                                <span class="text-body-secondary">Counts</span>
                             </p>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-3 col-sm-6">
-                    <div class="card card-border-shadow-primary h-90">
-                        <div class="card-body bg-label-primary">
+                    <div class="card border h-100">
+                        <div class="card-body bg-label-danger">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
                                     <span class="avatar-initial rounded bg-label-warning">
@@ -73,17 +71,17 @@
 
                                 </p>
                             </div>
-                            <small class="mb-1 fw-bold">Round Trip lcc bookings</small>
+                            <span class="mb-1 fw-bold">Roundtrip LCC Bookings</span>
                             <p class="mb-0">
                                 <span class="text-heading fw-bold me-1" id="booking_count"> <?php echo e($totalroundtriplcc ?? 0); ?> </span>
-                                <small class="text-body-secondary">Counts</small>
+                                <span class="text-body-secondary">Counts</span>
                             </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-sm-6 mb-3">
-                    <div class="card card-border-shadow-primary h-90">
-                        <div class="card-body bg-label-danger">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card border h-100">
+                        <div class="card-body bg-label-info">
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
                                     <span class="avatar-initial rounded bg-label-warning">
@@ -97,16 +95,16 @@
 
                                 </p>
                             </div>
-                            <small class="mb-1 fw-bold">Roundtrip non-lcc bookings</small>
+                            <span class="mb-1 fw-bold">Total Roundtrip Non-LCC</span>
                             <p class="mb-0">
-                                <span class="text-heading fw-bold me-1" id="booking_count"> <?php echo e($totalroundtripnonlcc ?? 0); ?> </span>
-                                <small class="text-body-secondary fs-13">Counts</small>
+                                <span class="text-heading fw-bold me-1" id="booking_count"> <?php echo e($totalroundtripnonlccCount ?? 0); ?> </span>
+                                <span class="text-body-secondary fs-13">Counts</span>
                             </p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="card">
+            <div class="card mt-3">
                 <div class="card-header pb-0 d-flex justify-content-between mb-lg-n4 ">
                     <div class="card-title mb-5">
                         <h4 class="mb-0">
