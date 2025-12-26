@@ -394,6 +394,14 @@
           border-top: 1px dashed #e5e7eb;
           padding-top: 8px;
       }
+
+      .ssr-box {
+          background: #f8f9ff;
+          border: 1px dashed #cfd5ff;
+          padding: 12px;
+          border-radius: 8px;
+          font-size: 15px;
+      }
   </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
@@ -446,7 +454,40 @@
           });
       }
 
+      function getSsrIcon(code) {
+          switch (code) {
+              case 'SEAT':
+                  return '💺';
+              case 'MEAL':
+                  return '🍱';
+              case 'BAGGAGE':
+                  return '🧳';
+              case 'WCHR':
+                  return '♿';
+              case 'PETC':
+                  return '🐶';
+              default:
+                  return '📝';
+          }
+      }
 
+      function renderSSR(ssrList = []) {
+
+          if (!ssrList.length) {
+              return `<div class="text-muted small">No special services selected</div>`;
+          }
+
+          return ssrList.map(ssr => `
+                <div class="d-flex justify-content-between border-bottom py-1">
+                    <div>
+                        ${getSsrIcon(ssr.SsrCode)}
+                        <b>${ssr.SsrCode}</b>
+                        <div class="text-muted small">${ssr.Detail}</div>
+                    </div>
+                    <div class="fw-semibold">₹${ssr.Price || 0}</div>
+                </div>
+            `).join('');
+      }
 
       function getDetails(booking) {
 
@@ -546,60 +587,65 @@
                         </div>
 
                         ${passengers.map((p, index) => `
-                                    <div class="passenger-card">
+                                            <div class="passenger-card">
 
-                                        <div class="row align-items-center mb-2">
-                                            <div class="col-8 passenger-name">
-                                                ${p.Title} ${p.FirstName} ${p.LastName}
-                                                ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
+                                                <div class="row align-items-center mb-2">
+                                                    <div class="col-8 passenger-name">
+                                                        ${p.Title} ${p.FirstName} ${p.LastName}
+                                                        ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
+                                                    </div>
+
+                                                    <div class="col-4 text-end passenger-pnr">
+                                                        E-Ticket: ${booking.PNR || '-'}
+                                                    </div>
+                                                </div>
+
+                                                <div class="row text-muted mb-2">
+                                                    <div class="col-4"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
+                                                    <div class="col-4"><b>Gender:</b> ${p.Gender == 1 ? 'Male' : 'Female'}</div>
+                                                    <div class="col-4"><b>Nationality:</b> ${p.Nationality}</div>
+                                                </div>
+
+                                                <div class="seat-box">
+                                                    <div class="seat-title">Seat Details</div>
+                                                    ${
+                                                        p.SeatDynamic?.map(s => `
+                                                    <div class="seat-row">
+                                                        <span>${s.Origin} → ${s.Destination}</span>
+                                                        <span class="seat-code">${s.Code}</span>
+                                                        <span class="seat-type">${s.Text}</span>
+                                                        <span>₹${s.Price}</span>
+                                                    </div>
+                                                `).join('') || '<div class="seat-row">No seat selected</div>'
+                                                    }
+                                                </div>
+
+                                                <div class="ssr-box mt-3">
+                                                        <div class="seat-title">Special Service Requests (SSR)</div>
+                                                        ${renderSSR(p.Ssr)}
+                                                    </div>
+
+                                                <div class="fare-box">
+                                                    <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
+                                                    <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
+                                                    <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
+                                                    <div class="fare-total">
+                                                        Total: ₹${p.Fare.PublishedFare}
+                                                    </div>
+                                                </div>
+
+                                                <div class="contact-box">
+                                                    <div><b>Mobile:</b> ${p.ContactNo}</div>
+                                                    <div><b>Email:</b> ${p.Email}</div>
+                                                    <div><b>City:</b> ${p.City}, ${p.CountryCode}</div>
+                                                </div>
+
+                                                <div class="barcode text-center mt-3">
+                                                    <canvas id="barcodeCanvas${index}"></canvas>
+                                                </div>
+
                                             </div>
-
-                                            <div class="col-4 text-end passenger-pnr">
-                                                E-Ticket: ${booking.PNR || '-'}
-                                            </div>
-                                        </div>
-
-                                        <div class="row text-muted mb-2">
-                                            <div class="col-4"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
-                                            <div class="col-4"><b>Gender:</b> ${p.Gender == 1 ? 'Male' : 'Female'}</div>
-                                            <div class="col-4"><b>Nationality:</b> ${p.Nationality}</div>
-                                        </div>
-
-                                        <div class="seat-box">
-                                            <div class="seat-title">Seat Details</div>
-                                            ${
-                                                p.SeatDynamic?.map(s => `
-                            <div class="seat-row">
-                                <span>${s.Origin} → ${s.Destination}</span>
-                                <span class="seat-code">${s.Code}</span>
-                                <span class="seat-type">${s.Text}</span>
-                                <span>₹${s.Price}</span>
-                            </div>
-                        `).join('') || '<div class="seat-row">No seat selected</div>'
-                                            }
-                                        </div>
-
-                                        <div class="fare-box">
-                                            <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
-                                            <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
-                                            <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
-                                            <div class="fare-total">
-                                                Total: ₹${p.Fare.PublishedFare}
-                                            </div>
-                                        </div>
-
-                                        <div class="contact-box">
-                                            <div><b>Mobile:</b> ${p.ContactNo}</div>
-                                            <div><b>Email:</b> ${p.Email}</div>
-                                            <div><b>City:</b> ${p.City}, ${p.CountryCode}</div>
-                                        </div>
-
-                                        <div class="barcode text-center mt-3">
-                                            <canvas id="barcodeCanvas${index}"></canvas>
-                                        </div>
-
-                                    </div>
-                                    `).join('')
+                                            `).join('')
                     }
                 </div>
                     <div class="mt-4 p-3 bg-white rounded text-end">
@@ -610,94 +656,94 @@
 
                       <div class="ticket-route">
 
-                    <div class="row g-0">
+                            <div class="row g-0">
 
-                        <div class="col-sm-9 border-end">
+                                <div class="col-sm-9 border-end">
 
-                            <div class="p-2 px-3 fw-semibold text-white" 
-                                style="background:#d7261e; border-radius:8px 8px 0 0;">
-                                Items not allowed in the aircraft
-                            </div>
-
-                            <div class="p-3">
-                                <div class="d-flex flex-wrap gap-4">
-
-                                    <div class="text-center" style="width:100px;">
-                                        <img src="<?php echo e(asset('/images/restricted/lighter.jpeg')); ?>" style="height:50px;">
-                                        <div class="mt-1">LIGHTERS,<br>MATCHSTICKS</div>
+                                    <div class="p-2 px-3 fw-semibold text-white" 
+                                        style="background:#d7261e; border-radius:8px 8px 0 0;">
+                                        Items not allowed in the aircraft
                                     </div>
 
-                                    <div class="text-center" style="width:120px;">
-                                        <img src="<?php echo e(asset('/images/restricted/flame.jpeg')); ?>" style="height:50px;">
-                                        <div class="mt-1">FLAMMABLE<br>LIQUIDS</div>
+                                    <div class="p-3">
+                                        <div class="d-flex flex-wrap gap-4">
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="<?php echo e(asset('/images/restricted/lighter.jpeg')); ?>" style="height:50px;">
+                                                <div class="mt-1">LIGHTERS,<br>MATCHSTICKS</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:120px;">
+                                                <img src="<?php echo e(asset('/images/restricted/flame.jpeg')); ?>" style="height:50px;">
+                                                <div class="mt-1">FLAMMABLE<br>LIQUIDS</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="<?php echo e(asset('/images/restricted/toxic.png')); ?>" style="height:50px;">
+                                                <div class="mt-1">TOXIC</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="<?php echo e(asset('/images/restricted/corrosive.jpeg')); ?>" style="height:50px;">
+                                                <div class="mt-1">CORROSIVES</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="<?php echo e(asset('/images/restricted/paper.png')); ?>" style="height:50px;">
+                                                <div class="mt-1">PEPPER<br>SPRAY</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:120px;">
+                                                <img src="<?php echo e(asset('/images/restricted/gas.png')); ?>" style="height:50px;">
+                                                <div class="mt-1">FLAMMABLE<br>GAS</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="<?php echo e(asset('/images/restricted/cigrate.jpeg')); ?>" style="height:50px;">
+                                                <div class="mt-1">E-CIGARETTE</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:120px;">
+                                                <img src="<?php echo e(asset('/images/restricted/infection.png')); ?>" style="height:50px;">
+                                                <div class="mt-1">INFECTIOUS<br>SUBSTANCES</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:130px;">
+                                                <img src="<?php echo e(asset('/images/restricted/redio.jpeg')); ?>" style="height:50px;">
+                                                <div class="mt-1">RADIOACTIVE<br>MATERIALS</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:130px;">
+                                                <img src="<?php echo e(asset('/images/restricted/explosive.jpeg')); ?>" style="height:50px;">
+                                                <div class="mt-1">EXPLOSIVES<br>AMMUNITION</div>
+                                            </div>
+
+                                        </div>
                                     </div>
-
-                                    <div class="text-center" style="width:100px;">
-                                        <img src="<?php echo e(asset('/images/restricted/toxic.png')); ?>" style="height:50px;">
-                                        <div class="mt-1">TOXIC</div>
-                                    </div>
-
-                                    <div class="text-center" style="width:100px;">
-                                        <img src="<?php echo e(asset('/images/restricted/corrosive.jpeg')); ?>" style="height:50px;">
-                                        <div class="mt-1">CORROSIVES</div>
-                                    </div>
-
-                                    <div class="text-center" style="width:100px;">
-                                        <img src="<?php echo e(asset('/images/restricted/paper.png')); ?>" style="height:50px;">
-                                        <div class="mt-1">PEPPER<br>SPRAY</div>
-                                    </div>
-
-                                    <div class="text-center" style="width:120px;">
-                                        <img src="<?php echo e(asset('/images/restricted/gas.png')); ?>" style="height:50px;">
-                                        <div class="mt-1">FLAMMABLE<br>GAS</div>
-                                    </div>
-
-                                    <div class="text-center" style="width:100px;">
-                                        <img src="<?php echo e(asset('/images/restricted/cigrate.jpeg')); ?>" style="height:50px;">
-                                        <div class="mt-1">E-CIGARETTE</div>
-                                    </div>
-
-                                    <div class="text-center" style="width:120px;">
-                                        <img src="<?php echo e(asset('/images/restricted/infection.png')); ?>" style="height:50px;">
-                                        <div class="mt-1">INFECTIOUS<br>SUBSTANCES</div>
-                                    </div>
-
-                                    <div class="text-center" style="width:130px;">
-                                        <img src="<?php echo e(asset('/images/restricted/redio.jpeg')); ?>" style="height:50px;">
-                                        <div class="mt-1">RADIOACTIVE<br>MATERIALS</div>
-                                    </div>
-
-                                    <div class="text-center" style="width:130px;">
-                                        <img src="<?php echo e(asset('/images/restricted/explosive.jpeg')); ?>" style="height:50px;">
-                                        <div class="mt-1">EXPLOSIVES<br>AMMUNITION</div>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-sm-3">
-
-                            <div class="p-2 fw-semibold text-white text-center" 
-                                style="background:#f8a900; border-radius:8px 8px 0 0;">
-                                Items allowed only<br>in Hand Baggage
-                            </div>
-
-                            <div class="p-4 text-center">
-
-                                <div class="mb-4">
-                                    <img src="<?php echo e(asset('/images/restricted/lithium.png')); ?>" style="height:50px;">
-                                    <div class="mt-1">LITHIUM<br>BATTERIES</div>
                                 </div>
 
-                                <div>
-                                    <img src="<?php echo e(asset('/images/restricted/powerbank.png')); ?>" style="height:50px;">
-                                    <div class="mt-1">POWER<br>BANKS</div>
-                                </div>
+                                <div class="col-sm-3">
 
+                                    <div class="p-2 fw-semibold text-white text-center" 
+                                        style="background:#f8a900; border-radius:8px 8px 0 0;">
+                                        Items allowed only<br>in Hand Baggage
+                                    </div>
+
+                                    <div class="p-4 text-center">
+
+                                        <div class="mb-4">
+                                            <img src="<?php echo e(asset('/images/restricted/lithium.png')); ?>" style="height:50px;">
+                                            <div class="mt-1">LITHIUM<br>BATTERIES</div>
+                                        </div>
+
+                                        <div>
+                                            <img src="<?php echo e(asset('/images/restricted/powerbank.png')); ?>" style="height:50px;">
+                                            <div class="mt-1">POWER<br>BANKS</div>
+                                        </div>
+
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
                 </div>
 
