@@ -2073,7 +2073,7 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
     if (selectedFlightDetails?.IsLCC) {
         ViewTicketAjax(payload, '/flight/ticket', trip, journeyType);
     } else {
-        ViewTicketAjax(payload, '/flight/book', trip, journeyType);
+        ViewTicketAjax(payload, '/flight/book', trip, journeyType, true);
     }
 }
 
@@ -2082,7 +2082,7 @@ let bookingResult = {
     return: null
 };
 
-function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func') {
+function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callTicketAfterBook = false) {
     $('#bookingData').addClass('d-none');
     $('.preloader').removeClass('d-none');
     $.ajax({
@@ -2095,6 +2095,14 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func') {
             $('.preloader').removeClass('d-none');
         },
         success: function (response) {
+            if (callTicketAfterBook && response?.status == 'success') {
+
+                bookingResult[trip] = response;
+
+                ViewTicketAjax(payload, '/flight/ticket', trip, journeyType, $val, false);
+                return;
+            }
+
             bookingResult[trip] = response;
             checkFinalBookingStatus(trip, journeyType, $val);
         },
