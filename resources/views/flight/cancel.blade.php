@@ -31,6 +31,7 @@
 
                     <div class="col-md-6 h-100">
                         @foreach ($finalDet['Passenger'] as $p)
+                        @dd($p);
                             <div class="form-check mb-2">
                                 <input class="form-check-input" type="checkbox" name="ticket_ids[]"
                                     value="{{ $p['Ticket']['TicketId'] }}" checked required>
