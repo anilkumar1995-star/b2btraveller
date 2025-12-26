@@ -379,7 +379,6 @@ class FlightController extends Controller
         $seg        = $data['FlightItinerary']['Segments'] ?? null;
         $segments         = $seg[0] ?? null;
 
-        // NotSet = 0, Successful = 1, Failed = 2, OtherFare = 3, OtherClass = 4, BookedOther = 5, NotConfirmed = 6]
         $status = "";
         if ($data['Status'] == 0) {
             $status = "Not Set";
@@ -474,5 +473,32 @@ class FlightController extends Controller
             'data' => $response['data']
         ]);
         // return response()->json($response);
+    }
+
+
+    public function cancelPage($id)
+    {
+      
+        $decoded = json_decode(base64_decode($id), true);
+
+        if (!$decoded) {
+            abort(404, 'Invalid Data');
+        }
+
+        $booking = DB::table('bookings')->where('booking_id_api', $decoded)->first();
+
+        if (!$booking) {
+            abort(404, 'Booking not found');
+        }
+
+        return view('flight.cancel', compact('booking'));
+    }
+
+    public function submitCancellation(Request $request)
+    {
+        $service = new FlightService();
+        $response = $service->cancelflight($request->all());
+
+        return response()->json($response);
     }
 }
