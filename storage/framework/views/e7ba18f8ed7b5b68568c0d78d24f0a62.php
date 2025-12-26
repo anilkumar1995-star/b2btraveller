@@ -1,4 +1,5 @@
 
+<?php $__env->startSection('title', 'Flight Cancellation'); ?>
 
 <?php $__env->startSection('content'); ?>
     <div class="card" style="border:1px solid rgb(244, 90, 90);">
@@ -194,7 +195,7 @@
                             title: 'Cancelled Successfully',
                             text: res.message
                         }).then(() => {
-                            window.location.href = '/flight/bookings';
+                            window.location.href = '/flight/booking-list';
                         });
                     } else {
                         swal('Error', res.message, 'error');

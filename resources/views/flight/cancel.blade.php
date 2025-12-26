@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('title', 'Flight Cancellation')
 
 @section('content')
     <div class="card" style="border:1px solid rgb(244, 90, 90);">
