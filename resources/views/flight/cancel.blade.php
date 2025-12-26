@@ -195,6 +195,7 @@
                         }).then(() => {
                             window.location.href = '/flight/booking-list';
                         });
+
                     } else {
                         swal('Error', res.message, 'error');
                     }

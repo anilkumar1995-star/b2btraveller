@@ -20720,8 +20720,27 @@ class StaticResponseHelper
         }';
     }
 
-    static public function bookingCancelStaticResponse(){
+    static public function bookingFailedCancelStaticResponse(){
         return '
         {"code":"0x0202","status":"FAILURE","message":"Either Sectors OR Ticket IDs should be passed for Partial Cancellation request."}';
+    } 
+    static public function bookingCancelStaticResponse(){
+        return '
+        {
+            "status": "success",
+            "message": "Flight Cancellation successfully",
+            "data": {
+                "TokenId": "83ad8f01-ee30-4850-8456-578b9f66c019",
+                "Response": [
+                    {
+                        "ChangeRequestId": 352372,
+                        "TicketId": 2337277,
+                        "Status": 1,
+                        "Remarks": "Successful",
+                        "ChangeRequestStatus": 1
+                    }
+                ]
+            }
+        }';
     } 
 }
