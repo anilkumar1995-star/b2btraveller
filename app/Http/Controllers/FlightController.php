@@ -379,7 +379,6 @@ class FlightController extends Controller
         $seg        = $data['FlightItinerary']['Segments'] ?? null;
         $segments         = $seg[0] ?? null;
 
-        // NotSet = 0, Successful = 1, Failed = 2, OtherFare = 3, OtherClass = 4, BookedOther = 5, NotConfirmed = 6]
         $status = "";
         if ($data['Status'] == 0) {
             $status = "Not Set";

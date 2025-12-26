@@ -20689,7 +20689,7 @@ class StaticResponseHelper
                         "Destination": "AMD",
                         "Airline": "AI",
                         "FareBasisCode": "GU1YXSII",
-                        "FareRuleDetail": "<table border=\"1\"><tr><th colspan=\"3\" align=\"center\">Mini fare rule not available</th></tr></table><br /><hr /><br /><br />Please refer above details <br /><hr /><br /><br /><br/> <br/>",
+                        "FareRuleDetail": "<table border="1\"><tr><th colspan=\"3\" align=\"center\">Mini fare rule not available</th></tr></table><br /><hr /><br /><br />Please refer above details <br /><hr /><br /><br /><br/> <br/>",
                         "FareRestriction": "",
                         "FareFamilyCode": "",
                         "FareRuleIndex": "",
@@ -20719,4 +20719,9 @@ class StaticResponseHelper
             }
         }';
     }
+
+    static public function bookingCancelStaticResponse(){
+        return '
+        {"code":"0x0202","status":"FAILURE","message":"Either Sectors OR Ticket IDs should be passed for Partial Cancellation request."}';
+    } 
 }

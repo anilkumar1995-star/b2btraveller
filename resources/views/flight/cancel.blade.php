@@ -192,7 +192,7 @@
                             title: 'Cancelled Successfully',
                             text: res.message
                         }).then(() => {
-                            window.location.href = '/flight/bookings';
+                            window.location.href = '/flight/booking-list';
                         });
                     } else {
                         swal('Error', res.message, 'error');
