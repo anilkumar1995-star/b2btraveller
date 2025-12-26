@@ -95,7 +95,7 @@
                             </div>
                             <small class="mb-1 fw-bold">Roundtrip non-lcc bookings</small>
                             <p class="mb-0">
-                                <span class="text-heading fw-bold me-1" id="booking_count"> {{ $totalroundtripnonlcc ?? 0 }} </span>
+                                <span class="text-heading fw-bold me-1" id="booking_count"> {{ $totalroundtripnonlccCount ?? 0 }} </span>
                                 <small class="text-body-secondary fs-13">Counts</small>
                             </p>
                         </div>
