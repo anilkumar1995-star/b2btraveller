@@ -144,8 +144,6 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);
 });
 
-
-
 Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActivityLog']], function () {
     Route::get('{type}', [RoleController::class, 'index'])->name('tools');
     Route::post('{type}/store', [RoleController::class, 'store'])->name('toolsstore');
@@ -214,10 +212,10 @@ Route::group(['prefix' => 'resources', 'middleware' => ['auth', 'company', "webA
 Route::group(['prefix' => 'recharge', 'middleware' => ['auth', 'company']], function () {
     Route::get('{type}', [RechargeController::class, 'index'])->name('recharge');
     Route::get('bbps/{type}', [BillpayController::class, 'bbps'])->name('bbps');
-    // Route::post('payment', [RechargeController::class, 'payment'])->name('rechargepay')->middleware('transactionlog:recharge');
-    // Route::post('getplan', [RechargeController::class, 'getplan'])->name('getplan');
-    // Route::post('getoperator', [RechargeController::class, 'getoperator'])->name('getoperator');
-    // Route::post('getdthinfo', [RechargeController::class, 'getdthinfo'])->name('getdthinfo');
+    Route::post('payment', [RechargeController::class, 'payment'])->name('rechargepay')->middleware('transactionlog:recharge');
+    Route::post('getplan', [RechargeController::class, 'getplan'])->name('getplan');
+    Route::post('getoperator', [RechargeController::class, 'getoperator'])->name('getoperator');
+    Route::post('getdthinfo', [RechargeController::class, 'getdthinfo'])->name('getdthinfo');
 });
 
 // LIC 

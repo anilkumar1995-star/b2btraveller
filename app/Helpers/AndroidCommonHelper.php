@@ -1,6 +1,7 @@
 <?php
 namespace App\Helpers;
 
+use App\Models\Api;
 use App\Models\ServiceCredential;
 use Illuminate\Support\Facades\DB;
 
@@ -13,6 +14,30 @@ class AndroidCommonHelper
         switch ($type) {
             case 'travels':
                 $checkAPIS = ServiceCredential::where('code', 'flight')->first();
+                break;
+            case 'iydaaeps':
+                $checkAPIS = Api::where('code', 'iydaAEPS')->first();
+                break;
+            case 'iydarecharge':
+                $checkAPIS = Api::where('code', 'iydaRecharge')->first();
+                break;
+            case 'iydapayout':
+                $checkAPIS = Api::where('code', 'iydaPayout')->first();
+                break;
+            case 'iydaaffiliate':
+                $checkAPIS = Api::where('code', 'iydaAffiliate')->first();
+                break;
+            case 'iydabillpayment':
+                $checkAPIS = Api::where('code', 'iydaBillpay')->first();
+                break;
+            case 'iydaaepssdk':
+                $checkAPIS = Api::where('code', 'iydaAepsSdk')->first();
+                break;
+            case 'iydapancard':
+                $checkAPIS = Api::where('code', 'iydaPANCard')->first();
+
+            case 'iydaverification':
+                $checkAPIS = Api::where('code', 'iydaVerification')->first();
                 break;
 
             default:
