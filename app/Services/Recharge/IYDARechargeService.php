@@ -124,7 +124,7 @@ class IYDARechargeService
         }
     
         $result = Permission::curl($fullURL, "GET", json_encode($parameters), $this->header, "yes", "Iyda-mplan", "");
-      dd($result);
+    //   dd($result);
         return $result;
 
     }
