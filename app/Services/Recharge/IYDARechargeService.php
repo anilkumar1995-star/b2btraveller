@@ -122,8 +122,9 @@ class IYDARechargeService
                 break;
 
         }
-
+    
         $result = Permission::curl($fullURL, "GET", json_encode($parameters), $this->header, "yes", "Iyda-mplan", "");
+    //   dd($result);
         return $result;
 
     }

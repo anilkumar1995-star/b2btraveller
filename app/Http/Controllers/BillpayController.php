@@ -37,16 +37,16 @@ class BillpayController extends Controller
 
     public function index(Request $post, $type)
     {
-        if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
-            return redirect(route('unauthorized'));
-        }
-
+        // if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
+        //     return redirect(route('unauthorized'));
+        // }
+      
         $data['type'] = $type;
         $data['providers'] = $this->table->where('type', $type)->where('status', '1')->whereNotNull('customParamResp')->orderBy('name')->limit(100)->get();
+       
         // Provider::where('type', $type)->where('status', "1")->whereNotNull('customParamResp')->orderBy('name')->get();
 
         // $agent = Agents::where('user_id', \Auth::id())->first();
-
         // return redirect(route('home'));
 
         return view('service.billpayment')->with($data);
@@ -66,10 +66,10 @@ class BillpayController extends Controller
 
     public function bbps(Request $post, $type)
     {
-        if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
-            return redirect(route('unauthorized'));
-            ;
-        }
+        // if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
+        //     return redirect(route('unauthorized'));
+        //     ;
+        // }
 
         $data['type'] = $type;
         $data['providers'] = Provider::where('type', $type)->where('status', "1")->orderBy('name')->get();
