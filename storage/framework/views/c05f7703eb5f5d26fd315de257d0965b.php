@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Booking Page'); ?>
 <?php $__env->startSection('pagetitle', 'Booking Page'); ?>
 
@@ -114,7 +115,7 @@
                             </div>
                         </div>
                     </aside>
-                    <!-- Right content END -->
+                    
                 </div>
             </div>
         </section>
@@ -124,7 +125,6 @@
     </main>
 
 <?php $__env->stopSection(); ?>
-
 
 
 <?php $__env->startPush('script'); ?>

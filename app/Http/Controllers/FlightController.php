@@ -231,7 +231,7 @@ class FlightController extends Controller
             return response()->json([
                 'status' => $response['status'] ?? 'failed',
                 'message' => $response['message'] ?? 'Flight booking failed!'
-            ], 400);
+            ]);
         }
 
         $data = $response['data']['Response']['Response'] ?? null;
@@ -241,7 +241,7 @@ class FlightController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'Invalid Data, Something went worng'
-            ], 400);
+            ]);
         }
 
 
@@ -355,7 +355,7 @@ class FlightController extends Controller
             return response()->json([
                 'status' => $response['status'] ?? 'failed',
                 'message' => $response['message'] ?? 'Flight booking failed!'
-            ], 400);
+            ]);
         }
 
         $data = $response['data']['Response']['Response'] ?? null;
@@ -365,7 +365,7 @@ class FlightController extends Controller
             return response()->json([
                 'status' => 'failed',
                 'message' => 'Invalid, Something went worng'
-            ], 400);
+            ]);
         }
 
         // Extracting required fields
