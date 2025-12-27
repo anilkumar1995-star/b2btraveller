@@ -210,16 +210,7 @@
 
                                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton<?php echo e($b->id); ?>">
 
-                                      <?php if($b->is_lcc !== 'true' && $b->ticket_status === 'pending'): ?>
-                                          <li>
-                                              <a class="dropdown-item  generate-ticket" href="javascript:void(0)"
-                                                  data-id="<?php echo e($b->id); ?>"
-                                                  data-journeytype = "<?php echo e($b->journey_type); ?>"
-                                                  data-payload='<?php echo json_encode(json_decode($b->raw_payload), 15, 512) ?>'>
-                                                  🎫 Generate Ticket
-                                              </a>
-                                          </li>
-                                      <?php endif; ?>
+                                      
 
 
                                       <li>
@@ -408,7 +399,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
 
   <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
-  <script src="<?php echo e(asset('')); ?>js/flight.js"></script>
+  <script src="<?php echo e(asset('')); ?>js/flighttrip.js"></script>
   <script type="text/javascript">
       function openBookingDetails(bookingId) {
 

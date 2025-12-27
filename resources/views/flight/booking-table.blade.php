@@ -205,9 +205,9 @@
 
                                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
 
-                                      @if ($b->is_lcc !== 'true' && $b->ticket_status === 'pending')
+                                      {{-- @if ($b->is_lcc !== 'true' && $b->ticket_status === 'pending')
                                           <li>
-                                              {{-- <a class="dropdown-item  generate-ticket" href="javascript:void(0)" --}}
+                                              <a class="dropdown-item  generate-ticket" href="javascript:void(0)"
                                               <a class="dropdown-item" href="javascript:void(0)"
                                                   data-id="{{ $b->id }}"
                                                   data-journeytype = "{{ $b->journey_type }}"
@@ -215,7 +215,7 @@
                                                   🎫 Generate Ticket
                                               </a>
                                           </li>
-                                      @endif
+                                      @endif --}}
 
 
                                       <li>
@@ -403,7 +403,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
 
   <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
-  <script src="{{ asset('') }}js/flight.js"></script>
+  <script src="{{ asset('') }}js/flighttrip.js"></script>
   <script type="text/javascript">
       function openBookingDetails(bookingId) {
 
