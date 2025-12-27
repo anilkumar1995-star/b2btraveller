@@ -877,7 +877,6 @@
                                         <div class="fw-semibold ">
                                             🪶 Fare Rules
                                         </div>
-                                        <img src="<?php echo e(asset('images/restricted/digiyatra2.jpeg')); ?>" style="height:30px;">
                                     </div>
                                     <div class="p-3" style="background:#e8ffec; font-size:14px;">`;
 
