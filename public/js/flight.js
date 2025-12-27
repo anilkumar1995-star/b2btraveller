@@ -2115,7 +2115,7 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
 }
 
 function checkFinalBookingStatus(trip, journeyType, source) {
-w
+
     if (trip == 'departure' && journeyType == '1') {
         $('#bookingData').removeClass('d-none');
         $('.preloader').addClass('d-none');
