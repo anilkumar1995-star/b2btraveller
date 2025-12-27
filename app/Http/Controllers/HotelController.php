@@ -19,7 +19,7 @@ class HotelController extends Controller
 
     public function root()
     {
-       return view('hotel.index-chain');
+       return view('hotel.index-hotel');
     }
     
 }

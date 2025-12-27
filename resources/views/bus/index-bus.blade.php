@@ -4,124 +4,175 @@
 
 
 @section('content')
-<main>
+    <style>
+        .nav-tabs .nav-link.active {
+            background-color: rgb(103, 103, 233) !important;
+            color: white !important;
+        }
 
-<!-- =======================
-Main Banner START -->
-<section class="pt-0">
-	<div class="container">
-		<!-- Background image -->
-		<div class="rounded-3 p-3 p-sm-5" style="background-image: url({{ asset('images/bg/05.jpg') }}); background-position: center center; background-repeat: no-repeat; background-size: cover;">
-			<!-- Banner title -->
-			<div class="row my-2 my-xl-5">
-				<div class="col-md-12 mx-auto">
-					<h1 class="text-center text-white">Find Your Bus Ticket</h1>
-					<!-- Form START -->
-					<form class="bg-mode shadow rounded-3 position-relative p-4 pe-md-5 pb-5 pb-md-4 mb-4">
-						<div class="row g-4">
-							<!-- From -->
-							<div class="col-lg-6">
-								<div class="form-control-border form-control-transparent form-fs-md d-flex">
-									<!-- Icon -->
-									<i class="bi bi-geo-alt fs-3 me-2 mt-2"></i>
-									<!-- Select input -->
-									<div class="flex-grow-1">
-										<label class="form-label">From</label>
-										<select class="form-select js-choice" data-search-enabled="true">
-											<option value="">Select location</option>
-											<option>Mumbai</option>
-											<option>Delhi</option>
-											<option>Bangalore</option>
-											<option>Hyderabad</option>
-											<option>Chennai</option>
-											<option>Kolkata</option>
-										</select>
-									</div>
-								</div>
-							</div>
+        .btn-flip-icon {
+            position: absolute;
+            left: 100%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
 
-							<!-- To -->
-							<div class="col-lg-6">
-								<div class="form-control-border form-control-transparent form-fs-md d-flex">
-									<!-- Icon -->
-									<i class="bi bi-geo-alt fs-3 me-2 mt-2"></i>
-									<!-- Select input -->
-									<div class="flex-grow-1">
-										<label class="form-label">To</label>
-										<select class="form-select js-choice" data-search-enabled="true">
-											<option value="">Select location</option>
-											<option>Mumbai</option>
-											<option>Delhi</option>
-											<option>Bangalore</option>
-											<option>Hyderabad</option>
-											<option>Chennai</option>
-											<option>Kolkata</option>
-										</select>
-									</div>
-								</div>
-							</div>
+        @media (max-width: 767.98px) {
+            .btn-flip-icon {
+                position: absolute;
+                left: 50%;
+                top: 100%;
+                transform: translate(-50%, -50%);
+                margin-top: 0.5rem;
+            }
 
-							<!-- Journey date -->
-							<div class="col-lg-4">
-								<div class="form-control-border form-control-transparent form-fs-md d-flex">
-									<!-- Icon -->
-									<i class="bi bi-calendar fs-3 me-2 mt-2"></i>
-									<!-- Date input -->
-									<div class="flex-grow-1">
-										<label class="form-label">Journey Date</label>
-										<input type="text" class="form-control flatpickr" data-date-format="d/m/Y" placeholder="Select date">
-									</div>
-								</div>
-							</div>
+            .btn-flip-icon i {
+                transform: rotate(270deg);
+            }
+        }
 
-							<!-- Return date -->
-							<div class="col-lg-4">
-								<div class="form-control-border form-control-transparent form-fs-md d-flex">
-									<!-- Icon -->
-									<i class="bi bi-calendar fs-3 me-2 mt-2"></i>
-									<!-- Date input -->
-									<div class="flex-grow-1">
-										<label class="form-label">Return Date (Optional)</label>
-										<input type="text" class="form-control flatpickr" data-date-format="d/m/Y" placeholder="Select date">
-									</div>
-								</div>
-							</div>
 
-							<!-- Passenger -->
-							<div class="col-lg-4">
-								<div class="form-control-border form-control-transparent form-fs-md d-flex">
-									<!-- Icon -->
-									<i class="bi bi-person fs-3 me-2 mt-2"></i>
-									<!-- Dropdown input -->
-									<div class="flex-grow-1">
-										<label class="form-label">Passengers</label>
-										<select class="form-select js-choice">
-											<option>1</option>
-											<option>2</option>
-											<option>3</option>
-											<option>4</option>
-											<option>5</option>
-											<option>6</option>
-										</select>
-									</div>
-								</div>
-							</div>
-						</div>
+        .select2-container--default {
+            width: 100% !important;
+        }
 
-						<!-- Button -->
-						<div class="btn-position-md-middle">
-							<a class="icon-lg btn btn-round btn-primary mb-0" href=""><i class="bi bi-search fa-fw"></i></a>
-						</div>
-					</form>
-					<!-- Form END -->
-				</div>
-			</div>
-		</div>
-	</div>
-</section>
-</main>
+        .select2-container--default .select2-selection--single {
+            border: 1px solid #dbdade !important;
+            height: 38px !important;
+            border-radius: 0.375rem !important;
+            line-height: 1.5 !important;
+            border-radius: 0.375rem !important;
+            font-size: 0.9375rem !important;
+            padding: 0.422rem 0.375rem !important;
+            width: 100% !important;
+        }
 
-<!-- Back to top -->
-<div class="back-top"></div>
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            color: #807c8c !important;
+            line-height: 25px !important;
+        }
+
+        .select2-container--default .select2-results>.select2-results__options {
+            cursor: pointer !important;
+        }
+    </style>
+    <section class="py-0">
+        <div class="card border-1">
+            <div class="card-header bg-label-primary">
+                <h5 class="card-title mb-0">🚌 Bus Booking Search</h5>
+            </div>
+
+            <form {{-- style="background-image: url('{{ asset('images/1.png') }}'); background-position: center center; background-repeat: no-repeat; background-size: cover;" --}} id="busSearchForm"
+                class="bg-mode bg-white position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
+                @csrf
+
+
+                <div class="row g-4 position-relative">
+
+                    <div class="col-lg-6">
+                        <div class="form-control-border form-control-transparent form-fs-md d-flex">
+                            <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
+                            <div class="flex-grow-1">
+                                <label >Departure</label>
+                                <select class="form-select  select" data-search-enabled="true" name="Origin"
+                                    id="Origin">
+                                    <option value="">Select location</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="form-control-border form-control-transparent form-fs-md d-flex">
+                            <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
+                            <div class="flex-grow-1">
+                                <label >Destination</label>
+                                <select class="form-select  select" data-search-enabled="true" name="Destination"
+                                    id="Destination">
+                                    <option value="">Select location</option>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="flex-grow-1">
+                            <label class="mb-1"> <i class="ti ti-calendar me-2"></i>Journey Date</label>
+                            <input type="text" class="form-control flatpickr" data-date-format="d/m/Y"
+                                placeholder="Select date">
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="mb-1"><i class="ti ti-calendar me-2"></i>Return Date (Optional)</label>
+                        <input type="text" class="form-control" id="roundReturn" name="PreferredArrivalTime"
+                            data-date-format="Y-m-d" autocomplete="off" placeholder="Select date">
+
+                    </div>
+
+                    <div class="col-lg-4">
+                        <label class="w-100">Passengers</label>
+                        <select class="form-select select" name="PassengerCount" id="PassengerCount" required>
+                            <option value="">Select Passengers</option>
+                            <option value="1" selected>1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                            <option value="6">6</option>
+                            <option value="7">7</option>
+                            <option value="8">8</option>
+                            <option value="9">9</option>
+                        </select>
+                    </div>
+
+                    <div class="text-end mb-3">
+                        <button type="submit" class="btn btn-primary">
+                            Search Buses
+                        </button>
+                    </div>
+            </form>
+        </div>
+    </section>
+    <div class="back-top"></div>
 
 @endsection
+
+
+@push('script')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.4/nouislider.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.4/nouislider.min.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+            localStorage.clear();
+            $('.select').select2();
+
+            $('.flatpickr').datepicker({
+                'autoclose': true,
+                'clearBtn': true,
+                'todayHighlight': true,
+                'format': 'yyyy-mm-dd',
+                'startDate': new Date()
+            });
+        });
+
+        $(document).on('submit', '#busSearchForm', function(e) {
+            e.preventDefault();
+
+            swal({
+                type: 'info',
+                title: 'Coming Soon',
+                text: '🚍 Bus booking feature will be available soon!',
+                confirmButtonText: 'Okay'
+            });
+        });
+    </script>
+@endpush

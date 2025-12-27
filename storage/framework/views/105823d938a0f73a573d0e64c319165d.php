@@ -695,7 +695,7 @@
                                                             </div>
                                                             <div class="col-4 text-end">
                                                                  <h5>Ticket Details</h5>
-                                                                 ${!p.Ticket ? `
+                                                                 ${p.Ticket ? `
                                                                     <div class="mb-1"><b>Issued On: </b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
                                                                     <div class="mb-1">${(() => {
                                                                             const s = getTicketStatus(p.Ticket.Status);
