@@ -2073,7 +2073,7 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
     if (selectedFlightDetails?.IsLCC) {
         ViewTicketAjax(payload, '/flight/ticket', trip, journeyType);
     } else {
-        ViewTicketAjax(payload, '/flight/book', trip, journeyType, true);
+        ViewTicketAjax(payload, '/flight/book', trip, journeyType, '',  true);
     }
 }
 
