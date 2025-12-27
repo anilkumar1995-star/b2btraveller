@@ -106,6 +106,175 @@
             </ul>
         </li>
 
+       
+              {{--  @if (Myhelper::can(['recharge_service'])) --}}
+                    <li class="menu-item {{ Request::is('recharge/*') ? 'active open' : '' }}">
+                        <a href="#menu-design" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons ti ti-file-dollar"></i>
+                            <div data-i18n="Utility Recharge">Recharge</div>
+                        </a>
+                        <ul class="menu-sub" id="menu-design {{ Request::is('recharge/*') ? 'show' : '' }}">
+                          
+                                <li class="menu-item {{ Request::is('recharge/mobile') ? 'active' : '' }}">
+                                    <a href="{{ route('recharge', ['type' => 'mobile']) }}" class="menu-link">
+                                        <div data-i18n="Mobile">Mobile</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('recharge/dth') ? 'active' : '' }}">
+                                    <a href="{{ route('recharge', ['type' => 'dth']) }}" class="menu-link">
+                                        <div data-i18n="DTH">DTH</div>
+                                    </a>
+                                </li>
+                          {{--  @endif --}}
+                        </ul>
+                    </li>
+                     
+                    <li class="menu-item {{ Request::is('billpay/*') ? 'active open' : '' }}">
+                        <a href="#userinfo" class="menu-link menu-toggle">
+                            <i class="menu-icon tf-icons ti ti-smart-home"></i>
+                            <div data-i18n="Bill Payment">Bill Payment</div>
+                        </a>
+                        <ul class="menu-sub {{ Request::is('billpay/*') ? 'show' : '' }}" id="userinfo">
+                        
+                                <li class="menu-item {{ Request::is('billpay/electricity') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'electricity']) }}" class="menu-link">
+                                        <div data-i18n="Electricity">Electricity</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/postpaid') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'postpaid']) }}" class="menu-link">
+                                        <div data-i18n="Postpaid">Postpaid</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/water') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'water']) }}" class="menu-link">
+                                        <div data-i18n="Water">Water</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/broadband') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'broadband']) }}" class="menu-link">
+                                        <div data-i18n="Broadband">Broadband</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/lpggas') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'lpggas']) }}" class="menu-link">
+                                        <div data-i18n="LPG Gas">LPG Gas</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/gas') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'gas']) }}" class="menu-link">
+                                        <div data-i18n="Piped Gas">Piped Gas</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/landline') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'landline']) }}" class="menu-link">
+                                        <div data-i18n="Landline">Landline</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/educationfees') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'educationfees']) }}" class="menu-link">
+                                        <div data-i18n="Education Fees">Education Fees</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/fastag') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'fastag']) }}" class="menu-link">
+                                        <i class="menu-icon tf-icons ti ti-user"></i>
+                                        <div data-i18n="Fastag">Fastag</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/loanrepayment') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'loanrepayment']) }}" class="menu-link">
+                                        <div data-i18n="Loan Repayment">Loan Repayment</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/insurance') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'insurance']) }}" class="menu-link">
+                                        <div data-i18n="Insurance">Insurance</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/rental') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'rental']) }}" class="menu-link">
+                                        <div data-i18n="Rental">Rental</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/donation') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'donation']) }}" class="menu-link">
+                                        <div data-i18n="Donation">Donation</div>
+                                    </a>
+                                </li>
+                                {{-- <li class="menu-item {{ Request::is('billpay/dthbbps') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'dthbbps']) }}" class="menu-link">
+                                        <div data-i18n="DTH Bbps">DTH Bbps</div>
+                                    </a>
+                                </li> --}}
+                                <li class="menu-item {{ Request::is('billpay/subscription') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'subscription']) }}" class="menu-link">
+                                        <div data-i18n="Subscription">Subscription</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/hospital') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'hospital']) }}" class="menu-link">
+                                        <div data-i18n="Hospital">Hospital</div>
+                                    </a>
+                                </li>
+                                <li
+                                    class="menu-item {{ Request::is('billpay/clubsandassociations') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'clubsandassociations']) }}"
+                                        class="menu-link">
+                                        <div data-i18n="Clubs and Associations">Clubs and Associations</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/municipalservices') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'municipalservices']) }}" class="menu-link">
+                                        <div data-i18n="Municipal Services">Municipal Services</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/municipaltaxes') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'municipaltaxes']) }}" class="menu-link">
+                                        <div data-i18n="Municipal Taxes">Municipal Taxes</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/housingsociety') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'housingsociety']) }}" class="menu-link">
+                                        <div data-i18n="Housing Society">Housing Society</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/lifeinsurance') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'lifeinsurance']) }}" class="menu-link">
+                                        <div data-i18n="Life Insurance">Life Insurance</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/cabletv') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'cabletv']) }}" class="menu-link">
+                                        <div data-i18n="Cable TV">Cable TV</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/creditcard') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'creditcard']) }}" class="menu-link">
+                                        <div data-i18n="Credit Card">Credit Card</div>
+                                    </a>
+                                </li>
+                                <li class="menu-item {{ Request::is('billpay/recurringdeposit') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'recurringdeposit']) }}" class="menu-link">
+                                        <div data-i18n="Recurring Deposit">Recurring Deposit</div>
+                                    </a>
+                                </li>
+                                {{-- <li class="menu-item {{ Request::is('billpay/mobileprepaid') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'mobileprepaid']) }}" class="menu-link">
+                                        <div data-i18n="Mobile Prepaid">Mobile prepaid</div>
+                                    </a>
+                                </li> --}}
+                                {{-- <li class="menu-item {{ Request::is('billpay/ncmcrecharge') ? 'active' : '' }}">
+                                    <a href="{{ route('bill', ['type' => 'ncmcrecharge']) }}" class="menu-link">
+                                        <div data-i18n="NCMC Recharge">NCMC Recharge</div>
+                                    </a>
+                                </li> --}}
+                         
+                        </ul>
+                    </li>
+              
+             
+
         @if (Myhelper::can([
         'view_whitelable',
         'view_md',

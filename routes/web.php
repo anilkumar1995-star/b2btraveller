@@ -138,10 +138,11 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::get('booking', [FlightController::class, 'flightBooking'])->name('flight.booking');
     Route::get('booking-list', [FlightController::class, 'bookingList'])->name('flight.bookingList');
     Route::get('booking-list-failed', [FlightController::class, 'bookingListFailed'])->name('flight.bookingListFailed');
-    Route::post('booking-view', [FlightController::class, 'viewTicket']) ->name('flight.booking.view');
+    Route::post('booking-view', [FlightController::class, 'viewTicket'])->name('flight.booking.view');
+
+    Route::get('cancel/{id}', [FlightController::class, 'cancelPage']);
+    Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);
 });
-
-
 
 Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActivityLog']], function () {
     Route::get('{type}', [RoleController::class, 'index'])->name('tools');
@@ -211,10 +212,10 @@ Route::group(['prefix' => 'resources', 'middleware' => ['auth', 'company', "webA
 Route::group(['prefix' => 'recharge', 'middleware' => ['auth', 'company']], function () {
     Route::get('{type}', [RechargeController::class, 'index'])->name('recharge');
     Route::get('bbps/{type}', [BillpayController::class, 'bbps'])->name('bbps');
-    // Route::post('payment', [RechargeController::class, 'payment'])->name('rechargepay')->middleware('transactionlog:recharge');
-    // Route::post('getplan', [RechargeController::class, 'getplan'])->name('getplan');
-    // Route::post('getoperator', [RechargeController::class, 'getoperator'])->name('getoperator');
-    // Route::post('getdthinfo', [RechargeController::class, 'getdthinfo'])->name('getdthinfo');
+    Route::post('payment', [RechargeController::class, 'payment'])->name('rechargepay')->middleware('transactionlog:recharge');
+    Route::post('getplan', [RechargeController::class, 'getplan'])->name('getplan');
+    Route::post('getoperator', [RechargeController::class, 'getoperator'])->name('getoperator');
+    Route::post('getdthinfo', [RechargeController::class, 'getdthinfo'])->name('getdthinfo');
 });
 
 // LIC 

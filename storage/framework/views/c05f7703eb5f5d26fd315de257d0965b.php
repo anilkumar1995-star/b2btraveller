@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Booking Page'); ?>
 <?php $__env->startSection('pagetitle', 'Booking Page'); ?>
 
@@ -114,7 +115,7 @@
                             </div>
                         </div>
                     </aside>
-                    <!-- Right content END -->
+                    
                 </div>
             </div>
         </section>
@@ -126,12 +127,11 @@
 <?php $__env->stopSection(); ?>
 
 
-
 <?php $__env->startPush('script'); ?>
     
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="<?php echo e(asset('')); ?>js/flight.js"></script>
+    <script src="<?php echo e(asset('')); ?>js/flighttrip.js"></script>
     <script>
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');

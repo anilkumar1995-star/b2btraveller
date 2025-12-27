@@ -115,7 +115,7 @@
                             </div>
                         </div>
                     </aside>
-                    <!-- Right content END -->
+                    
                 </div>
             </div>
         </section>
@@ -127,12 +127,11 @@
 @endsection
 
 
-
 @push('script')
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf417-js/2.1.7/pdf417.min.js"></script> --}}
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="{{ asset('') }}js/flight.js"></script>
+    <script src="{{ asset('') }}js/flighttrip.js"></script>
     <script>
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');

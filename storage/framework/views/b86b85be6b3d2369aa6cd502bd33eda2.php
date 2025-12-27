@@ -136,6 +136,167 @@
 
 
         </div>
+        <div class="card shadow-sm border mt-3 rounded-4 mb-4">
+            <div class="card-body pt-3">
+                <div class="services-scroll-container">
+                    <div class="services-scroll-wrapper d-flex gap-2 py-2">
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('recharge', ['type' => 'mobile'])); ?>"
+                            class="text-decoration-none service-tab" data-service="mobile">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-indigo">
+                                        <i class="fas fa-mobile-alt"></i>
+                                    </div>
+                                    <h6>Mobile</h6>
+                                    <small>Recharge</small>
+                                    <i class="service-bg fas fa-mobile-alt"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- DTH -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('recharge', ['type' => 'dth'])); ?>"
+                            class="text-decoration-none service-tab" data-service="dth">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-pink">
+                                        <i class="fas fa-satellite-dish"></i>
+                                    </div>
+                                    <h6>DTH</h6>
+                                    <small>Recharge</small>
+                                    <i class="service-bg fas fa-satellite-dish"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Postpaid -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('bill', ['type' => 'postpaid'])); ?>"
+                            class="text-decoration-none service-tab" data-service="postpaid">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-blue">
+                                        <i class="fas fa-file-invoice"></i>
+                                    </div>
+                                    <h6>Postpaid</h6>
+                                    <small>Bill Pay</small>
+                                    <i class="service-bg fas fa-file-invoice"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Electricity -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('bill', ['type' => 'electricity'])); ?>"
+                            class="text-decoration-none service-tab" data-service="electricity">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-warning">
+                                        <i class="fas fa-lightbulb"></i>
+                                    </div>
+                                    <h6>Electricity</h6>
+                                    <small>Bill Pay</small>
+                                    <i class="service-bg fas fa-lightbulb"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Water -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('bill', ['type' => 'water'])); ?>"
+                            class="text-decoration-none service-tab" data-service="water">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-cyan">
+                                        <i class="fas fa-tint"></i>
+                                    </div>
+                                    <h6>Water</h6>
+                                    <small>Bill Pay</small>
+                                    <i class="service-bg fas fa-tint"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- FASTag -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('bill', ['type' => 'fastag'])); ?>"
+                            class="text-decoration-none service-tab" data-service="fastag">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-dark">
+                                        <i class="fas fa-car"></i>
+                                    </div>
+                                    <h6>FASTag</h6>
+                                    <small>Recharge</small>
+                                    <i class="service-bg fas fa-car"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Broadband -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('bill', ['type' => 'broadband'])); ?>"
+                            class="text-decoration-none service-tab" data-service="broadband">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-teal">
+                                        <i class="fas fa-wifi"></i>
+                                    </div>
+                                    <h6>Broadband</h6>
+                                    <small>Bill Pay</small>
+                                    <i class="service-bg fas fa-wifi"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- LPG -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('bill', ['type' => 'lpggas'])); ?>"
+                            class="text-decoration-none service-tab" data-service="lpg">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-green">
+                                        <i class="fas fa-fire"></i>
+                                    </div>
+                                    <h6>LPG Gas</h6>
+                                    <small>Booking</small>
+                                    <i class="service-bg fas fa-fire"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Landline -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('bill', ['type' => 'landline'])); ?>"
+                            class="text-decoration-none service-tab" data-service="landline">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-secondary">
+                                        <i class="fas fa-phone"></i>
+                                    </div>
+                                    <h6>Landline</h6>
+                                    <small>Bill Pay</small>
+                                    <i class="service-bg fas fa-phone"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Education -->
+                        <div class="service-item flex-shrink-0">
+                            <a href="<?php echo e(route('bill', ['type' => 'educationfees'])); ?>"
+                            class="text-decoration-none service-tab" data-service="education">
+                                <div class="service-card">
+                                    <div class="icon-wrapper bg-purple">
+                                        <i class="fas fa-graduation-cap"></i>
+                                    </div>
+                                    <h6>Education</h6>
+                                    <small>Fees</small>
+                                    <i class="service-bg fas fa-graduation-cap"></i>
+                                </div>
+                            </a>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    
+
 
         <div class="row mt-4">
 
@@ -298,6 +459,80 @@
             color: #ececec;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
         }
+.services-scroll-container {
+    width: 100%;
+    overflow-x: auto;          /* horizontal scroll */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; /* smooth mobile swipe */
+    scrollbar-width: thin;  
+}
+.services-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.service-item {
+    width: 140px;
+}
+
+.service-card {
+    border: 1px solid #e5e7eb;
+    text-align: center;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    background: #fff;
+    position: relative;
+    overflow: hidden;
+    transition: .25s;
+}
+.service-card:hover {
+     border-color: #4f46e5; 
+     background-color: #edf3edff;
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,.08);
+}
+
+.service-card h6 {
+    margin: 0;
+    font-weight: 600;
+}
+.service-card small {
+    color: #6c757d;
+}
+
+.icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 6px;
+    font-size: 18px;
+}
+
+.service-bg {
+    position: absolute;
+    top: -12px;
+    right: -12px;
+    font-size: 3rem;
+    opacity: .08;
+}
+
+/* Color helpers */
+.bg-indigo{background:linear-gradient(135deg,#667eea,#764ba2);}
+.bg-pink{background:linear-gradient(135deg,#f093fb,#f5576c);}
+.bg-blue{background:linear-gradient(135deg,#4facfe,#00f2fe);}
+.bg-warning{background:linear-gradient(135deg,#f7971e,#ffd200);}
+.bg-cyan{background:linear-gradient(135deg,#00c6ff,#0072ff);}
+.bg-dark{background:linear-gradient(135deg,#232526,#414345);}
+.bg-teal{background:linear-gradient(135deg,#11998e,#38ef7d);}
+.bg-green{background:linear-gradient(135deg,#27ae60,#2ecc71);}
+.bg-secondary{background:linear-gradient(135deg,#6c757d,#495057);}
+.bg-purple{background:linear-gradient(135deg,#8e44ad,#9b59b6);}
+
+
     </style>
 
     <div class="floating-booking">
