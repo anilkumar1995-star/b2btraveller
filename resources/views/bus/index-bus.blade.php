@@ -107,7 +107,7 @@
 
                     <div class="col-lg-4">
                         <label class="mb-1"><i class="ti ti-calendar me-2"></i>Return Date (Optional)</label>
-                        <input type="text" class="form-control" id="roundReturn" name="PreferredArrivalTime"
+                        <input type="text" class="form-control flatpickr" id="roundReturn" name="PreferredArrivalTime"
                             data-date-format="Y-m-d" autocomplete="off" placeholder="Select date">
 
                     </div>

@@ -73,7 +73,7 @@
                         <div class="form-control-border form-control-transparent form-fs-md d-flex">
                             <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
                             <div class="flex-grow-1">
-                                <label >Location</label>
+                                <label>Location</label>
                                 <select class="form-select  select" data-search-enabled="true" name="Destination"
                                     id="Destination">
                                     <option value="">Select location</option>
@@ -84,11 +84,15 @@
                     </div>
 
                     <div class="col-lg-4">
-                        <div class="flex-grow-1">
-                            <label >Check in - out</label>
-                            <input type="text" class="form-control flatpickr" data-date-format="d/m/Y"
-                                placeholder="Select date">
+                        <label>Check in - out</label>
+                        <div class="input-daterange input-group rounded">
+                            <input type="text" class="form-control flatpickr" id="fromDate">
+                            <span class="input-group-text position-relative">
+                               <i class="fa-solid fa-right-left"></i>
+                            </span>
+                            <input type="text" class="form-control flatpickr" id="toDate">
                         </div>
+
                     </div>
 
 
@@ -96,7 +100,7 @@
                         <div class="form-control-border form-control-transparent form-fs-md d-flex">
                             <i class="ti ti-person fs-3 me-2 mt-2"></i>
                             <div class="w-100">
-                                <label >Guests & rooms</label>
+                                <label>Guests & rooms</label>
                                 <div class="dropdown guest-selector me-2">
                                     <input type="text" class="form-guest-selector form-control selection-result"
                                         value="2 Guests 1 Room" data-bs-auto-close="outside" data-bs-toggle="dropdown">
@@ -180,6 +184,18 @@
 
 
     <script>
+        $(document).ready(function() {
+            localStorage.clear();
+            $('.select').select2();
+
+            $('.flatpickr').datepicker({
+                'autoclose': true,
+                'clearBtn': true,
+                'todayHighlight': true,
+                'format': 'yyyy-mm-dd',
+                'startDate': new Date()
+            });
+        });
         $(document).on('submit', '#hotelSearchForm', function(e) {
             e.preventDefault();
 
