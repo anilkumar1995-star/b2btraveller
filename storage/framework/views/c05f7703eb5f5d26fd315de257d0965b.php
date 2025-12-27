@@ -131,7 +131,7 @@
     
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="<?php echo e(asset('')); ?>js/flight.js"></script>
+    <script src="<?php echo e(asset('')); ?>js/flighttrip.js"></script>
     <script>
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');
