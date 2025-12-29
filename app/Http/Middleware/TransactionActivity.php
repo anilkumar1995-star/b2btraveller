@@ -38,6 +38,7 @@ class TransactionActivity
         $log['request'] = json_encode($post->all());
         $log['parameters'] = $type;
 
+        dd($log);
         \DB::table('transaction_activitylogs')->insert($log);
         return $next($post);
     }
