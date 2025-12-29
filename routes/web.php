@@ -90,7 +90,7 @@ Route::get('comingsoon', [HomeController::class, 'comingsoon'])->name('comingsoo
 Route::get('unauthorized', [HomeController::class, 'unauthorized'])->name('unauthorized');
 
 Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
-Route::post('/dashboard', [HomeController::class, 'index'])->name('home');
+Route::post('/dashboard', [HomeController::class, 'index'])->name('homePost');
 
 Route::get('/search-txnid', [HomeController::class, 'searchTxnid'])->name('searchTxnid');
 Route::get('/search-user', [HomeController::class, 'searchUser'])->name('searchUser');
