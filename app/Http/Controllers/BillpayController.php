@@ -149,7 +149,7 @@ class BillpayController extends Controller
                 if ($result['status']) {
                     return response()->json(['statuscode' => "TXN", "data" => $result['data']]);
                 } else {
-                    return response()->json(['statuscode' => "ERR", "message" => @$result['message'] ?? "bill fetched failed/pending, try again"]);
+                    return response()->json(['statuscode' => "ERR", "message" => !empty($result['message']) ? $result['message'] : "bill fetched failed/pending, try again later"]);
                 }
 
                 break;
