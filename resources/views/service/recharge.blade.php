@@ -53,7 +53,7 @@ $table = "yes";
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="form-group col-sm-12 col-lg-3 my-1">
+                            <div class="form-group col-sm-12 col-lg-4 my-1">
                                 <label>Plan Type</label>
                                 <select name="rechargeType" class="form-control my-1" id="rechargeType" required>
                                     <option value="">Select Plan Type</option>
@@ -131,8 +131,8 @@ $table = "yes";
             </div>
         </div>
 
-<div class="modal fade bd-example-modal-lg" id="planModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade bd-example-modal-xl" id="planModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">{{ucfirst($type)}} Plans</h5>
@@ -321,12 +321,9 @@ $table = "yes";
                         }
                     },
                     error: function(errors) {
-
-                        // console.log(errors.responseJSON.status);
-                        // showError(errors, form);
                         notify(errors.responseJSON.status || errors.responseJSON || errors.responseJSON.message|| "Something went worng", 'error');
                         form.find('button[type="submit"]').html('Pay Now').attr('disabled', false).removeClass('btn-secondary');
-                        // notify(errors.responseJSON || errors.responseJSON.status, 'error');
+                        
                     }
                 });
             }
@@ -388,7 +385,7 @@ $table = "yes";
                         var count = 0;
 
                         $.each(data.data, function(index, value) {
-                            console.log('value', value);
+                           
                             // count = count + 1;
                             // if (count == "1") {
                             //     var active = "active";
