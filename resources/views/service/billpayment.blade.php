@@ -58,7 +58,7 @@ $table = 'yes';
                         <label class="form-label fw-semibold">
                             {{ ucfirst($type) }} Operator
                         </label>
-                        <select class="form-select" name="provider_id" required onchange="SETTITLE()" id="mySelect">
+                        <select class="form-select" name="provider_id" onchange="SETTITLE()" required id="mySelect">
                             <option value="">Select Operator</option>
                             @foreach ($providers as $provider)
                                 <option value="{{ $provider->id }}">
@@ -74,7 +74,7 @@ $table = 'yes';
                             placeholder="Enter registered mobile number">
                     </div>
 
-                    <div class="billdata p-3 mb-3 d-none rounded bg-light border">
+                    <div class="billdata mb-3">
 
                     </div>
                     <div class="mb-3">
@@ -508,6 +508,10 @@ $table = 'yes';
                 i = i + 1;
             }
             $('.billdata').append(htmlformfiled);
+
+
+
+
         }
     }
 </script>
