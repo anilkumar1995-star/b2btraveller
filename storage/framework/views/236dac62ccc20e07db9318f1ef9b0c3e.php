@@ -61,13 +61,7 @@
                                 <a href="<?php echo e(route('statement', ['type' => 'account'])); ?>" class="stretched-link">Main Wallet</a>
                                 <small class="text-muted mb-0">&#8377; <?php echo e(Auth::user()->mainwallet); ?> /-</small>
                             </div>
-                            <div class="dropdown-shortcuts-item col">
-                                <span class="dropdown-shortcuts-icon rounded-circle mb-2">
-                                    <i class="ti ti-file-invoice fs-4"></i>
-                                </span>
-                                <a href="<?php echo e(route('statement', ['type' => 'awallet'])); ?>" class="stretched-link">AEPS Wallet</a>
-                                <small class="text-muted mb-0"> &#8377; <?php echo e(Auth::user()->aepsbalance); ?> /-</small>
-                            </div>
+                            
                              <div class="dropdown-shortcuts-item col">
                                 <span class="dropdown-shortcuts-icon rounded-circle mb-2">
                                     <i class="ti ti-file-invoice fs-4"></i>

@@ -90,7 +90,7 @@ Route::get('comingsoon', [HomeController::class, 'comingsoon'])->name('comingsoo
 Route::get('unauthorized', [HomeController::class, 'unauthorized'])->name('unauthorized');
 
 Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
-Route::post('/dashboard', [HomeController::class, 'index'])->name('homePost');
+Route::post('/dashboard', [HomeController::class, 'index'])->name('home');
 
 Route::get('/search-txnid', [HomeController::class, 'searchTxnid'])->name('searchTxnid');
 Route::get('/search-user', [HomeController::class, 'searchUser'])->name('searchUser');
@@ -103,7 +103,7 @@ Route::get('setpermissions', [HomeController::class, 'setpermissions']);
 Route::get('setscheme', [HomeController::class, 'setscheme']);
 Route::get('setscheme', [HomeController::class, 'setscheme']);
 Route::get('getmyip', [HomeController::class, 'getmysendip']);
-Route::get('balance', [HomeController::class, 'getbalance'])->name('getbalances');
+Route::get('balance', [HomeController::class, 'getbalance'])->name('getbalance');
 Route::get('mydata', [HomeController::class, 'mydata']);
 Route::get('bulkSms', [HomeController::class, 'mydata']);
 
@@ -424,7 +424,7 @@ Route::group(['prefix' => 'rentpay', 'middleware' => ['auth', 'company', 'transa
 
 // Route::post('bene/delete', [XdmtController::class, 'beneDelete'])->name('beneDelete');
 
-Route::get('ipayoprator', [BillpayController::class, 'getbillerList'])->name('paysprintoperator');
+Route::get('ipayoprator', [BillpayController::class, 'getbillerList'])->name('paysprintoperators');
 
 Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
