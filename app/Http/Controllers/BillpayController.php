@@ -32,7 +32,6 @@ class BillpayController extends Controller
         $this->callIydaBillpay = new IYDABillPayController;
         $this->api = Api::where('code', 'paysprintbill')->first();
         $this->table = DB::table('billpay_providers');
-
     }
 
     public function index(Request $post, $type)
@@ -40,15 +39,15 @@ class BillpayController extends Controller
         // if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
         //     return redirect(route('unauthorized'));
         // }
-      
+
         $data['type'] = $type;
         $data['providers'] = $this->table->where('type', $type)->where('status', '1')->whereNotNull('customParamResp')->orderBy('name')->limit(100)->get();
-       
+
         // Provider::where('type', $type)->where('status', "1")->whereNotNull('customParamResp')->orderBy('name')->get();
 
         // $agent = Agents::where('user_id', \Auth::id())->first();
         // return redirect(route('home'));
-           $data['recentTransactions'] = Report::with('provider')->where('user_id', auth()->id())
+        $data['recentTransactions'] = Report::with('provider')->where('user_id', auth()->id())
             ->where('product', $type)->orderBy('id', 'desc')->limit(5)->get();
         return view('service.billpayment')->with($data);
     }
@@ -61,8 +60,6 @@ class BillpayController extends Controller
         }
         $data['providers'] = $providers->limit(200)->get();
         return response()->json($data);
-
-
     }
 
     public function bbps(Request $post, $type)
@@ -148,7 +145,6 @@ class BillpayController extends Controller
                 // case 'iydaBillpay':
                 $post['billerId'] = $provider->billerId;
                 $result = $this->callIydaBillpay->fetchBillPay($post, $provider, $user);
-dd($result);
                 if ($result['status']) {
                     return response()->json(['statuscode' => "TXN", "data" => $result['data']]);
                 } else {
@@ -288,7 +284,6 @@ dd($result);
             if (!$check) {
                 $user = \DB::table('paysprint_billers')->insert($insert);
             }
-
         }
 
         //dd($result,$url,$header,json_encode($parameter));
@@ -311,7 +306,7 @@ dd($result);
         $getDataProvider = $this->table->where('id', $post->provider_id)->first();
         $getMandatParam = $getDataProvider->customerReqParam = $getDataProvider->customParamResp;
         $i = 0;
-// dd($getMandatParam);
+        // dd($getMandatParam);
         foreach (json_decode($getMandatParam) as $params) {
             // dd(json_decode($params)->customParamName);
             $num = 'number' . $i;
@@ -351,14 +346,14 @@ dd($result);
         }
         return view('billpayReciptWithLogo', $data);
     }
-    
-    
-    
-    public function getbillerList(Request $post){
-        
-         // $result = $this->callIydaBillpay->getBillPaymentTableUpdate();
-         $result = $this->callIydaBillpay->fetchProduct();
-          dd($result) ;
+
+
+
+    public function getbillerList(Request $post)
+    {
+
+        // $result = $this->callIydaBillpay->getBillPaymentTableUpdate();
+        $result = $this->callIydaBillpay->fetchProduct();
+        dd($result);
     }
-    
 }
