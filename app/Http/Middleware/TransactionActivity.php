@@ -14,7 +14,7 @@ class TransactionActivity
      */
     public function handle($post, Closure $next, $type = "none")
     {
-        //dd($post->all());
+        dd($post->all());
         $ifsc = substr($post->ifsc, 0, 4);
         $ifsc2 = substr($post->ifsc2, 0, 4);
         $ifsc3 = substr($post->ifsc3, 0, 4);
@@ -38,7 +38,6 @@ class TransactionActivity
         $log['request'] = json_encode($post->all());
         $log['parameters'] = $type;
 
-        dd($log);
         \DB::table('transaction_activitylogs')->insert($log);
         return $next($post);
     }
