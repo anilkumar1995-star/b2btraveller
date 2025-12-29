@@ -153,7 +153,6 @@ class IYDABillPaymentService
         ];
         $fullURL = $this->setFullUrl('fetchBillByBillId');
          $result = Permission::curl($fullURL, "GET", json_encode($parameters), $this->header, "yes", "BillFetch", @$parameters['billId']);
-        dd($result);
         return $result;
 
     }
