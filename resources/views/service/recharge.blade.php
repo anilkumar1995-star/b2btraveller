@@ -14,7 +14,7 @@ $table = "yes";
 @endphp
 
 @section('content')
-<div class="content">
+    <iv class="content">
             <div class="card border mb-3">
                 <div class="card-header mb-3 bg-label-primary recharge-header">
                         <h5 class="mb-0 d-flex align-items-center gap-2">
@@ -24,8 +24,7 @@ $table = "yes";
                             {{ ucfirst($type) }} Recharge
                         </h5>
                     </div>
-                <div class="card-body">
-                    
+                <div class="card-body">   
                          <form id="rechargeForm" action="{{route('rechargepay')}}" method="post" autocomplete="off">
                         {{ csrf_field() }}
                         <input type="hidden" name="type" value="{{$type}}">
@@ -54,7 +53,7 @@ $table = "yes";
                                     @endforeach
                                 </select>
                             </div>
-                            <!-- <div class="form-group col-sm-12 col-lg-3 my-1">
+                            <div class="form-group col-sm-12 col-lg-3 my-1">
                                 <label>Plan Type</label>
                                 <select name="rechargeType" class="form-control my-1" id="rechargeType" required>
                                     <option value="">Select Plan Type</option>
@@ -62,7 +61,7 @@ $table = "yes";
                                     <option value="{{$circle->rechargeTypeId}}">{{$circle->rechargeType}}</option>
                                     @endforeach
                                 </select>
-                            </div> -->
+                            </div>
                             @endif
 
                             <div class="form-group col-sm-12 col-lg-4 my-1">
@@ -84,12 +83,12 @@ $table = "yes";
                                 <a href="{{url('profile/view?tab=pinChange')}}" target="_blank" class="text-primary pull-right">Generate Or Forgot Pin??</a>
                             </div>
 
-                          <div class="col-sm-12 col-lg-4 mt-4">
-                            <!-- <button type="submit"
+                          <div class="col-sm-12 col-lg-4">
+                            <button type="submit"
                                 class="btn btn-primary px-4"
                                 data-loading-text="<b><i class='fa fa-spin fa-spinner'></i></b> Paying">
                                 <i class="icon-paperplane"></i> Pay Now
-                            </button> -->
+                            </button>
 
                             <!-- <button type="button"
                                 class="btn btn-success px-4"
@@ -97,10 +96,7 @@ $table = "yes";
                                 GET Plan
                             </button> -->
                         </div>
-
-
-
-                        </div>
+                      </div>
                     </form>
                 </div>
             </div>
@@ -133,8 +129,7 @@ $table = "yes";
                     </div>
                 </div>
             </div>
-       
-</div>
+        </div>
 
 <div class="modal fade bd-example-modal-lg" id="planModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -369,7 +364,7 @@ $table = "yes";
                 beforeSend: function() {
                     swal({
                         title: 'Wait!',
-                        text: 'Please wait, we are fetching commission details',
+                        text: 'Please wait, we are fetching details',
                         onOpen: () => {
                             swal.showLoading()
                         },
@@ -488,7 +483,7 @@ $table = "yes";
                 beforeSend: function() {
                     swal({
                         title: 'Wait!',
-                        text: 'Please wait, we are fetching commission details',
+                        text: 'Please wait, we are fetching details',
                         onOpen: () => {
                             swal.showLoading()
                         },
@@ -536,7 +531,7 @@ $table = "yes";
                 beforeSend: function() {
                     swal({
                         title: 'Wait!',
-                        text: 'Please wait, we are fetching commission details',
+                        text: 'Please wait, we are fetching details',
                         onOpen: () => {
                             swal.showLoading()
                         },
