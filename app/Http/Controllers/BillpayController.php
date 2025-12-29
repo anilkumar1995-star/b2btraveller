@@ -49,7 +49,7 @@ class BillpayController extends Controller
         // $agent = Agents::where('user_id', \Auth::id())->first();
         // return redirect(route('home'));
            $data['recentTransactions'] = Report::with('provider')->where('user_id', auth()->id())
-            ->where('product', $type)->orderBy('id', 'desc')->limit(5)->get();
+            ->where('product', $type)->orderBy('id', 'desc')->limit(5)->get();        
         return view('service.billpayment')->with($data);
     }
 
@@ -338,6 +338,7 @@ class BillpayController extends Controller
             return view('comingsoon');
         }
         $getTxnHistory = Report::where("id", $id)->first();
+        // dd($getTxnHistory);
         if (!$getTxnHistory) {
             $data['error'] = 'Please go to Bill Statement and print reciept';
         } else {

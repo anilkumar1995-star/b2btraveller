@@ -6,12 +6,12 @@
 @section('content')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{-- <title>Document</title> --}}
+    {{-- <title>Document</title> 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-    </script>
+    </script> --}}
     <style>
         tr {
             padding: 2px;
@@ -24,120 +24,127 @@
     </style>
 
 
-    <div class="card shadow-sm bg-white">
-        <div class="card-body">
-            <div id='billrecipt'>
-                <!-- <div class="row text-center"><div class="col-sm-12 fw-bold1"></div></div> -->
-                <div class="row">
-                    <div class="col-sm-3">
-                        <img src="{{ asset('') }}logos/billpay.jpeg" height="150px" width="150px" />
-                    </div>
-                    <div class="col-sm-6  text-center">
-                        <div class="fw-bold1"> Bill Payment Details</div>
-                        {{-- <div class="fw-bold text-success mt-4"> Your Transaction Complete Successfully</div> --}}
-                    </div>
-                    {{-- <div class="col-sm-3">
-                        <img src="{{ asset('') }}logos/billpay.jpeg" height="150px" width="150px" />
-                    </div> --}}
-                </div>
-                <div class="row">
-                    @if (@isset($error) && !empty($error))
-                        <div class="col" style="padding-left: 431px; color: red;">
-                            <td class="fw-bold1">{{ $error }}</td>
-                            <div class="container" style="text-align-last: center;">
-                                <a href="{{ route('home') }}"><button type="button" class="btn"><strong>GO To
-                                            Dashboard</strong></button></a>
+  
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-md-10">
+
+                <div class="card shadow-sm border">
+
+                    <div class="card-body p-4" id="billrecipt">
+
+                        <div class="row align-items-center mb-4">
+                            <div class="col-3">
+                                <img src="{{ asset('logos/billpay.jpeg') }}"
+                                    class="img-fluid" style="max-height:120px">
+                            </div>
+
+                            <div class="col-6 text-center">
+                                <h5 class="fw-bold mb-1">Bill Payment Receipt</h5>
+                                <small class="text-muted">Transaction Details</small>
                             </div>
                         </div>
-                    @else
-                        <div class="col-sm-3">
-                        </div>
-                        <div class="col-sm-6">
-                            <table width="100%">
-                                <tr>
-                                    <td class="fw-bold1">Name of the biller</td>
-                                    <td class="fw-bold1">{{ @$order->billerName }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Operator Name</td>
-                                    <td class="fw-bold1">{{ @$order->providername }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Bill Number</td>
-                                    <td class="fw-bold1">{{ @$order->billerNo }}</td>
-                                </tr>
 
-                                <tr>
-                                    <td class="fw-bold1">Bill Date</td>
-                                    <td class="fw-bold1">{{ @$order->option2 }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Bill Due Date</td>
-                                    <td class="fw-bold1">{{ @$order->option3 }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Transaction Date</td>
-                                    <td class="fw-bold1">{{ @$order->created_at }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Transaction Ref Id</td>
-                                    <td class="fw-bold1">{{ @$order->txnid }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Biller Reference Number</td>
-                                    <td class="fw-bold1">{{ @$order->refno }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Bill Amount</td>
-                                    <td class="fw-bold1">Rs {{ @$order->amount }}</td>
-                                </tr>
-                                {{-- <tr>
-                                    <td class="fw-bold1">Customer Convienience Fee</td>
-                                    <td class="fw-bold1">0.00</td>
-                                </tr> --}}
-                                {{-- <tr>
-                                    <td class="fw-bold1">Total Amount</td>
-                                    <td class="fw-bold1">Rs {{ @$order->amount }}</td>
-                                </tr> --}}
-
-                                <tr>
-                                    <td class="fw-bold1">Status</td>
-                                    <td class="fw-bold1">{{ strtoupper(@$order->status) }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Remark</td>
-                                    <td class="fw-bold1">{{ @$order->remark }}</td>
-                                </tr>
-                                <tr>
-                                    <td class="fw-bold1">Description</td>
-                                    <td class="fw-bold1">{{ @$order->description }}</td>
-                                </tr>
-                            </table>
-                        </div>
-                    @endif
-                    <div class="col-sm-3">
-
+                        @if(isset($error) && !empty($error))
+                            <div class="alert alert-danger text-center">
+                                {{ $error }}
+                                <div class="mt-3">
+                                    <a href="{{ route('home') }}" class="btn btn-outline-primary btn-sm">
+                                        Go To Dashboard
+                                    </a>
+                                </div>
+                            </div>
+                        @else
+                            <div class="table-responsive">
+                                <table class="table table-borderless table-sm mb-0">
+                                    <tbody>
+                                        <tr>
+                                            <td class="fw-semibold">Biller Name</td>
+                                            <td>{{ @$order->billerName ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Operator Name</td>
+                                            <td>{{ @$order->providername ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Bill Number</td>
+                                            <td>{{ @$order->billerNo ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Bill Date</td>
+                                            <td>{{ @$order->option2 ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Bill Due Date</td>
+                                            <td>{{ @$order->option3 ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Transaction Date</td>
+                                            <td>{{ @$order->created_at ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Transaction ID</td>
+                                            <td>{{ @$order->txnid ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Reference No</td>
+                                            <td>{{ @$order->refno ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Amount</td>
+                                            <td><strong>₹ {{ number_format(@$order->amount ?? 0, 2) }}</strong></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Status</td>
+                                            <td>
+                                                <span class="badge 
+                                                    {{ ($order->status ?? '') == 'success' ? 'bg-success' :
+                                                    (($order->status ?? '') == 'pending' ? 'bg-warning text-dark' :
+                                                    (($order->status ?? '') ? 'bg-danger' : 'bg-secondary')) }}">
+                                                    {{ strtoupper(@$order->status ?? 'N/A') }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Remark</td>
+                                            <td>{{ @$order->remark ?? '-' }}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="fw-semibold">Description</td>
+                                            <td>{{ @$order->description ?? '-' }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        @endif
 
                     </div>
+
+                   @if(!isset($error) || empty($error))
+                        <div class="card-footer mb-2 bg-white border-0 text-center">
+                            <button class="btn btn-primary px-4" type="button" id="print">
+                                <i class="fa fa-print me-1"></i> Print Receipt
+                            </button>
+                        </div>
+                    @endif
+
                 </div>
             </div>
-        </div>
-        <div class="card-footer">
-            <button class="btn btn-primary" type="button" id="print"><i class="fa fa-print"></i>PRINT</button>
-        </div>
-    </div>
-
-
-
+        </div> 
 @endsection
 
 @push('script')
 <script src="{{ asset('/assets/js/core/jQuery.print.js') }}"></script>
     <script>
         $(document).ready(function() {
-            $('#print').click(function() {
-                $('#billrecipt').print();
-            });
+            $('#print').on('click', function () {
+
+        @if(isset($error) && !empty($error))
+            alert('Receipt not available for printing');
+            return false;
+        @endif
+
+        $('#billrecipt').print();
+    });
 
         });
     </script>
