@@ -335,6 +335,7 @@ class BillpayController extends Controller
             return view('comingsoon');
         }
         $getTxnHistory = Report::where("id", $id)->first();
+        // dd($getTxnHistory);
         if (!$getTxnHistory) {
             $data['error'] = 'Please go to Bill Statement and print reciept';
         } else {
