@@ -95,8 +95,8 @@ Route::post('/dashboard', [HomeController::class, 'index'])->name('homePost');
 Route::get('/search-txnid', [HomeController::class, 'searchTxnid'])->name('searchTxnid');
 Route::get('/search-user', [HomeController::class, 'searchUser'])->name('searchUser');
 
-Route::get('/insights', [HomeController::class, 'insights'])->name('insights');
-Route::post('/insights', [HomeController::class, 'insights'])->name('insights');
+// Route::get('/insights', [HomeController::class, 'insights'])->name('insights');
+// Route::post('/insights', [HomeController::class, 'insights'])->name('insights');
 
 Route::post('wallet/balance', [HomeController::class, 'getbalance'])->name('getbalance');
 Route::get('setpermissions', [HomeController::class, 'setpermissions']);
