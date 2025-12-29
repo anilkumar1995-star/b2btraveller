@@ -167,25 +167,25 @@
 
                         var menu = ``;
                         if (full.status == "success" || full.status == "pending") {
-                            @if (Myhelper::can('recharge_status'))
-                                menu +=
-                                    `<li><a href="javascript:void(0)" class="dropdown-item" onclick="status(` +
-                                    full.id +
-                                    `, 'recharge')"><i class="icon-info22"></i>Check Status</a></li>`;
-                            @endif
+                            // @if (Myhelper::can('recharge_status'))
+                            //     menu +=
+                            //         `<li><a href="javascript:void(0)" class="dropdown-item" onclick="status(` +
+                            //         full.id +
+                            //         `, 'recharge')"><i class="icon-info22"></i>Check Status</a></li>`;
+                            // @endif
 
-                            @if (Myhelper::can('recharge_statement_edit'))
-                                menu +=
-                                    `<li><a href="javascript:void(0)" class="dropdown-item" onclick="editReport(` +
-                                    full.id + `,'` + full.refno + `','` + full.txnid + `','` + full.payid +
-                                    `','` + full.remark + `', '` + full.status +
-                                    `', 'recharge')"><i class="icon-pencil5"></i> Edit</a></li>`;
-                            @endif
+                            // @if (Myhelper::can('recharge_statement_edit'))
+                            //     menu +=
+                            //         `<li><a href="javascript:void(0)" class="dropdown-item" onclick="editReport(` +
+                            //         full.id + `,'` + full.refno + `','` + full.txnid + `','` + full.payid +
+                            //         `','` + full.remark + `', '` + full.status +
+                            //         `', 'recharge')"><i class="icon-pencil5"></i> Edit</a></li>`;
+                            // @endif
                         }
 
-                        menu +=
-                            `<li><a href="javascript:void(0)" class="dropdown-item" onclick="complaint(` +
-                            full.id + `, 'recharge')"><i class="icon-cogs"></i> Complaint</a></li>`;
+                        // menu +=
+                        //     `<li><a href="javascript:void(0)" class="dropdown-item" onclick="complaint(` +
+                        //     full.id + `, 'recharge')"><i class="icon-cogs"></i> Complaint</a></li>`;
 
 
                         return `<div class="btn-group" role="group">
