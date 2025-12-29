@@ -49,6 +49,8 @@ class BillpayController extends Controller
         // return redirect(route('home'));
         $data['recentTransactions'] = Report::with('provider')->where('user_id', auth()->id())
             ->where('product', $type)->orderBy('id', 'desc')->limit(5)->get();
+
+            dd($data['recentTransactions']);
         return view('service.billpayment')->with($data);
     }
 
