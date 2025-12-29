@@ -74,7 +74,7 @@
             <ul class="menu-sub" id="menu-design {{ Request::is('bus/*') ? 'show' : '' }}">
 
                 <li class="menu-item {{ Request::is('bus/view') ? 'active' : '' }}">
-                    <a href="{{ route('flight.view') }}" class="menu-link">
+                    <a href="{{ route('bus.view') }}" class="menu-link">
                         <div data-i18n="Bus Booking">Bus Booking</div>
                     </a>
                 </li>
@@ -94,7 +94,7 @@
             <ul class="menu-sub" id="menu-design {{ Request::is('hotel/*') ? 'show' : '' }}">
 
                 <li class="menu-item {{ Request::is('hotel/view') ? 'active' : '' }}">
-                    <a href="{{ route('flight.view') }}" class="menu-link">
+                    <a href="{{ route('hotel.view') }}" class="menu-link">
                         <div data-i18n="Hotel Booking">Hotel Booking</div>
                     </a>
                 </li>
