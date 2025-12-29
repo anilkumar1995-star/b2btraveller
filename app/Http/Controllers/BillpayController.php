@@ -87,7 +87,6 @@ class BillpayController extends Controller
 
     public function payment(Request $post)
     {
-        dd($post->all());
         // if (!in_array($post->type, ['fetchBill', 'payBill'])) {
         //     return response()->json(['statuscode' => "ERR", "message" => "Type parameter request in invalid"]);
         // }
@@ -131,7 +130,7 @@ class BillpayController extends Controller
 
         $checkAPIStatus = $this->checkServiceStatus;
 
-        // dd($checkAPIStatus);
+        dd($checkAPIStatus);
         if (!$checkAPIStatus['status']) {
             return response()->json(['statuscode' => "ERR", "message" => $checkAPIStatus['message']]);
         }
