@@ -120,7 +120,7 @@ class IYDABillPayController extends Controller
     function fetchBillPay($request, $provider, $user)
     {
         $resp0 = $this->billService->getBillDetailsforBillPay($request);
-        // dd($request);
+        dd($request, $resp0);
         $resp = json_decode($resp0['response']);
 
         if ($resp0['code'] == 200) {
