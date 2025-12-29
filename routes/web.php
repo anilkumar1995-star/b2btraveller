@@ -424,7 +424,7 @@ Route::group(['prefix' => 'rentpay', 'middleware' => ['auth', 'company', 'transa
 
 // Route::post('bene/delete', [XdmtController::class, 'beneDelete'])->name('beneDelete');
 
-Route::get('ipayoprator', [BillpayController::class, 'getbillerList'])->name('paysprintoperator');
+Route::get('ipayoprator', [BillpayController::class, 'getbillerList'])->name('paysprintoperators');
 
 Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');
