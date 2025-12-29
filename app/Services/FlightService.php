@@ -51,6 +51,10 @@ class FlightService
             return $this->baseUrl . '/v1/service/traveller/flight/book';
         } else if ($method == 'ticketlcc') {
             return $this->baseUrl . '/v1/service/traveller/flight/ticket/llc';
+        } else if ($method == 'bookingDetails') {
+            return $this->baseUrl . '/v1/service/traveller/flight/booking/details';
+        } else if ($method == 'cancelFlight') {
+            return $this->baseUrl . '/v1/service/traveller/flight/booking/cancel';
         }
         return "";
     }
@@ -94,7 +98,7 @@ class FlightService
             } else {
                 $payload["Segments"] = [
                     [
-                       "Origin" => $data['Origin'] ?? "DEL",
+                        "Origin" => $data['Origin'] ?? "DEL",
                         "Destination" => $data['Destination'] ?? "BOM",
                         "FlightCabinClass" => $data['FlightCabinClass'] ?? "1",
                         "PreferredDepartureTime" => $data['PreferredDepartureTime'] ?? date('Y-m-d\TH:i:s'),
@@ -113,6 +117,7 @@ class FlightService
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 // $response = StaticResponseHelper::searchStaticResponse();
                 $response = StaticResponseHelper::flightroudtripsearchresponse();
+                // $response = StaticResponseHelper::flightfailedsearchresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "flight_search", "");
                 $response = $response['response'];
@@ -120,7 +125,6 @@ class FlightService
 
             if (is_string($response)) {
                 $response = json_decode(($response), true);
-              
             }
 
             if (isset($response['data']) && is_string($response['data'])) {
@@ -131,7 +135,12 @@ class FlightService
             if (isset($response['status']) && strtoupper($response['status']) == 'SUCCESS') {
                 return ['status' => 'success', 'message' => "Flight search successfully", 'data' => $response['data']];
             } else {
-                return ['status' => 'failed', 'message' => 'Flight search failed'];
+
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Flight search failed'
+                ];
             }
         } catch (Exception $e) {
             dd($e);
@@ -175,7 +184,11 @@ class FlightService
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
                 return ['status' => 'success', 'message' => "Fare Rule get successfully", 'data' => $response['data']];
             } else {
-                return ['status' => 'failed', 'message' => 'Fare Rule get failed'];
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Fare Rule get failed'
+                ];
             }
         } catch (Exception $e) {
             return ['status' => 'ERROR', 'message' => $e->getMessage()];
@@ -219,7 +232,11 @@ class FlightService
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
                 return ['status' => 'success', 'message' => "Fare Quotation get successfully", 'data' => $response['data']];
             } else {
-                return ['status' => 'failed', 'message' => 'Fare Quotation get failed'];
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Fare Quotation get failed'
+                ];
             }
         } catch (Exception $e) {
             return ['status' => 'ERROR', 'message' => $e->getMessage()];
@@ -261,7 +278,11 @@ class FlightService
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
                 return ['status' => 'success', 'message' => "Seat Layout get successfully", 'data' => $response['data']];
             } else {
-                return ['status' => 'failed', 'message' => 'Seat Layout get failed'];
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Seat Layout get failed'
+                ];
             }
         } catch (Exception $e) {
             return ['status' => 'ERROR', 'message' => $e->getMessage()];
@@ -284,12 +305,10 @@ class FlightService
 
             $url = $this->setFullUrl('book');
 
-
-
-
             // dd($response, $payload);
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
+                // $response = StaticResponseHelper::flightfailedbookingresponse();
                 $response = StaticResponseHelper::flightBookStaticResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
@@ -307,7 +326,11 @@ class FlightService
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
                 return ['status' => 'success', 'message' => "Flight Booking successfully", 'data' => $response['data']];
             } else {
-                return ['status' => 'failed', 'message' => 'Flight Booking failed'];
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Flight Booking failed'
+                ];
             }
         } catch (Exception $e) {
             return ['status' => 'ERROR', 'message' => $e->getMessage()];
@@ -333,6 +356,7 @@ class FlightService
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 $response = StaticResponseHelper::flightTicketLCCStaticResponse();
+                // $response = StaticResponseHelper::flightfailedbookingresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "ticketlcc", "");
                 $response = $response['response'];
@@ -350,7 +374,116 @@ class FlightService
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
                 return ['status' => 'success', 'message' => "Flight Booking successfully", 'data' => $response['data']];
             } else {
-                return ['status' => 'failed', 'message' => 'Flight Booking failed'];
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Flight Booking failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
+    }
+
+    public function getDetailsFlight($data)
+    {
+        try {
+            $token = $this->authService->getToken();
+
+
+            $res = json_decode($data->raw_response, true);
+       
+            $det = $res['Response']['Response']['FlightItinerary']['Passenger'][0];
+            $payload = [
+                "EndUserIp" => $this->ip,
+                "TokenId" => $token,
+                "BookingId" => $data->booking_id_api,
+                "PNR" => $data->pnr,
+                "FirstName" => $det['FirstName'],
+                "LastName" => $det['LastName'],
+            ];
+
+            $url = $this->setFullUrl('bookingDetails');
+
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = StaticResponseHelper::bookingdetStaticResponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "booking_details", "");
+                $response = $response['response'];
+            }
+
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
+
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Booking Details get successfully", 'data' => $response['data']];
+            } else {
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Booking Details get failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
+    }
+
+    public function cancelflight($data)
+    {
+        try {
+            $token = $this->authService->getToken();
+
+             $payload = [
+                "EndUserIp" => $this->ip,
+                "TokenId" => $token,
+                "BookingId" => $data['payload']['BookingId'],
+                "RequestType" => $data['payload']['RequestType'],
+                "CancellationType" => $data['payload']['CancellationType'],
+                "Remarks" => $data['payload']['Remarks'],
+            ];
+
+            if ($data['payload']['RequestType'] == 2) {
+                if (!empty($data['payload']['TicketId'])) {
+                    $payload['TicketId'] = $data['payload']['TicketId'];
+                } else {
+                    $payload['Sectors'] = $data['payload']['Sectors'][0];
+                }
+            }
+
+            $url = $this->setFullUrl('cancelFlight');
+
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = StaticResponseHelper::bookingCancelStaticResponse();
+                // $response = StaticResponseHelper::bookingFailedCancelStaticResponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "booking_details", "");
+                $response = $response['response'];
+            }
+
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
+
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Flight Cancellation successfully", 'data' => $response['data']];
+            } else {
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Flight Cancellation failed'
+                ];
             }
         } catch (Exception $e) {
             return ['status' => 'ERROR', 'message' => $e->getMessage()];

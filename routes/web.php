@@ -16,6 +16,7 @@ use App\Http\Controllers\AffliateController;
 use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BillpayController;
+use App\Http\Controllers\BusController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\CyrusPayoutController;
@@ -44,6 +45,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConDmtController;
 use App\Http\Controllers\CcpaymentController;
 use App\Http\Controllers\FlightController;
+use App\Http\Controllers\HotelController;
 use App\Http\Controllers\XdmtController;
 use App\Http\Controllers\IpayDmtController;
 use App\Http\Controllers\RoutingController;
@@ -51,9 +53,9 @@ use App\Http\Controllers\UpipayoutController;
 
 Route::get('/', [UserController::class, 'index'])->middleware('guest')->name('mylogin');
 
-Route::get('/privecy-policy', function () {
-    return view('privecy-policy');
-});
+// Route::get('/privecy-policy', function () {
+//     return view('privecy-policy');
+// });
 Route::post('searchbydatemystatics', [HomeController::class, 'searchdatestatics'])->name('searchbydatemystatics');
 
 Route::group(['prefix' => 'auth', "middleware" => ['webActivityLog']], function () {
@@ -69,6 +71,11 @@ Route::group(['prefix' => 'auth', "middleware" => ['webActivityLog']], function 
 Route::group(['prefix' => 'loanenquiry', 'middleware' => 'auth'], function () {
     Route::get('/', [UserController::class, 'loanindex'])->name('loanform');
     Route::post('loanformstore', [UserController::class, 'loanformstore'])->name('loanformstore');
+});
+
+
+Route::group(['prefix' => 'api', 'middleware' => ['auth', 'company', "webActivityLog"]], function () {
+    Route::get('log', [RoutingController::class, 'apilog'])->name('apilog');
 });
 
 Route::group(['prefix' => 'condmt', 'middleware' => ['auth', 'company']], function () {
@@ -88,8 +95,8 @@ Route::post('/dashboard', [HomeController::class, 'index'])->name('home');
 Route::get('/search-txnid', [HomeController::class, 'searchTxnid'])->name('searchTxnid');
 Route::get('/search-user', [HomeController::class, 'searchUser'])->name('searchUser');
 
-Route::get('/insights', [HomeController::class, 'insights'])->name('insights');
-Route::post('/insights', [HomeController::class, 'insights'])->name('insights');
+// Route::get('/insights', [HomeController::class, 'insights'])->name('insights');
+// Route::post('/insights', [HomeController::class, 'insights'])->name('insights');
 
 Route::post('wallet/balance', [HomeController::class, 'getbalance'])->name('getbalance');
 Route::get('setpermissions', [HomeController::class, 'setpermissions']);
@@ -132,9 +139,28 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::post('ticket', [FlightController::class, 'flightTicket'])->name('flight.ticket');
     Route::get('booking', [FlightController::class, 'flightBooking'])->name('flight.booking');
     Route::get('booking-list', [FlightController::class, 'bookingList'])->name('flight.bookingList');
+    Route::get('booking-list-failed', [FlightController::class, 'bookingListFailed'])->name('flight.bookingListFailed');
+    Route::post('booking-view', [FlightController::class, 'viewTicket'])->name('flight.booking.view');
+    Route::get('cancel/{id}', [FlightController::class, 'cancelPage']);
+    Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);
 });
 
 
+Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
+    Route::get('view', [BusController::class, 'root'])->name('bus.view');
+    // Route::post('search', [BusController::class, 'search'])->name('bus.search');
+    // Route::post('book', [BusController::class, 'bookBus'])->name('bus.book');
+    // Route::post('ticket', [BusController::class, 'busTicket'])->name('bus.ticket');
+    // Route::get('booking', [BusController::class, 'busBooking'])->name('bus.booking');
+});
+
+Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
+    Route::get('view', [HotelController::class, 'root'])->name('hotel.view');
+    // Route::post('search', [HotelController::class, 'search'])->name('hotel.search');
+    // Route::post('book', [HotelController::class, 'bookHotel'])->name('hotel.book');
+    // Route::post('ticket', [HotelController::class, 'hotelTicket'])->name('hotel.ticket');
+    // Route::get('booking', [HotelController::class, 'hotelBooking'])->name('hotel.booking');
+});
 
 Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActivityLog']], function () {
     Route::get('{type}', [RoleController::class, 'index'])->name('tools');
@@ -144,7 +170,7 @@ Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActiv
     Route::post('getdefault/permission/{id}', [RoleController::class, 'getdefaultpermissions'])->name('defaultpermissions');
 });
 
-Route::group(['prefix' => 'statement', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'statement', 'middleware' => ['auth']], function () {
     // Route::get("export/{type}", [StatementController::class, 'export'])->name('export');
     Route::get('{type}/{id?}/{status?}', [StatementController::class, 'index'])->name('statement');
     Route::post('fetch/{type}/{id?}/{returntype?}', [CommonController::class, 'fetchData']);
@@ -156,7 +182,7 @@ Route::group(['prefix' => 'statement', 'middleware' => ['auth', 'company']], fun
 });
 
 
-Route::group(['prefix' => 'member', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'member', 'middleware' => ['auth']], function () {
     Route::get('{type}/{action?}', [MemberController::class, 'index'])->name('member');
     Route::post('store', [MemberController::class, 'create'])->middleware('webActivityLog')->name('memberstore');
     Route::post('commission/update', [MemberController::class, 'commissionUpdate'])->middleware('webActivityLog')->name('commissionUpdate'); //->middleware('activity');
@@ -178,7 +204,7 @@ Route::group(['prefix' => 'fund', 'middleware' => ['auth', 'company']], function
     // Route::post('runpaisatxn', [CyrusPayoutController::class, 'transactionRunpaisa'])->name('runpaisatxn')->middleware('transactionlog:fund');
 });
 
-Route::group(['prefix' => 'profile', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'profile', 'middleware' => ['auth']], function () {
     Route::get('/view/{id?}', [SettingController::class, 'index'])->name('profile');
     // Route::get('certificate', [SettingController::class,'certificate'])->name('certificate');
     Route::post('user_profile_update', [SettingController::class, 'profileUpdate'])->middleware('webActivityLog')->name('profileUpdate');
@@ -195,19 +221,19 @@ Route::group(['prefix' => 'setup', 'middleware' => ['auth', 'company', "webActiv
 });
 
 Route::group(['prefix' => 'resources', 'middleware' => ['auth', 'company', "webActivityLog"]], function () {
-    // Route::get('{type}', [ResourceController::class, 'index'])->name('resource');
-    // Route::post('update', [ResourceController::class, 'update'])->name('resourceupdate');
-    // Route::post('get/{type}/commission', [ResourceController::class, 'getCommission']);
-    // Route::post('get/{type}/packagecommission', [ResourceController::class, 'getPackageCommission']);
+    Route::get('{type}', [ResourceController::class, 'index'])->name('resource');
+    Route::post('update', [ResourceController::class, 'update'])->name('resourceupdate');
+    Route::post('get/{type}/commission', [ResourceController::class, 'getCommission']);
+    Route::post('get/{type}/packagecommission', [ResourceController::class, 'getPackageCommission']);
 });
 
-Route::group(['prefix' => 'recharge', 'middleware' => ['auth', 'company']], function () {
-    // Route::get('{type}', [RechargeController::class, 'index'])->name('recharge');
+Route::group(['prefix' => 'recharge', 'middleware' => ['auth']], function () {
+    Route::get('{type}', [RechargeController::class, 'index'])->name('recharge');
     Route::get('bbps/{type}', [BillpayController::class, 'bbps'])->name('bbps');
-    // Route::post('payment', [RechargeController::class, 'payment'])->name('rechargepay')->middleware('transactionlog:recharge');
-    // Route::post('getplan', [RechargeController::class, 'getplan'])->name('getplan');
-    // Route::post('getoperator', [RechargeController::class, 'getoperator'])->name('getoperator');
-    // Route::post('getdthinfo', [RechargeController::class, 'getdthinfo'])->name('getdthinfo');
+    Route::post('payment', [RechargeController::class, 'payment'])->name('rechargepay')->middleware('transactionlog:recharge');
+    Route::post('getplan', [RechargeController::class, 'getplan'])->name('getplan');
+    Route::post('getoperator', [RechargeController::class, 'getoperator'])->name('getoperator');
+    Route::post('getdthinfo', [RechargeController::class, 'getdthinfo'])->name('getdthinfo');
 });
 
 // LIC 
@@ -220,7 +246,7 @@ Route::group(['prefix' => 'lic', 'middleware' => ['auth', 'company']], function 
 });
 
 
-Route::group(['prefix' => 'billpay', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'billpay', 'middleware' => ['auth']], function () {
     Route::get('{type}', [BillpayController::class, 'index'])->name('bill');
     Route::post('payment', [BillpayController::class, 'payment'])->name('billpay')->middleware('transactionlog:billpay');
     Route::post('getprovider', [BillpayController::class, 'getprovider'])->name('getprovider');
@@ -235,9 +261,9 @@ Route::group(['prefix' => 'upipay', 'middleware' => ['auth', 'company']], functi
 // Route::post('upibene/delete', [UpipayoutController::class, 'beneDelete'])->name('upibeneDelete');
 Route::group(['prefix' => 'pancard', 'middleware' => ['auth', 'company']], function () {
     // Route::post('uti/payment', [PancardController::class, 'utipay'])->name('utipay');
-    // Route::get('{type}', [PancardController::class, 'index'])->name('pancard');
-    // Route::post('payment', [PancardController::class, 'payment'])->name('pancardpay')->middleware('transactionlog:pancard');
-    // Route::get('nsdl/view/{id}', [PancardController::class, 'nsdlview']);
+    Route::get('{type}', [PancardController::class, 'index'])->name('pancard');
+    Route::post('payment', [PancardController::class, 'payment'])->name('pancardpay')->middleware('transactionlog:pancard');
+    Route::get('nsdl/view/{id}', [PancardController::class, 'nsdlview']);
 });
 
 // Route::post('spayment', [SpancardController::class, 'payment'])->name('spayment')->middleware(['auth']);
@@ -398,7 +424,7 @@ Route::group(['prefix' => 'rentpay', 'middleware' => ['auth', 'company', 'transa
 
 // Route::post('bene/delete', [XdmtController::class, 'beneDelete'])->name('beneDelete');
 
-Route::get('ipayoprator', [BillpayController::class, 'getbillerList'])->name('paysprintoperator');
+Route::get('ipayoprator', [BillpayController::class, 'getbillerList'])->name('paysprintoperators');
 
 Route::get('/clear-cache', function () {
     Artisan::call('cache:clear');

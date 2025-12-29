@@ -131,6 +131,15 @@ class CommonController extends Controller
 				}
 				$request['whereIn'] = 'user_id';
 				break;
+
+			case 'apilogs':
+				$request['table'] = '\App\Models\Apilog';
+				$request['searchdata'] = ['url', 'header', 'response', 'request'];
+				$request['select'] = 'all';
+				$request['order'] = ['id', 'desc'];
+				$request['parentData'] = 'all';
+				break;
+
 				
 		   	case 'wallet2walletstatement':
 				$request['table'] = '\App\Models\Report';
@@ -1238,6 +1247,7 @@ class CommonController extends Controller
 			$request->type != "cappingbalance" &&
 			$request->type != "setupapi" &&
 			$request->type != "setuplinks" &&
+			$request->type != "apilogs" &&
 			$request->type != "setupoperator" &&
 			$request->type != "resourcescheme" &&
 			$request->type != "resourcecompany" &&

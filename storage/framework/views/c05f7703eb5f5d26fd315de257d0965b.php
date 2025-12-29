@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Booking Page'); ?>
 <?php $__env->startSection('pagetitle', 'Booking Page'); ?>
 
@@ -19,7 +20,7 @@
                             <div class="card-header d-flex justify-content-between align-items-center border-bottom">
                                 <h5 class="mb-0 card-title">Your Booking 🔖</h5>
 
-                          
+
                                 <a href="<?php echo e(route('flight.bookingList')); ?>" class="btn btn-primary">Review booking</a>
                             </div>
 
@@ -114,29 +115,66 @@
                             </div>
                         </div>
                     </aside>
-                    <!-- Right content END -->
+                    
                 </div>
             </div>
         </section>
 
-         <div id="fareRuleListModal"></div>
+        <div id="fareRuleListModal"></div>
 
     </main>
 
 <?php $__env->stopSection(); ?>
 
 
-
 <?php $__env->startPush('script'); ?>
     
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="<?php echo e(asset('')); ?>js/flight.js"></script>
+    <script src="<?php echo e(asset('')); ?>js/flighttrip.js"></script>
     <script>
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');
             $('.preloader').removeClass('d-none');
-            hitBookingAPI();
+
+
+            const payload = JSON.parse(localStorage.getItem('payload'));
+            const traceId = localStorage.getItem('TraceId') || '';
+
+
+            let selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails'));
+            let selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
+            let selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
+            let selectedBaggage = JSON.parse(localStorage.getItem('selectedBaggage')) || [];
+
+            if (!payload || !traceId || !selectedFlightDetails) {
+                swal({
+                    title: "Session Expired ⚠️",
+                    html: "Your booking session has expired <br/> Please search flights again.",
+                    type: "error",
+                    confirmButtonText: "Search Flights",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+                return;
+            }
+
+            if (payload.JourneyType == 1) {
+                hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals,
+                    selectedBaggage, 'departure', '1');
+            }
+            if (payload.JourneyType == 2) {
+                selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
+                selectedMealsRet = JSON.parse(localStorage.getItem('selectedMealsReturn')) || [];
+                selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
+
+                hitBookingAPI(traceId, selectedFlightDetails.departure, selectedSeats, selectedMeals,
+                    selectedBaggage, 'departure', '2');
+                hitBookingAPI(traceId, selectedFlightDetails.return, selectedSeatsRet, selectedMealsRet,
+                    selectedBaggageRet, 'return', '2');
+            }
         });
     </script>
 <?php $__env->stopPush(); ?>

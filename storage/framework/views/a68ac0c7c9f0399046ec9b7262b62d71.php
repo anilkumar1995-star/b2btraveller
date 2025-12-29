@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', 'Booking List'); ?>
 <?php $__env->startSection('pagetitle', 'Booking List'); ?>
 
@@ -5,7 +6,105 @@
 <?php $__env->startSection('content'); ?>
     <main>
         <section>
-            <div class="card">
+            <div class="row">
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card border h-100">
+                        <div class="card-body bg-label-success">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="avatar me-3">
+                                    <span class="avatar-initial rounded bg-label-primary">
+                                        <i class="ti ti-plane-departure"></i>
+                                    </span>
+                                </div>
+                                <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="₹ <?php echo e(number_format($totalonewaylcc ?? 0, 2)); ?>"
+                                    id="total_booking_amount">
+                                    ₹ <?php echo e(number_format($totalonewaylcc ?? 0, 2)); ?>
+
+                            </p>
+                            </div>
+                            <span class="mb-1 fw-bold">Oneway LCC Bookings</span>
+                            <p class="mb-0">
+                                <span class="text-heading fw-bold me-1" id="booking_count"><?php echo e($totalonewaylccCount ?? 0); ?></span>
+                                <span class="text-body-secondary">Counts</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card border h-100">
+                        <div class="card-body bg-label-primary">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="avatar me-3">
+                                    <span class="avatar-initial rounded bg-label-success">
+                                        <i class="ti ti-plane-arrival"></i>
+                                    </span>
+                                </div>
+                                <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="₹ <?php echo e(number_format($totalonewaynonlcc ?? 0, 2)); ?>"
+                                    id="total_booking_amount">
+                                    ₹ <?php echo e($totalonewaynonlcc ?? 0); ?>
+
+                              </p>
+                            </div>
+                            <span class="mb-1 fw-bold">Total Oneway Non-LCC</span>
+                            <p class="mb-0">
+                                <span class="text-heading fw-bold me-1" id="booking_count"><?php echo e($totalonewaynonlccCount ?? 0); ?></span>
+                                <span class="text-body-secondary">Counts</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card border h-100">
+                        <div class="card-body bg-label-danger">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="avatar me-3">
+                                    <span class="avatar-initial rounded bg-label-warning">
+                                        <i class="ti ti-arrows-exchange"></i>
+                                    </span>
+                                </div>
+                                <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="₹ <?php echo e(number_format($totalroundtriplcc ?? 0, 2)); ?>"
+                                    id="total_booking_amount">
+                                    ₹<?php echo e($totalroundtriplcc ?? 0); ?>
+
+                                </p>
+                            </div>
+                            <span class="mb-1 fw-bold">Roundtrip LCC Bookings</span>
+                            <p class="mb-0">
+                                <span class="text-heading fw-bold me-1" id="booking_count"> <?php echo e($totalroundtriplccCount ?? 0); ?> </span>
+                                <span class="text-body-secondary">Counts</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <div class="card border h-100">
+                        <div class="card-body bg-label-info">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="avatar me-3">
+                                    <span class="avatar-initial rounded bg-label-warning">
+                                        <i class="ti ti-plane-inflight"></i>
+                                    </span>
+                                </div>
+                                <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""
+                                    data-bs-original-title="₹ <?php echo e(number_format($totalroundtripnonlcc ?? 0, 2)); ?>"
+                                    id="total_booking_amount">
+                                    ₹<?php echo e($totalroundtripnonlcc ?? 0); ?>
+
+                                </p>
+                            </div>
+                            <span class="mb-1 fw-bold">Total Roundtrip Non-LCC</span>
+                            <p class="mb-0">
+                                <span class="text-heading fw-bold me-1" id="booking_count"> <?php echo e($totalroundtripnonlccCount ?? 0); ?> </span>
+                                <span class="text-body-secondary fs-13">Counts</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-3">
                 <div class="card-header pb-0 d-flex justify-content-between mb-lg-n4 ">
                     <div class="card-title mb-5">
                         <h4 class="mb-0">
@@ -46,7 +145,6 @@
                     }
                 });
             }
-
         });
     </script>
 <?php $__env->stopPush(); ?>

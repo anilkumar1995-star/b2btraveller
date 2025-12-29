@@ -1,3 +1,20 @@
+
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous">
+
+<!-- Font Awesome (icons ke liye, optional but useful) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+<!-- Bootstrap JS Bundle (Popper included) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 <main>
 
     <!-- =======================
@@ -28,14 +45,14 @@
                                 <!-- Questions List START -->
                                 <div class="list-group hstack gap-3 justify-content-center flex-wrap mb-0">
                                     <a class="btn btn-link text-white fw-light text-decoration-underline p-0 mb-0"
-                                        href="{{ route('second', ['help', 'detail']) }}"> How can we help?</a>
+                                        href=""> How can we help?</a>
                                     <a class="btn btn-link text-white fw-light text-decoration-underline p-0 mb-0"
-                                        href="{{ route('second', ['help', 'detail']) }}"> How to upload data to the
+                                        href=""> How to upload data to the
                                         system? </a>
                                     <a class="btn btn-link text-white fw-light text-decoration-underline p-0 mb-0"
-                                        href="{{ route('second', ['help', 'detail']) }}"> Installation Guide? </a>
+                                        href=""> Installation Guide? </a>
                                     <a class="btn btn-link text-white fw-light text-decoration-underline p-0 mb-0"
-                                        href="{{ route('second', ['help', 'detail']) }}"> How to view expired tickets?
+                                        href=""> How to view expired tickets?
                                     </a>
                                     <a class="btn btn-link text-white p-0 mb-0" href="#!">View all question</a>
                                 </div>
@@ -65,19 +82,19 @@
                                 <div class="card-body pt-0">
                                     <ul class="nav flex-column">
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Gulp and
                                                 Customization</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Color
                                                 Scheme and Logo Settings</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Dark
                                                 mode, RTL Version, and Lazy Load</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Updates
                                                 and Support</a></li>
                                     </ul>
@@ -99,23 +116,23 @@
                                 <div class="card-body pt-0">
                                     <ul class="nav flex-column">
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Connecting
                                                 to your Account</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Edit
                                                 your profile information</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Connecting
                                                 to other Social Media Accounts</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Adding
                                                 your profile picture</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Describing
                                                 your store</a></li>
                                     </ul>
@@ -138,23 +155,23 @@
                                 <div class="card-body pt-0">
                                     <ul class="nav flex-column">
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Security
                                                 &amp; Privacy</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Author,
                                                 Publisher &amp; Admin Guides</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Pricing
                                                 plans</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Sales
                                                 Tax &amp; Regulatory Fees</a></li>
                                         <li class="nav-item"><a class="nav-link d-flex"
-                                                href="{{ route('second', ['help', 'detail']) }}"><i
+                                                href=""><i
                                                     class="fa-solid fa-angle-right text-primary pt-1 me-2"></i>Promotions
                                                 &amp; Deals</a></li>
                                     </ul>
@@ -379,7 +396,7 @@
                             <div class="ms-3">
                                 <h4 class="mb-1">Contact Support?</h4>
                                 <p class="mb-3">Not finding the help you need?</p>
-                                <a href="{{ route('second', ['pages', 'contact-2']) }}"
+                                <a href=""
                                     class="btn btn-dark mb-0">Contact Us</a>
                             </div>
                         </div>

@@ -98,13 +98,13 @@
                                 <a href="{{ route('statement', ['type' => 'account']) }}" class="stretched-link">Main Wallet</a>
                                 <small class="text-muted mb-0">&#8377; {{Auth::user()->mainwallet}} /-</small>
                             </div>
-                            <div class="dropdown-shortcuts-item col">
+                            {{-- <div class="dropdown-shortcuts-item col">
                                 <span class="dropdown-shortcuts-icon rounded-circle mb-2">
                                     <i class="ti ti-file-invoice fs-4"></i>
                                 </span>
                                 <a href="{{ route('statement', ['type' => 'awallet']) }}" class="stretched-link">AEPS Wallet</a>
                                 <small class="text-muted mb-0"> &#8377; {{Auth::user()->aepsbalance}} /-</small>
-                            </div>
+                            </div> --}}
                              <div class="dropdown-shortcuts-item col">
                                 <span class="dropdown-shortcuts-icon rounded-circle mb-2">
                                     <i class="ti ti-file-invoice fs-4"></i>
@@ -217,14 +217,14 @@
                     </li>
 
 
-                    <li>
+                    {{-- <li>
                         @if (Myhelper::hasNotRole('admin') && Myhelper::can('view_commission'))
                         <a class="dropdown-item" href="{{route('resource', ['type' => 'commission'])}}">
                             <i class="ti ti-eye me-2 ti-sm"></i>
                             <span class="align-middle">View Commission</span>
                         </a>
                         @endif
-                    </li>
+                    </li> --}}
                     <li>
                         <a class="dropdown-item" href="{{route('logout')}}">
                             <i class="ti ti-logout me-2 ti-sm"></i>

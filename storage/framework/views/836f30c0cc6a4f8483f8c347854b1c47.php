@@ -14,7 +14,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="<?php echo e(Imagehelper::getImageUrl() . Auth::user()->company->logo); ?>"
+    <link rel="icon" type="image/x-icon" href="https://ipayments.in/assets/images/ilogo.png"
         class=" img-fluid rounded" />
 
     <style>
@@ -123,7 +123,7 @@
     
 
     <?php if(isset($table) && $table == 'yes'): ?>
-        
+        <script type="text/javascript" src="<?php echo e(asset('')); ?>assets/js/plugins/tables/datatables/datatables.min.js"></script>
     <?php endif; ?>
 
     <?php if(env('MAINTENANCE_MODE', false)): ?>

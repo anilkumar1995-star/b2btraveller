@@ -37,18 +37,19 @@ class BillpayController extends Controller
 
     public function index(Request $post, $type)
     {
-        if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
-            return redirect(route('unauthorized'));
-        }
-
+        // if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
+        //     return redirect(route('unauthorized'));
+        // }
+      
         $data['type'] = $type;
         $data['providers'] = $this->table->where('type', $type)->where('status', '1')->whereNotNull('customParamResp')->orderBy('name')->limit(100)->get();
+       
         // Provider::where('type', $type)->where('status', "1")->whereNotNull('customParamResp')->orderBy('name')->get();
 
         // $agent = Agents::where('user_id', \Auth::id())->first();
-
         // return redirect(route('home'));
-
+           $data['recentTransactions'] = Report::with('provider')->where('user_id', auth()->id())
+            ->where('product', $type)->orderBy('id', 'desc')->limit(5)->get();
         return view('service.billpayment')->with($data);
     }
 
@@ -66,10 +67,10 @@ class BillpayController extends Controller
 
     public function bbps(Request $post, $type)
     {
-        if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
-            return redirect(route('unauthorized'));
-            ;
-        }
+        // if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
+        //     return redirect(route('unauthorized'));
+        //     ;
+        // }
 
         $data['type'] = $type;
         $data['providers'] = Provider::where('type', $type)->where('status', "1")->orderBy('name')->get();
@@ -92,9 +93,9 @@ class BillpayController extends Controller
         // }
 
 
-        if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
-            return response()->json(['status' => "Permission Not Allowed"], 400);
-        }
+        // if (\Myhelper::hasRole('admin') || !\Myhelper::can('billpayment_service')) {
+        //     return response()->json(['status' => "Permission Not Allowed"], 400);
+        // }
 
         $rules = array(
             'provider_id' => 'required|numeric'
@@ -311,7 +312,7 @@ class BillpayController extends Controller
         $getDataProvider = $this->table->where('id', $post->provider_id)->first();
         $getMandatParam = $getDataProvider->customerReqParam = $getDataProvider->customParamResp;
         $i = 0;
-
+// dd($getMandatParam);
         foreach (json_decode($getMandatParam) as $params) {
             // dd(json_decode($params)->customParamName);
             $num = 'number' . $i;

@@ -61,7 +61,7 @@ class SettingController extends Controller
                 }
 
                 if (($post->id == \Auth::id()) && !\Myhelper::can('password_reset')) {
-                    //   return response()->json(['status' => "Permission Not Allowed"], 400);
+                      return response()->json(['status' => "Permission Not Allowed"], 400);
                 }
 
                 if (\Myhelper::hasNotRole('admin')) {

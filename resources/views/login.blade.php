@@ -12,7 +12,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ Imagehelper::getImageUrl().json_decode(app\Models\Company::where('id', '1')->first(['logo']))->logo }}" class=" img-fluid rounded" />
+    <link rel="icon" type="image/x-icon" href="https://ipayments.in/assets/images/ilogo.png" class=" img-fluid rounded" />
 
 
     <!-- Fonts -->
@@ -89,36 +89,46 @@
                      data-bs-ride="carousel"
                      data-bs-interval="4000">
 
-                    <div class="carousel-inner h-100">
+                    <div class="carousel-inner h-100 rounded">
 
                         <div class="carousel-item active h-100">
-                            <img src="{{ asset('images/clouds-flight.jpg') }}"
+                            <img src="{{ asset('images/Air-India.jpg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
+                            {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Book Flights Worldwide</h3>
                                 <p>Fast, Secure & Affordable Air Travel</p>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="carousel-item h-100">
-                            <img src="{{ asset('images/01.jpg') }}"
+                            <img src="{{ asset('images/02.jpg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
+                            {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Explore the World</h3>
                                 <p>Best deals on domestic & international flights</p>
-                            </div>
+                            </div> --}}
                         </div>
 
                         <div class="carousel-item h-100">
-                            <img src="{{ asset('images/flight_2.jpeg') }}"
+                            <img src="{{ asset('images/bus01.jpeg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
-                            <div class="carousel-caption d-none d-md-block">
+                            {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Travel Smarter</h3>
                                 <p>Your journey starts here</p>
-                            </div>
+                            </div> --}}
+                        </div>
+                        
+                        <div class="carousel-item h-100">
+                            <img src="{{ asset('images/hotel.jpeg') }}"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            <!-- <div class="carousel-caption d-none d-md-block">
+                                <h3>Travel Smarter</h3>
+                                <p>Your journey starts here</p>
+                            </div> -->
                         </div>
 
                     </div>
@@ -141,7 +151,8 @@
  
 
         <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
-            <div class="w-px-400 mx-auto sign-in-from">
+           <div class="w-px-400 mx-auto sign-in-from mt-n5">
+
 
                 <div class="app-brand mb-4">
                     <a href="{{ route('home') }}" class="app-brand-link gap-2"></a>
@@ -151,12 +162,13 @@
                     Welcome to {{ @$company->companyname }}! 👋
                 </h3>
                 <p class="mb-4">
-                    Please sign-in to your account and start the adventure
+                Sign in to your account and begin your journey               
                 </p>
-
+                
                 <form action="{{ route('authCheck') }}" method="POST" class="login-form">
                     @csrf
-
+                <b class="errorText text-danger d-block mb-2"></b>
+                <b class="successText text-success d-block mb-2"></b>
                     <div class="mb-3">
                         <label class="form-label">Mobile No.</label>
                         <input type="tel"
@@ -196,22 +208,18 @@
                     </div>
 
                 <div class="bottom-links">
-                    <a href="{{ url('privecy-policy') }}">Privacy Policy</a>
+                    <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
                     <span>|</span>
-                    <a href="">Refund Policy</a>
+                    <a href="{{ route('refund-policy') }}">Refund Policy</a>
                     <span>|</span>
-                    <a href="">Terms & Conditions</a>
+                    <a href="{{ route('term-of-use') }}">Terms & Conditions</a>
+                      <span>|</span>
+                   <div class="text-center"><a href="{{ route('about') }}">About Us</a>
+                    <span>|</span>
+                    <a href="{{ route('contact') }}">Contact Us</a></div>  
+
                 </div>
-                 <div class=" divider my-4">
-                        <div class="divider-text">or</div>
-                    </div>
-                           <div class="bottom-links">
-                    <a href="{{ url('privecy-policy') }}">About Us</a>
-                    <span>|</span>
-                    <a href="">Contact Us</a>
-                    <span>|</span>
-                  
-                </div>
+            
             </div>
         </div>
 
@@ -570,21 +578,26 @@
                                 }
                             }
                         },
-                        error: function(errors) {
+                       error: function(xhr) {
                             swal.close();
-                            if (errors.status == '400') {
-                                $('b.errorText').text(errors.responseJSON.status);
-                                setTimeout(function() {
-                                    $('b.errorText').text('');
-                                }, 5000);
-                            } else {
-                                $('b.errorText').text(
-                                    'Something went wrong, try again later.');
-                                setTimeout(function() {
-                                    $('b.errorText').text('');
-                                }, 5000);
+
+                            let msg = 'Something went wrong, try again later.';
+
+                            if (xhr.responseJSON) {
+                                if (xhr.responseJSON.status) {
+                                    msg = xhr.responseJSON.status;
+                                } else if (xhr.responseJSON.message) {
+                                    msg = xhr.responseJSON.message;
+                                }
                             }
+
+                            $('b.errorText').text(msg);
+
+                            setTimeout(function () {
+                                $('b.errorText').text('');
+                            }, 5000);
                         }
+
                     });
                 }
             });
@@ -718,8 +731,8 @@
                         error: function(errors) {
                             form.find('button:submit').html('Submit').attr("disabled",
                                 false).removeClass('btn-secondary');
-                            if (errors.status == '422') {
-                                // notify(errors.responseJSON.errors[0], 'warning');
+                            if (errors.status == '400') {
+                                notify(errors.responseJSON.errors[0], 'warning');
                                 $('#emailError').text(errors.responseJSON.errors.email);
                                 $('#mobileError').text(errors.responseJSON.errors.mobile);
                                 $('#shopnameError').text(errors.responseJSON.errors

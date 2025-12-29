@@ -101,7 +101,7 @@ class RoutingController extends Controller
 
     public function termsofuse()
     {
-        return view('help.terms-of-services');
+        return view('help.terms-of-service');
     }
 
     public function aboutus()
@@ -112,6 +112,11 @@ class RoutingController extends Controller
     public function contactus()
     {
         return view('help.contact');
+    }
+
+     public function apilog()
+    {
+        return view('api.apilogs');
     }
 
     /**

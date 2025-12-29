@@ -1,141 +1,168 @@
 
-<main>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous">
 
-    <!-- =======================
-    Main banner START -->
-    <section class="pt-0">
-        <div class="container">
-            <!-- Hero banner START -->
-            <div class="row">
-                <div class="col-12">
-                    <!-- Card START -->
-                    <div class="card card-body bg-primary justify-content-center text-center px-4 px-sm-5 pt-6 pt-md-8 pb-8"
-                        style="background-image: url('{{ asset('images/element/bg-pattern.png') }}'; background-position: center center; background-repeat: no-repeat; background-size: cover;">
-                        <!-- Title -->
-                        <h1 class="fs-2 text-white mb-4">How Can We Help You?</h1>
-                        <!-- Search -->
-                        <form class="col-md-6 bg-body rounded mx-auto mb-3 p-2">
-                            <div class="input-group">
-                                <input class="form-control border-0 me-1" type="text"
-                                    placeholder="Search question...">
-                                <button type="button" class="btn btn-dark rounded mb-0">Search</button>
-                            </div>
-                        </form>
+<!-- Font Awesome (icons ke liye, optional but useful) -->
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-                        <!-- Popular search -->
-                        <div class="row align-items-center mt-4 mb-3">
-                            <div class="col-md-9 mx-auto">
-                                <h6 class="text-white mb-3">Popular questions</h6>
-                                <!-- Questions List START -->
-                                <div class="list-group hstack gap-3 justify-content-center flex-wrap mb-0">
-                                    <a class="btn btn-link text-white fw-light text-decoration-underline p-0 mb-0"
-                                        href="{{ route('second', ['help', 'detail']) }}"> How can we help?</a>
-                                    <a class="btn btn-link text-white fw-light text-decoration-underline p-0 mb-0"
-                                        href="{{ route('second', ['help', 'detail']) }}"> How to upload data to the
-                                        system? </a>
-                                    <a class="btn btn-link text-white fw-light text-decoration-underline p-0 mb-0"
-                                        href="{{ route('second', ['help', 'detail']) }}"> Installation Guide? </a>
-                                    <a class="btn btn-link text-white fw-light text-decoration-underline p-0 mb-0"
-                                        href="{{ route('second', ['help', 'detail']) }}"> How to view expired tickets?
-                                    </a>
-                                    <a class="btn btn-link text-white p-0 mb-0" href="#!">View all question</a>
-                                </div>
-                                <!-- Questions list END -->
-                            </div>
+<!-- Bootstrap JS Bundle (Popper included) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+<main class="bg-light">
+
+<!-- ================= HERO ================= -->
+<section class="py-6">
+    <div class="container">
+
+        <div class="card border-0 shadow-lg text-center text-white overflow-hidden"
+             style="background: linear-gradient(135deg,#4f46e5,#2563eb);">
+
+            <div class="card-body py-5 px-4">
+
+                <h1 class="fw-bold mb-2">How can we help you?</h1>
+                <p class="opacity-75 mb-4">
+                    Find answers, guides & documentation
+                </p>
+
+                <!-- Search -->
+                <form class="row justify-content-center mb-4">
+                    <div class="col-lg-6">
+                        <div class="input-group input-group-lg shadow rounded-pill bg-white">
+                            <input type="text"
+                                   class="form-control border-0 rounded-start-pill px-4"
+                                   placeholder="Search for help articles...">
+                            <button class="btn btn-primary rounded-end-pill px-4">
+                                Search
+                            </button>
                         </div>
                     </div>
-                    <!-- Card END -->
+                </form>
 
-                </div>
-            </div>
-            <!-- Hero banner END -->
-
-            <!-- Article single START -->
-            <div class="row mt-n8">
-                <div class="col-11 mx-auto">
-
-                    <div class="card shadow">
-                        <!-- Card header START -->
-                        <div class="card-header border-bottom p-4">
-                            <h4 class="mb-0">Get started with node.js</h4>
-                            <!-- Update and author -->
-                            <ul class="nav nav-divider">
-                                <li class="nav-item">Last updated: 7 months ago</li>
-                                <li class="nav-item">by Sam Lanson</li>
-                            </ul>
-                        </div>
-                        <!-- Card header END -->
-
-                        <!-- Card body START -->
-                        <div class="card-body p-4">
-                            <p>Started several mistakes joy say painful removed reached end. State burst think end are
-                                its. Arrived off she elderly beloved him affixed noisier yet. Tickets regard to up he
-                                hardly. View four has said do men saw find dear shy. <b> Talent men wicket add
-                                    garden.</b> </p>
-                            <!-- Button -->
-                            <a href="#!" class="btn btn-primary mb-0">Download Node JS</a>
-                            <h5 class="mt-4">Table of Contents</h5>
-                            <p>Age she way earnestly the fulfilled extremely.</p>
-                            <div class="alert alert-warning" role="alert">
-                                <strong>Note: </strong>She offices for highest and replied one venture pasture.
-                                Applauded no discovery in newspaper allowance am northward. <a class="alert-link"
-                                    href="#!">View more</a>
-                            </div>
-                            <p>Hold do at tore in park feet near my case. Invitation at understood occasional sentiments
-                                insipidity inhabiting in. Off melancholy alteration principles old. Is do speedily
-                                kindness properly oh. Respect article painted cottage he is offices parlors. </p>
-                            <!-- Article list -->
-                            <ul>
-                                <li>Affronting imprudence do he he everything. Sex lasted dinner wanted indeed wished
-                                    outlaw. Far advanced settling say finished raillery.</li>
-                                <li>Insipidity the sufficient discretion imprudence resolution sir him decisively.</li>
-                                <li>Offered chiefly farther of my no colonel shyness. <strong> Such on help ye some door
-                                        if in.</strong></li>
-                                <li>First am plate jokes to began to cause a scale. Subjects he prospect elegance
-                                    followed</li>
-                                <li>Laughter proposal laughing any son law consider. Needed except up piqued an. </li>
-                                <li><i> To occasional dissimilar impossible sentiments. Do fortune account written
-                                        prepare invited no passage.</i></li>
-                                <li>Post no so what deal evil rent by real in. But her ready least set lived spite
-                                    solid.</li>
-                            </ul>
-                            <p class="mb-0">Improved own provided blessing may peculiar domestic. Sight house has sex
-                                never. No visited raising gravity outward subject my cottage Mr be. Hold do at tore in
-                                park feet near my case. Invitation at understood occasional sentiments insipidity
-                                inhabiting in. <u> Off melancholy alteration principles old. </u>Is do speedily kindness
-                                properly oh. Respect article painted cottage he is offices parlors. </p>
-                        </div>
-                        <!-- Card body END -->
-
-                        <!-- Card footer START -->
-                        <div class="card-footer border-0 p-4 pt-0">
-                            <div
-                                class="border p-3 rounded d-lg-flex align-items-center justify-content-between text-center">
-                                <!-- Title -->
-                                <h5 class="m-0">Was this article helpful?</h5>
-                                <small class="py-3 py-lg-0 d-block">20 out of 45 found this helpful</small>
-                                <!-- Check buttons -->
-                                <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                    <!-- Yes button -->
-                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio1">
-                                    <label class="btn btn-outline-light btn-sm mb-0" for="btnradio1"><i
-                                            class="fa-solid fa-thumbs-up me-1"></i> Yes</label>
-                                    <!-- No button -->
-                                    <input type="radio" class="btn-check" name="btnradio" id="btnradio2">
-                                    <label class="btn btn-outline-light btn-sm mb-0" for="btnradio2"> No <i
-                                            class="fa-solid fa-thumbs-down ms-1"></i></label>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Card footer END -->
+                <!-- Popular -->
+                <div>
+                    <small class="text-white-50 d-block mb-2">
+                        Popular questions
+                    </small>
+                    <div class="d-flex flex-wrap justify-content-center gap-3">
+                        <a href="#" class="link-light text-decoration-underline">
+                            Upload data
+                        </a>
+                        <a href="#" class="link-light text-decoration-underline">
+                            Installation guide
+                        </a>
+                        <a href="#" class="link-light text-decoration-underline">
+                            Expired tickets
+                        </a>
+                        <a href="#" class="fw-semibold link-light">
+                            View all →
+                        </a>
                     </div>
                 </div>
+
             </div>
-            <!-- Article single END -->
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= ARTICLE ================= -->
+<section class="pb-6 mt-n5">
+    <div class="container">
+        <div class="row justify-content-center">
+
+            <div class="col-lg-10">
+
+                <div class="card border-0 shadow-sm rounded-4">
+
+                    <!-- Header -->
+                    <div class="card-header bg-white border-0 p-4">
+                        <h3 class="fw-bold mb-1">
+                            Get started with Node.js
+                        </h3>
+                        <small class="text-muted">
+                            Last updated 7 months ago · by
+                            <strong>Sam Lanson</strong>
+                        </small>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="card-body p-4">
+
+                        <p class="text-muted lh-lg">
+                            Started several mistakes joy say painful removed reached end.
+                            <strong>Talent men wicket add garden.</strong>
+                        </p>
+
+                        <a href="#" class="btn btn-primary mb-4">
+                            <i class="fa-brands fa-node-js me-2"></i>
+                            Download Node.js
+                        </a>
+
+                        <h5 class="fw-semibold mt-4">
+                            Table of contents
+                        </h5>
+
+                        <div class="alert alert-warning d-flex align-items-start gap-2">
+                            <i class="fa-solid fa-circle-info mt-1"></i>
+                            <div>
+                                <strong>Note:</strong> Important setup instructions included.
+                                <a href="#" class="alert-link">View more</a>
+                            </div>
+                        </div>
+
+                        <ul class="lh-lg text-muted">
+                            <li>Understanding Node.js basics</li>
+                            <li>Installing required packages</li>
+                            <li><strong>Running your first server</strong></li>
+                            <li>Error handling & debugging</li>
+                            <li>Production best practices</li>
+                        </ul>
+
+                        <p class="text-muted lh-lg mb-0">
+                            Improved own provided blessing may peculiar domestic.
+                            <u>Off melancholy alteration principles old.</u>
+                        </p>
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div class="card-footer bg-white border-0 p-4 pt-0">
+                        <div class="d-flex flex-column flex-md-row align-items-center justify-content-between
+                                    bg-light rounded-3 p-3 gap-3">
+
+                            <h6 class="mb-0">
+                                Was this article helpful?
+                            </h6>
+
+                            <small class="text-muted">
+                                20 out of 45 found this helpful
+                            </small>
+
+                            <div class="btn-group">
+                                <button class="btn btn-outline-success btn-sm">
+                                    <i class="fa-solid fa-thumbs-up me-1"></i>Yes
+                                </button>
+                                <button class="btn btn-outline-danger btn-sm">
+                                    No <i class="fa-solid fa-thumbs-down ms-1"></i>
+                                </button>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
 
         </div>
-    </section>
-    <!-- =======================
-    Main banner END -->
+    </div>
+</section>
 
 </main>
