@@ -28,72 +28,139 @@ $table = 'yes';
 
 @section('content')
 
-<div class="row">
-    <!-- <div class="col-sm-0 col-lg-3"></div> -->
-    <div class="col-sm-12 col-lg-8">
-        <div class="card">
-            <div class="card-header d-flex justify-content-between">
-                <div class="header-title">
-                    <h4 class="card-title">Bill Payment</h4>
-                </div>
+<div class="row g-4">
+    <div class="col-lg-7 col-12">
+        <div class="card shadow-sm border-0 rounded-4">
+            <div class="card-header bg-label-primary text-white rounded-top-4">
+                <h5 class="mb-0">
+                    <i class="ti ti-receipt me-2"></i> Bill Payment
+                </h5>
             </div>
-            <div class="card-body">
-                @if ($mydata['billnotice'] != null && $mydata['billnotice'] != '')
-                <!-- <b class="text-danger" style="font-size:16px;">
-                    <marquee behavior="alternate">{{ $mydata['billnotice'] }}</marquee>
-                </b> -->
-                @endif
-                <form id="billpayForm" action="{{ route('billpay') }}" method="post">
 
+            <div class="card-body p-4">
+            <!-- 
+                @if ($mydata['billnotice'])
+                    <div class="alert alert-warning small">
+                        {{ $mydata['billnotice'] }}
+                    </div>
+                @endif -->
+
+                <form id="billpayForm" action="{{ route('billpay') }}" method="post">
                     {{ csrf_field() }}
+
                     <input type="hidden" name="type" value="getbilldetails">
                     <input type="hidden" name="operatorType" value="{{ $type }}">
                     <input type="hidden" name="refId">
                     <input type="hidden" name="billId">
                     <input type="hidden" name="mode" value="online">
 
-                    <div class="form-group my-3">
-                        <label>{{ ucfirst($type) }} Operator</label>
-                        <select class="form-control mb-3" name="provider_id" required="" onchange="SETTITLE()" id="mySelect">
-                            <option selected="">Select Operator</option>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            {{ ucfirst($type) }} Operator
+                        </label>
+                        <select class="form-select" name="provider_id" required onchange="SETTITLE()" id="mySelect">
+                            <option value="">Select Operator</option>
                             @foreach ($providers as $provider)
-                            <option value="{{ $provider->id }}">{{ $provider->name }} - ( {{   "Coverage: ". strtoupper($provider->billerCoverage) }} )</option>
-                            <!-- <option value="{{ $provider->billerId }}">{{ $provider->name }}</option> -->
+                                <option value="{{ $provider->id }}">
+                                    {{ $provider->name }} (Coverage: {{ strtoupper($provider->billerCoverage) }})
+                                </option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="phone">Mobile Number</label>
-                        <input type="text" class="form-control" name="mobileNo" placeholder="Enter mobile no.">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Mobile Number</label>
+                        <input type="text" class="form-control" name="mobileNo"
+                            placeholder="Enter registered mobile number">
                     </div>
 
-                    <div class="billdata">
+                    <div class="billdata p-3 mb-3 d-none rounded bg-light border">
 
                     </div>
-
-                    <div class="form-group mb-2">
-                        <label>T-Pin</label>
-                        <a href="{{ url('profile/view?tab=pinChange') }}" target="_blank" class="float-end">Generate
-                            Or Forgot Pin??</a>
-                        <input type="password" name="pin" class="form-control" placeholder="Enter transaction pin" required="">
-                    </div>
-
-                    <div class="d-flex flex-row justify-content-end mt-3">
-                        <button type="submit" class="btn btn-primary" id="fetch">Fetch</button>
-                        <!-- <button type="submit" class="btn btn-success submit-button mx-2" id="pay">Pay</button> -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">
+                            Transaction Pin
+                           
+                        </label>
+                        <input type="password" name="pin" class="form-control"
+                            placeholder="Enter transaction pin" required>  <a href="{{ url('profile/view?tab=pinChange') }}"
+                               class="float-end text-decoration-none small" target="_blank"> 
+                                Forgot / Generate?
+                            </a>
+                    </div><br>
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="submit" class="btn btn-outline-primary px-4" id="fetch">
+                            <i class="ti ti-search me-1"></i> Fetch Bill
+                        </button>
+                        <button type="submit" class="btn btn-success px-4 submit-button" id="pay">
+                            <i class="ti ti-credit-card me-1"></i> Pay Now
+                        </button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div class="col-sm-12 col-lg-4">
-        <div class="card">
-            {{-- <img src="https://pwa-cdn.freecharge.in/pwa-static/pwa/images/operators/electricity.svg"> --}}
-            <img src="{{ asset('') }}logos/billpay.jpeg" height="320px" width="320px">
 
+
+   <div class="col-lg-5 col-12">
+    <div class="card shadow-sm border-0 rounded-4 h-100">
+        <div class="card-header bg-label-primary fw-semibold d-flex align-items-center justify-content-between">
+            <span class="text-black">
+                <i class="ti ti-history me-1 text-primary"></i> Recent Transactions
+            </span>
+            <a href="#" class="small text-decoration-none">
+                View All
+            </a>
+        </div>
+
+        <div class="card-body p-0">
+
+            @if(!empty($recentTransactions) && count($recentTransactions))
+            <ul class="list-group list-group-flush">
+                @foreach($recentTransactions as $txn)
+                    <li class="list-group-item py-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <div class="fw-semibold">
+                                    {{ $txn->providername }}
+                                </div>
+                                <div class="small text-muted">
+                                    {{ $txn->number }}
+                                </div>
+                                <div class="small text-muted">
+                                    {{ $txn->created_at }}
+                                </div>
+                            </div>
+
+                            <div class="text-end">
+                                <div class="fw-bold">
+                                    ₹ {{ number_format($txn->amount, 2) }}
+                                </div>
+
+                                @if($txn->status == 'success')
+                                    <span class="badge bg-success">Success</span>
+                                @elseif($txn->status == 'pending')
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                @else
+                                    <span class="badge bg-danger">Failed</span>
+                                @endif
+                            </div>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+                @else
+                    <div class="text-center py-5 text-muted">
+                        <i class="ti ti-receipt-off fs-1 mb-2"></i>
+                        <div>No recent transactions</div>
+                    </div>
+                @endif
         </div>
     </div>
+  </div>
+
 </div>
+
 
 @endsection
 
@@ -441,10 +508,6 @@ $table = 'yes';
                 i = i + 1;
             }
             $('.billdata').append(htmlformfiled);
-
-
-
-
         }
     }
 </script>

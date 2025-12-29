@@ -83,7 +83,7 @@ $table = "yes";
                                 <a href="{{url('profile/view?tab=pinChange')}}" target="_blank" class="text-primary pull-right">Generate Or Forgot Pin??</a>
                             </div>
 
-                          <div class="col-sm-12 col-lg-4">
+                          <div class="col-sm-12 col-lg-4 my-4">
                             <button type="submit"
                                 class="btn btn-primary px-4"
                                 data-loading-text="<b><i class='fa fa-spin fa-spinner'></i></b> Paying">

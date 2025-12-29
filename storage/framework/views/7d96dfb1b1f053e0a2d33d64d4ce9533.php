@@ -73,7 +73,7 @@
             <ul class="menu-sub" id="menu-design <?php echo e(Request::is('bus/*') ? 'show' : ''); ?>">
 
                 <li class="menu-item <?php echo e(Request::is('bus/view') ? 'active' : ''); ?>">
-                    <a href="<?php echo e(route('flight.view')); ?>" class="menu-link">
+                    <a href="<?php echo e(route('bus.view')); ?>" class="menu-link">
                         <div data-i18n="Bus Booking">Bus Booking</div>
                     </a>
                 </li>
@@ -93,7 +93,7 @@
             <ul class="menu-sub" id="menu-design <?php echo e(Request::is('hotel/*') ? 'show' : ''); ?>">
 
                 <li class="menu-item <?php echo e(Request::is('hotel/view') ? 'active' : ''); ?>">
-                    <a href="<?php echo e(route('flight.view')); ?>" class="menu-link">
+                    <a href="<?php echo e(route('hotel.view')); ?>" class="menu-link">
                         <div data-i18n="Hotel Booking">Hotel Booking</div>
                     </a>
                 </li>
