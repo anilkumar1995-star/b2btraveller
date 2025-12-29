@@ -47,10 +47,9 @@ class BillpayController extends Controller
 
         // $agent = Agents::where('user_id', \Auth::id())->first();
         // return redirect(route('home'));
-        $data['recentTransactions'] = Report::with('provider')->where('user_id', auth()->id())->orderBy('id', 'desc')->limit(5)->get();
-            // ->where('product', $type)->orderBy('id', 'desc')->limit(5)->get();
+        $data['recentTransactions'] = Report::with('provider')->where('user_id', auth()->id())
+            ->where('product', 'billpay')->orderBy('id', 'desc')->limit(5)->get();
 
-            dd($data['recentTransactions'], $type);
         return view('service.billpayment')->with($data);
     }
 
