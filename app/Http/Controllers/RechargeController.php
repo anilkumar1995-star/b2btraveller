@@ -69,7 +69,7 @@ class RechargeController extends Controller
         }
 
         dd($provider->api, $provider->api->is_active);
-        if (!$provider->api || $provider->api->status == 0) {
+        if (!$provider->api || $provider->api->is_active == 0) {
             return response()->json(['statuscode' => "ERR", 'status' => "Recharge Service Currently Down."], 400);
         }
 
