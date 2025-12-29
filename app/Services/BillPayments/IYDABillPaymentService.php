@@ -152,9 +152,8 @@ class IYDABillPaymentService
             "billId" => $billId,
         ];
         $fullURL = $this->setFullUrl('fetchBillByBillId');
-        // dd($fullURL, "POST", json_encode($parameters), $this->header, "yes", "AffiliateDepartment", @$parameters['mobile']);
-        $result = Permission::curl($fullURL, "GET", json_encode($parameters), $this->header, "yes", "BillFetch", @$parameters['billId']);
-        // dd($result);
+         $result = Permission::curl($fullURL, "GET", json_encode($parameters), $this->header, "yes", "BillFetch", @$parameters['billId']);
+        dd($result);
         return $result;
 
     }
