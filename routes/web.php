@@ -103,7 +103,7 @@ Route::get('setpermissions', [HomeController::class, 'setpermissions']);
 Route::get('setscheme', [HomeController::class, 'setscheme']);
 Route::get('setscheme', [HomeController::class, 'setscheme']);
 Route::get('getmyip', [HomeController::class, 'getmysendip']);
-Route::get('balance', [HomeController::class, 'getbalance'])->name('getbalance');
+Route::get('balance', [HomeController::class, 'getbalance'])->name('getbalances');
 Route::get('mydata', [HomeController::class, 'mydata']);
 Route::get('bulkSms', [HomeController::class, 'mydata']);
 
