@@ -180,14 +180,14 @@
                         // }
                         @if (Myhelper::hasRole('admin'))
                             // btn += `<br><button class="btn btn-primary my-2 btn-xs waves-effect mt-10" onclick="transfer('` + full.id + `', '` + full.username + `')"><i class="fa fa-pencil"></i> Edit</button>`;
-                            menu +=
-                                `<a href="javascript:void(0)" class="dropdown-item" onclick="transfer('` +
-                                full.id + `', '` + full.username +
-                                `')"><i class="icon-pencil5"></i> Edit</a>`;
+                            // menu +=
+                            //     `<a href="javascript:void(0)" class="dropdown-item" onclick="transfer('` +
+                            //     full.id + `', '` + full.username +
+                            //     `')"><i class="icon-pencil5"></i> Edit</a>`;
 
-                            menu += `<a href="javascript:void(0)" class="dropdown-item" onclick="status(` +
-                                full.id +
-                                `, 'commStatusCheck')"><i class="icon-info22"></i>Check Status</a>`;
+                            // menu += `<a href="javascript:void(0)" class="dropdown-item" onclick="status(` +
+                            //     full.id +
+                            //     `, 'commStatusCheck')"><i class="icon-info22"></i>Check Status</a>`;
                             // @endif
                             // @if (Myhelper::can('money_status'))
                         @endif
