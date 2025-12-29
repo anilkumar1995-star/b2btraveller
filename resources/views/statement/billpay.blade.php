@@ -60,7 +60,7 @@ $status['data'] = [
 <div class="modal fade" id="receipt" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header">      
+            <div class="modal-header bg-light pb-2">      
                 <h4 class="modal-title">Receipt</h4>
                    
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
@@ -74,7 +74,7 @@ $status['data'] = [
                                 <th style="padding: 0px 0px 5px 0px">Receipt - <span class="created_at"></span></th>
                                 <th style="padding: 0px 0px 5px 0px; text-align: right; margin-right:10px">
                                     @if(Auth::user()->company->logo)
-                                    <img src="{{Imagehelper::getImageUrl().Auth::user()->company->logo}}" class="img-responsive" alt="" style="width: 60px;height: 40px;">
+                                    <img src="https://ipayments.in/img/IPAYMNT.png" class="img-responsive" alt="" style="width: 100px;height: 40px;">
                                     @else
                                     {{Auth::user()->company->companyname}}
                                     @endif
