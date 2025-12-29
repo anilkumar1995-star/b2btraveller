@@ -14,7 +14,6 @@ class TransactionActivity
      */
     public function handle($post, Closure $next, $type = "none")
     {
-        dd($post->all());
         $ifsc = substr($post->ifsc, 0, 4);
         $ifsc2 = substr($post->ifsc2, 0, 4);
         $ifsc3 = substr($post->ifsc3, 0, 4);
@@ -22,17 +21,21 @@ class TransactionActivity
         if ($ifsc == "PYTM" || $ifsc == "AIRP" || $ifsc == "NSPB" || $ifsc2 == "PYTM" || $ifsc2 == "AIRP" || $ifsc2 == "NSPB" || $ifsc3 == "PYTM" || $ifsc3 == "AIRP" || $ifsc3 == "NSPB") {
             //   return response()->json(['status'=>'Your bank A/c Not accepted','statuscode'=>'ERR','message'=> 'Your bank A/c Not accepted']);  
         }
-
-        $geodata = geoip($post->ip());
+        try {
+            $geodata = geoip($post->ip());
+            $geo = $geodata->lat . '/' . $geodata->lon;
+        } catch (\Exception $e) {
+            $geo = null;
+        }
 
         $log['ip'] = $post->ip();
         $log['user_agent'] = $post->server('HTTP_USER_AGENT');
         if (\Auth::check()) {
             $log['user_id'] = \Auth::id();
         } else {
-            $log['user_id'] = $post->user_id;
+            $log['user_id'] = $post->user_id ?? null;
         }
-        $log['geo_location'] = $geodata->lat . "/" . $geodata->lon;
+        $log['geo_location'] = $geo;
         $log['url'] = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         $log['oldpayload'] = '';
         $log['request'] = json_encode($post->all());
