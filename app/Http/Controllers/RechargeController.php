@@ -47,7 +47,6 @@ class RechargeController extends Controller
     public function payment(Request $post)
     {
 
-        dd($post);
         if (\Myhelper::hasRole('admin') || !\Myhelper::can('recharge_service')) {
             return response()->json(['status' => "Permission Not Allowed"], 400);
         }
