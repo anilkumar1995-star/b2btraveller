@@ -126,7 +126,7 @@ class IYDABillPayController extends Controller
         if ($resp0['code'] == 200) {
             if ($resp->code == "0x0200" && $resp->status == 'SUCCESS') {
                 $billId = $resp->data->billId;
-                sleep(10);
+                sleep(5);
                 return self::fetchBillbyBillid($billId);
             } else {
                 return ["status" => false, "message" => @$resp->message ?? "Something went wrong"];

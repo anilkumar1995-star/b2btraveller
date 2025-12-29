@@ -146,7 +146,6 @@ class BillpayController extends Controller
                 $post['billerId'] = $provider->billerId;
                 $result = $this->callIydaBillpay->fetchBillPay($post, $provider, $user);
 
-                dd($result);
                 if ($result['status']) {
                     return response()->json(['statuscode' => "TXN", "data" => $result['data']]);
                 } else {
