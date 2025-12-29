@@ -36,7 +36,7 @@
         <form id="searchForm">
             <div class="col-lg-12 ">
                 <div class="card h-100">
-                    <div class="card-header pb-0 d-flex justify-content-between mb-lg-n4">
+                    <div class="card-header pb-1 d-flex justify-content-between mb-lg-n4 bg-light">
                         <div class="card-title mb-0">
                             <h5 class="mb-0">
                                 <h4>@yield('pagetitle')</h4>

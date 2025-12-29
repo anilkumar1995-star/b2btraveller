@@ -25,8 +25,8 @@ $status['data'] = [
 <div class="row mt-4">
     <div class="col-12 col-xl-12 col-sm-12 order-1 order-lg-2 mb-4 mb-lg-0">
         <div class="card">
-            <div class="card-header pb-0 d-flex justify-content-between mb-lg-n4 ">
-                <div class="card-title mb-5">
+            <div class="card-header bg-light pb-0 d-flex justify-content-between mb-2">
+                <div class="card-title">
                     <h5 class="mb-0">
                         <span>@yield('pagetitle') </span>
                     </h5>
