@@ -1,9 +1,8 @@
-@extends('layouts.app')
-@section('title', ucfirst($type) . ' Bill Payment')
-@section('pagetitle', ucfirst($type) . ' Bill Payment')
-@php
+<?php $__env->startSection('title', ucfirst($type) . ' Bill Payment'); ?>
+<?php $__env->startSection('pagetitle', ucfirst($type) . ' Bill Payment'); ?>
+<?php
 $table = 'yes';
-@endphp
+?>
 
 <style>
     .select2-container--default .select2-selection--single {
@@ -26,7 +25,7 @@ $table = 'yes';
     }
 </style>
 
-@section('content')
+<?php $__env->startSection('content'); ?>
 
 <div class="row g-4">
     <div class="col-lg-7 col-12">
@@ -39,32 +38,34 @@ $table = 'yes';
 
             <div class="card-body p-4">
             <!-- 
-                @if ($mydata['billnotice'])
+                <?php if($mydata['billnotice']): ?>
                     <div class="alert alert-warning small">
-                        {{ $mydata['billnotice'] }}
-                    </div>
-                @endif -->
+                        <?php echo e($mydata['billnotice']); ?>
 
-                <form id="billpayForm" action="{{ route('billpay') }}" method="post">
-                    {{ csrf_field() }}
+                    </div>
+                <?php endif; ?> -->
+
+                <form id="billpayForm" action="<?php echo e(route('billpay')); ?>" method="post">
+                    <?php echo e(csrf_field()); ?>
+
 
                     <input type="hidden" name="type" value="getbilldetails">
-                    <input type="hidden" name="operatorType" value="{{ $type }}">
+                    <input type="hidden" name="operatorType" value="<?php echo e($type); ?>">
                     <input type="hidden" name="refId">
                     <input type="hidden" name="billId">
                     <input type="hidden" name="mode" value="online">
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold">
-                            {{ ucfirst($type) }} Operator
+                            <?php echo e(ucfirst($type)); ?> Operator
                         </label>
                         <select class="form-select" name="provider_id" onchange="SETTITLE()" required id="mySelect">
                             <option value="">Select Operator</option>
-                            @foreach ($providers as $provider)
-                                <option value="{{ $provider->id }}">
-                                    {{ $provider->name }} (Coverage: {{ strtoupper($provider->billerCoverage) }})
+                            <?php $__currentLoopData = $providers; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $provider): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                <option value="<?php echo e($provider->id); ?>">
+                                    <?php echo e($provider->name); ?> (Coverage: <?php echo e(strtoupper($provider->billerCoverage)); ?>)
                                 </option>
-                            @endforeach
+                            <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                         </select>
                     </div>
 
@@ -83,7 +84,7 @@ $table = 'yes';
                            
                         </label>
                         <input type="password" name="pin" class="form-control"
-                            placeholder="Enter transaction pin" required>  <a href="{{ url('profile/view?tab=pinChange') }}"
+                            placeholder="Enter transaction pin" required>  <a href="<?php echo e(url('profile/view?tab=pinChange')); ?>"
                                class="float-end text-decoration-none small" target="_blank"> 
                                 Forgot / Generate?
                             </a>
@@ -115,46 +116,50 @@ $table = 'yes';
 
         <div class="card-body p-0">
 
-            @if(!empty($recentTransactions) && count($recentTransactions))
+            <?php if(!empty($recentTransactions) && count($recentTransactions)): ?>
             <ul class="list-group list-group-flush">
-                @foreach($recentTransactions as $txn)
+                <?php $__currentLoopData = $recentTransactions; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $txn): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                     <li class="list-group-item py-3">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <div class="fw-semibold">
-                                    {{ $txn->providername }}
+                                    <?php echo e($txn->providername); ?>
+
                                 </div>
                                 <div class="small text-muted">
-                                    {{ $txn->number }}
+                                    <?php echo e($txn->number); ?>
+
                                 </div>
                                 <div class="small text-muted">
-                                    {{ $txn->created_at }}
+                                    <?php echo e($txn->created_at); ?>
+
                                 </div>
                             </div>
 
                             <div class="text-end">
                                 <div class="fw-bold">
-                                    ₹ {{ number_format($txn->amount, 2) }}
+                                    ₹ <?php echo e(number_format($txn->amount, 2)); ?>
+
                                 </div>
 
-                                @if($txn->status == 'success')
+                                <?php if($txn->status == 'success'): ?>
                                     <span class="badge bg-success">Success</span>
-                                @elseif($txn->status == 'pending')
-                                    <span class="badge bg-warning">Pending</span>
-                                @else
+                                <?php elseif($txn->status == 'pending'): ?>
+                                    <span class="badge bg-warning text-dark">Pending</span>
+                                <?php else: ?>
                                     <span class="badge bg-danger">Failed</span>
-                                @endif
+                                <?php endif; ?>
                             </div>
                         </div>
                     </li>
-                @endforeach
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
             </ul>
-                @else
+                <?php else: ?>
                     <div class="text-center py-5 text-muted">
                         <i class="ti ti-receipt-off fs-1 mb-2"></i>
                         <div>No recent transactions</div>
                     </div>
-                @endif
+                <?php endif; ?>
         </div>
     </div>
   </div>
@@ -162,17 +167,17 @@ $table = 'yes';
 </div>
 
 
-@endsection
+<?php $__env->stopSection(); ?>
 
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-@push('script')
-<script src="{{ asset('/assets/js/core/jQuery.print.js') }}"></script>
+<?php $__env->startPush('script'); ?>
+<script src="<?php echo e(asset('/assets/js/core/jQuery.print.js')); ?>"></script>
 <script type="text/javascript">
     $(document).ready(function() {
         $('#mySelect').select2();
-        var url = "{{ url('statement/fetch') }}/{{ $type }}statement/0";
+        var url = "<?php echo e(url('statement/fetch')); ?>/<?php echo e($type); ?>statement/0";
 
         var onDraw = function() {};
 
@@ -240,15 +245,15 @@ $table = 'yes';
 
         $('#mySelect').select2({
             ajax: {
-                url: "{{ url('billpay/providersByName') }}",
+                url: "<?php echo e(url('billpay/providersByName')); ?>",
                 type: 'post',
                 minimumInputLength: 2,
                 data: function(params) {
                     var query = {
                         searchname: params.term,
-                        type: `{{ $type }}`,
+                        type: `<?php echo e($type); ?>`,
                         page: params.page || 1,
-                        _token: `{{csrf_token()}}`
+                        _token: `<?php echo e(csrf_token()); ?>`
 
                     }
                     return query;
@@ -391,7 +396,7 @@ $table = 'yes';
                             //     text: "Billpayment Successfully Submitted",
                             //     type: 'success',
                             //     onClose: () => {
-                            window.location.href = "{{ url('billpayrecipt') }}/" + data.data.id;
+                            window.location.href = "<?php echo e(url('billpayrecipt')); ?>/" + data.data.id;
                             //     }
                             // });                        
 
@@ -418,7 +423,7 @@ $table = 'yes';
 
         if (providerid != '' && providerid != null && providerid != 'null') {
             $.ajax({
-                    url: "{{ route('getprovider') }}",
+                    url: "<?php echo e(route('getprovider')); ?>",
                     type: 'post',
                     dataType: 'json',
                     headers: {
@@ -515,4 +520,5 @@ $table = 'yes';
         }
     }
 </script>
-@endpush
+<?php $__env->stopPush(); ?>
+<?php echo $__env->make('layouts.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\wampp\www\b2btraveller\resources\views/service/billpayment.blade.php ENDPATH**/ ?>

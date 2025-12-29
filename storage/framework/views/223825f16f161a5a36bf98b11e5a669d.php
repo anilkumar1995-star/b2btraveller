@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light-style customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('theme_1/assets/') }}" data-template="vertical-menu-template">
+<html lang="en" class="light-style customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="<?php echo e(asset('theme_1/assets/')); ?>" data-template="vertical-menu-template">
 
 <head>
 
@@ -8,10 +8,10 @@
 
     <title>Unauthorized Page</title>
 
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="https://ipayments.in/img/IPAYMNT.png" class=" img-fluid rounded" />
+    <link rel="icon" type="image/x-icon" href="<?php echo e(Imagehelper::getImageUrl().json_decode(app\Models\Company::where('id', '1')->first(['logo']))->logo); ?>" class=" img-fluid rounded" />
 
 
     <!-- Fonts -->
@@ -20,21 +20,21 @@
     <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
 
     <!-- Icons -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/fontawesome.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/tabler-icons.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/flag-icons.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/fonts/fontawesome.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/fonts/tabler-icons.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/fonts/flag-icons.css')); ?>" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/rtl/theme-default.css') }}" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/css/demo.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/css/rtl/core.css')); ?>" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/css/rtl/theme-default.css')); ?>" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/css/demo.css')); ?>" />
 
     <!-- Vendors CSS -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/node-waves/node-waves.css') }}" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/node-waves/node-waves.css')); ?>" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.css')); ?>" />
     <!-- Vendor -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css')); ?>" />
 
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
@@ -44,7 +44,7 @@
 
     <!-- Page CSS -->
     <!-- Page -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/pages/page-auth.css') }}" />
+    <link rel="stylesheet" href="<?php echo e(asset('theme_1/assets/vendor/css/pages/page-auth.css')); ?>" />
 
     <style>
         .form-group p {
@@ -62,9 +62,9 @@
                 You do not have permission to view this page using the credentials that you have provided while login. <br />
                 Please contact your site administrator.
             </p>
-            <a href="{{route('home')}}" class="btn btn-primary mb-4">Back to home</a>
+            <a href="<?php echo e(route('home')); ?>" class="btn btn-primary mb-4">Back to home</a>
             <div class="mt-4">
-                <img src="{{ asset('') }}logos/unauthorized.png" alt="not-authorized" width="170" class="img-fluid" />
+                <img src="<?php echo e(asset('')); ?>logos/unauthorized.png" alt="not-authorized" width="170" class="img-fluid" />
             </div>
         </div>
         <img src="../../assets/img/illustrations/bg-shape-image-light.png" alt="page-misc-not-authorized" data-app-light-img="illustrations/bg-shape-image-light.png" data-app-dark-img="illustrations/bg-shape-image-dark.png" />
@@ -94,4 +94,4 @@
     <!-- Page JS -->
 </body>
 
-</html>
+</html><?php /**PATH D:\wampp\www\b2btraveller\resources\views/unauthorized.blade.php ENDPATH**/ ?>
