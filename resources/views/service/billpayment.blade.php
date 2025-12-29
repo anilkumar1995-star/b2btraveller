@@ -140,7 +140,7 @@ $table = 'yes';
                                 @if($txn->status == 'success')
                                     <span class="badge bg-success">Success</span>
                                 @elseif($txn->status == 'pending')
-                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    <span class="badge bg-warning">Pending</span>
                                 @else
                                     <span class="badge bg-danger">Failed</span>
                                 @endif
