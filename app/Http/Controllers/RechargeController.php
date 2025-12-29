@@ -46,6 +46,7 @@ class RechargeController extends Controller
 
     public function payment(Request $post)
     {
+
         if (\Myhelper::hasRole('admin') || !\Myhelper::can('recharge_service')) {
             return response()->json(['status' => "Permission Not Allowed"], 400);
         }
@@ -57,8 +58,7 @@ class RechargeController extends Controller
         }
 
         $provider = Provider::where('id', $post->provider_id)->first();
-
-        // dd([$provider,$post->all()]);
+                
 
         if (!$provider) {
             return response()->json(['statuscode' => "ERR", 'status' => "Operator Not Found"], 400);
@@ -68,7 +68,7 @@ class RechargeController extends Controller
             return response()->json(['statuscode' => "ERR", 'status' => "Operator Currently Down."], 400);
         }
 
-        if (!$provider->api || $provider->api->status == 0) {
+        if (!$provider->api || $provider->api->is_active == 0) {
             return response()->json(['statuscode' => "ERR", 'status' => "Recharge Service Currently Down."], 400);
         }
 
@@ -82,12 +82,11 @@ class RechargeController extends Controller
             return response()->json(['statuscode' => "ERR", 'status' => 'Low Balance, Kindly recharge your wallet.']);
         }
 
+
         $previousrecharge = Report::where('number', $post->number)->where('amount', $post->amount)->where('provider_id', $post->provider_id)->whereBetween('created_at', [Carbon::now()->subMinutes(2)->format('Y-m-d H:i:s'), Carbon::now()->format('Y-m-d H:i:s')])->count();
         if ($previousrecharge > 0) {
             return response()->json(['statuscode' => "ERR", 'status' => 'Same Transaction allowed after 2 min.']);
         }
-
-        // dd($provider->api->code);
 
         do {
             $post['txnid'] = $this->transcode() . rand(11111, 9999999) . Carbon::now()->timestamp;
@@ -153,8 +152,6 @@ class RechargeController extends Controller
         $update['txnid'] = $post->txnid;
         $update['statuscode'] = $outp['statuscode'];
         return response()->json($update, 200);
-
-
 
     }
     // }
