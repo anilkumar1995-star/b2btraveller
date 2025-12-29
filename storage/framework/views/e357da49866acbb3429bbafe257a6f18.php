@@ -328,12 +328,12 @@
         <?php endif; ?>
 
         <li
-            class="menu-item <?php echo e(Request::is('statement/aeps') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/affiliateList') || Request::is('statement/cmsreport') ? 'active open' : ''); ?>">
+            class="menu-item <?php echo e(Request::is('statement/aeps') || Request::is('fund/aepsrequest') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/affiliateList') || Request::is('statement/cmsreport') ? 'active open' : ''); ?>">
             <a href="#txnreport" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-file"></i>
                 <div data-i18n="Transaction Report">Transaction Report</div>
             </a>
-            <ul class="menu-sub <?php echo e(Request::is('statement/aeps') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/cmsreport') || Request::is('statement/affiliateList') ? 'show' : ''); ?>"
+            <ul class="menu-sub <?php echo e(Request::is('statement/aeps') || Request::is('fund/aepsrequest') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/cmsreport') || Request::is('statement/affiliateList') ? 'show' : ''); ?>"
                 id="txnreport">
                  
                 

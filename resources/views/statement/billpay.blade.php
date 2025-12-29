@@ -25,8 +25,8 @@ $status['data'] = [
 <div class="row mt-4">
     <div class="col-12 col-xl-12 col-sm-12 order-1 order-lg-2 mb-4 mb-lg-0">
         <div class="card">
-            <div class="card-header pb-0 d-flex justify-content-between mb-lg-n4 ">
-                <div class="card-title mb-5">
+            <div class="card-header bg-light pb-0 d-flex justify-content-between mb-2">
+                <div class="card-title">
                     <h5 class="mb-0">
                         <span>@yield('pagetitle') </span>
                     </h5>
@@ -212,15 +212,15 @@ $status['data'] = [
                     if (full.status == "success" || full.status == "pending") {
                         menu += `<li><a href="javascript:void(0)" class="dropdown-item print"><i class="icon-info22"></i>Print Invoice</a></li>`;
                         @if(Myhelper::can('billpayment_status'))
-                        menu += `<li><a href="javascript:void(0)" class="dropdown-item" onclick="status(` + full.id + `, 'billpayment')"><i class="icon-info22"></i>Check Status</a></li>`;
+                        // menu += `<li><a href="javascript:void(0)" class="dropdown-item" onclick="status(` + full.id + `, 'billpayment')"><i class="icon-info22"></i>Check Status</a></li>`;
                         @endif
 
                         @if(Myhelper::can('billpay_statement_edit'))
-                        menu += `<li><a href="javascript:void(0)" class="dropdown-item" onclick="editReport(` + full.id + `,'` + full.refno + `','` + full.txnid + `','` + full.payid + `','` + full.remark + `', '` + full.status + `', 'billpay')"><i class="icon-pencil5"></i> Edit</a></li>`;
+                        // menu += `<li><a href="javascript:void(0)" class="dropdown-item" onclick="editReport(` + full.id + `,'` + full.refno + `','` + full.txnid + `','` + full.payid + `','` + full.remark + `', '` + full.status + `', 'billpay')"><i class="icon-pencil5"></i> Edit</a></li>`;
                         @endif
                     }
 
-                    menu += `<li><a href="javascript:void(0)" class="dropdown-item" onclick="complaint(` + full.id + `, 'billpay')"><i class="icon-cogs"></i> Complaint</a></li>`;
+                    // menu += `<li><a href="javascript:void(0)" class="dropdown-item" onclick="complaint(` + full.id + `, 'billpay')"><i class="icon-cogs"></i> Complaint</a></li>`;
 
                     return `<div class="btn-group" role="group">
                                     <span id="btnGroupDrop1" class="badge ${full.status=='success'? 'bg-success' : full.status=='pending'? 'bg-warning':full.status=='reversed'? 'bg-info':full.status=='refund'? 'bg-dark':'bg-danger'} dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
