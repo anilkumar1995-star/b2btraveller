@@ -14,7 +14,7 @@
     <meta name="description" content="" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="{{ Imagehelper::getImageUrl() . Auth::user()->company->logo }}"
+    <link rel="icon" type="image/x-icon" href="https://ipayments.in/assets/images/ilogo.png"
         class=" img-fluid rounded" />
 
     <style>

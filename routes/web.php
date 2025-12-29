@@ -16,6 +16,7 @@ use App\Http\Controllers\AffliateController;
 use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BillpayController;
+use App\Http\Controllers\BusController;
 use App\Http\Controllers\CommonController;
 use App\Http\Controllers\ComplaintController;
 use App\Http\Controllers\CyrusPayoutController;
@@ -44,6 +45,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ConDmtController;
 use App\Http\Controllers\CcpaymentController;
 use App\Http\Controllers\FlightController;
+use App\Http\Controllers\HotelController;
 use App\Http\Controllers\XdmtController;
 use App\Http\Controllers\IpayDmtController;
 use App\Http\Controllers\RoutingController;
@@ -139,9 +141,25 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::get('booking-list', [FlightController::class, 'bookingList'])->name('flight.bookingList');
     Route::get('booking-list-failed', [FlightController::class, 'bookingListFailed'])->name('flight.bookingListFailed');
     Route::post('booking-view', [FlightController::class, 'viewTicket'])->name('flight.booking.view');
-
     Route::get('cancel/{id}', [FlightController::class, 'cancelPage']);
     Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);
+});
+
+
+Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
+    Route::get('view', [BusController::class, 'root'])->name('bus.view');
+    // Route::post('search', [BusController::class, 'search'])->name('bus.search');
+    // Route::post('book', [BusController::class, 'bookBus'])->name('bus.book');
+    // Route::post('ticket', [BusController::class, 'busTicket'])->name('bus.ticket');
+    // Route::get('booking', [BusController::class, 'busBooking'])->name('bus.booking');
+});
+
+Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
+    Route::get('view', [HotelController::class, 'root'])->name('hotel.view');
+    // Route::post('search', [HotelController::class, 'search'])->name('hotel.search');
+    // Route::post('book', [HotelController::class, 'bookHotel'])->name('hotel.book');
+    // Route::post('ticket', [HotelController::class, 'hotelTicket'])->name('hotel.ticket');
+    // Route::get('booking', [HotelController::class, 'hotelBooking'])->name('hotel.booking');
 });
 
 Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActivityLog']], function () {
@@ -209,7 +227,7 @@ Route::group(['prefix' => 'resources', 'middleware' => ['auth', 'company', "webA
     Route::post('get/{type}/packagecommission', [ResourceController::class, 'getPackageCommission']);
 });
 
-Route::group(['prefix' => 'recharge', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'recharge', 'middleware' => ['auth']], function () {
     Route::get('{type}', [RechargeController::class, 'index'])->name('recharge');
     Route::get('bbps/{type}', [BillpayController::class, 'bbps'])->name('bbps');
     Route::post('payment', [RechargeController::class, 'payment'])->name('rechargepay')->middleware('transactionlog:recharge');
@@ -228,7 +246,7 @@ Route::group(['prefix' => 'lic', 'middleware' => ['auth', 'company']], function 
 });
 
 
-Route::group(['prefix' => 'billpay', 'middleware' => ['auth', 'company']], function () {
+Route::group(['prefix' => 'billpay', 'middleware' => ['auth']], function () {
     Route::get('{type}', [BillpayController::class, 'index'])->name('bill');
     Route::post('payment', [BillpayController::class, 'payment'])->name('billpay')->middleware('transactionlog:billpay');
     Route::post('getprovider', [BillpayController::class, 'getprovider'])->name('getprovider');

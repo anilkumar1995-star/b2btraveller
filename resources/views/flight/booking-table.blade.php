@@ -699,6 +699,7 @@
                                                             </div>
                                                             <div class="col-4 text-end">
                                                                  <h5>Ticket Details</h5>
+                                                                 ${p.Ticket ? `
                                                                     <div class="mb-1"><b>Issued On: </b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
                                                                     <div class="mb-1">${(() => {
                                                                             const s = getTicketStatus(p.Ticket.Status);
@@ -711,6 +712,11 @@
                                                                         })()}</div>
                                                                     <div class="mb-1"><b>Validating Airline: </b> ${p.Ticket.ValidatingAirline}</div>
                                                                     <div class="mb-1"><b>Ticket Id: </b> ${p.Ticket.TicketId}</div>
+                                                                    ` : `
+                                                                    <div class="mb-1 text-danger">
+                                                                        <b>Status:</b> Ticket not generated
+                                                                    </div>
+                                                                `}
                                                                     
                                                           </div>
                                                         </div>
