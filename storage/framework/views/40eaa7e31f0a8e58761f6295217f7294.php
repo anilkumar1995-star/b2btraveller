@@ -139,9 +139,9 @@
         <div class="card shadow-sm border mt-3 rounded-4 mb-4">
              <div class="card-header bg-white border-0 pb-0 rounded-top-4">
                     <h5 class="mb-0 fw-semibold text-dark">
-                        Choose Services
+                        Choose Services (<small class="text-muted">Select a service to continue</small>)
                     </h5>
-                    <small class="text-muted">Select a service to continue</small>
+                    
                 </div>
             <div class="card-body pt-3">
                 <div class="services-scroll-container">
