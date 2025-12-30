@@ -11,7 +11,7 @@
     <meta name="csrf-token" content="<?php echo e(csrf_token()); ?>">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="<?php echo e(Imagehelper::getImageUrl().json_decode(app\Models\Company::where('id', '1')->first(['logo']))->logo); ?>" class=" img-fluid rounded" />
+    <link rel="icon" type="image/x-icon" href="https://ipayments.in/img/IPAYMNT.png" class=" img-fluid rounded" />
 
 
     <!-- Fonts -->
