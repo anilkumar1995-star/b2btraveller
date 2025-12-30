@@ -73,7 +73,7 @@
                         <div class="form-control-border form-control-transparent form-fs-md d-flex">
                             <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
                             <div class="flex-grow-1">
-                                <label >Departure</label>
+                                <label>Departure</label>
                                 <select class="form-select  select" data-search-enabled="true" name="Origin"
                                     id="Origin">
                                     <option value="">Select location</option>
@@ -87,7 +87,7 @@
                         <div class="form-control-border form-control-transparent form-fs-md d-flex">
                             <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
                             <div class="flex-grow-1">
-                                <label >Destination</label>
+                                <label>Destination</label>
                                 <select class="form-select  select" data-search-enabled="true" name="Destination"
                                     id="Destination">
                                     <option value="">Select location</option>
@@ -152,6 +152,12 @@
 
     <script>
         $(document).ready(function() {
+            swal({
+                type: 'info',
+                title: 'Coming Soon',
+                text: '🚍 Bus booking feature will be available soon!',
+                confirmButtonText: 'Okay'
+            });
             localStorage.clear();
             $('.select').select2();
 

@@ -21,5 +21,21 @@ class BusController extends Controller
     {
         return view('bus.index-bus');
     }
-    
+
+    public function refreshToken()
+    {
+        try {
+            $token = $this->tektravels->getToken();
+            return response()->json([
+                'success' => true,
+                'token' => $token,
+                'message' => 'Token refreshed successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
 }
