@@ -49,9 +49,7 @@ class AuthService
 
         $dbToken = Token::where('service_name', 'tektravels')->first();
 
-        // dd($dbToken, Carbon::parse($dbToken->expires_at)->isFuture());
         if ($dbToken && Carbon::parse($dbToken->expires_at)->isFuture()) {
-            // Cache::put('tektravels_token', $dbToken->token, now()->addHours(24));
             return $dbToken->token;
         }
 
@@ -87,9 +85,6 @@ class AuthService
         }
 
         $token = $result['response']['data']['TokenId'];
-
-
-        // Cache::put('tektravels_token', $token, now()->addHours(24));
 
 
         Token::updateOrCreate(
