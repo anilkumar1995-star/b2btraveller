@@ -1,3 +1,4 @@
+
 <?php $__env->startSection('title', ucfirst($type) . ' Bill Payment'); ?>
 <?php $__env->startSection('pagetitle', ucfirst($type) . ' Bill Payment'); ?>
 <?php
@@ -145,7 +146,7 @@ $table = 'yes';
                                 <?php if($txn->status == 'success'): ?>
                                     <span class="badge bg-success">Success</span>
                                 <?php elseif($txn->status == 'pending'): ?>
-                                    <span class="badge bg-warning text-dark">Pending</span>
+                                    <span class="badge bg-warning">Pending</span>
                                 <?php else: ?>
                                     <span class="badge bg-danger">Failed</span>
                                 <?php endif; ?>

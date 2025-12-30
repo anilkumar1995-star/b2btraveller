@@ -63,10 +63,7 @@
         <section class="py-0">
             <!-- Background image -->
             <div class="rounded-3">
-                <!-- Banner title -->
-                
-
-                <!-- Booking from START -->
+          
                 <form
                     style="background-image: url('<?php echo e(asset('images/1.png')); ?>'); background-position: center center; background-repeat: no-repeat; background-size: cover;"
                     id="flightSearchForm" class="bg-mode bg-white position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
@@ -198,7 +195,7 @@
                                     <div class="col-md-6 col-lg-4 position-relative">
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
-                                            <label class="mb-1 w-100"><i class="bi bi-geo-alt me-2"></i>Origin</label>
+                                            <label class="mb-1 w-100">Origin</label>
                                             <select class="form-select  select" data-search-enabled="true" name="Origin"
                                                 id="Origin">
                                                 <option value="">Select location</option>
@@ -218,7 +215,7 @@
                                     <div class="col-md-6 col-lg-4">
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
-                                            <label class="mb-1 w-100"><i class="bi bi-send me-2"></i>Destination</label>
+                                            <label class="mb-1 w-100">Destination</label>
                                             <select class="form-select  select" data-search-enabled="true"
                                                 id="Destination" name="Destination">
                                                 <option value="">Select location</option>
@@ -233,7 +230,7 @@
                                     <!-- Departure -->
                                     <div class="col-lg-4">
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                                            <label class="mb-1"><i class="bi bi-calendar me-2"></i>Departure</label>
+                                            <label class="mb-1">Departure</label>
                                             <input type="text" class="form-control flatpickr" data-date-format="Y-m-d"
                                                 placeholder="Select date" name="PreferredDepartureTime"
                                                 autocomplete="off" id="PreferredDepartureTime">
@@ -242,7 +239,7 @@
 
                                     <div class="col-12 text-end pt-0">
                                         <button type="submit" class="btn btn-primary mb-n4">Find Ticket <i
-                                                class="bi bi-arrow-right ps-3"></i></button>
+                                                class="ti ti-arrow-right ps-3"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -257,7 +254,7 @@
                                     <div class="col-md-6 col-xl-3 position-relative">
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
-                                            <label class="mb-1 w-100"><i class="bi bi-geo-alt me-2"></i>Origin</label>
+                                            <label class="mb-1 w-100">Origin</label>
                                             <select class="form-select  select w-100" data-search-enabled="true"
                                                 name="Origin" id="roundOrigin">
                                                 <option value="">Select location</option>
@@ -275,7 +272,7 @@
                                     <div class="col-md-6 col-xl-3">
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
-                                            <label class="mb-1 w-100"><i class="bi bi-send me-2"></i>Destination</label>
+                                            <label class="mb-1 w-100">Destination</label>
                                             <select class="form-select  select w-100" data-search-enabled="true"
                                                 id="roundDestination" name="Destination">
                                                 <option value="">Select location</option>
@@ -287,7 +284,7 @@
                                     <!-- Departure -->
                                     <div class="col-md-6 col-xl-3">
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                                            <label class="mb-1"><i class="bi bi-calendar me-2"></i>Departure</label>
+                                            <label class="mb-1">Departure</label>
                                             <input type="text" class="form-control flatpickr"
                                                 name="PreferredDepartureTime" id="roundDeparture" autocomplete="off"
                                                 data-date-format="Y-m-d" placeholder="Select date">
@@ -297,7 +294,7 @@
                                     <!-- Return -->
                                     <div class="col-md-6 col-xl-3">
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
-                                            <label class="mb-1"><i class="bi bi-calendar me-2"></i>Return</label>
+                                            <label class="mb-1">Return</label>
                                             <input type="text" class="form-control flatpickr" id="roundReturn"
                                                 name="PreferredArrivalTime" data-date-format="Y-m-d" autocomplete="off"
                                                 placeholder="Select date">
@@ -306,9 +303,9 @@
 
                                     <input type="hidden" name="JourneyType" value="2">
 
-                                    <div class="col-12 text-end pt-0">
+                                    <div class="col-12 text-end pt-0 mb-3">
                                         <button type="submit" class="btn btn-primary mb-n4">Find Ticket <i
-                                                class="bi bi-arrow-right ps-3"></i></button>
+                                                class="ti ti-arrow-right ps-3"></i></button>
                                     </div>
                                 </div>
                             </div>
@@ -317,11 +314,6 @@
                         <!-- Tab content END -->
                     </div>
                 </form>
-
-
-
-
-                <!-- Booking from END -->
             </div>
         </section>
 
