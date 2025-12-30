@@ -151,11 +151,11 @@ class StatementController extends Controller
                 break;
         }
 
-        if (!\Myhelper::can($permission)) {
-            return redirect(route('unauthorized'));
-            ;
-        }
-
+        // if (!\Myhelper::can($permission)) {
+        //     return redirect(route('unauthorized'));
+        //     ;
+        // }
+// dd($data);
         return view('statement.' . $type)->with($data);
     }
 

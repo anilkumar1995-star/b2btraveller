@@ -239,6 +239,53 @@
                 }
             });
 
+            $('#editForm').on('submit', function (e) {
+    e.preventDefault();
+
+    let form = $(this);
+    let btn = form.find('button[type=submit]');
+
+    $.ajax({
+        url: form.attr('action'),
+        type: "POST",
+        data: form.serialize(),
+
+        beforeSend: function () {
+            btn.prop('disabled', true)
+               .html("<i class='fa fa-spinner fa-spin'></i> Updating");
+        },
+
+        success: function (res) {
+            btn.prop('disabled', false).html('Update');
+
+            if (res.status === "success") {
+                notify('Updated successfully', 'success');
+
+                // close offcanvas
+                let offcanvasEl = document.getElementById('editModal');
+                bootstrap.Offcanvas.getInstance(offcanvasEl).hide();
+
+                $('#datatable').DataTable().ajax.reload(null, false);
+            } else {
+                notify(res.status, 'error');
+            }
+        },
+
+        error: function (xhr) {
+            btn.prop('disabled', false).html('Update');
+
+            if (xhr.responseJSON?.errors) {
+                Object.values(xhr.responseJSON.errors).forEach(err => {
+                    notify(err[0], 'error');
+                });
+            } else {
+                notify('Something went wrong', 'error');
+            }
+        }
+    });
+});
+
+
 
             $('#formReset').click(function() {
                 $('form#searchForm')[0].reset();
@@ -382,60 +429,60 @@
                 }
             });
 
-            // $("#complaintForm").validate({
-            //     rules: {
-            //         subject: {
-            //             required: true,
-            //         },
-            //         description: {
-            //             required: true,
-            //         }
-            //     },
-            //     messages: {
-            //         subject: {
-            //             required: "Please select subject",
-            //         },
-            //         description: {
-            //             required: "Please enter your description",
-            //         },
-            //     },
-            //     errorElement: "p",
-            //     errorPlacement: function(error, element) {
-            //         if (element.prop("tagName").toLowerCase() === "select") {
-            //             error.insertAfter(element.closest(".form-group").find(".select2"));
-            //         } else {
-            //             error.insertAfter(element);
-            //         }
-            //     },
-            //     submitHandler: function() {
-            //         var form = $('#complaintForm');
-            //         form.ajaxSubmit({
-            //             dataType: 'json',
-            //             beforeSubmit: function() {
-            //                 form.find('button:submit').html('Please wait...').attr(
-            //                     'disabled',
-            //                     true).addClass('btn-secondary');
-            //             },
-            //             complete: function() {
-            //                 form.find('button:submit').html('Update').attr('disabled',
-            //                     false).removeClass('btn-secondary');
-            //             },
-            //             success: function(data) {
-            //                 if (data.status) {
-            //                     form[0].reset();
-            //                     form.closest('.offcanvas').offcanvas('hide');
-            //                     notify("Complaint successfully submitted", 'success');
-            //                 } else {
-            //                     notify(data.status, 'warning');
-            //                 }
-            //             },
-            //             error: function(errors) {
-            //                 showError(errors, form);
-            //                 notify('Something went wrong', 'error');
-            //             }
-            //         });
-            //     }
-            // });
+            $("#complaintForm").validate({
+                rules: {
+                    subject: {
+                        required: true,
+                    },
+                    description: {
+                        required: true,
+                    }
+                },
+                messages: {
+                    subject: {
+                        required: "Please select subject",
+                    },
+                    description: {
+                        required: "Please enter your description",
+                    },
+                },
+                errorElement: "p",
+                errorPlacement: function(error, element) {
+                    if (element.prop("tagName").toLowerCase() === "select") {
+                        error.insertAfter(element.closest(".form-group").find(".select2"));
+                    } else {
+                        error.insertAfter(element);
+                    }
+                },
+                submitHandler: function() {
+                    var form = $('#complaintForm');
+                    form.ajaxSubmit({
+                        dataType: 'json',
+                        beforeSubmit: function() {
+                            form.find('button:submit').html('Please wait...').attr(
+                                'disabled',
+                                true).addClass('btn-secondary');
+                        },
+                        complete: function() {
+                            form.find('button:submit').html('Update').attr('disabled',
+                                false).removeClass('btn-secondary');
+                        },
+                        success: function(data) {
+                            if (data.status) {
+                                form[0].reset();
+                                form.closest('.offcanvas').offcanvas('hide');
+                                notify("Complaint successfully submitted", 'success');
+                            } else {
+                                notify(data.status, 'warning');
+                            }
+                        },
+                        error: function(errors) {
+                            showError(errors, form);
+                            notify('Something went wrong', 'error');
+                        }
+                    });
+                }
+            });
         });
 
         function getbalance() {
@@ -627,107 +674,107 @@
             window.location.href = "<?php echo e(route('logout')); ?>";
         }
 
-        // function status(id, type) {
-        //     $.ajax({
-        //         url: `<?php echo e(route('statementStatus')); ?>`,
-        //         type: 'post',
-        //         headers: {
-        //             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        //         },
-        //         data: {
-        //             'id': id,
-        //             "type": type
-        //         },
-        //         dataType: 'json',
-        //         beforeSend: function() {
-        //             swal({
-        //                 title: 'Wait!',
-        //                 text: 'Please wait, we are fetching transaction details',
-        //                 onOpen: () => {
-        //                     swal.showLoading()
-        //                 },
-        //                 allowOutsideClick: () => !swal.isLoading()
-        //             });
-        //         },
-        //         success: function(data) {
-        //             if (data.statuscode == "TXN" || data.status == 'success') {
-        //                 if (data.txnStatus == undefined || data.txnStatus == null) {
-        //                     var ot = data.status;
-        //                 } else {
-        //                     var ot = data.txnStatus;
+        function status(id, type) {
+            $.ajax({
+                url: `<?php echo e(route('statementStatus')); ?>`,
+                type: 'post',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    'id': id,
+                    "type": type
+                },
+                dataType: 'json',
+                beforeSend: function() {
+                    swal({
+                        title: 'Wait!',
+                        text: 'Please wait, we are fetching transaction details',
+                        onOpen: () => {
+                            swal.showLoading()
+                        },
+                        allowOutsideClick: () => !swal.isLoading()
+                    });
+                },
+                success: function(data) {
+                    if (data.statuscode == "TXN" || data.status == 'success') {
+                        if (data.txnStatus == undefined || data.txnStatus == null) {
+                            var ot = data.status;
+                        } else {
+                            var ot = data.txnStatus;
 
-        //                 }
-        //                 var refno = "Your transaction " + ot;
-        //                 console.log(refno);
-        //                 swal({
-        //                     type: 'success',
-        //                     title: "Transaction status",
-        //                     text: refno,
-        //                     onClose: () => {
-        //                         $('#datatable').dataTable().api().ajax.reload();
-        //                     }
-        //                 });
-        //             } else if (data.statuscode == "TXF" || data.status == 'failed' || data.status ==
-        //                 'reversed') {
-        //                 if (data.txnStatus == undefined || data.txnStatus == null) {
-        //                     var ot = data.status;
-        //                 } else {
-        //                     var ot = data.txnStatus;
+                        }
+                        var refno = "Your transaction " + ot;
+                        console.log(refno);
+                        swal({
+                            type: 'success',
+                            title: "Transaction status",
+                            text: refno,
+                            onClose: () => {
+                                $('#datatable').dataTable().api().ajax.reload();
+                            }
+                        });
+                    } else if (data.statuscode == "TXF" || data.status == 'failed' || data.status ==
+                        'reversed') {
+                        if (data.txnStatus == undefined || data.txnStatus == null) {
+                            var ot = data.status;
+                        } else {
+                            var ot = data.txnStatus;
 
-        //                 }
-        //                 var refno = "Your transaction " + ot;
-        //                 console.log(refno);
-        //                 swal({
-        //                     type: 'success',
-        //                     title: "Transaction status",
-        //                     text: refno,
-        //                     onClose: () => {
-        //                         $('#datatable').dataTable().api().ajax.reload();
-        //                     }
-        //                 });
+                        }
+                        var refno = "Your transaction " + ot;
+                        console.log(refno);
+                        swal({
+                            type: 'success',
+                            title: "Transaction status",
+                            text: refno,
+                            onClose: () => {
+                                $('#datatable').dataTable().api().ajax.reload();
+                            }
+                        });
 
-        //             } else {
-        //                 swal({
-        //                     type: 'warning',
-        //                     title: "Transaction status",
-        //                     text: data.message || "Please try after sometimes",
-        //                     onClose: () => {
-        //                         $('#datatable').dataTable().api().ajax.reload();
-        //                     }
-        //                 });
-        //             }
-        //         },
-        //         error: function(errors) {
-        //             swal.close();
-        //             $('#datatable').dataTable().api().ajax.reload();
-        //             showError(errors, "withoutform");
-        //             notify(errors.responseJSON, 'error');
+                    } else {
+                        swal({
+                            type: 'warning',
+                            title: "Transaction status",
+                            text: data.message || "Please try after sometimes",
+                            onClose: () => {
+                                $('#datatable').dataTable().api().ajax.reload();
+                            }
+                        });
+                    }
+                },
+                error: function(errors) {
+                    swal.close();
+                    $('#datatable').dataTable().api().ajax.reload();
+                    showError(errors, "withoutform");
+                    notify(errors.responseJSON, 'error');
 
-        //         }
-        //     })
+                }
+            })
 
-        // }
+        }
 
-        // function editReport(id, refno, txnid, payid, remark, status, actiontype) {
-        //     $('#editModal').find('[name="id"]').val(id);
-        //     $('#editModal').find('[name="status"]').val(status).trigger('change');
-        //     $('#editModal').find('[name="refno"]').val(refno);
-        //     $('#editModal').find('[name="txnid"]').val(txnid);
-        //     if (actiontype == "billpay") {
-        //         $('#editModal').find('[name="payid"]').closest('div.form-group').remove();
-        //     } else {
-        //         $('#editModal').find('[name="payid"]').val(payid);
-        //     }
-        //     $('#editModal').find('[name="remark"]').val(remark);
-        //     $('#editModal').find('[name="actiontype"]').val(actiontype);
-        //     $('#editModal').offcanvas('show');
-        // }
+        function editReport(id, refno, txnid, payid, remark, status, actiontype) {
+            $('#editModal').find('[name="id"]').val(id);
+            $('#editModal').find('[name="status"]').val(status).trigger('change');
+            $('#editModal').find('[name="refno"]').val(refno);
+            $('#editModal').find('[name="txnid"]').val(txnid);
+            if (actiontype == "billpay") {
+                $('#editModal').find('[name="payid"]').closest('div.form-group').remove();
+            } else {
+                $('#editModal').find('[name="payid"]').val(payid);
+            }
+            $('#editModal').find('[name="remark"]').val(remark);
+            $('#editModal').find('[name="actiontype"]').val(actiontype);
+            $('#editModal').offcanvas('show');
+        }
 
-        // function complaint(id, product) {
-        //     $('#complaintModal').find('[name="transaction_id"]').val(id);
-        //     $('#complaintModal').find('[name="product"]').val(product);
-        //     $('#complaintModal').offcanvas('show');
-        // }
+        function complaint(id, product) {
+            $('#complaintModal').find('[name="transaction_id"]').val(id);
+            $('#complaintModal').find('[name="product"]').val(product);
+            $('#complaintModal').offcanvas('show');
+        }
 
         function notify(text, status) {
             new Notify({
@@ -844,7 +891,7 @@
                 </form>
             </div>
         <?php endif; ?>
-
+   
 
         <div class="offcanvas offcanvas-end" id="editModal" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
