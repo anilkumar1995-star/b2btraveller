@@ -88,7 +88,7 @@
                         <div class="input-daterange input-group rounded">
                             <input type="text" class="form-control flatpickr" id="fromDate">
                             <span class="input-group-text position-relative">
-                               <i class="fa-solid fa-right-left"></i>
+                                <i class="fa-solid fa-right-left"></i>
                             </span>
                             <input type="text" class="form-control flatpickr" id="toDate">
                         </div>
@@ -185,6 +185,12 @@
 
     <script>
         $(document).ready(function() {
+            swal({
+                type: 'info',
+                title: 'Coming Soon',
+                text: 'Hotel booking feature will be available soon!',
+                confirmButtonText: 'Okay'
+            });
             localStorage.clear();
             $('.select').select2();
 
