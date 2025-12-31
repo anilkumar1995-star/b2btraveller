@@ -31,7 +31,7 @@ class AppServiceProvider extends ServiceProvider
             view()->composer('*', function ($view) {
                 $mydata['links'] = Link::get();
                 $mydata['sessionOut'] = PortalSetting::where('code', 'sessionout')->first()->value;
-                // $mydata['complaintsubject'] = Complaintsubject::get();
+                $mydata['complaintsubject'] = Complaintsubject::get();
                 $mydata['topheadcolor'] = PortalSetting::where('code', "topheadcolor")->first();
                 $mydata['sidebarlightcolor'] = PortalSetting::where('code', "sidebarlightcolor")->first();
                 $mydata['sidebardarkcolor'] = PortalSetting::where('code', "sidebardarkcolor")->first();

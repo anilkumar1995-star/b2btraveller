@@ -891,6 +891,40 @@
             </div>
         @endif
    
+                <div class="offcanvas offcanvas-end" id="complaintModal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
+
+            <div class="offcanvas-header bg-primary">
+                <h5 class="text-white" id="exampleModalLabel">Complaint</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <form id="complaintForm" action="{{ route('complaintstore') }}" method="post">
+                <div class="offcanvas-body">
+                    <input type="hidden" name="id" value="new">
+                    <input type="hidden" name="product">
+                    <input type="hidden" name="transaction_id">
+                    {{ csrf_field() }}
+                    <div class="form-group my-1">
+                        <label>Subject</label>
+                        <select name="subject" class="form-control">
+                            <option value="">Select Subject</option>
+                            @foreach ($mydata['complaintsubject'] as $item)
+                                <option value="{{ $item->id }}">{{ $item->subject }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group my-1">
+                        <label>Description</label>
+                        <textarea name="description" cols="30" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit"
+                        data-loading-text="<i class='fa fa-spin fa-spinner'></i> Updating">Update</button>
+                </div>
+            </form>
+
+        </div>
 
         <div class="offcanvas offcanvas-end" id="editModal" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
@@ -905,7 +939,7 @@
                         <input type="hidden" name="id">
                         <input type="hidden" name="actiontype" value="">
                         {{ csrf_field() }}
-                        <div class="form-group col-md-6 my-2">
+                        <div class="form-group col-md-12 my-2">
                             <label>Status</label>
                             <select name="status" class="form-control" required>
                                 <option value="">Select Type</option>
@@ -916,7 +950,7 @@
                             </select>
                         </div>
 
-                        <div class="form-group col-md-6 my-2">
+                        <div class="form-group col-md-12 my-2">
                             <label>Ref No</label>
                             <input type="text" name="refno" class="form-control" placeholder="Enter Ref id"
                                 required="">
@@ -924,13 +958,13 @@
                     </div>
 
                     <div class="row">
-                        <div class="form-group col-md-6 my-2">
+                        <div class="form-group col-md-12 my-2">
                             <label>Txn Id</label>
                             <input type="text" name="txnid" class="form-control" placeholder="Enter Txn id"
                                 required="">
                         </div>
 
-                        <div class="form-group col-md-6 my-2">
+                        <div class="form-group col-md-12 my-2">
                             <label>Pay Id</label>
                             <input type="text" name="payid" class="form-control" placeholder="Enter Pay id"
                                 required="">
