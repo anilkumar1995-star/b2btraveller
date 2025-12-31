@@ -222,7 +222,7 @@ $status['data'] = [
 
                     menu += `<li><a href="javascript:void(0)" class="dropdown-item" onclick="complaint(` + full.id + `, 'billpay')"><i class="icon-cogs"></i> Complaint</a></li>`;
 
-                    return `<div class="btn-group" role="group">
+                    return `<div class="btn-group cursor-pointer" role="group">
                                     <span id="btnGroupDrop1" class="badge ${full.status=='success'? 'bg-success' : full.status=='pending'? 'bg-warning':full.status=='reversed'? 'bg-info':full.status=='refund'? 'bg-dark':'bg-danger'} dropdown-toggle"  data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     ` + full.status + `
                                     </span>
