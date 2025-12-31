@@ -95,65 +95,25 @@ class BusService
         }
     }
 
-    public function searchFlight($data)
+    public function searchBus($data)
     {
         try {
             $token = $this->authService->getToken();
 
             $payload = [
-                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
-                "AdultCount" => $data['AdultCount'] ?? "1",
-                "ChildCount" => $data['ChildCount'] ?? "0",
-                "InfantCount" => $data['InfantCount'] ?? "0",
-                "DirectFlight" => $data['DirectFlight'] ?? "false",
-                "OneStopFlight" => $data['OneStopFlight'] ?? "false",
-                "JourneyType" => $data['JourneyType'] ?? "1",
-                "PreferredAirlines" => null,
-                "Sources" => null
+                "DateOfJourney" => $data['JourneyDate'] ?? date('Y-m-d'),
+                "DestinationId" => $data['DestinationId'],
+                "OriginId" => $data['DepartureId'],
+                "BookingMode" => $data['BookingMode'] ?? "5",
+                "PreferredCurrency" => $data['Currency'] ?? "INR",
             ];
-
-            if ($data['JourneyType'] == 2 && isset($data['Segments']) && count($data['Segments']) == 2) {
-
-                $payload["Segments"] = [
-                    [
-                        "Origin" => $data['Segments'][0]['Origin'],
-                        "Destination" => $data['Segments'][0]['Destination'],
-                        "FlightCabinClass" => $data['FlightCabinClass'],
-                        "PreferredDepartureTime" => $data['Segments'][0]['PreferredDepartureTime'],
-                        "PreferredArrivalTime" => $data['Segments'][0]['PreferredArrivalTime']
-                    ],
-                    [
-                        "Origin" => $data['Segments'][1]['Origin'],
-                        "Destination" => $data['Segments'][1]['Destination'],
-                        "FlightCabinClass" => $data['FlightCabinClass'],
-                        "PreferredDepartureTime" => $data['Segments'][1]['PreferredDepartureTime'],
-                        "PreferredArrivalTime" => $data['Segments'][1]['PreferredArrivalTime']
-                    ]
-                ];
-            } else {
-                $payload["Segments"] = [
-                    [
-                        "Origin" => $data['Origin'] ?? "DEL",
-                        "Destination" => $data['Destination'] ?? "BOM",
-                        "FlightCabinClass" => $data['FlightCabinClass'] ?? "1",
-                        "PreferredDepartureTime" => $data['PreferredDepartureTime'] ?? date('Y-m-d\TH:i:s'),
-                        "PreferredArrivalTime" => @$data['PreferredArrivalTime'] ?? '',
-                    ]
-                ];
-            }
-
 
             $url = $this->setFullUrl('search');
 
-            // Call API using Permission::curl
-
-
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = StaticResponseHelper::searchStaticResponse();
-                $response = StaticResponseHelper::flightroudtripsearchresponse();
-                // $response = StaticResponseHelper::flightfailedsearchresponse();
+                $response = BusStaticResponseHelper::bussearchresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "flight_search", "");
                 $response = $response['response'];

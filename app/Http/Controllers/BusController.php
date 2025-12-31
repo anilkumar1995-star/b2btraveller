@@ -46,4 +46,13 @@ class BusController extends Controller
 
         return response()->json($response);
     }
+
+
+    public function search(Request $request)
+    {
+        $service = new BusService();
+        $response = $service->searchBus($request->all());
+
+        return response()->json($response);
+    }
 }
