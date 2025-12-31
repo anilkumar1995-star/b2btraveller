@@ -331,9 +331,9 @@ Route::group(['prefix' => 'raeps', 'middleware' => ['company', 'auth']], functio
 });
 
 Route::group(['prefix' => 'complaint', 'middleware' => ['auth', 'company']], function () {
-    // Route::get('/', [ComplaintController::class, 'index'])->name('complaint');
-    // Route::post('store', [ComplaintController::class, 'store'])->name('complaintstore');
-    // Route::get('/supportdata', [ComplaintController::class, 'supportindex'])->name('supportdata');
+    Route::get('/', [ComplaintController::class, 'index'])->name('complaint');
+    Route::post('store', [ComplaintController::class, 'store'])->name('complaintstore');
+    Route::get('/supportdata', [ComplaintController::class, 'supportindex'])->name('supportdata');
 });
 
 Route::group(['prefix' => '', 'middleware' => ['auth', 'company', "webActivityLog"]], function () {
