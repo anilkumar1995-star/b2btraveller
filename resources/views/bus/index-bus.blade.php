@@ -71,11 +71,11 @@
 
                     <div class="col-lg-6">
                         <div class="form-control-border form-control-transparent form-fs-md d-flex">
-                            <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
+
                             <div class="flex-grow-1">
-                                <label>Departure</label>
-                                <select class="form-select  select" data-search-enabled="true" name="Origin"
-                                    id="Origin">
+                                <label class="mb-1"> <i class="ti ti-location fs-6 text-primary"></i> Departure</label>
+                                <select class="form-select select w-100" data-search-enabled="true" name="Departure"
+                                    id="DepartureId">
                                     <option value="">Select location</option>
 
                                 </select>
@@ -85,11 +85,11 @@
 
                     <div class="col-lg-6">
                         <div class="form-control-border form-control-transparent form-fs-md d-flex">
-                            <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
+
                             <div class="flex-grow-1">
-                                <label>Destination</label>
-                                <select class="form-select  select" data-search-enabled="true" name="Destination"
-                                    id="Destination">
+                                <label class="mb-1"> <i class="ti ti-location fs-6 text-success"></i> Destination</label>
+                                <select class="form-select  select w-100" data-search-enabled="true" name="Destination"
+                                    id="DestinationId">
                                     <option value="">Select location</option>
 
                                 </select>
@@ -99,21 +99,21 @@
 
                     <div class="col-lg-4">
                         <div class="flex-grow-1">
-                            <label class="mb-1"> <i class="ti ti-calendar me-2"></i>Journey Date</label>
+                            <label class="mb-1"> <i class="ti ti-calendar fs-6 text-info"></i>Journey Date</label>
                             <input type="text" class="form-control flatpickr" data-date-format="d/m/Y"
-                                placeholder="Select date">
+                                placeholder="Select date" name="JourneyDate" id="JourneyDate" autocomplete="off">
                         </div>
                     </div>
 
                     <div class="col-lg-4">
-                        <label class="mb-1"><i class="ti ti-calendar me-2"></i>Return Date (Optional)</label>
-                        <input type="text" class="form-control flatpickr" id="roundReturn" name="PreferredArrivalTime"
-                            data-date-format="Y-m-d" autocomplete="off" placeholder="Select date">
+                        <label class="mb-1"><i class="ti ti-calendar fs-6 text-danger"></i>Return Date (Optional)</label>
+                        <input type="text" class="form-control flatpickr" data-date-format="Y-m-d" autocomplete="off"
+                            placeholder="Select date" name="ReturnJourneyDate" id="ReturnJourneyDate">
 
                     </div>
 
                     <div class="col-lg-4">
-                        <label class="w-100">Passengers</label>
+                        <label class="w-100 mb-1"><i class="ti ti-user fs-6 text-warning"></i> Passengers</label>
                         <select class="form-select select" name="PassengerCount" id="PassengerCount" required>
                             <option value="">Select Passengers</option>
                             <option value="1" selected>1</option>
@@ -152,14 +152,8 @@
 
     <script>
         $(document).ready(function() {
-            swal({
-                type: 'info',
-                title: 'Coming Soon',
-                text: '🚍 Bus booking feature will be available soon!',
-                confirmButtonText: 'Okay'
-            });
             localStorage.clear();
-            $('.select').select2();
+            // $('.select').select2();
 
             $('.flatpickr').datepicker({
                 'autoclose': true,
@@ -168,17 +162,56 @@
                 'format': 'yyyy-mm-dd',
                 'startDate': new Date()
             });
-        });
 
-        $(document).on('submit', '#busSearchForm', function(e) {
-            e.preventDefault();
+            $('#DepartureId, #DestinationId').select2({
+                placeholder: 'Type at least 3 characters',
+                minimumInputLength: 3,
+                ajax: {
+                    url: "{{ route('bus.search.city') }}",
+                    dataType: 'json',
+                    delay: 300,
+                    data: function(params) {
+                        return {
+                            query: params.term
+                        };
+                    },
+                    processResults: function(response, params) {
 
-            swal({
-                type: 'info',
-                title: 'Coming Soon',
-                text: '🚍 Bus booking feature will be available soon!',
-                confirmButtonText: 'Okay'
+                        let keyword = params.term.trim().toLowerCase();
+
+                        let exact = [];
+                        let startsWith = [];
+                        let contains = [];
+
+                        response.data.forEach(function(item) {
+                            let city = item.CityName.trim().toLowerCase();
+
+                            if (city === keyword) {
+                                exact.push(item);
+                            } else if (city.startsWith(keyword)) {
+                                startsWith.push(item);
+                            } else if (city.includes(keyword)) {
+                                contains.push(item);
+                            }
+                        });
+
+                        // 🔥 exact → startsWith → contains
+                        let finalList = [...exact, ...startsWith, ...contains].slice(0, 20);
+
+                        return {
+                            results: finalList.map(function(item) {
+                                return {
+                                    id: item.CityId,
+                                    text: item.CityName.trim()
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
             });
+
         });
+
     </script>
 @endpush

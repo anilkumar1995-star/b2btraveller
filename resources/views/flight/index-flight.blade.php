@@ -255,7 +255,7 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100">Origin</label>
-                                            <select class="form-select  select w-100" data-search-enabled="true"
+                                            <select class="form-select select w-100" data-search-enabled="true"
                                                 name="Origin" id="roundOrigin">
                                                 <option value="">Select location</option>
                                             </select>
