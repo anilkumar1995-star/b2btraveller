@@ -55,6 +55,7 @@
         .select2-container--default .select2-results>.select2-results__options {
             cursor: pointer !important;
         }
+        
     </style>
 
 
@@ -648,7 +649,7 @@
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-between p-2 p-xl-0 mt-xl-4">
-                            <button class="btn btn-link p-0 mb-0">Clear all</button>
+                            <button class="btn btn-secondary mb-0">Clear all</button>
                             <button class="btn btn-primary mb-0">Filter Result</button>
                         </div>
 
