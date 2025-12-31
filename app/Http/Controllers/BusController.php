@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Apilog;
 use App\Services\AuthService;
-use App\Services\FlightService;
+use App\Services\BusService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -37,5 +37,13 @@ class BusController extends Controller
                 'message' => $e->getMessage()
             ], 500);
         }
+    }
+
+    public function searchCity(Request $request)
+    {
+        $service = new BusService();
+        $response = $service->searchCity($request->all());
+
+        return response()->json($response);
     }
 }
