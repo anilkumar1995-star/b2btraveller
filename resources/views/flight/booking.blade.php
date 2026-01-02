@@ -131,7 +131,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf417-js/2.1.7/pdf417.min.js"></script> --}}
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="{{ asset('') }}js/flightbook.js.js"></script>
+    <script src="{{ asset('') }}js/flightbook.js"></script>
     <script>
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');

@@ -299,7 +299,7 @@
 
 @push('script')
     {{-- ================== SCRIPT ================== --}}
-    <script src="{{ asset('') }}js/flightbook.js.js"></script>
+    <script src="{{ asset('') }}js/flightbook.js"></script>
     <script>
         $(document).ready(function() {
 
