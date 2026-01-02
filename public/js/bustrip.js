@@ -26,7 +26,7 @@ $('#busSearchForm').on('submit', function (e) {
             $('#busSearchForm').find('button[type="submit"]').html('Please Wait...').attr('disabled', true);
         },
         complete: function () {
-            $('#busSearchForm').find('button[type="submit"]').html('Find Ticket <i class="ti ti-arrow-right ps-3"></i>').attr('disabled', false);
+            $('#busSearchForm').find('button[type="submit"]').html('Search Buses<i class="ti ti-arrow-right"></i>').attr('disabled', false);
         },
         success: function (response) {
             $('#busContainerList').addClass('d-none');
@@ -49,7 +49,6 @@ $('#busSearchForm').on('submit', function (e) {
                     let boarding = bus.BoardingPointsDetails.map(bp => bp.CityPointName).join(', ');
                     let dropping = bus.DroppingPointsDetails.map(dp => dp.CityPointName).join(', ');
 
-                    console.log(bus, boarding, dropping);
                     html += `
                         <div class="card border mb-3">
                             <div class="card-header d-flex justify-content-between">
@@ -84,7 +83,7 @@ $('#busSearchForm').on('submit', function (e) {
                                         </div>
                                     </div>
                                     <div class="col-md-3 text-md-end">
-                                        <h4>₹${bus.BusPrice.OfferedPrice}</h4>
+                                        <h4>₹${bus.BusPrice.PublishedPriceRoundedOff}</h4>
                                         <button class="btn btn-dark mb-0 btn-book-now" data-busid="${bus.ResultIndex}">Book Now</button>
                                     </div>
                                 </div>                               
@@ -93,16 +92,18 @@ $('#busSearchForm').on('submit', function (e) {
                              <div class="card-footer pt-4">
                                 <ul class="list-inline bg-light d-sm-flex justify-content-sm-between text-center rounded-2 py-2 px-4 mb-0">
                                     <li class="list-inline-item text-danger">Only ${bus.AvailableSeats} Seat Left</li> |
-                                    <li class="list-inline-item text-danger">
-                                        Id Proof : ${bus.IdProofRequired ? 'Required' : 'Not Required'}
+                                    <li class="list-inline-item">
+                                        ${bus.IdProofRequired ? '<span class="text-success fw-bold">Id Proof Required</span>' : '<span class="text-danger fw-bold">Id Proof Not Required</span>'}
                                     </li> |
-                                    <li class="list-inline-item text-danger">
+                                    <li class="list-inline-item">
                                         ${bus.LiveTrackingAvailable ? '<span class="text-success fw-bold">Live Tracking Available</span>' : '<span class="text-danger fw-bold">No Live Tracking</span>'}
                                     </li> |
                     
                                     <li class="list-inline-item">
                                         <button class="btn p-0 text-primary view-details" 
-                                        >
+                                            data-bs-toggle="modal" data-bs-target="#busdetail" 
+                                            data-busid="${bus.ResultIndex}"
+                                            data-businfo="${encodeURIComponent(JSON.stringify(bus))}">
                                             👁️ Full Details <i class="fa-solid fa-angle-right ms-1"></i>
                                         </button>
                                     </li>
@@ -122,7 +123,6 @@ $('#busSearchForm').on('submit', function (e) {
     });
 });
 
-// data-bs-toggle="modal" data-bs-target="#busdetail" data-busid="${bus.ResultIndex}"
 function formatTime(dateStr) {
     let dt = new Date(dateStr);
     return dt.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -149,3 +149,204 @@ $(document).on('click', '.btn-book-now', function () {
     // localStorage.setItem("ResultIndex", busId || '');   
     // window.location.href = "/bus/details";
 });
+
+$(document).on("click", ".view-details", function () {
+    let busId = $(this).data('busid');
+    let busInfo = JSON.parse(
+        decodeURIComponent($(this).attr("data-businfo"))
+    );
+
+    let infohtml = "";
+    let policyhtml = "";
+    let farehtml = "";
+
+    infohtml += `
+        <div class="card border mb-3">
+            <div class="card-header d-flex align-items-center border-bottom">
+                🚌
+                <h5 class="card-title mb-0">${busInfo.TravelName} (${busInfo.ServiceName})</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive-lg">
+                    <table class="table caption-bottom mb-0">
+                        <caption class="pb-0">Bus Type : ${busInfo.BusType}</caption>
+                        <tbody class="border-top-0">
+                           <tr>
+                                <td colspan="2">
+                                    <strong>Boarding Point</strong>
+                                    <div class="mt-2 boarding-list">
+                                        ${busInfo.BoardingPointsDetails && busInfo.BoardingPointsDetails.length
+                                        ? busInfo.BoardingPointsDetails.map((bp, i) => `
+                                                <div class="form-check border rounded p-2 mb-2">
+                                                    <input class="form-check-input boarding-point"
+                                                        type="radio"
+                                                        name="boardingPoint"
+                                                        id="bp_${i}"
+                                                        value="${bp.CityPointIndex}"
+                                                        data-location="${bp.CityPointLocation}"
+                                                        data-time="${bp.CityPointTime}">
+                                                    
+                                                    <label class="form-check-label w-100" for="bp_${i}">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div>
+                                                                <strong>${bp.CityPointName}</strong><br>
+                                                                <small class="text-muted">${bp.CityPointLocation}</small>
+                                                            </div>
+                                                            <div class="text-end">
+                                                                <span class="badge bg-primary">
+                                                                    ${formatTime(bp.CityPointTime)}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            `).join('')
+                                        : '<span class="text-muted">No boarding points available</span>'
+                                    }
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2">
+                                    <strong>Boarding Point</strong>
+                                    <div class="mt-2 boarding-list">
+                                        ${
+                                            busInfo.DroppingPointsDetails && busInfo.DroppingPointsDetails.length
+                                            ? busInfo.DroppingPointsDetails.map((bp, i) => `
+                                                <div class="form-check border rounded p-2 mb-2">
+                                                    <input class="form-check-input boarding-point"
+                                                        type="radio"
+                                                        name="boardingPoint"
+                                                        id="bp_${i}"
+                                                        value="${bp.CityPointIndex}"
+                                                        data-location="${bp.CityPointLocation}"
+                                                        data-time="${bp.CityPointTime}">
+                                                    
+                                                    <label class="form-check-label w-100" for="bp_${i}">
+                                                        <div class="d-flex justify-content-between">
+                                                            <div>
+                                                                <strong>${bp.CityPointName}</strong><br>
+                                                                <small class="text-muted">${bp.CityPointLocation}</small>
+                                                            </div>
+                                                            <div class="text-end">
+                                                                <span class="badge bg-primary">
+                                                                    ${formatTime(bp.CityPointTime)}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            `).join('')
+                                            : '<span class="text-muted">No boarding points available</span>'
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>`;
+
+    policyhtml += `<div class="card border mt-3">
+            <div class="card-header d-flex align-items-center border-bottom">
+                ✈️
+                <h5 class="card-title mb-0">${busInfo.TravelName} (${busInfo.ServiceName})</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive-lg">
+                    <table class="table caption-bottom mb-0 mt-2">
+                        <caption class="pb-0"> *${busInfo.BusType}</caption>
+                        
+                       <thead class="table-light">
+                            <tr>
+                                <th>Cancellation Time</th>
+                                 <th>From</th>
+                                <th>To</th>
+                                <th>Charges</th>
+                            </tr>
+                        </thead>
+                        <tbody class="border-top-0">
+                            ${busInfo.CancellationPolicies && busInfo.CancellationPolicies.length
+            ? busInfo.CancellationPolicies.map(policy => `
+                                    <tr>
+                                        <td>${policy.PolicyString}</td>
+                                         <td>${formatDateTime(policy.FromDate)}</td>
+                                        <td>${formatDateTime(policy.ToDate)}</td>
+                                        <td>
+                                            ${formatCancellationCharge(policy)}
+                                        </td>
+                                    </tr>
+                                `).join('')
+            : `<tr><td colspan="2" class="text-muted text-center">No cancellation policy available</td></tr>`
+        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>`;
+
+
+    // Fare Information
+
+    farehtml = `
+         <div class="card border">
+            <div class="table-responsive-lg">
+                <table class="table caption-bottom mb-0">
+                    <caption class="pb-0">*From The Date Of Departure</caption>
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" class="border-0 rounded-start">Base Fare</th>
+                            <th scope="col" class="border-0">Taxes and Fees</th>
+                            <th scope="col" class="border-0">Discount</th>
+                            <th scope="col" class="border-0">Other Charges</th>
+                            <th scope="col" class="border-0 rounded-end">Total Fees</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${busInfo?.BusPrice?.CurrencyCode || '₹'} ${busInfo?.BusPrice?.BasePrice || '0.00'}</td>
+                            <td>${busInfo?.BusPrice?.CurrencyCode || '₹'} ${busInfo?.BusPrice?.Tax || '0.00'}</td>
+                            <td>${busInfo?.BusPrice?.CurrencyCode || '₹'} ${busInfo?.BusPrice?.Discount || '0.00'}</td>
+                            <td>${busInfo?.BusPrice?.CurrencyCode || '₹'} ${busInfo?.BusPrice?.OtherCharges || '0.00'}</td>
+                            <td><h5 class="mb-0">${busInfo?.BusPrice?.CurrencyCode || '₹'} ${busInfo?.BusPrice?.PublishedPriceRoundedOff || '0.00'}</h5></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>`;
+
+    $("#policy-tab").html(policyhtml);
+    $("#info-tab").html(infohtml);
+    $("#fare-tab").html(farehtml);
+});
+
+function formatDateTime(dateStr) {
+    if (!dateStr) return '-';
+    const d = new Date(dateStr);
+    return d.toLocaleString('en-IN', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+    });
+}
+
+
+function formatCancellationCharge(policy) {
+    switch (policy.CancellationChargeType) {
+        case 1:
+            return `₹${policy.CancellationCharge}`;
+        case 2:
+            return `${policy.CancellationCharge}%`;
+        case 3:
+            return `${policy.CancellationCharge} Night(s)`;
+        default:
+            return '-';
+    }
+}

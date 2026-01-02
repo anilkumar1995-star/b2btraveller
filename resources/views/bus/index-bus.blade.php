@@ -120,7 +120,7 @@
 
                     <div class="text-end mb-3">
                         <button type="submit" class="btn btn-primary">
-                            Search Buses
+                            Search Buses <i class="ti ti-arrow-right"></i>
                         </button>
                     </div>
             </form>
@@ -260,6 +260,33 @@
         </div>
 
     </section>
+
+    <div class="modal fade" id="busdetail" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">✈️ Bus Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-pills nav-justified bg-opacity-10 rounded p-2 mb-3 border bg-light">
+                        <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill"
+                                data-bs-target="#info-tab">Bus Location Info</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#fare-tab">Fare Detail</button></li>
+                        <li class="nav-item"><button class="nav-link" data-bs-toggle="pill"
+                                data-bs-target="#policy-tab">Cancellation Policy</button></li>
+                    </ul>
+
+                    <div class="tab-content pt-0 mt-0">
+                        <div class="tab-pane fade show active" id="info-tab"></div>
+                        <div class="tab-pane fade" id="fare-tab"></div>
+                        <div class="tab-pane fade" id="policy-tab"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="back-top"></div>
 
 @endsection

@@ -809,11 +809,11 @@ function getFareQuote(resultIndex, traceId, trip) {
                     let farehtml = '';
 
                     farehtml += `<div class="card-header border-bottom bg-light d-flex justify-content-between align-items-center">
-                            <h5 class="card-title mb-0">Fare Summary</h5>
-                                <span class="badge ${resultData?.IsRefundable ? 'bg-success' : 'bg-danger'}">
-                                ${resultData?.IsRefundable ? 'Refundable' : 'Non-Refundable'}
-                            </span>
-                        </div>
+                                <h5 class="card-title mb-0">Fare Summary</h5>
+                                    <span class="badge ${resultData?.IsRefundable ? 'bg-success' : 'bg-danger'}">
+                                    ${resultData?.IsRefundable ? 'Refundable' : 'Non-Refundable'}
+                                </span>
+                            </div>
 
                         <div class="card-body" >
                             <div class="row mb-3">

@@ -141,7 +141,7 @@
                             <label>Adult Count</label>
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select  select" name="AdultCount" id="AdultCount" required>
-                                    <option value="">Select Adult (18+ Yr)</option>
+                                    <option value="">Select Adult (12+ Yr)</option>
                                     <option value="1" selected>1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -159,7 +159,7 @@
                             <label>Child Count</label>
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select  select" name="ChildCount" id="ChildCount" required>
-                                    <option value="">Select Child (2-18 Yr)</option>
+                                    <option value="">Select Child (2-12 Yr)</option>
                                     <option value="0" selected>0</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
