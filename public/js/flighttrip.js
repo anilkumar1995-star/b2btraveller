@@ -2220,7 +2220,8 @@ function checkFinalBookingStatus(trip, journeyType, source) {
         } else {
             swal({
                 title: "Booking Failed ❌",
-                text: "Both departure and return bookings failed.",
+                html: `${depRes?.message ? `<strong>Departure Error:</strong> ${depRes.message}` : 'Booking failed'}
+                <br/>${retRes.message ? `<strong>Return Error:</strong> ${retRes.message}` : 'Booking failed'}`,
                 type: "error"
             }).then(() => {
                 window.location.href = "/flight/view";
