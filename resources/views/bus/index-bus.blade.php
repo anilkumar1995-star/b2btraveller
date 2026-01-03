@@ -285,7 +285,7 @@
                     </div>
                 </div>
 
-                <div class="modal-footer border-top" id="busDetailFooter">
+                <div class="modal-footer border-top d-flex justify-content-between align-items-center" id="busDetailFooter">
                    
                 </div>
             </div>

@@ -94,10 +94,10 @@ $('#busSearchForm').on('submit', function (e) {
                                 <ul class="list-inline bg-light d-sm-flex justify-content-sm-between text-center rounded-2 py-2 px-4 mb-0">
                                     <li class="list-inline-item text-danger">Only ${bus.AvailableSeats} Seat Left</li> |
                                     <li class="list-inline-item">👤
-                                        ${bus.IdProofRequired ? '<span class="text-success fw-bold">Id Proof Required</span>' : '<span class="text-danger fw-bold">Id Proof Not Required</span>'}
+                                        ${bus.IdProofRequired ? '<span class="text-success">Id Proof Required</span>' : '<span class="text-danger fw-bold">Id Proof Not Required</span>'}
                                     </li> |
                                     <li class="list-inline-item">📍
-                                        ${bus.LiveTrackingAvailable ? '<span class="text-success fw-bold">Live Tracking Available</span>' : '<span class="text-danger fw-bold">No Live Tracking</span>'}
+                                        ${bus.LiveTrackingAvailable ? '<span class="text-success">Live Tracking Available</span>' : '<span class="text-danger fw-bold">No Live Tracking</span>'}
                                     </li>
                                 </ul>
                                 
@@ -307,9 +307,13 @@ $(document).on("click", ".view-details", function () {
     $("#info-tab").html(infohtml);
     $("#fare-tab").html(farehtml);
 
-    $('#busDetailFooter').html(`
+    $('#busDetailFooter').html(` <small class="text-muted">
+            ℹ️ Please select <strong>1 Boarding Point</strong> and <strong>1 Dropping Point</strong> to continue
+        </small>
+        <div>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-primary btn-book-now">Proceed to Next</button>
+    </div>
     `);
 });
 
@@ -319,9 +323,40 @@ $(document).on('click', '.btn-book-now', function () {
 
     notify("🚧 Booking service is currently under maintenance. Please try again later.", "warning");
     return;
-    // let busId = $(this).data('busid');
-    // localStorage.setItem("ResultIndex", busId || '');   
-    // window.location.href = "/bus/details";
+    let boarding = $('input[name="boardingPoint"]:checked');
+    let dropping = $('input[name="droppingPoint"]:checked');
+
+    if (!boarding.length) {
+        notify("⚠️ Please select at least one Boarding Point", "error");
+        return;
+    }
+
+    if (!dropping.length) {
+        notify("⚠️ Please select at least one Dropping Point", "error");
+        return;
+    }
+
+    // Selected Data
+    let bookingData = {
+        busId: bookingSelectedBusId, // set this globally when opening modal
+        boardingPoint: {
+            id: boarding.val(),
+            location: boarding.data('location'),
+            time: boarding.data('time')
+        },
+        droppingPoint: {
+            id: dropping.val(),
+            location: dropping.data('location'),
+            time: dropping.data('time')
+        }
+    };
+
+    // Store for next page
+    localStorage.setItem("busBookingData", JSON.stringify(bookingData));
+
+    // Redirect to detail page
+    window.location.href = "/bus/details";
+
 });
 
 function formatDateTime(dateStr) {
