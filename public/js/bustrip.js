@@ -90,7 +90,7 @@ $('#busSearchForm').on('submit', function (e) {
                                 </div>                               
                             </div>
 
-                             <div class="card-footer pt-4">
+                             <div class="card-footer">
                                 <ul class="list-inline bg-light d-sm-flex justify-content-sm-between text-center rounded-2 py-2 px-4 mb-0">
                                     <li class="list-inline-item text-danger">Only ${bus.AvailableSeats} Seat Left</li> |
                                     <li class="list-inline-item">👤
