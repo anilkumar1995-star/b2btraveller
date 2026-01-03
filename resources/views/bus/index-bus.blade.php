@@ -278,11 +278,15 @@
                                 data-bs-target="#policy-tab">Cancellation Policy</button></li>
                     </ul>
 
-                    <div class="tab-content pt-0 mt-0">
+                    <div class="tab-content pt-0 mt-0 px-0">
                         <div class="tab-pane fade show active" id="info-tab"></div>
                         <div class="tab-pane fade" id="fare-tab"></div>
                         <div class="tab-pane fade" id="policy-tab"></div>
                     </div>
+                </div>
+
+                <div class="modal-footer border-top" id="busDetailFooter">
+                   
                 </div>
             </div>
         </div>
