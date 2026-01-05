@@ -94,10 +94,10 @@ $('#busSearchForm').on('submit', function (e) {
                                 <ul class="list-inline bg-light d-sm-flex justify-content-sm-between text-center rounded-2 py-2 px-4 mb-0">
                                     <li class="list-inline-item text-danger">Only ${bus.AvailableSeats} Seat Left</li> |
                                     <li class="list-inline-item">👤
-                                        ${bus.IdProofRequired ? '<span class="text-success">Id Proof Required</span>' : '<span class="text-danger fw-bold">Id Proof Not Required</span>'}
+                                        ${bus.IdProofRequired ? '<span class="text-success">Id Proof Required</span>' : '<span class="text-danger">Id Proof Not Required</span>'}
                                     </li> |
                                     <li class="list-inline-item">📍
-                                        ${bus.LiveTrackingAvailable ? '<span class="text-success">Live Tracking Available</span>' : '<span class="text-danger fw-bold">No Live Tracking</span>'}
+                                        ${bus.LiveTrackingAvailable ? '<span class="text-success">Live Tracking Available</span>' : '<span class="text-danger>No Live Tracking</span>'}
                                     </li>
                                 </ul>
                                 
@@ -158,7 +158,7 @@ $(document).on("click", ".view-details", function () {
                             </div>
                             <div class="mt-2 boarding-list">
                                 ${busInfo.BoardingPointsDetails?.length
-            ? busInfo.BoardingPointsDetails.map((bp, i) => `
+                                ? busInfo.BoardingPointsDetails.map((bp, i) => `
                                         <div class="form-check border rounded p-2 mb-2">
                                            
                                             
@@ -171,16 +171,7 @@ $(document).on("click", ".view-details", function () {
                                                             ${formatDateTime(bp.CityPointTime)}
                                                         </span>
                                                     </div>
-                                                    <div class="text-end">
-                                                      
-                                                         <input class="form-check-input boarding-point"
-                                                            type="radio"
-                                                            name="boardingPoint[]"
-                                                            id="boarding_${i}"
-                                                            value="${bp.CityPointIndex}"
-                                                            data-location="${bp.CityPointLocation}"
-                                                            data-time="${bp.CityPointTime}">
-                                                    </div>
+                                                   
                                                 </div>
                                             </label>
                                         </div>
@@ -209,16 +200,6 @@ $(document).on("click", ".view-details", function () {
                                                         <span>
                                                             ${formatDateTime(dp.CityPointTime)}
                                                         </span>
-                                                    </div>
-                                                    <div class="text-end">
-                                                        
-                                                         <input class="form-check-input dropping-point"
-                                                            type="radio"
-                                                            name="droppingPoint[]"
-                                                            id="dropping_${i}"
-                                                            value="${dp.CityPointIndex}"
-                                                            data-location="${dp.CityPointLocation}"
-                                                            data-time="${dp.CityPointTime}">
                                                     </div>
                                                 </div>
                                             </label>
@@ -320,43 +301,8 @@ $(document).on("click", ".view-details", function () {
 
 // BTN Book Now
 $(document).on('click', '.btn-book-now', function () {
-
     notify("🚧 Booking service is currently under maintenance. Please try again later.", "warning");
     return;
-    let boarding = $('input[name="boardingPoint"]:checked');
-    let dropping = $('input[name="droppingPoint"]:checked');
-
-    if (!boarding.length) {
-        notify("⚠️ Please select at least one Boarding Point", "error");
-        return;
-    }
-
-    if (!dropping.length) {
-        notify("⚠️ Please select at least one Dropping Point", "error");
-        return;
-    }
-
-    // Selected Data
-    let bookingData = {
-        busId: bookingSelectedBusId, // set this globally when opening modal
-        boardingPoint: {
-            id: boarding.val(),
-            location: boarding.data('location'),
-            time: boarding.data('time')
-        },
-        droppingPoint: {
-            id: dropping.val(),
-            location: dropping.data('location'),
-            time: dropping.data('time')
-        }
-    };
-
-    // Store for next page
-    localStorage.setItem("busBookingData", JSON.stringify(bookingData));
-
-    // Redirect to detail page
-    window.location.href = "/bus/details";
-
 });
 
 function formatDateTime(dateStr) {
