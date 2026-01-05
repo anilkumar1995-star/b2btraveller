@@ -137,6 +137,7 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::post('ssr', [FlightController::class, 'seatdetails'])->name('flight.ssr');
     Route::post('book', [FlightController::class, 'bookFlight'])->name('flight.book');
     Route::post('ticket', [FlightController::class, 'flightTicket'])->name('flight.ticket');
+    // Route::post('ticket-non-lcc', [FlightController::class, 'flightTicketNonLcc'])->name('flight.ticket.nonlcc');
     Route::get('booking', [FlightController::class, 'flightBooking'])->name('flight.booking');
     Route::get('booking-list', [FlightController::class, 'bookingList'])->name('flight.bookingList');
     Route::get('booking-list-failed', [FlightController::class, 'bookingListFailed'])->name('flight.bookingListFailed');

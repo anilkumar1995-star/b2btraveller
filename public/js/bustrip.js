@@ -289,7 +289,8 @@ $(document).on("click", ".view-details", function () {
     $("#fare-tab").html(farehtml);
 
     $('#busDetailFooter').html(` <small class="text-muted">
-            ℹ️ Please select <strong>1 Boarding Point</strong> and <strong>1 Dropping Point</strong> to continue
+         ℹ️ Please Proceed to Seat Selection & Boarding Points after reviewing the bus details.
+            
         </small>
         <div>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

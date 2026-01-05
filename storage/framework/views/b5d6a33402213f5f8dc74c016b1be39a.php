@@ -55,6 +55,7 @@
         .select2-container--default .select2-results>.select2-results__options {
             cursor: pointer !important;
         }
+        
     </style>
 
 
@@ -140,7 +141,7 @@
                             <label>Adult Count</label>
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select  select" name="AdultCount" id="AdultCount" required>
-                                    <option value="">Select Adult (18+ Yr)</option>
+                                    <option value="">Select Adult (12+ Yr)</option>
                                     <option value="1" selected>1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -158,7 +159,7 @@
                             <label>Child Count</label>
                             <div class="form-control-bg-light form-fs-md">
                                 <select class="form-select  select" name="ChildCount" id="ChildCount" required>
-                                    <option value="">Select Child (2-18 Yr)</option>
+                                    <option value="">Select Child (2-12 Yr)</option>
                                     <option value="0" selected>0</option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
@@ -255,7 +256,7 @@
                                         <div class="form-border-transparent form-fs-lg bg-light rounded-3 h-100 p-3">
                                             <!-- Input field -->
                                             <label class="mb-1 w-100">Origin</label>
-                                            <select class="form-select  select w-100" data-search-enabled="true"
+                                            <select class="form-select select w-100" data-search-enabled="true"
                                                 name="Origin" id="roundOrigin">
                                                 <option value="">Select location</option>
                                             </select>
@@ -640,7 +641,7 @@
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-between p-2 p-xl-0 mt-xl-4">
-                            <button class="btn btn-link p-0 mb-0">Clear all</button>
+                            <button class="btn btn-secondary mb-0">Clear all</button>
                             <button class="btn btn-primary mb-0">Filter Result</button>
                         </div>
 
@@ -736,7 +737,7 @@
 
 
 <?php $__env->startPush('script'); ?>
-    <script src="<?php echo e(asset('')); ?>js/flighttrip.js"></script>
+    <script src="<?php echo e(asset('')); ?>js/flightbook.js"></script>
     
 
     
