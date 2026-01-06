@@ -176,7 +176,7 @@
 
                           $ticketStatus = $ticketStatusMap[$b->ticket_status] ?? [
                               'label' => ucfirst($b->ticket_status),
-                              'class' => 'badge bg-secondary',
+                              'class' => 'badge bg-warning',
                           ];
                       @endphp
                       <tr>
