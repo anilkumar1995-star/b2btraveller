@@ -580,16 +580,18 @@
                             <div class="text-muted small">
                                 ${booking.AirlineCode} (${segments[0]?.Airline?.AirlineName}) • ${segments[0]?.Airline?.FlightNumber}
                             </div>
-                            <h4>Booking ID: ${booking.BookingId || '-'}</h4>
+                            <div>
+                                <h4>Booking ID: ${booking.BookingId || '-'}</h4>
+                            </div>
                         </div>
                     </div>
 
                     <h4>✈️ ${originAirport.AirportName || booking.Origin} → ${destAirport.AirportName || booking.Destination}</h4>
 
-                    <!-- ROUTE INFO -->
+                    <!-- ROUTE -->
                     <div class="row ticket-route">
 
-                        <div class="col-sm-6 p-3 text-center ticket-route">
+                        <div class="col-sm-6 p-3 text-center">
                             <div class="mt-2 border rounded p-1 bg-label-warning">
                                 <span>PNR : <b>${booking.PNR || '-'}</b></span><br/>
                                 Invoice Number : <b>${booking.InvoiceNo || '-'}</b>
@@ -611,43 +613,40 @@
                             </div>
                         </div>
 
-                        <div class="col-sm-6 p-3 ticket-route">
+                        <div class="col-sm-6 p-3">
                             <div class="d-flex justify-content-between align-items-center">
-
                                 <div class="text-start">
-                                    <div class="city-code">${originAirport.AirportCode || ''}</div>
-                                    <div class="city-name">${originAirport.CityName || ''}</div>
+                                    <div class="city-code">${originAirport.AirportCode}</div>
+                                    <div class="city-name">${originAirport.CityName}</div>
                                     <div>
-                                        ${departTime ? new Date(departTime).toLocaleDateString() : ''}<br>
-                                        <strong>${departTime ? new Date(departTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}</strong>
+                                        ${new Date(departTime).toLocaleDateString()}<br>
+                                        <strong>${new Date(departTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</strong>
                                     </div>
                                 </div>
 
                                 <div class="text-center">
-                                    <h5>${lastSeg?.Duration ? Math.floor(lastSeg.Duration / 60) + 'h ' + (lastSeg.Duration % 60) + 'm' : '—'}</h5>
-                                    <div class="route-line"><span></span> ✈️ <span></span></div>
+                                    <h5>${Math.floor(lastSeg.Duration / 60)}h ${lastSeg.Duration % 60}m</h5>
+                                    <div class="route-line"><span></span>✈️<span></span></div>
                                 </div>
 
                                 <div class="text-end">
-                                    <div class="city-code">${destAirport.AirportCode || ''}</div>
-                                    <div class="city-name">${destAirport.CityName || ''}</div>
+                                    <div class="city-code">${destAirport.AirportCode}</div>
+                                    <div class="city-name">${destAirport.CityName}</div>
                                     <div>
-                                        ${arrivalTime ? new Date(arrivalTime).toLocaleDateString() : ''}<br>
-                                        <strong>${arrivalTime ? new Date(arrivalTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'}) : ''}</strong>
+                                        ${new Date(arrivalTime).toLocaleDateString()}<br>
+                                        <strong>${new Date(arrivalTime).toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})}</strong>
                                     </div>
                                 </div>
-
                             </div>
 
                             <hr>
 
-                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between">
                                 <div><b>Aircraft:</b> ${firstSeg.Craft}</div>
                                 <div><b>Fare Type:</b> ${booking.FareType}</div>
                                 <div><b>Fare Class:</b> ${booking.SupplierFareClasses}</div>
                             </div>
                         </div>
-
                     </div>
 
                     <!-- PASSENGERS -->
@@ -657,7 +656,7 @@
                         ${passengers.map((p, index) => `
                             <div class="passenger-card">
 
-                                <div class="row align-items-center mb-2">
+                                <div class="row mb-2">
                                     <div class="col-5">
                                         <b>${p.Title} ${p.FirstName} ${p.LastName}</b> |
                                         ${p.Gender == 1 ? 'Male' : 'Female'} |
@@ -668,26 +667,69 @@
                                         <div class="contact-box w-50">
                                             <div><b>Mobile:</b> ${p.ContactNo}</div>
                                             <div><b>Email:</b> ${p.Email}</div>
-                                            <div><b>City:</b> ${p.City}, ${p.CountryCode}</div>
+                                            <div><b>City:</b> ${p.City}</div>
                                             <div><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
                                         </div>
                                     </div>
 
                                     <div class="col-3">
                                         <h5>Invoice Details</h5>
-                                        <div><b>Invoice No:</b> ${booking.InvoiceNo}</div>
-                                        <div><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
-                                        <div><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
+                                        <div><b>No:</b> ${booking.InvoiceNo}</div>
+                                        <div><b>Amount:</b> ₹${booking.InvoiceAmount}</div>
+                                        <div><b>Created:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
                                     </div>
 
                                     <div class="col-4 text-end">
                                         <h5>Ticket Details</h5>
                                         ${p.Ticket ? `
-                                            <div><b>Issued On:</b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
-                                            <div><b>Validating Airline:</b> ${p.Ticket.ValidatingAirline}</div>
+                                            <div><b>Issued:</b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
+                                            <div><b>Status:</b>
+                                                <span class="badge ${getTicketStatus(p.Ticket.Status).badge}">
+                                                    ${getTicketStatus(p.Ticket.Status).text}
+                                                </span>
+                                            </div>
                                             <div><b>Ticket Id:</b> ${p.Ticket.TicketId}</div>
-                                        ` : `<div class="text-danger"><b>Status:</b> Ticket not generated</div>`}
+                                        ` : `<div class="text-danger">Ticket not generated</div>`}
                                     </div>
+                                </div>
+
+                                <!-- SEAT -->
+                                <div class="seat-box">
+                                    <div class="seat-title">Seat Details</div>
+                                    ${p.SeatDynamic?.map(s => `
+                                        <div class="seat-row">
+                                            <span>${s.Origin} → ${s.Destination}</span>
+                                            <span>${s.Code}</span>
+                                            <span>${s.Text}</span>
+                                            <span>₹${s.Price}</span>
+                                        </div>
+                                    `).join('') || '<div>No seat selected</div>'}
+                                </div>
+
+                                <!-- SSR -->
+                                <div class="ssr-box mt-3">
+                                    <div class="seat-title">Special Service Requests (SSR)</div>
+                                    ${renderSSR(p.Ssr)}
+                                </div>
+
+                                <!-- BAGGAGE -->
+                                <div class="baggage-allow-box mt-3">
+                                    <div class="seat-title">Baggage Allowance</div>
+                                    ${p.SegmentAdditionalInfo?.map(b => `
+                                        <div class="row">
+                                            <div class="col-4"><b>Check-in:</b> ${b.Baggage}</div>
+                                            <div class="col-4"><b>Cabin:</b> ${b.CabinBaggage}</div>
+                                            <div class="col-4"><b>Meal:</b> ${b.Meal || 'Not Included'}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+
+                                <!-- FARE -->
+                                <div class="fare-box mt-3">
+                                    <div><b>Base:</b> ₹${p.Fare.BaseFare}</div>
+                                    <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
+                                    <div><b>Seat:</b> ₹${p.Fare.TotalSeatCharges}</div>
+                                    <div class="fare-total">Total: ₹${p.Fare.PublishedFare}</div>
                                 </div>
 
                                 <div class="barcode text-center mt-3">
@@ -696,11 +738,6 @@
                             </div>
                         `).join('')}
                     </div>
-
-                    <div class="mt-4 p-3 bg-white rounded text-end">
-                        <span class="text-success">You have paid <h4>INR ${booking?.Fare?.PublishedFare || '-'}</h4></span>
-                    </div>
-
                 </div>
             </div>
             `;
@@ -709,13 +746,10 @@
 
             setTimeout(() => {
                 passengers.forEach((p, index) => {
-                    let barcode = booking.PNR;
-                    if (p.BarcodeDetails?.Barcode?.length) {
-                        barcode = p.BarcodeDetails.Barcode[0].Content ?? "N/A";
-                    }
-                    makeBarcode(index, barcode);
+                    makeBarcode(index, booking.PNR);
                 });
             }, 100);
+
 
           //   let html = '';
           //     html += `
@@ -1063,18 +1097,7 @@
         //     `;
 
 
-          //   $('#ticketContent').html(html);
 
-          //   setTimeout(() => {
-          //       passengers.forEach((p, index) => {
-          //           let barcode = booking.PNR;
-          //           if (p.BarcodeDetails && p.BarcodeDetails.Barcode && p.BarcodeDetails.Barcode.length >
-          //               0) {
-          //               barcode = p.BarcodeDetails.Barcode[0].Content ?? "N/A";
-          //           }
-          //           makeBarcode(index, barcode);
-          //       });
-          //   }, 100);
       }
 
 
