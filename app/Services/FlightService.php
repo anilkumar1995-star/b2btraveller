@@ -51,6 +51,8 @@ class FlightService
             return $this->baseUrl . '/v1/service/traveller/flight/book';
         } else if ($method == 'ticketlcc') {
             return $this->baseUrl . '/v1/service/traveller/flight/ticket/llc';
+        } else if ($method == 'ticketnonlcc') {
+            return $this->baseUrl . '/v1/service/traveller/flight/ticket/nonllc';
         } else if ($method == 'bookingDetails') {
             return $this->baseUrl . '/v1/service/traveller/flight/booking/details';
         } else if ($method == 'cancelFlight') {
@@ -342,16 +344,50 @@ class FlightService
         try {
             $token = $this->authService->getToken();
 
-            $payload = [
-                "EndUserIp" => $this->ip,
-                "TokenId" => $token,
-                "TraceId" => $data['traceId'],
-                "ResultIndex" => $data['resultIndex'],
-                "Passengers" => $data['passengers']
-            ];
+            if ($data['islcc'] == 'true') {
+                $payload = [
+                    "EndUserIp" => $this->ip,
+                    "TokenId" => $token,
+                    "TraceId" => $data['traceId'],
+                    "ResultIndex" => $data['resultIndex'],
+                    "Passengers" => $data['passengers']
+                ];
+                $url = $this->setFullUrl('ticketlcc');
+            } else {
+                // in this passport details re  uired then key add kro 
+                $payload = [
+                    "EndUserIp" => $this->ip,
+                    "TokenId" => $token,
+                    "BookingId" => $data['bookingId'],
+                    "PNR" => $data['pnr'],
+                ];
 
+                $passportArr = [];
 
-            $url = $this->setFullUrl('ticketlcc');
+                if (!empty($data['Passport']) && is_array($data['Passport'])) {
+
+                    foreach ($data['Passport'] as $paxPassport) {
+
+                        if (
+                            !empty($paxPassport['PassportNo']) &&
+                            !empty($paxPassport['PassportExpiry'])
+                        ) {
+                            $passportArr[] = [
+                                "PaxId"          => $paxPassport['PaxId'],
+                                "PassportNo"     => $paxPassport['PassportNo'],
+                                "PassportExpiry" => $paxPassport['PassportExpiry'],
+                                "DateOfBirth"    => $paxPassport['DateOfBirth'],
+                            ];
+                        }
+                    }
+                }
+
+                if (!empty($passportArr)) {
+                    $payload['Passport'] = $passportArr;
+                }
+
+                 $url = $this->setFullUrl('ticketnonlcc');
+            }
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
@@ -372,12 +408,12 @@ class FlightService
             }
 
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
-                return ['status' => 'success', 'message' => "Flight Booking successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Flight Ticket generated successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Flight Booking failed'
+                    'message' => $response['message'] ?? 'Flight Ticket generated failed'
                 ];
             }
         } catch (Exception $e) {
@@ -392,7 +428,7 @@ class FlightService
 
 
             $res = json_decode($data->raw_response, true);
-       
+
             $det = $res['Response']['Response']['FlightItinerary']['Passenger'][0];
             $payload = [
                 "EndUserIp" => $this->ip,
@@ -440,7 +476,7 @@ class FlightService
         try {
             $token = $this->authService->getToken();
 
-             $payload = [
+            $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "BookingId" => $data['payload']['BookingId'],

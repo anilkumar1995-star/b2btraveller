@@ -2067,13 +2067,14 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
         resultIndex: selectedFlightDetails?.ResultIndex,
         passengers: passengers,
         traceId: traceId,
+        islcc: selectedFlightDetails?.IsLCC || false,
         _token: $('meta[name="csrf-token"]').attr('content')
     };
 
     if (selectedFlightDetails?.IsLCC) {
         ViewTicketAjax(payload, '/flight/ticket', trip, journeyType);
     } else {
-        ViewTicketAjax(payload, '/flight/book', trip, journeyType, '',  true);
+        ViewTicketAjax(payload, '/flight/book', trip, journeyType, '', true);
     }
 }
 
@@ -2098,7 +2099,28 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
             if (callTicketAfterBook && response?.status == 'success') {
 
                 bookingResult[trip] = response;
+                payload['bookingId'] = response?.data?.Response?.Response?.BookingId || '';
+                payload['pnr'] = response?.data?.Response?.Response?.PNR || '';
 
+                // IsPassportRequired
+
+                const passengers = response?.data?.Response?.Response?.FlightItinerary?.Passenger || [];
+
+                const passportArr = [];
+                passengers.forEach(pax => {
+                    if (!pax.IsPassportRequired) {
+                        passportArr.push({
+                            PaxId: pax.PaxId,
+                            PassportNo: pax.PassportNo || '',
+                            PassportExpiry: pax.PassportExpiry || '',
+                            DateOfBirth: pax.DateOfBirth
+                        });
+                    }
+                });
+                if (passportArr.length > 0) {
+                    payload['Passport'] = passportArr;
+                }
+                console.log(payload);
                 ViewTicketAjax(payload, '/flight/ticket', trip, journeyType, $val, false);
                 return;
             }
