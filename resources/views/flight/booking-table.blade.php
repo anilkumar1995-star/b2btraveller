@@ -154,15 +154,15 @@
                   ];
 
                   $ticketStatusMap = [
-                      0 => ['label' => 'Failed', 'class' => 'badge bg-danger'],
-                      1 => ['label' => 'Successful', 'class' => 'badge bg-success'],
-                      2 => ['label' => 'Not Saved', 'class' => 'badge bg-secondary'],
-                      3 => ['label' => 'Not Created', 'class' => 'badge bg-secondary'],
-                      4 => ['label' => 'Not Allowed', 'class' => 'badge bg-warning'],
-                      5 => ['label' => 'In Progress', 'class' => 'badge bg-info'],
-                      6 => ['label' => 'Ticket Already Created', 'class' => 'badge bg-primary'],
-                      8 => ['label' => 'Price Changed', 'class' => 'badge bg-warning'],
-                      9 => ['label' => 'Other Error', 'class' => 'badge bg-dark'],
+                      'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                      'Successful' => ['label' => 'Successful', 'class' => 'badge bg-success'],
+                      'NotSaved' => ['label' => 'Not Saved', 'class' => 'badge bg-secondary'],
+                      'NotCreated' => ['label' => 'Not Created', 'class' => 'badge bg-secondary'],
+                      'NotAllowed' => ['label' => 'Not Allowed', 'class' => 'badge bg-warning'],
+                      'InProgress' => ['label' => 'In Progress', 'class' => 'badge bg-info'],
+                      'TicketAlreadyCreated' => ['label' => 'Ticket Already Created', 'class' => 'badge bg-primary'],
+                      'PriceChanged' => ['label' => 'Price Changed', 'class' => 'badge bg-warning'],
+                      'OtherError' => ['label' => 'Other Error', 'class' => 'badge bg-dark'],
                   ];
               @endphp
               {{-- @dd($bookings); --}}
