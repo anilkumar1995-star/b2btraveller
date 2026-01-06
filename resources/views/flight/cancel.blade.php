@@ -194,11 +194,9 @@
                         }
                     });
                 },
-                complete: function() {
-                    swal.close();
-                },
                 success: function(res) {
 
+                    swal.close();
                     if (res.status === 'success') {
                         const response = res.data?.Response?.[0];
 
@@ -235,7 +233,8 @@
                     }
                 },
                 error: function() {
-                    swal('Error', 'Unable to process cancellation', 'error');
+                    swal.close();
+                    notify('Unable to process cancellation', 'error');
                 }
             });
         }
