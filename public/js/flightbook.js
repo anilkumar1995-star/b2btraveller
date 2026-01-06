@@ -2120,7 +2120,6 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
                 if (passportArr.length > 0) {
                     payload['Passport'] = passportArr;
                 }
-                console.log(payload);
                 ViewTicketAjax(payload, '/flight/ticket', trip, journeyType, $val, false);
                 return;
             }
