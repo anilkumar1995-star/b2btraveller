@@ -152,6 +152,18 @@
                       'BookedOther' => ['label' => 'Booked Other', 'class' => 'badge bg-primary'],
                       'NotConfirmed' => ['label' => 'Not Confirmed', 'class' => 'badge bg-dark'],
                   ];
+
+                  $ticketStatusMap = [
+                      0 => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                      1 => ['label' => 'Successful', 'class' => 'badge bg-success'],
+                      2 => ['label' => 'Not Saved', 'class' => 'badge bg-secondary'],
+                      3 => ['label' => 'Not Created', 'class' => 'badge bg-secondary'],
+                      4 => ['label' => 'Not Allowed', 'class' => 'badge bg-warning'],
+                      5 => ['label' => 'In Progress', 'class' => 'badge bg-info'],
+                      6 => ['label' => 'Ticket Already Created', 'class' => 'badge bg-primary'],
+                      8 => ['label' => 'Price Changed', 'class' => 'badge bg-warning'],
+                      9 => ['label' => 'Other Error', 'class' => 'badge bg-dark'],
+                  ];
               @endphp
               {{-- @dd($bookings); --}}
               @if (!empty($bookings) && $bookings->count() > 0)
@@ -159,6 +171,11 @@
                       @php
                           $status = $statusMap[$b->booking_status] ?? [
                               'label' => 'Unknown',
+                              'class' => 'badge bg-secondary',
+                          ];
+
+                          $ticketStatus = $ticketStatusMap[$b->ticket_status] ?? [
+                              'label' => ucfirst($b->ticket_status),
                               'class' => 'badge bg-secondary',
                           ];
                       @endphp
@@ -187,10 +204,10 @@
                               <br />
                               <span class="badge bg-info">{{ $b->journey_type }}</span>
                           </td>
-                          <td>{!! $b->ticket_status == 'pending'
-                              ? '<span class="badge bg-warning">Pending</span>'
-                              : '<span class="badge bg-success">Confirmed</span>' !!}
-
+                          <td>
+                              <span class="{{ $ticketStatus['class'] }}">
+                                  {{ $ticketStatus['label'] }}
+                              </span>
                           </td>
                           <td>
                               <span class="{{ $status['class'] }}">
@@ -550,23 +567,23 @@
 
 
       function getDetails(booking) {
-        const segments = booking?.Segments || [];
-        const passengers = booking?.Passenger || [];
+          const segments = booking?.Segments || [];
+          const passengers = booking?.Passenger || [];
 
-        const firstSeg = segments[0] || {};
-        const lastSeg = segments[segments.length - 1] || {};
+          const firstSeg = segments[0] || {};
+          const lastSeg = segments[segments.length - 1] || {};
 
-        const originAirport = firstSeg?.Origin?.Airport || {};
-        const destAirport = lastSeg?.Destination?.Airport || {};
+          const originAirport = firstSeg?.Origin?.Airport || {};
+          const destAirport = lastSeg?.Destination?.Airport || {};
 
-        const departTime = firstSeg?.Origin?.DepTime;
-        const arrivalTime = lastSeg?.Destination?.ArrTime;
+          const departTime = firstSeg?.Origin?.DepTime;
+          const arrivalTime = lastSeg?.Destination?.ArrTime;
 
 
 
-        let html = '';
+          let html = '';
 
-        html += `<div>
+          html += `<div>
                     <div class="bg-white p-4 rounded shadow-sm">
 
                         <div class="d-flex justify-content-between mb-4">
@@ -607,8 +624,8 @@
                                     <br />
                                     Airline Toll Free: ${booking.AirlineTollFreeNo
                                     ? `<a href="tel:${booking.AirlineTollFreeNo}" class="text-primary fw-semibold">
-                                        📞 ${booking.AirlineTollFreeNo}
-                                    </a>`
+                                              📞 ${booking.AirlineTollFreeNo}
+                                          </a>`
                                     : '-'
                                     }
                                 </div>
@@ -677,39 +694,39 @@
 
 
                             ${passengers.map((p, index) => `
-                            <div class="passenger-card">
+                                  <div class="passenger-card">
 
-                                <div class="row align-items-center mb-2">
-                                    <div class="col-5 text-start">
-                                        <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
-                                        ${p.Nationality} <span class="badge bg-label-success">${booking.PNR || '-'}</span>
-                                        ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
-                                        <div class="contact-box w-50 text-start">
-                                            <div class="mb-1"><b>Mobile:</b> ${p.ContactNo}</div>
-                                            <div class="mb-1"><b>Email:</b> ${p.Email}</div>
-                                            <div class="mb-1"><b>City:</b> ${p.City}, ${p.CountryCode}</div>
-                                            <div class="mb-1"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
-                                        </div>
-                                    </div>
+                                      <div class="row align-items-center mb-2">
+                                          <div class="col-5 text-start">
+                                              <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
+                                              ${p.Nationality} <span class="badge bg-label-success">${booking.PNR || '-'}</span>
+                                              ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
+                                              <div class="contact-box w-50 text-start">
+                                                  <div class="mb-1"><b>Mobile:</b> ${p.ContactNo}</div>
+                                                  <div class="mb-1"><b>Email:</b> ${p.Email}</div>
+                                                  <div class="mb-1"><b>City:</b> ${p.City}, ${p.CountryCode}</div>
+                                                  <div class="mb-1"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
+                                              </div>
+                                          </div>
 
-                                    <div class="col-3 text-start">
-                                        <h5>Invoice Details</h5>
-                                        <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNo}</div>
-                                        <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
-                                        <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
-                                    </div>
-                                    <div class="col-4 text-end">
-                                        <h5>Ticket Details</h5>
-                                        ${p.Ticket ? `
+                                          <div class="col-3 text-start">
+                                              <h5>Invoice Details</h5>
+                                              <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNo}</div>
+                                              <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
+                                              <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
+                                          </div>
+                                          <div class="col-4 text-end">
+                                              <h5>Ticket Details</h5>
+                                              ${p.Ticket ? `
                                         <div class="mb-1"><b>Issued On: </b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
                                         <div class="mb-1">${(() => {
                                             const s = getTicketStatus(p.Ticket.Status);
                                             return `
-                                            <div class="mb-1">
-                                                <b>Status:</b>
-                                                <span class="badge ${s.badge}">${s.text}</span>
-                                            </div>
-                                            `;
+                                                  <div class="mb-1">
+                                                      <b>Status:</b>
+                                                      <span class="badge ${s.badge}">${s.text}</span>
+                                                  </div>
+                                                  `;
                                             })()}
                                         </div>
                                         <div class="mb-1"><b>Validating Airline: </b> ${p.Ticket.ValidatingAirline}</div>
@@ -720,12 +737,12 @@
                                         </div>
                                         `}
 
-                                    </div>
-                                </div>
+                                          </div>
+                                      </div>
 
-                                <div class="seat-box">
-                                    <div class="seat-title">Seat Details</div>
-                                    ${p.SeatDynamic?.map(s => `
+                                      <div class="seat-box">
+                                          <div class="seat-title">Seat Details</div>
+                                          ${p.SeatDynamic?.map(s => `
                                     <div class="seat-row">
                                         <span>${s.Origin} → ${s.Destination}</span>
                                         <span class="seat-code">${s.Code}</span>
@@ -733,19 +750,19 @@
                                         <span>₹${s.Price}</span>
                                     </div>
                                     `).join('') || '<div class="seat-row">No seat selected</div>'
-                                    }
-                                </div>
+                                          }
+                                      </div>
 
-                                <div class="ssr-box mt-3">
-                                    <div class="seat-title">Special Service Requests (SSR)</div>
-                                    ${renderSSR(p.Ssr)}
-                                </div>
-                                <div class="baggage-allow-box mt-2">
-                                    <div class="seat-title">Baggage Allowance</div>
+                                      <div class="ssr-box mt-3">
+                                          <div class="seat-title">Special Service Requests (SSR)</div>
+                                          ${renderSSR(p.Ssr)}
+                                      </div>
+                                      <div class="baggage-allow-box mt-2">
+                                          <div class="seat-title">Baggage Allowance</div>
 
 
-                                    <div class="row text-muted mb-2">
-                                        ${p.SegmentAdditionalInfo?.map(b => `
+                                          <div class="row text-muted mb-2">
+                                              ${p.SegmentAdditionalInfo?.map(b => `
                                             <div class="col-4 text-start">
                                                 <b>Check-in :</b>
                                                 <span>${b.Baggage || '-'}</span>
@@ -759,23 +776,23 @@
                                                 <span>${b.Meal || 'Not Included'}</span>
                                             </div>
                                         `).join('')}
-                                    </div>
-                                </div>
-                                <hr />
-                                <div class="fare-box">
-                                    <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
-                                    <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
-                                    <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
-                                    <div class="fare-total">
-                                        Total: ₹${p.Fare.PublishedFare}
-                                    </div>
-                                </div>
-                                <div class="barcode text-center mt-3">
-                                    <canvas id="barcodeCanvas${index}"></canvas>
-                                </div>
+                                          </div>
+                                      </div>
+                                      <hr />
+                                      <div class="fare-box">
+                                          <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
+                                          <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
+                                          <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
+                                          <div class="fare-total">
+                                              Total: ₹${p.Fare.PublishedFare}
+                                          </div>
+                                      </div>
+                                      <div class="barcode text-center mt-3">
+                                          <canvas id="barcodeCanvas${index}"></canvas>
+                                      </div>
 
-                            </div>
-                            `).join('')}
+                                  </div>
+                                  `).join('')}
                         </div>
                         <div class="mt-4 p-3 bg-white rounded text-end">
                             <span class="text-success">
@@ -877,7 +894,7 @@
                         `;
 
 
-                        html += `<div class="rticket-route mt-4 ticket-route">
+          html += `<div class="rticket-route mt-4 ticket-route">
                             <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
                                 <div class="fw-semibold ">
                                     🪶 Fare Rules
@@ -885,15 +902,15 @@
                             </div>
                             <div class="p-3" style="background:#e8ffec; font-size:14px;">`;
 
-                                booking.FareRules.forEach(r => {
-                                html += `
+          booking.FareRules.forEach(r => {
+              html += `
                                 <div class="mb-3">
                                     <b>${r.Origin} → ${r.Destination}</b>
                                     <div class="small">${r.FareRuleDetail}</div>
                                 </div>`;
-                                });
+          });
 
-                                html += `
+          html += `
                             </div>
                         </div>
 
@@ -908,18 +925,18 @@
                     </div>
                 </div>`;
 
-        $('#ticketContent').html(html);
+          $('#ticketContent').html(html);
 
-        setTimeout(() => {
-            passengers.forEach((p, index) => {
-                let barcode = booking.PNR;
-                if (p.BarcodeDetails && p.BarcodeDetails.Barcode && p.BarcodeDetails.Barcode.length >
-                    0) {
-                    barcode = p.BarcodeDetails.Barcode[0].Content ?? "N/A";
-                }
-                makeBarcode(index, barcode);
-            });
-        }, 100);
+          setTimeout(() => {
+              passengers.forEach((p, index) => {
+                  let barcode = booking.PNR;
+                  if (p.BarcodeDetails && p.BarcodeDetails.Barcode && p.BarcodeDetails.Barcode.length >
+                      0) {
+                      barcode = p.BarcodeDetails.Barcode[0].Content ?? "N/A";
+                  }
+                  makeBarcode(index, barcode);
+              });
+          }, 100);
       }
 
 
@@ -988,7 +1005,7 @@
           const bookingId = $(this).data('bookingidcancel');
           const ticketStatus = $(this).data('ticketstatus');
 
-          if (ticketStatus !== 'confirmed') {
+          if (ticketStatus !== 'Successful') {
               swal({
                   title: 'Ticket Not Confirmed',
                   text: 'Please Generate the ticket before cancellation.',
