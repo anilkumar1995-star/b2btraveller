@@ -148,7 +148,6 @@
                 return;
             }
 
-
             const payload = {
                 BookingId: {{ $booking->booking_id_api }},
                 RequestType: Number(requestType),
@@ -183,6 +182,20 @@
                 data: {
                     _token: "{{ csrf_token() }}",
                     payload: payload
+                },
+                beforeSend: function() {
+                    swal({
+                        type: 'warning',
+                        title: 'Processing Cancellation...',
+                        text: 'Please wait while we process your request.',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            swal.showLoading();
+                        }
+                    });
+                },
+                complete: function() {
+                    swal.close();
                 },
                 success: function(res) {
 

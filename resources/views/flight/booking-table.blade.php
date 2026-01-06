@@ -1007,8 +1007,8 @@
 
           if (ticketStatus !== 'Successful') {
               swal({
-                  title: 'Ticket Not Confirmed',
-                  text: 'Please Generate the ticket before cancellation.',
+                  title: 'Ticket is Not Confirmed',
+                  text: 'Cancellation is not allowed.',
                   type: 'warning',
                   confirmButtonText: 'OK',
                   allowOutsideClick: false,
