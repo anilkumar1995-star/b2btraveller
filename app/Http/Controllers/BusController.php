@@ -22,6 +22,11 @@ class BusController extends Controller
         return view('bus.index-bus');
     }
 
+    public function seatlayList()
+    {
+        return view('bus.seatlay');
+    }
+
     public function refreshToken()
     {
         try {

@@ -269,7 +269,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <ul class="nav nav-pills nav-justified bg-opacity-10 rounded p-2 mb-3 border bg-light">
+                    <ul class="nav nav-pills nav-justified bg-opacity-10 rounded p-2 border bg-light">
                         <li class="nav-item"><button class="nav-link active" data-bs-toggle="pill"
                                 data-bs-target="#info-tab">Bus Location Info</button></li>
                         <li class="nav-item"><button class="nav-link" data-bs-toggle="pill"
@@ -278,7 +278,7 @@
                                 data-bs-target="#policy-tab">Cancellation Policy</button></li>
                     </ul>
 
-                    <div class="tab-content pt-0 mt-0 px-0">
+                    <div class="tab-content p-0 mt-2">
                         <div class="tab-pane fade show active" id="info-tab"></div>
                         <div class="tab-pane fade" id="fare-tab"></div>
                         <div class="tab-pane fade" id="policy-tab"></div>
@@ -309,8 +309,6 @@
     <script>
         $(document).ready(function() {
             localStorage.clear();
-            // $('.select').select2();
-
             $('.flatpickr').datepicker({
                 'autoclose': true,
                 'clearBtn': true,

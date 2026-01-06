@@ -1,3 +1,5 @@
+let selectedBusId = null;
+
 $('#busSearchForm').on('submit', function (e) {
 
     e.preventDefault();
@@ -20,9 +22,6 @@ $('#busSearchForm').on('submit', function (e) {
 
             localStorage.removeItem("TraceId");
             localStorage.removeItem("ResultIndex");
-            localStorage.removeItem("selectedFlightDetails");
-
-            // Button loading state submit
             $('#busSearchForm').find('button[type="submit"]').html('Please Wait...').attr('disabled', true);
         },
         complete: function () {
@@ -84,7 +83,7 @@ $('#busSearchForm').on('submit', function (e) {
                                     </div>
                                     <div class="col-md-3 text-md-end">
                                         <h4 class="text-success">₹${bus.BusPrice.PublishedPriceRoundedOff}</h4>
-                                        <button class="btn btn-dark mb-0 view-details" data-bs-toggle="modal" data-bs-target="#busdetail" data-busid="${bus.ResultIndex}"
+                                        <button class="btn btn-dark mb-0 view-details" data-bs-toggle="modal" data-bs-target="#busdetail" data-busresultindex="${bus.ResultIndex}"
                                             data-businfo="${encodeURIComponent(JSON.stringify(bus))}">View Details</button>
                                     </div>
                                 </div>                               
@@ -97,7 +96,7 @@ $('#busSearchForm').on('submit', function (e) {
                                         ${bus.IdProofRequired ? '<span class="text-success">Id Proof Required</span>' : '<span class="text-danger">Id Proof Not Required</span>'}
                                     </li> |
                                     <li class="list-inline-item">📍
-                                        ${bus.LiveTrackingAvailable ? '<span class="text-success">Live Tracking Available</span>' : '<span class="text-danger>No Live Tracking</span>'}
+                                        ${bus.LiveTrackingAvailable ? '<span class="text-success">Live Tracking Available</span>' : '<span class="text-danger">No Live Tracking</span>'}
                                     </li>
                                 </ul>
                                 
@@ -133,7 +132,7 @@ function calculateDuration(dep, arr) {
 }
 
 $(document).on("click", ".view-details", function () {
-    let busId = $(this).data('busid');
+    selectedBusId = $(this).data('busresultindex');
     let busInfo = JSON.parse(
         decodeURIComponent($(this).attr("data-businfo"))
     );
@@ -158,7 +157,7 @@ $(document).on("click", ".view-details", function () {
                             </div>
                             <div class="mt-2 boarding-list">
                                 ${busInfo.BoardingPointsDetails?.length
-                                ? busInfo.BoardingPointsDetails.map((bp, i) => `
+            ? busInfo.BoardingPointsDetails.map((bp, i) => `
                                         <div class="form-check border rounded p-2 mb-2">
                                            
                                             
@@ -302,8 +301,8 @@ $(document).on("click", ".view-details", function () {
 
 // BTN Book Now
 $(document).on('click', '.btn-book-now', function () {
-    notify("🚧 Booking service is currently under maintenance. Please try again later.", "warning");
-    return;
+    localStorage.setItem("BusResultIndex", selectedBusId || '');
+    window.location.href = "/bus/seatlayout";
 });
 
 function formatDateTime(dateStr) {

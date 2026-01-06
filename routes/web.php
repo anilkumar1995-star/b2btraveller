@@ -151,6 +151,7 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
     Route::get('view', [BusController::class, 'root'])->name('bus.view');
      Route::get('search-city', [BusController::class, 'searchCity'])->name('bus.search.city');
     Route::post('search', [BusController::class, 'search'])->name('bus.search');
+     Route::get('seatlayout', [BusController::class, 'seatlayList']);
     // Route::post('book', [BusController::class, 'bookBus'])->name('bus.book');
     // Route::post('ticket', [BusController::class, 'busTicket'])->name('bus.ticket');
     // Route::get('booking', [BusController::class, 'busBooking'])->name('bus.booking');
