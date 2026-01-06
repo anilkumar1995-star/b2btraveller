@@ -189,9 +189,7 @@
                         title: 'Processing Cancellation...',
                         text: 'Please wait while we process your request.',
                         allowOutsideClick: false,
-                        didOpen: () => {
-                            swal.showLoading();
-                        }
+                        showConfirmButton: false,
                     });
                 },
                 success: function(res) {
