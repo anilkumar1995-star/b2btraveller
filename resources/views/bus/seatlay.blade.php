@@ -12,13 +12,17 @@
     <div class="pb-4 d-none" id="seatLayoutContainer">
         <div class="card shadow-sm mb-3">
             <div class="card-body d-flex justify-content-between align-items-center">
-
-
-                <button class="btn btn-primary" id="proceedBookingBtn">
+                <h5 class="mb-0">🪑 Please carefully select your seat & boarding point before proceeding</h5>
+                <button class="btn btn-primary" disabled id="proceedBookingBtn">
                     Proceed to Booking
                 </button>
             </div>
         </div>
+
+        <div id="boardingpassdetails" class="card mb-3"></div>
+
+        <div id="seatlayoutdetails"></div>
+
     </div>
 
 @endsection
@@ -50,10 +54,16 @@
             }
 
             if (resultIndex) {
-                notify("Fetching Seat Layout Details...", "info");
+                swal({
+                    type: 'warning',
+                    title: 'Fetching Details...',
+                    text: 'Please wait while we fetch your seat layout and boarding details.U',
+                    allowOutsideClick: false,
+                    showConfirmButton: false,
+                });
                 return;
-                // getSeatDetails(resultIndex, traceId);
-                // getboradingDetails(resultIndex, traceId);
+                getSeatDetails(resultIndex, traceId);
+                getboradingDetails(resultIndex, traceId);
             } else {
                 window.location.href = "/bus/view";
             }

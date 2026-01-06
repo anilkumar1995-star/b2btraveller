@@ -115,7 +115,7 @@ class BusService
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 $response = BusStaticResponseHelper::bussearchresponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "flight_search", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "bus_search", "");
                 $response = $response['response'];
             }
 
@@ -144,27 +144,25 @@ class BusService
         }
     }
 
-    public function fareRuleFlight($data)
+    public function boardingdetail($data)
     {
         try {
             $token = $this->authService->getToken();
 
             $payload = [
-                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "TraceId" => $data['TraceId'],
                 "ResultIndex" => $data['ResultIndex'],
             ];
 
 
-            $url = $this->setFullUrl('farerule');
+            $url = $this->setFullUrl('boardingpass');
 
-            // Call API using Permission::curl
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = StaticResponseHelper::fareRuleStaticResponse();
+                $response = BusStaticResponseHelper::busboardingpassresponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "fare_rule", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "boardingpass", "");
                 $response = $response['response'];
             }
 
@@ -178,60 +176,12 @@ class BusService
             }
 
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
-                return ['status' => 'success', 'message' => "Fare Rule get successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Boarding Details get successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Fare Rule get failed'
-                ];
-            }
-        } catch (Exception $e) {
-            return ['status' => 'ERROR', 'message' => $e->getMessage()];
-        }
-    }
-
-    public function fareQuoteFlight($data)
-    {
-        try {
-            $token = $this->authService->getToken();
-
-
-            $payload = [
-                "EndUserIp" => $this->ip,
-                "TokenId" => $token,
-                "TraceId" => $data['TraceId'],
-                "ResultIndex" => $data['ResultIndex'],
-            ];
-
-            $url = $this->setFullUrl('farequote');
-
-
-            $baseUrl = url('/');
-            if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = StaticResponseHelper::fareQuoteStaticResponse();
-            } else {
-
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "fare_quote", "");
-                $response = $response['response'];
-            }
-
-
-            if (is_string($response)) {
-                $response = json_decode(($response), true);
-            }
-
-            if (isset($response['data']) && is_string($response['data'])) {
-                $response['data'] = json_decode($response['data'], true);
-            }
-
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
-                return ['status' => 'success', 'message' => "Fare Quotation get successfully", 'data' => $response['data']];
-            } else {
-                return [
-                    'code' => $response['code'] ?? '0x0202',
-                    'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Fare Quotation get failed'
+                    'message' => $response['message'] ?? 'Boarding Details get failed'
                 ];
             }
         } catch (Exception $e) {
@@ -240,26 +190,25 @@ class BusService
     }
 
 
-    public function seatLayoutFlight($data)
+
+    public function seatdetail($data)
     {
         try {
             $token = $this->authService->getToken();
 
             $payload = [
-                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "TraceId" => $data['TraceId'],
                 "ResultIndex" => $data['ResultIndex'],
             ];
 
-            $url = $this->setFullUrl('ssr');
+            $url = $this->setFullUrl('seatlayout');
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = StaticResponseHelper::flightSSRStaticResponse();
-                $response = StaticResponseHelper::flightSSROneStaticResponse();
+                $response = BusStaticResponseHelper::busseatlayoutresponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "ssr", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "seatlayout", "");
                 $response = $response['response'];
             }
 

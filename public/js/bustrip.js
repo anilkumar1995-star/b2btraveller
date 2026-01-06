@@ -331,3 +331,159 @@ function formatCancellationCharge(policy) {
             return '-';
     }
 }
+
+
+function getSeatDetails(resultIndex, traceId) {
+    $('#seatLayoutContainer').removeClass('d-none');
+    $('.preloader').addClass('d-none');
+    $.ajax({
+        url: '/bus/seatdetails',
+        method: 'POST',
+        data: {
+            ResultIndex: resultIndex,
+            TraceId: traceId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            swal.close();
+            if (response.status === 'success') {
+                renderSeatLayout(response.data);
+            } else {
+                notify(response.message, 'error');
+            }
+        },
+        error: function () {
+            swal.close();
+            notify('Failed to fetch seat layout details.', 'error');
+        }
+    });
+}
+
+function getboradingDetails(resultIndex, traceId) {
+    $('#seatLayoutContainer').removeClass('d-none');
+    $('.preloader').addClass('d-none');
+    $.ajax({
+        url: '/bus/boardingdetails',
+        method: 'POST',
+        data: {
+            ResultIndex: resultIndex,
+            TraceId: traceId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+            if (response.status === 'success') {
+                renderBoardingPoints(response.data);
+            } else {
+                notify(response.message, 'error');
+            }
+        },
+        error: function () {
+            notify('Failed to fetch boarding points details.', 'error');
+        }
+    });
+}
+
+function renderSeatLayout(response) {
+    console.log(response);
+    const htmlLayout = response?.FareRules?.HTMLLayout;
+
+    if (!htmlLayout) {
+        $('#seatlayoutdetails').html(
+            '<p class="text-danger">Seat layout not available</p>'
+        );
+        return;
+    }
+
+    $('#seatlayoutdetails').html(`
+        <div class="card">
+            <div class="card-header fw-semibold">
+                🪑 Select Your Seat
+            </div>
+            <div class="card-body">
+                ${htmlLayout}
+            </div>
+        </div>
+    `);
+}
+
+function renderBoardingPoints(response) {
+
+    let html = `
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 border-end">
+                        <h5>🚏 Boarding Point</h5>
+                        <div class="mt-2 boarding-list">
+                            ${response.BoardingPointsDetails?.length
+                        ? response.BoardingPointsDetails.map((bp, i) => `
+                                    <div class="form-check border rounded p-2 mb-2 d-flex justify-content-between align-items-center">
+                                        <label class="form-check-label w-100" for="boarding_${i}">
+                                            <div>
+                                                <strong>${bp.CityPointName}</strong><br>
+                                                <small class="text-muted">${bp.CityPointLocation}</small><br>
+                                                <span>${formatDateTime(bp.CityPointTime)}</span>
+                                            </div>
+                                        </label>
+
+                                        <input 
+                                            class="form-check-input ms-2"
+                                            type="radio"
+                                            name="boarding_point"
+                                            id="boarding_${i}"
+                                            value='${JSON.stringify(bp)}'
+                                        >
+                                    </div>
+                                `).join('')
+                        : '<span class="text-muted">No boarding points available</span>'
+                    }
+                        </div>
+                    </div>
+
+                
+                    <div class="col-md-6 border-start">
+                        <h5>🚏 Dropping Point</h5>
+                        <div class="mt-2 boarding-list">
+                            ${response.DroppingPointsDetails?.length
+                        ? response.DroppingPointsDetails.map((dp, i) => `
+                                    <div class="form-check border rounded p-2 mb-2 d-flex justify-content-between align-items-center">
+                                        <label class="form-check-label w-100" for="dropping_${i}">
+                                            <div>
+                                                <strong>${dp.CityPointName}</strong><br>
+                                                <small class="text-muted">${dp.CityPointLocation}</small><br>
+                                                <span>${formatDateTime(dp.CityPointTime)}</span>
+                                            </div>
+                                        </label>
+
+                                        <input 
+                                            class="form-check-input ms-2"
+                                            type="radio"
+                                            name="dropping_point"
+                                            id="dropping_${i}"
+                                            value='${JSON.stringify(dp)}'
+                                        >
+                                    </div>
+                                `).join('')
+                        : '<span class="text-muted">No dropping points available</span>'
+                    }
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="card-footer text-warning">
+            ℹ️ Select your preferred boarding and dropping points before proceeding.
+            </div>
+    `;
+    $('#boardingpassdetails').html(html);
+}
+
+$(document).on('change', 'input[name="boarding_point"]', function () {
+    const boardingData = JSON.parse(this.value);
+    console.log('Selected Boarding:', boardingData);
+});
+
+$(document).on('change', 'input[name="dropping_point"]', function () {
+    const droppingData = JSON.parse(this.value);
+    console.log('Selected Dropping:', droppingData);
+});
+
