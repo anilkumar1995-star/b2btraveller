@@ -746,20 +746,20 @@
 
                                     <div class="row text-muted mb-2">
                                         ${p.SegmentAdditionalInfo?.map(b => `
-                                        <div class="col-4 text-start">
-                                            <b>Check-in :</b>
-                                            <span>${b.Baggage || '-'}</span>
-                                        </div>
-                                        <div class="col-4 text-center">
-                                            <b>Cabin :</b>
-                                            <span>${b.CabinBaggage || '-'}</span>
-                                        </div>
-                                        <div class="col-4 text-end">
-                                            <b>Meal :</b>
-                                            <span>${b.Meal || 'Not Included'}</span>
-                                        </div>
+                                            <div class="col-4 text-start">
+                                                <b>Check-in :</b>
+                                                <span>${b.Baggage || '-'}</span>
+                                            </div>
+                                            <div class="col-4 text-center">
+                                                <b>Cabin :</b>
+                                                <span>${b.CabinBaggage || '-'}</span>
+                                            </div>
+                                            <div class="col-4 text-end">
+                                                <b>Meal :</b>
+                                                <span>${b.Meal || 'Not Included'}</span>
+                                            </div>
+                                        `).join('')}
                                     </div>
-                                    `).join('')}
                                 </div>
                                 <hr />
                                 <div class="fare-box">
