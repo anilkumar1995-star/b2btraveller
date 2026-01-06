@@ -315,7 +315,7 @@ class FlightController extends Controller
             'is_lcc'    => $islcc,
             'api_type' => 'book',
 
-            'payment_status'  => 'success',
+            'payment_status'  => 'pending',
             'booking_status'  => $status,
             'ticket_status' => 'pending',
             'raw_response'    => json_encode($response['data']),
@@ -455,7 +455,7 @@ class FlightController extends Controller
                 'is_refundable'    => $isrefund,
                 'is_lcc'    => $islcc,
 
-                'payment_status'  => 'success',
+                'payment_status'  => 'pending',
                 'booking_status'  => $status,
                 'ticket_status' => 'confirmed',
                 'api_type' => 'ticket',
