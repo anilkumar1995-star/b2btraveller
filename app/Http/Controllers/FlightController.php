@@ -379,21 +379,48 @@ class FlightController extends Controller
         $seg        = $data['FlightItinerary']['Segments'] ?? null;
         $segments         = $seg[0] ?? null;
 
+
         $status = "";
-        if ($data['Status'] == 0) {
-            $status = "Not Set";
-        } else  if ($data['Status'] == 1) {
+
+        if ($islcc) {
+            if ($data['Status'] == 0) {
+                $status = "Not Set";
+            } else  if ($data['Status'] == 1) {
+                $status = "Successful";
+            } else  if ($data['Status'] == 2) {
+                $status = "Failed";
+            } else  if ($data['Status'] == 3) {
+                $status = "OtherFare";
+            } else  if ($data['Status'] == 4) {
+                $status = "OtherClass";
+            } else  if ($data['Status'] == 5) {
+                $status = "BookedOther";
+            } else if ($data['Status'] == 6) {
+                $status = "NotConfirmed";
+            }
+        } else {
             $status = "Successful";
-        } else  if ($data['Status'] == 2) {
-            $status = "Failed";
-        } else  if ($data['Status'] == 3) {
-            $status = "OtherFare";
-        } else  if ($data['Status'] == 4) {
-            $status = "OtherClass";
-        } else  if ($data['Status'] == 5) {
-            $status = "BookedOther";
-        } else if ($data['Status'] == 6) {
-            $status = "NotConfirmed";
+        }
+
+        $ticketstatus = "";
+        if ($data['TicketStatus'] == 0) {
+            $ticketstatus = "Failed";
+        } else  if ($data['TicketStatus'] == 1) {
+            $ticketstatus = "Successful";
+        } else  if ($data['TicketStatus'] == 2) {
+            $ticketstatus = "NotSaved";
+        } else  if ($data['TicketStatus'] == 3) {
+            $ticketstatus = "NotCreated";
+        } else  if ($data['TicketStatus'] == 4) {
+            $ticketstatus = "NotAllowed";
+        } else  if ($data['TicketStatus'] == 5) {
+            $ticketstatus = "InProgress";
+        } else if ($data['TicketStatus'] == 6) {
+            $ticketstatus = "TicketeAlreadyCreated";
+        } else if ($data['TicketStatus'] == 8) {
+            $ticketstatus = "PriceChanged";
+        } else if ($data['TicketStatus'] == 9) {
+            $ticketstatus = "OtherError";
         }
 
         // segment length
@@ -433,7 +460,7 @@ class FlightController extends Controller
                     'base_fare'       => $baseFare,
                     'tax'             => $tax,
                     'total_amount'    => $totalAmount,
-                    'ticket_status'   => 'confirmed',
+                    'ticket_status'   => $ticketstatus,
                     'api_type'        => 'ticket',
                     'raw_response'    => json_encode($response['data']),
                     'updated_at'      => now(),
@@ -457,7 +484,7 @@ class FlightController extends Controller
 
                 'payment_status'  => 'pending',
                 'booking_status'  => $status,
-                'ticket_status' => 'confirmed',
+                'ticket_status' => $ticketstatus,
                 'api_type' => 'ticket',
                 'raw_response'    => json_encode($response['data']),
                 'raw_payload'     => json_encode($request->all()),
@@ -478,7 +505,7 @@ class FlightController extends Controller
 
     public function cancelPage($id)
     {
-      
+
         $decoded = json_decode(base64_decode($id), true);
 
         if (!$decoded) {
