@@ -2108,7 +2108,7 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
 
                 const passportArr = [];
                 passengers.forEach(pax => {
-                    if (!pax.IsPassportRequired) {
+                    if (pax.IsPassportRequired) {
                         passportArr.push({
                             PaxId: pax.PaxId,
                             PassportNo: pax.PassportNo || '',
