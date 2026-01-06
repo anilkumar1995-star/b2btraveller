@@ -382,7 +382,7 @@ class FlightController extends Controller
 
         $status = "";
 
-        if ($islcc) {
+        if ($islcc == "true") {
             if ($data['Status'] == 0) {
                 $status = "Not Set";
             } else  if ($data['Status'] == 1) {
