@@ -383,28 +383,132 @@ function getboradingDetails(resultIndex, traceId) {
     });
 }
 
-function renderSeatLayout(response) {
-    console.log(response);
-    const htmlLayout = response?.FareRules?.HTMLLayout;
 
-    if (!htmlLayout) {
-        $('#seatlayoutdetails').html(
-            '<p class="text-danger">Seat layout not available</p>'
-        );
-        return;
-    }
+
+function renderSeatLayout(apiResponse) {
+
+    const fareRules = apiResponse.FareRules;
+    const rows = fareRules.SeatLayout.SeatDetails;
+
+    let lowerHTML = '';
+    let upperHTML = '';
+
+    rows.forEach((row, index) => {
+        let rowHTML = `<div class="bus-row">`;
+
+        row.forEach((seat, idx) => {
+
+            let seatClass = '';
+            let icon = '💺';
+            let typeText = 'Seat';
+
+            if ([2, 3, 4, 5].includes(seat.SeatType)) {
+                seatClass += ' sleeper';
+                icon = '🛏️';
+                typeText = 'Sleeper';
+            }
+
+            if (seat.SeatType == 4) {
+                seatClass += ' upper';
+                icon = '⬆️🛏️';
+                typeText = 'Upper Berth';
+            }
+
+            if (seat.SeatType == 5) {
+                seatClass += ' lower';
+                icon = '⬇️🛏️';
+                typeText = 'Lower Berth';
+            }
+
+            if (seat.IsLadiesSeat) seatClass += ' ladies';
+            if (seat.IsMalesSeat) seatClass += ' male';
+            if (!seat.SeatStatus) seatClass += ' booked';
+
+            let tooltip = `Row: ${seat.RowNo} | Column: ${seat.ColumnNo} | Type: ${typeText} | 
+             Fare: ₹${seat.SeatFare} 
+             ${seat?.IsLadiesSeat ? '| Ladies Seat' : ''}  ${seat?.IsMalesSeat ? '| Male Seat' : ''}
+              | ${seat.SeatStatus ? 'Availbale' : 'Booked'}`.trim();
+
+            rowHTML += `
+                <div class="seat ${seatClass} mb-2"
+                     data-tooltip="${tooltip}">
+                     <span class="icon">${seat?.SeatName}</span>
+                </div>
+            `;
+        });
+
+        rowHTML += `</div>`;
+
+        index < 4 ? lowerHTML += rowHTML : upperHTML += rowHTML;
+    });
 
     $('#seatlayoutdetails').html(`
         <div class="card">
-            <div class="card-header fw-semibold">
-                🪑 Select Your Seat
+            <div class="card-header border-bottom">
+                🚌 Only ${fareRules.AvailableSeats} Seats Available
             </div>
             <div class="card-body">
-                ${htmlLayout}
+            
+                <div class="legend-panel">
+                    <div class="legend-title">Available Seat/Sleeper</div>
+                    <div class="legend-item">
+                        <div class="legend-box  sleeper male-seat"></div>
+                        <span>Male Seat/Sleeper</span>
+                   
+                        <div class="legend-box  sleeper ladies-seat"></div>
+                        <span>Ladies Seat/Sleeper</span>
+                                  
+                        <div class="legend-box sleeper available-sleeper"></div>
+                        <span>Available Seat/Sleeper</span>
+                   
+                        <div class="legend-box sleeper selected-sleeper"></div>
+                        <span>Selected Seat/Sleeper</span>
+                 
+                        <div class="legend-box sleeper booked-seat"></div>
+                        <span>Booked Seat/Sleeper</span>
+                    </div>
+                </div>
+                <div class="row px-2">
+                    <div class="col-md-6">
+                        <div class="card bus-card border h-100 shadow-none">
+                            <div class="card-header pb-1 border-bottom d-flex justify-content-between align-items-center">
+                                <h5>Lower Deck ⬇️</h5>
+                                <h5 class="fs-5">🛞 Driver</h5>
+                            </div>
+
+
+                            <div class="card-body mt-4">
+                                ${lowerHTML}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="card bus-card border h-100 shadow-none">
+                        
+
+                                <div class="card-header pb-1 border-bottom deck-header">
+                                    <h5>Upper Deck ⬆️</h5>
+                                </div>
+
+                                <div class="card-body mt-4">
+                                    ${upperHTML}
+                                </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     `);
+
+    $('.seat').not('.booked').on('click', function () {
+        $(this).toggleClass('selected');
+    });
 }
+
+
+
 
 function renderBoardingPoints(response) {
 
@@ -415,7 +519,7 @@ function renderBoardingPoints(response) {
                         <h5>🚏 Boarding Point</h5>
                         <div class="mt-2 boarding-list">
                             ${response.BoardingPointsDetails?.length
-                        ? response.BoardingPointsDetails.map((bp, i) => `
+            ? response.BoardingPointsDetails.map((bp, i) => `
                                     <div class="form-check border rounded p-2 mb-2 d-flex justify-content-between align-items-center">
                                         <label class="form-check-label w-100" for="boarding_${i}">
                                             <div>
@@ -434,8 +538,8 @@ function renderBoardingPoints(response) {
                                         >
                                     </div>
                                 `).join('')
-                        : '<span class="text-muted">No boarding points available</span>'
-                    }
+            : '<span class="text-muted">No boarding points available</span>'
+        }
                         </div>
                     </div>
 
@@ -444,7 +548,7 @@ function renderBoardingPoints(response) {
                         <h5>🚏 Dropping Point</h5>
                         <div class="mt-2 boarding-list">
                             ${response.DroppingPointsDetails?.length
-                        ? response.DroppingPointsDetails.map((dp, i) => `
+            ? response.DroppingPointsDetails.map((dp, i) => `
                                     <div class="form-check border rounded p-2 mb-2 d-flex justify-content-between align-items-center">
                                         <label class="form-check-label w-100" for="dropping_${i}">
                                             <div>
@@ -463,8 +567,8 @@ function renderBoardingPoints(response) {
                                         >
                                     </div>
                                 `).join('')
-                        : '<span class="text-muted">No dropping points available</span>'
-                    }
+            : '<span class="text-muted">No dropping points available</span>'
+        }
                         </div>
                     </div>
 

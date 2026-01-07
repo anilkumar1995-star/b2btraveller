@@ -1730,7 +1730,6 @@ function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
             </div>
         `;
 
-        console.log(trip);
         if (trip == 'departure') {
             $("#mainPlaneWrapper").append(planeHtml);
         }
