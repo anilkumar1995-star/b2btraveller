@@ -77,7 +77,7 @@
                 </div>
                 <div class="offcanas-footer px-4 pb-2 d-grid">
                     <button id="confirmPassengers" type="button" disabled="true" class="btn btn-primary mb-0">
-                        Proceed To Booking
+                        Proceed To Bus Block
                     </button>
                 </div>
             </form>
