@@ -1,4 +1,11 @@
 let selectedBusId = null;
+let selectedSeats = [];
+let selectedBoardingId = null;
+let selectedDroppingId = null;
+let maxSeatsAllowed = 1;
+let isDropMandatory = true;
+let isIdProofRequired = false;
+
 
 $('#busSearchForm').on('submit', function (e) {
 
@@ -136,6 +143,7 @@ $(document).on("click", ".view-details", function () {
     let busInfo = JSON.parse(
         decodeURIComponent($(this).attr("data-businfo"))
     );
+    localStorage.setItem("selectedBusDetails", JSON.stringify(busInfo));
 
     let infohtml = "";
     let policyhtml = "";
@@ -144,8 +152,11 @@ $(document).on("click", ".view-details", function () {
     infohtml += `
         <div class="card border">
             <div class="card-header d-flex align-items-center border-bottom">
-                🚌
-                <h5 class="card-title mb-0">${busInfo.TravelName} (${busInfo.ServiceName}) <small>(Bus Type : ${busInfo.BusType})</small></h5>
+               
+                <h5 class="card-title mb-0"> 🚌 ${busInfo.TravelName} (${busInfo.ServiceName}) <small>(Bus Type : ${busInfo.BusType})</small><br/>
+                 <small>Max ${busInfo.MaxSeatsPerTicket} Seat Allowed </small> 
+                 | ${busInfo?.PartialCancellationAllowed ? '<small class="text-success">Partial Cancellation Allowed</small>' : '<small class="text-danger">Partial Cancellation Not Allowed</small>'}
+                 | ${busInfo?.IsDropPointMandatory ? '<small class="text-success">Droping Point Mandatory</small>' : '<small class="text-danger">Droping Point Not Mandatory</small>'}</h5>
             </div>
             <div class="card-body mt-3">
                 <div class="table-responsive-lg">
@@ -293,14 +304,14 @@ $(document).on("click", ".view-details", function () {
         </small>
         <div>
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary btn-book-now">Proceed to Next</button>
+        <button type="button" class="btn btn-primary proceed-next">Proceed to Next</button>
     </div>
     `);
 });
 
 
 // BTN Book Now
-$(document).on('click', '.btn-book-now', function () {
+$(document).on('click', '.proceed-next', function () {
     localStorage.setItem("BusResultIndex", selectedBusId || '');
     window.location.href = "/bus/seatlayout";
 });
@@ -387,6 +398,11 @@ function getboradingDetails(resultIndex, traceId) {
 
 function renderSeatLayout(apiResponse) {
 
+    let bsdet = JSON.parse(localStorage.getItem("selectedBusDetails"));
+
+    maxSeatsAllowed = bsdet.MaxSeatsPerTicket;
+    isIdProofRequired = bsdet.IdProofRequired;
+
     const fareRules = apiResponse.FareRules;
     const rows = fareRules.SeatLayout.SeatDetails;
 
@@ -424,14 +440,12 @@ function renderSeatLayout(apiResponse) {
             if (seat.IsMalesSeat) seatClass += ' male';
             if (!seat.SeatStatus) seatClass += ' booked';
 
-            let tooltip = `Row: ${seat.RowNo} | Column: ${seat.ColumnNo} | Type: ${typeText} | 
-             Fare: ₹${seat.SeatFare} 
-             ${seat?.IsLadiesSeat ? '| Ladies Seat' : ''}  ${seat?.IsMalesSeat ? '| Male Seat' : ''}
-              | ${seat.SeatStatus ? 'Availbale' : 'Booked'}`.trim();
+            let tooltip = `Fare: ₹${seat.SeatFare} ${seat?.IsLadiesSeat ? '| Ladies' : ''}  ${seat?.IsMalesSeat ? '| Male' : ''} | ${typeText} `.trim();
 
             rowHTML += `
                 <div class="seat ${seatClass} mb-2"
-                     data-tooltip="${tooltip}">
+                     data-tooltip="${tooltip}"
+                     data-seat='${JSON.stringify(seat)}'>
                      <span class="icon">${seat?.SeatName}</span>
                 </div>
             `;
@@ -442,15 +456,16 @@ function renderSeatLayout(apiResponse) {
         index < 4 ? lowerHTML += rowHTML : upperHTML += rowHTML;
     });
 
+
+
     $('#seatlayoutdetails').html(`
         <div class="card">
             <div class="card-header border-bottom">
-                🚌 Only ${fareRules.AvailableSeats} Seats Available
+                🚌 Total ${fareRules.AvailableSeats} Seats Available in which you can select Max ${maxSeatsAllowed} Seat
             </div>
             <div class="card-body">
             
                 <div class="legend-panel">
-                    <div class="legend-title">Available Seat/Sleeper</div>
                     <div class="legend-item">
                         <div class="legend-box  sleeper male-seat"></div>
                         <span>Male Seat/Sleeper</span>
@@ -502,15 +517,14 @@ function renderSeatLayout(apiResponse) {
         </div>
     `);
 
-    $('.seat').not('.booked').on('click', function () {
-        $(this).toggleClass('selected');
-    });
 }
 
-
-
-
 function renderBoardingPoints(response) {
+
+    let bsdetails = JSON.parse(localStorage.getItem("selectedBusDetails"));
+
+    isDropMandatory = bsdetails.IsDropPointMandatory;
+    isIdProofRequired = bsdetails.IdProofRequired;
 
     let html = `
             <div class="card-body">
@@ -545,28 +559,28 @@ function renderBoardingPoints(response) {
 
                 
                     <div class="col-md-6 border-start">
-                        <h5>🚏 Dropping Point</h5>
+                        <h5>🚏 Dropping Point ${isDropMandatory ? 'Mandatory' : 'Not Mandatory'}</h5>
                         <div class="mt-2 boarding-list">
                             ${response.DroppingPointsDetails?.length
             ? response.DroppingPointsDetails.map((dp, i) => `
-                                    <div class="form-check border rounded p-2 mb-2 d-flex justify-content-between align-items-center">
-                                        <label class="form-check-label w-100" for="dropping_${i}">
-                                            <div>
-                                                <strong>${dp.CityPointName}</strong><br>
-                                                <small class="text-muted">${dp.CityPointLocation}</small><br>
-                                                <span>${formatDateTime(dp.CityPointTime)}</span>
-                                            </div>
-                                        </label>
+                                                        <div class="form-check border rounded p-2 mb-2 d-flex justify-content-between align-items-center">
+                                                            <label class="form-check-label w-100" for="dropping_${i}">
+                                                                <div>
+                                                                    <strong>${dp.CityPointName}</strong><br>
+                                                                    <small class="text-muted">${dp.CityPointLocation}</small><br>
+                                                                    <span>${formatDateTime(dp.CityPointTime)}</span>
+                                                                </div>
+                                                            </label>
 
-                                        <input 
-                                            class="form-check-input ms-2"
-                                            type="radio"
-                                            name="dropping_point"
-                                            id="dropping_${i}"
-                                            value='${JSON.stringify(dp)}'
-                                        >
-                                    </div>
-                                `).join('')
+                                                            <input 
+                                                                class="form-check-input ms-2"
+                                                                type="radio"
+                                                                name="dropping_point"
+                                                                id="dropping_${i}"
+                                                                value='${JSON.stringify(dp)}'
+                                                            >
+                                                        </div>
+                                                    `).join('')
             : '<span class="text-muted">No dropping points available</span>'
         }
                         </div>
@@ -581,13 +595,245 @@ function renderBoardingPoints(response) {
     $('#boardingpassdetails').html(html);
 }
 
+
+function validateProceedButton() {
+
+    let seatOk = selectedSeats.length > 0;
+    let boardingOk = selectedBoardingId !== null;
+    let dropOk = !isDropMandatory || selectedDroppingId !== null;
+
+    if (seatOk && boardingOk && dropOk) {
+        $('#proceedBookingBtn').prop('disabled', false);
+    } else {
+        $('#proceedBookingBtn').prop('disabled', true);
+    }
+}
+
+$(document).on('click', '.seat:not(.booked)', function () {
+
+    let seatData = JSON.parse($(this).attr('data-seat'));
+    let seatIndex = seatData.SeatIndex;
+
+    let alreadySelected = selectedSeats.find(s => s.SeatIndex == seatIndex);
+
+    if (alreadySelected) {
+        selectedSeats = selectedSeats.filter(s => s.SeatIndex != seatIndex);
+        $(this).removeClass('selected');
+    }
+    // ✅ SELECT
+    else {
+        if (selectedSeats.length >= maxSeatsAllowed) {
+            notify(`Max ${maxSeatsAllowed} seats allowed`, 'warning');
+            return;
+        }
+
+        selectedSeats.push(seatData);
+        $(this).addClass('selected');
+    }
+
+    validateProceedButton();
+});
+
 $(document).on('change', 'input[name="boarding_point"]', function () {
-    const boardingData = JSON.parse(this.value);
-    console.log('Selected Boarding:', boardingData);
+    let bp = JSON.parse(this.value);
+    selectedBoardingId = bp.CityPointIndex;
+    validateProceedButton();
 });
 
 $(document).on('change', 'input[name="dropping_point"]', function () {
-    const droppingData = JSON.parse(this.value);
-    console.log('Selected Dropping:', droppingData);
+    let dp = JSON.parse(this.value);
+    selectedDroppingId = dp.CityPointIndex;
+    validateProceedButton();
 });
+
+
+$('#proceedBookingBtn').on('click', function () {
+    buildPassengerForm();
+    $('#passengerOffcanvas').offcanvas('show');
+    $('#confirmPassengers').prop('disabled', true);
+});
+
+function buildPassengerForm() {
+
+    let html = '';
+
+    selectedSeats.forEach((seat, i) => {
+
+        html += `
+        <div class="card mb-3 shadow-sm passenger-card border" data-seatindex="${i}">
+            
+            <div class="card-header d-flex justify-content-between align-items-center bg-light py-3">
+                <strong>Passenger ${i + 1}</strong>
+                <span class="badge bg-primary">Seat ${seat.SeatName}</span>
+            </div>
+
+            <div class="card-body mt-4">
+                <div class="row g-2">
+
+                    <div class="col-md-3 mb-2">
+                    
+                        <label>Title <span class="text-danger">*</span></label>
+                        <select class="form-select title required-field" required>
+                            <option value="">Title</option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Ms.">Ms.</option>
+                            <option value="Mrs.">Mrs.</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-4 mb-2">
+                    
+                    <label>First Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control fname required-field" placeholder="First Name" required>
+                    </div>
+
+                    <div class="col-md-5 mb-2">
+                    
+                    <label>Last Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control lname required-field" placeholder="Last Name" required>
+                    </div>
+
+                    <div class="col-md-3 mb-2">
+                    
+                    <label>Age <span class="text-danger">*</span></label>
+                        <input type="number" class="form-control age required-field" placeholder="Age" min="1" required>
+                    </div>
+
+                    <div class="col-md-3 mb-2">
+                    
+                    <label>Gender <span class="text-danger">*</span></label>
+                        <select class="form-select gender required-field" required>
+                            <option value="">Gender</option>
+                            <option value="1">Male</option>
+                            <option value="2">Female</option>
+                        </select>
+                    </div>
+
+                    <div class="col-md-6 mb-2">
+                    <label>Address <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control address  required-field" placeholder="Address" required>
+                    </div>`;
+
+        if (isIdProofRequired == 'true' || isIdProofRequired) {
+            html += `
+                        <div class="col-md-6 mb-2">
+                        <label>Select Id Type <span class="text-danger">*</span></label>
+                            <select class="form-select idType required-field">
+                                <option value="">Select ID Type</option>
+                                <option value="voterid">Voter Id</option>
+                                <option value="pan">PAN</option>
+                                <option value="passport">Passport</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                        <label>ID Number <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control idNumber required-field" placeholder="ID Number">
+                        </div>`;
+        }
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+
+    $('#passengerOffcanvasBody').html(html);
+}
+
+function buildPassengerPayload() {
+
+    let passengers = [];
+
+    $('#passengerForm .passenger-card').each(function (i) {
+
+        let card = $(this);
+
+        let passenger = {
+            LeadPassenger: i === 0,
+            PassengerId: 0,
+            Title: card.find('.title').val(),
+            FirstName: card.find('.fname').val(),
+            LastName: card.find('.lname').val(),
+            Gender: parseInt(card.find('.gender').val()),
+            Age: parseInt(card.find('.age').val()),
+            Address: card.find('.address').val(),
+            Email: card.find('.email').val(),
+            Phoneno: card.find('.phone').val(),
+            IdType: card.find('.idType').val() || null,
+            IdNumber: card.find('.idNumber').val() || null,
+            Seat: selectedSeats[i]
+        };
+
+        passengers.push(passenger);
+    });
+
+    return passengers;
+}
+
+
+function validatePassengerForm(liveCheck = false) {
+
+    let allValid = true;
+
+    $('#passengerForm .required-field, #passengerForm .required-contact').each(function () {
+
+        let val = $(this).val();
+
+        if (!val || !val.toString().trim()) {
+            allValid = false;
+
+            if (!liveCheck) {
+                $(this).addClass('is-invalid');
+            }
+        } else {
+            $(this).removeClass('is-invalid');
+        }
+    });
+
+    // Enable / Disable button
+    $('#confirmPassengers').prop('disabled', !allValid);
+
+    return allValid;
+}
+
+$(document).on('click', '#confirmPassengers', function () {
+
+
+    let isValid = validatePassengerForm(false);
+
+    if (!isValid) {
+
+        notify('Please fill all required fields before proceeding.', 'error');
+
+        $('#confirmPassengers').prop('disabled', true);
+        return;
+    }
+
+    let passengers = buildPassengerPayload();
+
+    let trcid = localStorage.getItem('TraceId');
+    let bsrstindx = localStorage.getItem("BusResultIndex");
+
+    let bookingPayload = {
+        ResultIndex: bsrstindx,
+        TraceId: trcid,
+        BoardingPointId: selectedBoardingId,
+        DroppingPointId: selectedDroppingId,
+        Passenger: passengers
+    };
+
+    // console.log('FINAL BOOKING PAYLOAD', bookingPayload);
+    notify('Bus booking is temporarily unavailable due to maintenance. Please try again shortly.', 'error');
+});
+
+$(document).on(
+    'input change',
+    '#passengerForm .required-field, #passengerForm .required-contact',
+    function () {
+        validatePassengerForm(true); // live check
+    }
+);
+
+
 

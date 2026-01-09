@@ -115,6 +115,7 @@
                             </div>
                         </div>
                     </div>
+
                     <input type="hidden" name="Currency" id="Currency" value="INR" required>
                     <input type="hidden" name="BookingMode" id="BookingMode" value="5" required>
 
@@ -285,8 +286,9 @@
                     </div>
                 </div>
 
-                <div class="modal-footer border-top d-flex justify-content-between align-items-center" id="busDetailFooter">
-                   
+                <div class="modal-footer border-top d-flex justify-content-between align-items-center"
+                    id="busDetailFooter">
+
                 </div>
             </div>
         </div>

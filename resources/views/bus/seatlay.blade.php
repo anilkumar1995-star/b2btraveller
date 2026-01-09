@@ -10,22 +10,85 @@
     </div>
 
     <div class="pb-4 d-none" id="seatLayoutContainer">
-        <div class="card shadow-sm mb-3">
-            <div class="card-body d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">🪑 Please carefully select your seat & boarding point before proceeding</h5>
-                <button class="btn btn-primary" disabled id="proceedBookingBtn">
-                    Proceed to Booking
-                </button>
-            </div>
-        </div>
+
 
         <div id="boardingpassdetails" class="card mb-3"></div>
 
         <div id="seatlayoutdetails"></div>
 
+        <div class="card shadow-sm mt-3">
+            <div class="card-body d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">🪑 Please carefully select your seat & boarding point before proceeding</h5>
+                <button class="btn btn-primary" disabled id="proceedBookingBtn">
+                    Proceed to Add Details
+                </button>
+            </div>
+        </div>
+    </div>
+
+    {{-- Offcanvas --}}
+
+    <div class="offcanvas offcanvas-end w-50" tabindex="-1" id="passengerOffcanvas" style="overflow-y:scroll"
+        aria-labelledby="passengerOffcanvasLabel">
+        <div class="offcanvas-content">
+            <div class="offcanvas-header bg-primary">
+                <h5 id="passengerOffcanvasLabel" class="text-white mb-0">Passneger Details</h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <form id="passengerForm">
+                <div class="offcanvas-body pb-0">
+
+                    <div class="card card-body border mb-3">
+                        <div class="bg-light bg-opacity-10 rounded-2 p-3">
+                            <p class="h6 fw-light small mb-0">
+                                <span class="badge bg-danger me-2">Note</span>
+                                Please make sure you enter the name as per your passport.
+                            </p>
+                        </div>
+                        <h5 class="mt-4">Booking details will be sent to</h5>
+                        <div class="row g-3 g-md-4">
+                            <div class="col-md-3">
+                                <label class="form-label">Cell Code<span class="text-danger">*</span></label>
+                                <select class="form-select required-field" name="cellcode">
+                                    <option value="">Select</option>
+                                    <option value="+91" selected>+91</option>
+                                    <option value="+1">+1</option>
+                                    <option value="+44">+44</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
+                                <input type="text" class="form-control required-contact"
+                                    placeholder="Enter your mobile number" name="mobileNo">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">Email Address<span class="text-danger">*</span></label>
+                                <input type="email" class="form-control required-contact"
+                                    placeholder="Enter your email address" name="emailId">
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div id="passengerOffcanvasBody"></div>
+
+                </div>
+                <div class="offcanas-footer px-4 pb-2 d-grid">
+                    <button id="confirmPassengers" type="button" disabled="true" class="btn btn-primary mb-0">
+                        Proceed To Booking
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <style>
+        .is-invalid {
+            border-color: #dc3545 !important;
+        }
+
         /* ================= LEGEND ================= */
         .legend-panel {
             width: 100%;
@@ -159,9 +222,9 @@
 
         /* Selected */
         .seat.selected {
-            background: #4dc243;
-            border-color: #4dc243;
-            color: #fff;
+            background: #4dc243 !important;
+            border-color: #4dc243 !important;
+            color: #fff !important;
         }
 
         /* Ladies */
