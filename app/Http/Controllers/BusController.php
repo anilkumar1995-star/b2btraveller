@@ -79,8 +79,6 @@ class BusController extends Controller
     {
         $service = new BusService();
         $response = $service->busBlocks($request->all());
-
-        dd($response);
         return response()->json($response);
     }
     public function bookBus(Request $request)

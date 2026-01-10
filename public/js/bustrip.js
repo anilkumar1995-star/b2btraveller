@@ -523,7 +523,7 @@ function renderBoardingPoints(response) {
 
     let bsdetails = JSON.parse(localStorage.getItem("selectedBusDetails"));
 
-    isDropMandatory = bsdetails.IsDropPointMandatory;
+    // isDropMandatory = bsdetails.IsDropPointMandatory;
     isIdProofRequired = bsdetails.IdProofRequired;
 
     let html = `
@@ -600,7 +600,7 @@ function validateProceedButton() {
 
     let seatOk = selectedSeats.length > 0;
     let boardingOk = selectedBoardingId !== null;
-    let dropOk = !isDropMandatory || selectedDroppingId !== null;
+    let dropOk = selectedDroppingId !== null;
 
     if (seatOk && boardingOk && dropOk) {
         $('#proceedBookingBtn').prop('disabled', false);
@@ -851,9 +851,10 @@ $(document).on(
 function callBlockApi(bookingPayload) {
 
     swal({
+        type: 'info',
         title: 'Blocking Seats...',
         allowOutsideClick: false,
-        didOpen: () => swal.showLoading()
+        allowEscapeKey: false
     });
 
     $.ajax({
@@ -869,7 +870,9 @@ function callBlockApi(bookingPayload) {
                 swal({
                     type: 'warning',
                     title: 'Fare Changed',
-                    text: 'Seat price has changed. Please review before proceeding.'
+                    text: 'Seat price has changed. Please review before proceeding.',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
                 });
                 return;
             }
@@ -878,7 +881,9 @@ function callBlockApi(bookingPayload) {
                 swal({
                     type: 'error',
                     title: 'Block Failed',
-                    text: res.Error?.ErrorMessage || 'Seats could not be blocked'
+                    text: res.Error?.ErrorMessage || 'Seats could not be blocked',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
                 });
                 return;
             }
@@ -890,7 +895,9 @@ function callBlockApi(bookingPayload) {
                 type: 'success',
                 title: 'Seats Blocked',
                 text: 'Seats blocked successfully. Proceed to payment.',
-                confirmButtonText: 'Proceed'
+                confirmButtonText: 'Proceed',
+                allowOutsideClick: false,
+                allowEscapeKey: false
             }).then(() => {
                 // openPaymentScreen();
                 callBookApi(bookingPayload);
@@ -910,7 +917,8 @@ function callBookApi(bookingPayload) {
         title: 'Confirming Booking...',
         text: 'Amount will be deducted from wallet',
         allowOutsideClick: false,
-        didOpen: () => swal.showLoading()
+        allowEscapeKey: false,
+        type: 'success'
     });
 
     $.ajax({
@@ -926,19 +934,22 @@ function callBookApi(bookingPayload) {
             if (!res.Success) {
 
                 if (res.Error?.ErrorCode === 'INSUFFICIENT_BALANCE') {
-                    swal(
-                        'Insufficient Wallet Balance',
-                        'Please recharge wallet and try again.',
-                        'error'
-                    );
+                    swal({
+                        title: 'Insufficient Wallet Balance',
+                        text: 'Please recharge wallet and try again.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        type: 'error'
+                    });
                     return;
                 }
-
-                swal(
-                    'Booking Failed',
-                    res.Error?.ErrorMessage || 'Unable to confirm booking',
-                    'error'
-                );
+                swal({
+                    title: 'Booking Failed',
+                    text: res.Error?.ErrorMessage || 'Unable to confirm booking',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    type: 'error'
+                });
                 return;
             }
 
@@ -949,7 +960,9 @@ function callBookApi(bookingPayload) {
                     <b>Ticket No:</b> ${res.TicketNo}<br>
                     <b>PNR:</b> ${res.PNR}
                 `,
-                confirmButtonText: 'View Ticket'
+                confirmButtonText: 'View Ticket',
+                allowOutsideClick: false,
+                allowEscapeKey: false
             }).then(() => {
                 window.location.href = `/bus/ticket-list`;
             });

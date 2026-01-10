@@ -8,14 +8,6 @@
             z-index: 20000 !important;
         }
 
-        /* .offcanvas-backdrop {
-            z-index: 1040;
-        }
-
-        .offcanvas {
-            z-index: 1050;
-        } */
-
     </style>
     <div class="preloader text-center">
         <div class="preloader-item">
