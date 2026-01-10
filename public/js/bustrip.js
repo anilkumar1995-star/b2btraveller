@@ -674,10 +674,10 @@ function buildPassengerForm() {
                     
                         <label>Title <span class="text-danger">*</span></label>
                         <select class="form-select title required-field" required>
-                            <option value="">Title</option>
-                            <option value="Mr.">Mr.</option>
-                            <option value="Ms.">Ms.</option>
-                            <option value="Mrs.">Mrs.</option>
+                            <option value="">Select Title</option>
+                            <option value="Mr">Mr</option>
+                            <option value="Mrs">Mrs</option>
+                            <option value="Mstr">Mstr (Male Infant)</option>
                         </select>
                     </div>
 
@@ -718,7 +718,7 @@ function buildPassengerForm() {
             html += `
                         <div class="col-md-6 mb-2">
                         <label>Select Id Type <span class="text-danger">*</span></label>
-                            <select class="form-select idType required-field">
+                            <select class="form-select idType required-field" required>
                                 <option value="">Select ID Type</option>
                                 <option value="voterid">Voter Id</option>
                                 <option value="pan">PAN</option>
@@ -728,7 +728,7 @@ function buildPassengerForm() {
 
                         <div class="col-md-6 mb-2">
                         <label>ID Number <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control idNumber required-field" placeholder="ID Number">
+                            <input type="text" class="form-control idNumber required-field" placeholder="ID Number" required>
                         </div>`;
         }
         html += `
@@ -745,6 +745,8 @@ function buildPassengerPayload() {
 
     let passengers = [];
 
+    let email = $('.contact-email').val();
+    let phone = $('.contact-phone').val();
     $('#passengerForm .passenger-card').each(function (i) {
 
         let card = $(this);
@@ -758,8 +760,8 @@ function buildPassengerPayload() {
             Gender: parseInt(card.find('.gender').val()),
             Age: parseInt(card.find('.age').val()),
             Address: card.find('.address').val(),
-            Email: card.find('.email').val(),
-            Phoneno: card.find('.phone').val(),
+            Email: email,
+            Phoneno: phone,
             IdType: card.find('.idType').val() || null,
             IdNumber: card.find('.idNumber').val() || null,
             Seat: selectedSeats[i]
@@ -816,24 +818,147 @@ $(document).on('click', '#confirmPassengers', function () {
     let bsrstindx = localStorage.getItem("BusResultIndex");
 
     let bookingPayload = {
-        ResultIndex: bsrstindx,
-        TraceId: trcid,
-        BoardingPointId: selectedBoardingId,
-        DroppingPointId: selectedDroppingId,
-        Passenger: passengers
+        resultIndex: bsrstindx,
+        traceId: trcid,
+        boardingPointId: selectedBoardingId,
+        droppingPointId: selectedDroppingId,
+        passenger: passengers,
+        _token: $('meta[name="csrf-token"]').attr('content')
     };
 
-    // console.log('FINAL BOOKING PAYLOAD', bookingPayload);
-    notify('Bus booking is temporarily unavailable due to maintenance. Please try again shortly.', 'error');
+    swal({
+        title: 'Confirm Seat Blocking?',
+        text: 'Selected seats will be blocked for limited time.',
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, Block Seats',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if (result.value) {
+            callBlockApi(bookingPayload);
+        }
+    });
 });
 
 $(document).on(
     'input change',
     '#passengerForm .required-field, #passengerForm .required-contact',
     function () {
-        validatePassengerForm(true); // live check
+        validatePassengerForm(true);
     }
 );
 
+function callBlockApi(bookingPayload) {
 
+    swal({
+        title: 'Blocking Seats...',
+        allowOutsideClick: false,
+        didOpen: () => swal.showLoading()
+    });
+
+    $.ajax({
+        url: '/bus/block',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(bookingPayload),
+        success: function (res) {
+
+            swal.close();
+
+            if (res.IsPriceChanged) {
+                swal({
+                    type: 'warning',
+                    title: 'Fare Changed',
+                    text: 'Seat price has changed. Please review before proceeding.'
+                });
+                return;
+            }
+
+            if (!res.Success) {
+                swal({
+                    type: 'error',
+                    title: 'Block Failed',
+                    text: res.Error?.ErrorMessage || 'Seats could not be blocked'
+                });
+                return;
+            }
+
+            window.BLOCK_ID = res.BlockId;
+            window.BLOCK_EXPIRY = res.BlockExpiryTime;
+
+            swal({
+                type: 'success',
+                title: 'Seats Blocked',
+                text: 'Seats blocked successfully. Proceed to payment.',
+                confirmButtonText: 'Proceed'
+            }).then(() => {
+                // openPaymentScreen();
+                callBookApi(bookingPayload);
+            });
+        },
+
+        error: function () {
+            swal.close();
+            swal('Error', 'Unable to block seats. Please try again.', 'error');
+        }
+    });
+}
+
+function callBookApi(bookingPayload) {
+
+    swal({
+        title: 'Confirming Booking...',
+        text: 'Amount will be deducted from wallet',
+        allowOutsideClick: false,
+        didOpen: () => swal.showLoading()
+    });
+
+    $.ajax({
+        url: '/bus/book',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(bookingPayload),
+
+        success: function (res) {
+
+            swal.close();
+
+            if (!res.Success) {
+
+                if (res.Error?.ErrorCode === 'INSUFFICIENT_BALANCE') {
+                    swal(
+                        'Insufficient Wallet Balance',
+                        'Please recharge wallet and try again.',
+                        'error'
+                    );
+                    return;
+                }
+
+                swal(
+                    'Booking Failed',
+                    res.Error?.ErrorMessage || 'Unable to confirm booking',
+                    'error'
+                );
+                return;
+            }
+
+            swal({
+                type: 'success',
+                title: 'Booking Confirmed 🎉',
+                html: `
+                    <b>Ticket No:</b> ${res.TicketNo}<br>
+                    <b>PNR:</b> ${res.PNR}
+                `,
+                confirmButtonText: 'View Ticket'
+            }).then(() => {
+                window.location.href = `/bus/ticket-list`;
+            });
+        },
+
+        error: function () {
+            swal.close();
+            swal('Error', 'Booking confirmation failed', 'error');
+        }
+    });
+}
 

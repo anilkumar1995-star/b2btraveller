@@ -3,6 +3,20 @@
 @section('pagetitle', 'Seat Layout Details')
 
 @section('content')
+    <style>
+        .swal2-container {
+            z-index: 20000 !important;
+        }
+
+        .offcanvas-backdrop {
+            z-index: 1040;
+        }
+
+        .offcanvas {
+            z-index: 1050;
+        }
+
+    </style>
     <div class="preloader text-center">
         <div class="preloader-item">
             <div class="spinner-grow text-primary"></div>
@@ -58,14 +72,14 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Mobile Number<span class="text-danger">*</span></label>
-                                <input type="text" class="form-control required-contact"
-                                    placeholder="Enter your mobile number" name="mobileNo">
+                                <input type="text" class="form-control required-contact contact-phone"
+                                    placeholder="Enter your mobile number">
                             </div>
 
                             <div class="col-md-5">
                                 <label class="form-label">Email Address<span class="text-danger">*</span></label>
-                                <input type="email" class="form-control required-contact"
-                                    placeholder="Enter your email address" name="emailId">
+                                <input type="email" class="form-control required-contact contact-email"
+                                    placeholder="Enter your email address">
                             </div>
                         </div>
 

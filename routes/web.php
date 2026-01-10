@@ -156,8 +156,8 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
     Route::post('seatdetails', [BusController::class, 'seatdetails'])->name('bus.seatdetails');
     Route::post('boardingdetails', [BusController::class, 'boardingdetails'])->name('bus.boardingdetails');
 
-    // Route::post('book', [BusController::class, 'bookBus'])->name('bus.book');
-    // Route::post('ticket', [BusController::class, 'busTicket'])->name('bus.ticket');
+    Route::post('block', [BusController::class, 'busBlock'])->name('bus.block');
+    Route::post('book', [BusController::class, 'bookBus'])->name('bus.book');
     // Route::get('booking', [BusController::class, 'busBooking'])->name('bus.booking');
 });
 
