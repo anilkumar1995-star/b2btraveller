@@ -850,6 +850,8 @@ $(document).on(
 
 function callBlockApi(bookingPayload) {
 
+    notify('Block Failed from supplier end', 'error');
+    return; 
     swal({
         type: 'info',
         title: 'Blocking Seats...',
@@ -877,19 +879,16 @@ function callBlockApi(bookingPayload) {
                 return;
             }
 
-            if (!res.Success) {
+            if (res.status == 'FAILURE') {
                 swal({
                     type: 'error',
                     title: 'Block Failed',
-                    text: res.Error?.ErrorMessage || 'Seats could not be blocked',
+                    text: res.message || 'Seats could not be blocked',
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 });
                 return;
             }
-
-            window.BLOCK_ID = res.BlockId;
-            window.BLOCK_EXPIRY = res.BlockExpiryTime;
 
             swal({
                 type: 'success',
@@ -900,6 +899,7 @@ function callBlockApi(bookingPayload) {
                 allowEscapeKey: false
             }).then(() => {
                 // openPaymentScreen();
+                
                 callBookApi(bookingPayload);
             });
         },
