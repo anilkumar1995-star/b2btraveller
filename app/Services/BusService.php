@@ -257,7 +257,7 @@ class BusService
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 // $response = StaticResponseHelper::flightfailedbookingresponse();
-                $response = StaticResponseHelper::flightBookStaticResponse();
+                $response = BusStaticResponseHelper::busBlockStaticResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
                 $response = $response['response'];
@@ -272,12 +272,12 @@ class BusService
             }
 
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
-                return ['status' => 'success', 'message' => "Flight Booking successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Bus Block successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Flight Booking failed'
+                    'message' => $response['message'] ?? 'Bus Block failed'
                 ];
             }
         } catch (Exception $e) {
@@ -285,52 +285,53 @@ class BusService
         }
     }
 
-    public function bookBuss()
+    public function bookBuss($data)
     {
-        // try {
-        //     $token = $this->authService->getToken();
+        dd($data);
+        try {
+            $token = $this->authService->getToken();
 
-        //     $payload = [
-        //         "EndUserIp" => $this->ip,
-        //         "TokenId" => $token,
-        //         "TraceId" => $data['traceId'],
-        //         "ResultIndex" => $data['resultIndex'],
-        //         "Passengers" => $data['passengers']
-        //     ];
+            $payload = [
+                "TokenId" => $token,
+                "TraceId" => $data['traceId'],
+                "ResultIndex" => $data['resultIndex'],
+                "BoardingPointId" => $data['boardingPointId'],
+                "DroppingPointId" => $data['droppingPointId'],
+                "Passenger" => $data['passenger']
+            ];
 
 
-        //     $url = $this->setFullUrl('book');
+            $url = $this->setFullUrl('book');
 
-        //     // dd($response, $payload);
-        //     $baseUrl = url('/');
-        //     if ($baseUrl === 'http://127.0.0.1:8000') {
-        //         // $response = StaticResponseHelper::flightfailedbookingresponse();
-        //         $response = StaticResponseHelper::flightBookStaticResponse();
-        //     } else {
-        //         $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
-        //         $response = $response['response'];
-        //     }
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                // $response = StaticResponseHelper::flightfailedbookingresponse();
+                $response = BusStaticResponseHelper::flightBookStaticResponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
+                $response = $response['response'];
+            }
 
-        //     if (is_string($response)) {
-        //         $response = json_decode(($response), true);
-        //     }
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
 
-        //     if (isset($response['data']) && is_string($response['data'])) {
-        //         $response['data'] = json_decode($response['data'], true);
-        //     }
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
 
-        //     if (isset($response['status']) && $response['status'] == 'SUCCESS') {
-        //         return ['status' => 'success', 'message' => "Flight Booking successfully", 'data' => $response['data']];
-        //     } else {
-        //         return [
-        //             'code' => $response['code'] ?? '0x0202',
-        //             'status' => $response['status'] ?? 'failed',
-        //             'message' => $response['message'] ?? 'Flight Booking failed'
-        //         ];
-        //     }
-        // } catch (Exception $e) {
-        //     return ['status' => 'ERROR', 'message' => $e->getMessage()];
-        // }
+            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+                return ['status' => 'success', 'message' => "Bus Booking successfully", 'data' => $response['data']];
+            } else {
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Bus Booking failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
     }
 
     // public function FlightTicketView($data)

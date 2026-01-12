@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use PhpParser\Node\Stmt\Static_;
+
 class BusStaticResponseHelper
 {
 
@@ -1213,4 +1215,111 @@ class BusStaticResponseHelper
             }
         }';
     }  
+
+    public static function busBlockStaticResponse(){
+        return '{
+            "code": "0x0200",
+            "message": "success",
+            "status": "SUCCESS",
+            "data": {
+                "TokenId": "72587378-8e96-47a4-a1b8-8705a6947471",
+                "TraceId": "4c91e438-4f9f-476d-8b04-192f7cd3d762",
+                "IsPriceChanged": false,
+                "ArrivalTime": "01\\\/18\\\/2026 07:00:00",
+                "BusType": "Volvo A\\\/C Seater\\\/Sleeper Luxury (2+2)",
+                "DepartureTime": "01\\\/17\\\/2026 22:00:00",
+                "ServiceName": "Seat Seller",
+                "TravelName": "test-travels",
+                "BoardingPointdetails": {
+                    "CityPointIndex": 1,
+                    "CityPointLocation": "Gomti Nagar, Lucknow",
+                    "CityPointName": "Gomti Nagar, Lucknow (Pickup Bus)",
+                    "CityPointTime": "2026-01-17T22:00:00"
+                },
+                "CancelPolicy": [
+                    {
+                        "CancellationCharge": 10,
+                        "CancellationChargeType": 2,
+                        "PolicyString": "Till 17:00 on 16 Jan 2026",
+                        "TimeBeforeDept": "29$-1",
+                        "FromDate": "2026-01-12T11:37:29",
+                        "ToDate": "2026-01-16T17:00:00"
+                    },
+                    {
+                        "CancellationCharge": 50,
+                        "CancellationChargeType": 2,
+                        "PolicyString": "Between 17:00 on 16 Jan 2026 - 05:00 on 17 Jan 2026",
+                        "TimeBeforeDept": "17$29",
+                        "FromDate": "2026-01-16T17:00:00",
+                        "ToDate": "2026-01-17T05:00:00"
+                    },
+                    {
+                        "CancellationCharge": 100,
+                        "CancellationChargeType": 2,
+                        "PolicyString": "After 05:00 on 17 Jan 2026",
+                        "TimeBeforeDept": "0$17",
+                        "FromDate": "2026-01-17T05:00:00",
+                        "ToDate": "2026-01-18T07:00:00"
+                    }
+                ],
+                "DropingPointdetails": null,
+                "Passenger": [
+                    {
+                        "LeadPassenger": true,
+                        "Title": "Mrs",
+                        "Address": "lucknow",
+                        "Age": 21,
+                        "City": null,
+                        "Email": "shivani@ipayments.org.in",
+                        "FirstName": "Shivani",
+                        "Gender": 2,
+                        "IdNumber": null,
+                        "IdType": null,
+                        "LastName": "Pandey",
+                        "Phoneno": "7007422419",
+                        "Seat": {
+                            "ColumnNo": "002",
+                            "Height": 1,
+                            "IsLadiesSeat": false,
+                            "IsMalesSeat": false,
+                            "IsUpper": false,
+                            "RowNo": "000",
+                            "SeatFare": 105,
+                            "SeatIndex": 9,
+                            "SeatName": "9",
+                            "SeatStatus": true,
+                            "SeatType": 1,
+                            "Width": 1,
+                            "Price": {
+                                "CurrencyCode": "INR",
+                                "BasePrice": 105,
+                                "Tax": 0,
+                                "OtherCharges": 0,
+                                "Discount": 0,
+                                "PublishedPrice": 105,
+                                "PublishedPriceRoundedOff": 105,
+                                "OfferedPrice": 75,
+                                "OfferedPriceRoundedOff": 75,
+                                "AgentCommission": 30,
+                                "AgentMarkUp": 0,
+                                "TDS": 12,
+                                "GST": {
+                                    "CGSTAmount": 0,
+                                    "CGSTRate": 0,
+                                    "CessAmount": 0,
+                                    "CessRate": 0,
+                                    "IGSTAmount": 0,
+                                    "IGSTRate": 18,
+                                    "SGSTAmount": 0,
+                                    "SGSTRate": 0,
+                                    "TaxableAmount": 0
+                                }
+                            }
+                        },
+                        "State": null
+                    }
+                ]
+            }
+        }';
+    }
 }

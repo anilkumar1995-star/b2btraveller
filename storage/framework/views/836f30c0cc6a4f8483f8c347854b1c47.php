@@ -131,7 +131,6 @@
 
     <?php endif; ?>
 
-
     <script type="text/javascript">
         $(document).ready(function() {
             $('.select').select2();
@@ -239,51 +238,51 @@
                 }
             });
 
-            $('#editForm').on('submit', function (e) {
-    e.preventDefault();
+            $('#editForm').on('submit', function(e) {
+                e.preventDefault();
 
-    let form = $(this);
-    let btn = form.find('button[type=submit]');
+                let form = $(this);
+                let btn = form.find('button[type=submit]');
 
-    $.ajax({
-        url: form.attr('action'),
-        type: "POST",
-        data: form.serialize(),
+                $.ajax({
+                    url: form.attr('action'),
+                    type: "POST",
+                    data: form.serialize(),
 
-        beforeSend: function () {
-            btn.prop('disabled', true)
-               .html("<i class='fa fa-spinner fa-spin'></i> Updating");
-        },
+                    beforeSend: function() {
+                        btn.prop('disabled', true)
+                            .html("<i class='fa fa-spinner fa-spin'></i> Updating");
+                    },
 
-        success: function (res) {
-            btn.prop('disabled', false).html('Update');
+                    success: function(res) {
+                        btn.prop('disabled', false).html('Update');
 
-            if (res.status === "success") {
-                notify('Updated successfully', 'success');
+                        if (res.status === "success") {
+                            notify('Updated successfully', 'success');
 
-                // close offcanvas
-                let offcanvasEl = document.getElementById('editModal');
-                bootstrap.Offcanvas.getInstance(offcanvasEl).hide();
+                            // close offcanvas
+                            let offcanvasEl = document.getElementById('editModal');
+                            bootstrap.Offcanvas.getInstance(offcanvasEl).hide();
 
-                $('#datatable').DataTable().ajax.reload(null, false);
-            } else {
-                notify(res.status, 'error');
-            }
-        },
+                            $('#datatable').DataTable().ajax.reload(null, false);
+                        } else {
+                            notify(res.status, 'error');
+                        }
+                    },
 
-        error: function (xhr) {
-            btn.prop('disabled', false).html('Update');
+                    error: function(xhr) {
+                        btn.prop('disabled', false).html('Update');
 
-            if (xhr.responseJSON?.errors) {
-                Object.values(xhr.responseJSON.errors).forEach(err => {
-                    notify(err[0], 'error');
+                        if (xhr.responseJSON?.errors) {
+                            Object.values(xhr.responseJSON.errors).forEach(err => {
+                                notify(err[0], 'error');
+                            });
+                        } else {
+                            notify('Something went wrong', 'error');
+                        }
+                    }
                 });
-            } else {
-                notify('Something went wrong', 'error');
-            }
-        }
-    });
-});
+            });
 
 
 
@@ -891,8 +890,8 @@
                 </form>
             </div>
         <?php endif; ?>
-   
-                <div class="offcanvas offcanvas-end" id="complaintModal" tabindex="-1" role="dialog"
+
+        <div class="offcanvas offcanvas-end" id="complaintModal" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true" data-bs-backdrop="static">
 
             <div class="offcanvas-header bg-primary">

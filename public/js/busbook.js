@@ -851,10 +851,14 @@ $(document).on(
 function callBlockApi(bookingPayload) {
 
     swal({
-        type: 'info',
+        type: 'warning',
         title: 'Blocking Seats...',
-        allowOutsideClick: false,
-        allowEscapeKey: false
+        text: 'Your request is being processed',
+        onOpen: () => {
+            swal.showLoading()
+        },
+        allowOutsideClick: () => !swal.isLoading(),
+        allowEscapeKey: false,
     });
 
     $.ajax({
@@ -865,19 +869,28 @@ function callBlockApi(bookingPayload) {
         success: function (res) {
 
             swal.close();
-
-            if (res.IsPriceChanged) {
+            if (res.status == 'success') {
+                if (res.data?.IsPriceChanged) {
+                    swal({
+                        type: 'warning',
+                        title: 'Fare Changed',
+                        text: 'Seat price has changed. Please review before proceeding.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+                    return;
+                }
                 swal({
-                    type: 'warning',
-                    title: 'Fare Changed',
-                    text: 'Seat price has changed. Please review before proceeding.',
+                    type: 'success',
+                    title: 'Seats Blocked',
+                    text: 'Seats blocked successfully. Proceed to payment.',
+                    confirmButtonText: 'Proceed',
                     allowOutsideClick: false,
                     allowEscapeKey: false
+                }).then(() => {
+                    callBookApi(bookingPayload);
                 });
-                return;
-            }
-
-            if (res.status == 'FAILURE') {
+            } else {
                 swal({
                     type: 'error',
                     title: 'Block Failed',
@@ -887,24 +900,18 @@ function callBlockApi(bookingPayload) {
                 });
                 return;
             }
-
-            swal({
-                type: 'success',
-                title: 'Seats Blocked',
-                text: 'Seats blocked successfully. Proceed to payment.',
-                confirmButtonText: 'Proceed',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then(() => {
-                // openPaymentScreen();
-                
-                callBookApi(bookingPayload);
-            });
         },
 
         error: function () {
             swal.close();
-            swal('Error', 'Unable to block seats. Please try again.', 'error');
+            swal({
+                title: 'Error',
+                text: 'Unable to block seats. Please try again.',
+                allowOutsideClick: false,
+                confirmButtonText: 'OK, Got it',
+                allowEscapeKey: false,
+                type: 'error'
+            });
         }
     });
 }
@@ -912,11 +919,14 @@ function callBlockApi(bookingPayload) {
 function callBookApi(bookingPayload) {
 
     swal({
+        type: 'warning',
         title: 'Confirming Booking...',
         text: 'Amount will be deducted from wallet',
-        allowOutsideClick: false,
+        onOpen: () => {
+            swal.showLoading()
+        },
+        allowOutsideClick: () => !swal.isLoading(),
         allowEscapeKey: false,
-        type: 'success'
     });
 
     $.ajax({
@@ -937,6 +947,7 @@ function callBookApi(bookingPayload) {
                         text: 'Please recharge wallet and try again.',
                         allowOutsideClick: false,
                         allowEscapeKey: false,
+                        confirmButtonText: 'OK, Got it',
                         type: 'error'
                     });
                     return;
@@ -968,7 +979,13 @@ function callBookApi(bookingPayload) {
 
         error: function () {
             swal.close();
-            swal('Error', 'Booking confirmation failed', 'error');
+            swal({
+                title: 'Error',
+                text: 'Booking Confirmation Failed',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                type: 'error'
+            });
         }
     });
 }

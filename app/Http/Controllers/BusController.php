@@ -83,6 +83,7 @@ class BusController extends Controller
     }
     public function bookBus(Request $request)
     {
+        
         $service = new BusService();
         $response = $service->bookBuss($request->all());
 
