@@ -850,8 +850,8 @@ $(document).on(
 
 function callBlockApi(bookingPayload) {
 
-    notify('Block Failed from supplier end', 'error');
-    return; 
+    // notify('Block Failed from supplier end', 'error');
+    // return; 
     swal({
         type: 'info',
         title: 'Blocking Seats...',
