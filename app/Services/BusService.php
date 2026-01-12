@@ -287,7 +287,6 @@ class BusService
 
     public function bookBuss($data)
     {
-        dd($data);
         try {
             $token = $this->authService->getToken();
 

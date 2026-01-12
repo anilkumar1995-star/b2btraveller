@@ -1322,4 +1322,8 @@ class BusStaticResponseHelper
             }
         }';
     }
+
+    public static function flightBookStaticResponse(){
+        return '';
+    }
 }
