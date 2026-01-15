@@ -874,7 +874,7 @@ function callBlockApi(bookingPayload) {
                     swal({
                         type: 'warning',
                         title: 'Fare Changed',
-                        text: 'Seat price has changed. Please review before proceeding.',
+                        text: res.message || 'Seat price has changed. Please review before proceeding.',
                         allowOutsideClick: false,
                         allowEscapeKey: false
                     });
@@ -939,9 +939,23 @@ function callBookApi(bookingPayload) {
 
             swal.close();
 
-            if (!res.Success) {
+            if (res.status == 'success') {
 
-                if (res.Error?.ErrorCode === 'INSUFFICIENT_BALANCE') {
+                swal({
+                    type: 'success',
+                    title: 'Booking Confirmed 🎉',
+                    html: `
+                    <b>Ticket No:</b> ${res.data.TicketNo}<br>
+                    <b>PNR:</b> ${res.data.PNR}
+                `,
+                    confirmButtonText: 'View Ticket',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = `/bus/ticket-list`;
+                });
+            } else {
+                if (res.status == 'balance_low') {
                     swal({
                         title: 'Insufficient Wallet Balance',
                         text: 'Please recharge wallet and try again.',
@@ -950,33 +964,20 @@ function callBookApi(bookingPayload) {
                         confirmButtonText: 'OK, Got it',
                         type: 'error'
                     });
-                    return;
+                } else {
+                    swal({
+                        title: 'Booking Failed',
+                        text: res.Error?.ErrorMessage || 'Unable to confirm booking',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        type: 'error'
+                    });
                 }
-                swal({
-                    title: 'Booking Failed',
-                    text: res.Error?.ErrorMessage || 'Unable to confirm booking',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    type: 'error'
-                });
                 return;
             }
 
-            swal({
-                type: 'success',
-                title: 'Booking Confirmed 🎉',
-                html: `
-                    <b>Ticket No:</b> ${res.TicketNo}<br>
-                    <b>PNR:</b> ${res.PNR}
-                `,
-                confirmButtonText: 'View Ticket',
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then(() => {
-                window.location.href = `/bus/ticket-list`;
-            });
-        },
 
+        },
         error: function () {
             swal.close();
             swal({

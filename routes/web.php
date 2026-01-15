@@ -158,7 +158,9 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
 
     Route::post('block', [BusController::class, 'busBlock'])->name('bus.block');
     Route::post('book', [BusController::class, 'bookBus'])->name('bus.book');
-    // Route::get('booking', [BusController::class, 'busBooking'])->name('bus.booking');
+
+    Route::get('booking-list', [BusController::class, 'bookingList'])->name('flight.bookingList');
+    Route::get('booking-list-failed', [BusController::class, 'bookingListFailed'])->name('flight.bookingListFailed');
 });
 
 Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {

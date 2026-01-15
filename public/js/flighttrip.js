@@ -2606,7 +2606,11 @@ function roundtripFlightResults(data) {
     let results = data.Results || [];
 
     if (results.length < 2) {
-        notify("Invalid roundtrip response!", "error");
+        notify(results.length === 0
+            ? "No flights available"
+            : "Round Trip data incomplete. Only onward flight received",
+            "error");
+        $('.all_flight_list').addClass('d-none');
         return;
     }
     $("#roundTabs").removeClass("d-none");

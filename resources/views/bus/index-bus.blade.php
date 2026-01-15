@@ -132,7 +132,7 @@
     <section class="pt-2 d-none" id="busContainerList">
         <div class="row">
 
-            <aside class="col-xl-4 col-xxl-3">
+            <aside class="col-4">
                 <!-- Responsive offcanvas body START -->
                 <div class="offcanvas-xl offcanvas-end" tabindex="-1" id="offcanvasSidebar"
                     aria-labelledby="offcanvasSidebarLabel">
@@ -255,7 +255,7 @@
             </aside>
 
             <div class="col-8">
-                <div id="busResults" class="row g-4">
+                <div id="busResults">
                 </div>
             </div>
         </div>

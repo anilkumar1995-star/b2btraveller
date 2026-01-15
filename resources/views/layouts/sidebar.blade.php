@@ -80,8 +80,13 @@
                     </a>
                 </li>
                 <li class="menu-item {{ Request::is('bus/booking-list') ? 'active' : '' }}">
-                    <a href="{{ url('flight/booking-list') }}" class="menu-link">
+                    <a href="{{ url('bus/booking-list') }}" class="menu-link">
                         <div data-i18n="Booking List">Booking List</div>
+                    </a>
+                </li>
+                 <li class="menu-item {{ Request::is('bus/booking-list-failed') ? 'active' : '' }}">
+                    <a href="{{ url('bus/booking-list-failed') }}" class="menu-link">
+                        <div data-i18n="Failed List">Failed List</div>
                     </a>
                 </li>
             </ul>
