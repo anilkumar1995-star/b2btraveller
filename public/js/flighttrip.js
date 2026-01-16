@@ -2044,7 +2044,7 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
             ContactNo: contactDetails.mobile,
             Email: contactDetails.email,
             IsLeadPax: index === 0,
-            Fare: selectedFlightDetails?.Fare || {}
+            Fare: selectedFlightDetails?.FareBreakdown[index] || {}
         };
 
         const seat = passengerSeats[index] || [];
