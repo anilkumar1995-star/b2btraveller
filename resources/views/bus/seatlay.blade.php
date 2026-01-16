@@ -7,7 +7,6 @@
         .swal2-container {
             z-index: 20000 !important;
         }
-
     </style>
     <div class="preloader text-center">
         <div class="preloader-item">
@@ -307,8 +306,8 @@
             }
 
             if (resultIndex) {
-                getSeatDetails(resultIndex, traceId);
                 getboradingDetails(resultIndex, traceId);
+                getSeatDetails(resultIndex, traceId);
             } else {
                 window.location.href = "/bus/view";
             }
