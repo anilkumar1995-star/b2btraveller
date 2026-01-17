@@ -70,7 +70,7 @@ $('#busSearchForm').on('submit', function (e) {
                                             <div class="col-sm-4">
                                                 <h4>${formatTime(bus.DepartureTime)}</h4>
                                                 <h6 class="fw-normal mb-0">${formatDate(bus.DepartureTime)}</h6>
-                                                <p>${bus.Origin ? bus.Origin : 'N/A'}</p>
+                                                <p>${bus.Origin ? bus.Origin : ''}</p>
                                             </div>
                                             <div class="col-sm-4 text-center">
                                                 <h5>${calculateDuration(bus.DepartureTime, bus.ArrivalTime)}</h5>
@@ -84,13 +84,13 @@ $('#busSearchForm').on('submit', function (e) {
                                             <div class="col-sm-4">
                                                 <h4>${formatTime(bus.ArrivalTime)}</h4>
                                                 <h6 class="fw-normal mb-0">${formatDate(bus.ArrivalTime)}</h6>
-                                                <p>${bus.Destination ? bus.Destination : 'N/A'}</p>
+                                                <p>${bus.Destination ? bus.Destination : ''}</p>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3 text-md-end">
                                         <h4 class="text-success">₹${bus.BusPrice.PublishedPriceRoundedOff}</h4>
-                                        <button class="btn btn-dark mb-0 view-details" data-bs-toggle="modal" data-bs-target="#busdetail" data-busresultindex="${bus.ResultIndex}"
+                                        <button class="btn btn-dark btn-sm mb-0 view-details" data-bs-toggle="modal" data-bs-target="#busdetail" data-busresultindex="${bus.ResultIndex}"
                                             data-businfo="${encodeURIComponent(JSON.stringify(bus))}">View Details</button>
                                     </div>
                                 </div>                               

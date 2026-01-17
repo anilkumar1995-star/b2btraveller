@@ -1214,9 +1214,10 @@ class BusStaticResponseHelper
                 }
             }
         }';
-    }  
+    }
 
-    public static function busBlockStaticResponse(){
+    public static function busBlockStaticResponse()
+    {
         return '{
             "code": "0x0200",
             "message": "success",
@@ -1323,7 +1324,14 @@ class BusStaticResponseHelper
         }';
     }
 
-    public static function flightBookStaticResponse(){
-        return '';
+    public static function busBookStaticResponse()
+    {
+        return '{
+            "code": "0x0200",
+            "message": "success",
+            "status": "SUCCESS",
+            "data":{
+            }
+        }';
     }
 }

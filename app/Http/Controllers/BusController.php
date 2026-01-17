@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Apilog;
 use App\Services\AuthService;
 use App\Services\BusService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -75,17 +76,133 @@ class BusController extends Controller
 
         return response()->json($response);
     }
+
+
     public function busBlock(Request $request)
     {
         $service = new BusService();
         $response = $service->busBlocks($request->all());
-        return response()->json($response);
+
+        if (strtolower($response['status'] ?? '') !== 'success') {
+
+            $baseFare    = 0;
+            $tax         = 0;
+            $totalAmount = 0;
+            $totalSeats  = 0;
+
+            if (!empty($request->passenger)) {
+                foreach ($request->passenger as $p) {
+                    $price = $p['Seat']['Price'] ?? [];
+
+                    $baseFare    += $price['BasePrice'] ?? 0;
+                    $tax         += $price['Tax'] ?? 0;
+                    $totalAmount += $price['PublishedPrice'] ?? 0;
+                    $totalSeats++;
+                }
+            }
+
+            DB::table('failed_bus_bookings_list')->insert([
+                'user_id'        => \Auth::id(),
+                'base_fare'      => $baseFare,
+                'tax'            => $tax,
+                'total_amount'   => $totalAmount,
+                'booking_status' => 'failed',
+                'message'        => $response['message'] ?? 'Bus block failed',
+                'raw_response'   => json_encode($response),
+                'raw_payload'    => json_encode($request->all()),
+                'created_at'     => now(),
+                'updated_at'     => now(),
+            ]);
+
+            return response()->json([
+                'status'  => 'failed',
+                'message' => $response['message'] ?? 'Bus block failed'
+            ]);
+        }
+
+        $data = $response['data'] ?? null;
+
+        if (!$data || empty($data['Passenger'])) {
+            return response()->json([
+                'status'  => 'failed',
+                'message' => 'Invalid bus block response'
+            ]);
+        }
+
+        $baseFare     = 0;
+        $tax          = 0;
+        $totalAmount  = 0;
+        $totalSeats   = 0;
+
+        foreach ($data['Passenger'] as $p) {
+            $price = $p['Seat']['Price'] ?? [];
+
+            $baseFare    += $price['BasePrice'] ?? 0;
+            $tax         += $price['Tax'] ?? 0;
+            $totalAmount += $price['PublishedPrice'] ?? 0;
+            $totalSeats++;
+        }
+
+        $departureTime = !empty($data['DepartureTime'])
+            ? Carbon::createFromFormat('m/d/Y H:i:s', str_replace('\/', '/', $data['DepartureTime']))
+            ->format('Y-m-d H:i:s')
+            : null;
+
+        $arrivalTime = !empty($data['ArrivalTime'])
+            ? Carbon::createFromFormat('m/d/Y H:i:s', str_replace('\/', '/', $data['ArrivalTime']))
+            ->format('Y-m-d H:i:s')
+            : null;
+        /* ================= SUCCESS SAVE ================= */
+        DB::table('bus_bookings')->insert([
+            'user_id'        => \Auth::id(),
+            'pnr'            => null,
+            'booking_id_api' => $data['TraceId'],
+            'ticket_no' => $data['TicketNo'] ?? null,
+            'bus_id' => $data['BusId'] ?? null,
+
+            'origin'         => $data['BoardingPointdetails']['CityPointLocation'] ?? null,
+            'destination'    => $data['DropingPointdetails']['CityPointLocation'] ?? null,
+            'travel_name'    => $data['TravelName'] ?? null,
+            'service_name'    => $data['ServiceName'] ?? null,
+            'bus_type'       => $data['BusType'] ?? null,
+
+            'journey_date'   => $departureTime,
+            'departure_time' => $departureTime,
+            'arrival_time'   => $arrivalTime,
+
+
+            'boarding_point' => $data['BoardingPointdetails']['CityPointName'] ?? null,
+            'dropping_point' => $data['DropingPointdetails']['CityPointName'] ?? null,
+            'total_seats'    => $totalSeats,
+            'base_fare'      => $baseFare,
+            'tax'            => $tax,
+            'total_amount'   => $totalAmount,
+            'is_pricechange' => $data['IsPriceChanged'] ? "true" : "false",
+            'payment_status' => 'pending',
+            'booking_status' => 'blocked',
+            'api_type'       => 'block',
+
+            'raw_payload'    => json_encode($request->all()),
+            'raw_response'   => json_encode($response),
+
+            'created_at'     => now(),
+            'updated_at'     => now(),
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Bus Block successfully',
+            'data'    => $response['data']
+        ]);
     }
+
     public function bookBus(Request $request)
     {
 
         $service = new BusService();
         $response = $service->bookBuss($request->all());
+
+        dd($response);
 
         return response()->json($response);
     }

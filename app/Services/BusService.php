@@ -301,7 +301,7 @@ class BusService
                 "TraceId" => $data['traceId'],
                 "ResultIndex" => $data['resultIndex'],
                 "BoardingPointId" => $data['boardingPointId'],
-                "DroppingPointId" => $data['droppingPointId'],
+                "DropingPointId" => $data['droppingPointId'],
                 "Passenger" => $data['passenger']
             ];
 
@@ -310,8 +310,7 @@ class BusService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = StaticResponseHelper::flightfailedbookingresponse();
-                $response = BusStaticResponseHelper::flightBookStaticResponse();
+                $response = BusStaticResponseHelper::busBookStaticResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
                 $response = $response['response'];
@@ -326,7 +325,7 @@ class BusService
             }
 
             if (isset($response['status']) && $response['status'] == 'SUCCESS') {
-                return ['status' => 'success', 'message' => "Bus Booking successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Bus Booked successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
