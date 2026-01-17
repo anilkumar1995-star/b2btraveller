@@ -1998,7 +1998,42 @@ $('#proceedBookingBtn').on('click', function () {
 
 });
 
+const getFareForPassenger = (paxType) => {
+    const fb = fareMap[paxType];
+    if (!fb) return {};
+
+    const count = fb.PassengerCount || 1;
+
+    return {
+        CFARAmount: fb.CFARAmount || 0,
+        DCFARAmount: fb.DCFARAmount || 0,
+        Currency: fb.Currency,
+        PassengerType: paxType,
+        PassengerCount: 1,
+        BaseFare: +(fb.BaseFare / count).toFixed(2),
+        Tax: +(fb.Tax / count).toFixed(2),
+        TaxBreakUp: fb.TaxBreakUp,
+        YQTax: fb.YQTax || 0,
+        AdditionalTxnFeeOfrd: fb.AdditionalTxnFeeOfrd || 0,
+        AdditionalTxnFeePub: fb.AdditionalTxnFeePub || 0,
+        PGCharge: fb.PGCharge || 0,
+        SupplierReissueCharges: fb.SupplierReissueCharges || 0
+    };
+};
+
+
 function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals, selectedBaggage, trip, journeyType) {
+
+    // Fare
+
+    const fareBreakdown = selectedFlightDetails?.FareBreakdown || [];
+
+    const fareMap = {};
+    fareBreakdown.forEach(fb => {
+        fareMap[fb.PassengerType] = fb;
+    });
+    // FareEnd
+
 
     const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
     const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
@@ -2027,11 +2062,14 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
     };
 
     const passengers = travelerDetails.map((trav, index) => {
+
+        const paxType = trav.type === "Child" ? 2 : trav.type === "Infant" ? 3 : 1;
+
         const passenger = {
             Title: trav.title,
             FirstName: trav.firstName,
             LastName: trav.lastName,
-            PaxType: trav.type === "Child" ? 2 : trav.type === "Infant" ? 3 : 1,
+            PaxType: paxType,
             DateOfBirth: formatDate(trav.dob),
             Gender: trav.gender,
             PassportNo: trav.passportNo || "",
@@ -2044,7 +2082,8 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
             ContactNo: contactDetails.mobile,
             Email: contactDetails.email,
             IsLeadPax: index === 0,
-            Fare: selectedFlightDetails?.FareBreakdown[index] || {}
+            Fare: getFareForPassenger(paxType)
+            // Fare: selectedFlightDetails?.FareBreakdown[index] || {}
         };
 
         const seat = passengerSeats[index] || [];
@@ -2070,6 +2109,8 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
         _token: $('meta[name="csrf-token"]').attr('content')
     };
 
+    console.log(payload);
+    return;
     if (selectedFlightDetails?.IsLCC) {
         ViewTicketAjax(payload, '/flight/ticket', trip, journeyType);
     } else {

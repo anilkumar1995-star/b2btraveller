@@ -60,6 +60,7 @@ class BusService
             $token = $this->authService->getToken();
 
             $payload = [
+                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
             ];
 
@@ -103,6 +104,7 @@ class BusService
             $token = $this->authService->getToken();
 
             $payload = [
+                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "DateOfJourney" => $data['JourneyDate'] ?? date('Y-m-d'),
                 "DestinationId" => $data['DestinationId'],
@@ -152,6 +154,7 @@ class BusService
             $token = $this->authService->getToken();
 
             $payload = [
+                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "TraceId" => $data['TraceId'],
                 "ResultIndex" => $data['ResultIndex'],
@@ -199,6 +202,7 @@ class BusService
             $token = $this->authService->getToken();
 
             $payload = [
+                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "TraceId" => $data['TraceId'],
                 "ResultIndex" => $data['ResultIndex'],
@@ -242,6 +246,7 @@ class BusService
             $token = $this->authService->getToken();
 
             $payload = [
+                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "TraceId" => $data['traceId'],
                 "ResultIndex" => $data['resultIndex'],
@@ -291,6 +296,7 @@ class BusService
             $token = $this->authService->getToken();
 
             $payload = [
+                "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "TraceId" => $data['traceId'],
                 "ResultIndex" => $data['resultIndex'],
