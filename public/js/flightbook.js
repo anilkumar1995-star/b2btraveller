@@ -1998,30 +1998,6 @@ $('#proceedBookingBtn').on('click', function () {
 
 });
 
-const getFareForPassenger = (paxType) => {
-    const fb = fareMap[paxType];
-    if (!fb) return {};
-
-    const count = fb.PassengerCount || 1;
-
-    return {
-        CFARAmount: fb.CFARAmount || 0,
-        DCFARAmount: fb.DCFARAmount || 0,
-        Currency: fb.Currency,
-        PassengerType: paxType,
-        PassengerCount: 1,
-        BaseFare: +(fb.BaseFare / count).toFixed(2),
-        Tax: +(fb.Tax / count).toFixed(2),
-        TaxBreakUp: fb.TaxBreakUp,
-        YQTax: fb.YQTax || 0,
-        AdditionalTxnFeeOfrd: fb.AdditionalTxnFeeOfrd || 0,
-        AdditionalTxnFeePub: fb.AdditionalTxnFeePub || 0,
-        PGCharge: fb.PGCharge || 0,
-        SupplierReissueCharges: fb.SupplierReissueCharges || 0
-    };
-};
-
-
 function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals, selectedBaggage, trip, journeyType) {
 
     const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
