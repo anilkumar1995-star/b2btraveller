@@ -2110,8 +2110,6 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
         _token: $('meta[name="csrf-token"]').attr('content')
     };
 
-    console.log(payload);
-    return;
     if (selectedFlightDetails?.IsLCC) {
         ViewTicketAjax(payload, '/flight/ticket', trip, journeyType);
     } else {
