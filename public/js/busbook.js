@@ -877,6 +877,8 @@ function callBlockApi(bookingPayload) {
                         text: res.message || 'Seat price has changed. Please review before proceeding.',
                         allowOutsideClick: false,
                         allowEscapeKey: false
+                    }).then(() => {
+                        window.location.href = '/bus/seatlayout';
                     });
                     return;
                 }
@@ -897,6 +899,8 @@ function callBlockApi(bookingPayload) {
                     text: res.message || 'Seats could not be blocked',
                     allowOutsideClick: false,
                     allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = `/bus/booking-list-failed`;
                 });
                 return;
             }
@@ -911,6 +915,8 @@ function callBlockApi(bookingPayload) {
                 confirmButtonText: 'OK, Got it',
                 allowEscapeKey: false,
                 type: 'error'
+            }).then(() => {
+                window.location.href = `/bus/booking-list`;
             });
         }
     });
@@ -952,7 +958,7 @@ function callBookApi(bookingPayload) {
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 }).then(() => {
-                    window.location.href = `/bus/ticket-list`;
+                    window.location.href = `/bus/booking-list`;
                 });
             } else {
                 if (res.status == 'balance_low') {
@@ -963,6 +969,8 @@ function callBookApi(bookingPayload) {
                         allowEscapeKey: false,
                         confirmButtonText: 'OK, Got it',
                         type: 'error'
+                    }).then(() => {
+                        window.location.href = '/bus/view';
                     });
                 } else {
                     swal({
@@ -971,6 +979,8 @@ function callBookApi(bookingPayload) {
                         allowOutsideClick: false,
                         allowEscapeKey: false,
                         type: 'error'
+                    }).then(() => {
+                        window.location.href = '/bus/booking-list-failed';
                     });
                 }
                 return;
