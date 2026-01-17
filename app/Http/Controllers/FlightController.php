@@ -216,9 +216,9 @@ class FlightController extends Controller
         if (strtolower($response['status']) != 'success') {
             $up = [
                 'user_id'         => \Auth::user()->id,
-                'base_fare'       => @$request['passengers'][0]['Fare']['BaseFare'] ?? '0.00',
-                'tax'             => @$request['passengers'][0]['Fare']['Tax'] ?? '0.00',
-                'total_amount'    => @$request['passengers'][0]['Fare']['PublishedFare'] ?? '0.00',
+                'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
+                'tax'             => $request['passengers'][0]['Fare']['Tax'],
+                'total_amount'    => @$request['passengers'][0]['Fare']['PublishedFare'] ?? $request['passengers'][0]['Fare']['BaseFare'],
                 'booking_status'  => $response['status'],
                 'message'         => $response['message'],
                 'raw_response'    => json_encode($response),
@@ -341,9 +341,9 @@ class FlightController extends Controller
         if (strtolower($response['status']) != 'success') {
             $up = [
                 'user_id'         => \Auth::user()->id,
-                'base_fare'       => @$request['passengers'][0]['Fare']['BaseFare'] ?? '0.00',
-                'tax'             => @$request['passengers'][0]['Fare']['Tax'] ?? '0.00',
-                'total_amount'    => @$request['passengers'][0]['Fare']['PublishedFare'] ?? '0.00',
+                'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
+                'tax'             => $request['passengers'][0]['Fare']['Tax'],
+                'total_amount'    => @$request['passengers'][0]['Fare']['PublishedFare'] ?? $request['passengers'][0]['Fare']['BaseFare'],
                 'booking_status'  => $response['status'],
                 'message'         => $response['message'],
                 'raw_response'    => json_encode($response),
