@@ -50,6 +50,8 @@ class BusService
             return $this->baseUrl . '/v1/service/traveller/bus/boarding/pass';
         } else if ($method == 'busblock') {
             return $this->baseUrl . '/v1/service/traveller/bus/block';
+        } else if ($method == 'bookbus') {
+            return $this->baseUrl . '/v1/service/traveller/bus/book';
         }
         return "";
     }
@@ -306,7 +308,7 @@ class BusService
             ];
 
 
-            $url = $this->setFullUrl('book');
+            $url = $this->setFullUrl('bookbus');
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
