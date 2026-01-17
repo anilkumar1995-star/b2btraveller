@@ -2024,7 +2024,12 @@ const getFareForPassenger = (paxType) => {
 
 function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMeals, selectedBaggage, trip, journeyType) {
 
-    // Fare
+    const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
+    const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
+    const formatDate = (date) => date ? `${date}T00:00:00` : null;
+
+
+    /* ================= FARE LOGIC START ================= */
 
     const fareBreakdown = selectedFlightDetails?.FareBreakdown || [];
 
@@ -2032,12 +2037,32 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
     fareBreakdown.forEach(fb => {
         fareMap[fb.PassengerType] = fb;
     });
-    // FareEnd
 
+    const getFareForPassenger = (paxType) => {
+        const fb = fareMap[paxType];
+        if (!fb) return {};
 
-    const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
-    const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
-    const formatDate = (date) => date ? `${date}T00:00:00` : null;
+        const count = fb.PassengerCount || 1;
+
+        return {
+            CFARAmount: fb.CFARAmount || 0,
+            DCFARAmount: fb.DCFARAmount || 0,
+            Currency: fb.Currency,
+            PassengerType: paxType,
+            PassengerCount: 1,
+            BaseFare: +(fb.BaseFare / count).toFixed(2),
+            Tax: +(fb.Tax / count).toFixed(2),
+            TaxBreakUp: fb.TaxBreakUp,
+            YQTax: fb.YQTax || 0,
+            AdditionalTxnFeeOfrd: fb.AdditionalTxnFeeOfrd || 0,
+            AdditionalTxnFeePub: fb.AdditionalTxnFeePub || 0,
+            PGCharge: fb.PGCharge || 0,
+            SupplierReissueCharges: fb.SupplierReissueCharges || 0
+        };
+    };
+
+    /* ================= FARE LOGIC END ================= */
+
 
     const mapSeatsToPassengers = (seatData, numPassengers) => {
         const passengersSeats = Array.from({ length: numPassengers }, () => []);
@@ -2083,7 +2108,6 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
             Email: contactDetails.email,
             IsLeadPax: index === 0,
             Fare: getFareForPassenger(paxType)
-            // Fare: selectedFlightDetails?.FareBreakdown[index] || {}
         };
 
         const seat = passengerSeats[index] || [];

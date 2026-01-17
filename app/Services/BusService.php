@@ -264,7 +264,7 @@ class BusService
                 // $response = StaticResponseHelper::flightfailedbookingresponse();
                 $response = BusStaticResponseHelper::busBlockStaticResponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "block", "");
                 $response = $response['response'];
             }
 
