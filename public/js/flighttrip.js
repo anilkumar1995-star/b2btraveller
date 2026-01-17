@@ -682,6 +682,7 @@ function getFareQuote(resultIndex, traceId, trip) {
                     let flightDetails = response.data;
                     let resultData = flightDetails?.Results || {};
 
+                    localStorage.setItem(`fareFlightDetails${trip}`, JSON.stringify(resultData?.FareBreakdown));
                     let segmnt = resultData.Segments[0];
                     const fmt = (num) => Number(num || 0).toLocaleString('en-IN');
 
@@ -2007,7 +2008,7 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
 
     /* ================= FARE LOGIC START ================= */
 
-    const fareBreakdown = selectedFlightDetails?.FareBreakdown || [];
+    const fareBreakdown = JSON.parse(localStorage.getItem(`fareFlightDetails${trip}`)) || [];
 
     const fareMap = {};
     fareBreakdown.forEach(fb => {

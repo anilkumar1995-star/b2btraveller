@@ -140,8 +140,6 @@
 
             const payload = JSON.parse(localStorage.getItem('payload'));
             const traceId = localStorage.getItem('TraceId') || '';
-
-
             let selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails'));
             let selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
             let selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
