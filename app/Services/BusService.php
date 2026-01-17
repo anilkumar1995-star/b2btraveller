@@ -303,7 +303,7 @@ class BusService
                 "TraceId" => $data['traceId'],
                 "ResultIndex" => $data['resultIndex'],
                 "BoardingPointId" => $data['boardingPointId'],
-                "DroppingPointId" => $data['droppingPointId'],
+                "DropingPointId" => $data['droppingPointId'],
                 "Passenger" => $data['passenger']
             ];
 
