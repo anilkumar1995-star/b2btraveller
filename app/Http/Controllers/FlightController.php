@@ -338,7 +338,7 @@ class FlightController extends Controller
        $service = new FlightService();
         $response = $service->FlightTicketView($request->all());
 
-        dd($request);
+        dd($request['passengers'][0]);
         if (strtolower($response['status']) != 'success') {
             $up = [
                 'user_id'         => \Auth::user()->id,
