@@ -338,7 +338,6 @@ class FlightController extends Controller
        $service = new FlightService();
         $response = $service->FlightTicketView($request->all());
 
-        dd($request['passengers'][0]['Fare']['BaseFare']);
         if (strtolower($response['status']) != 'success') {
             $up = [
                 'user_id'         => \Auth::user()->id,
