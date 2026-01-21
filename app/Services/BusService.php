@@ -347,12 +347,11 @@ class BusService
         try {
             $token = $this->authService->getToken();
 
-            dd($data, $data['traceId']);
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
-                "TraceId" => $data['traceId'],
-                "BusId" => $data['busId']
+                "TraceId" => $data->booking_id_api,
+                "BusId" => $data->bus_id
             ];
             $url = $this->setFullUrl('bookingDetails');
 
