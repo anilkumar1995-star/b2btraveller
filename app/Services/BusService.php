@@ -358,14 +358,13 @@ class BusService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = StaticResponseHelper::busbookingresponse();
+                $response = BusStaticResponseHelper::busbookingdetailsresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "bookingDetail", "");
                 $response = $response['response'];
             }
 
 
-            dd($response);
             if (is_string($response)) {
                 $response = json_decode(($response), true);
             }
