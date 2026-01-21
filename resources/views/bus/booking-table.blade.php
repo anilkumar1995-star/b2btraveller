@@ -422,7 +422,7 @@
                       return;
                   }
 
-                  const booking = res?.data?.Response?.Itinerary;
+                  const booking = res?.data?.Response;
 
                   if (!booking) {
                       $('#ticketContent').html(`<div class="alert alert-danger">Invalid booking data</div>`);
@@ -542,19 +542,15 @@
 
       function getDetails(booking) {
         console.log(booking);
-          const segments = booking?.Segments || [];
+        notify('Working on bus getting details', 'warning');
+        return;
           const passengers = booking?.Passenger || [];
 
-          const firstSeg = segments[0] || {};
-          const lastSeg = segments[segments.length - 1] || {};
+          const originBusDet = booking?.BoardingPointdetails || {};
+          const dropBusDet = booking?.DroppingPointdetails || {};
 
-          const originAirport = firstSeg?.Origin?.Airport || {};
-          const destAirport = lastSeg?.Destination?.Airport || {};
-
-          const departTime = firstSeg?.Origin?.DepTime;
-          const arrivalTime = lastSeg?.Destination?.ArrTime;
-
-
+          const departTime = booking?.DepartureTime;
+          const arrivalTime = booking?.ArrTime;
 
           let html = '';
 
@@ -564,7 +560,7 @@
                         <div class="d-flex justify-content-between mb-4">
                             <img src="{{ asset('images/logo.png') }}" style="height:58px;">
                             <div class="text-end">
-                                <div class="fw-bold">Flight Ticket (${booking.JourneyType == '1' ? 'One-way' : 'Roundtrip'})</div>
+                                <div class="fw-bold">${booking.TravelName}</div>
 
                                 <div class="text-muted small">
                                     ${booking.AirlineCode} (${segments[0]?.Airline?.AirlineName}) •
@@ -575,7 +571,7 @@
                                 </div>
                             </div>
                         </div>
-                        <h4>✈️ ${originAirport.AirportName || booking.Origin} → ${destAirport.AirportName || booking.Destination}</h4>
+                        <h4>✈️ ${originBusDet.AirportName || booking.Origin} → ${dropBusDet.AirportName || booking.Destination}</h4>
 
                         <div class="row ticket-route">
 
@@ -611,8 +607,8 @@
                                 <div class="d-flex justify-content-between align-items-center">
 
                                     <div class="text-start">
-                                        <div class="city-code">${originAirport.AirportCode || ''}</div>
-                                        <div class="city-name">${originAirport.CityName || ''}</div>
+                                        <div class="city-code">${originBusDet.AirportCode || ''}</div>
+                                        <div class="city-name">${originBusDet.CityName || ''}</div>
                                         <div>
                                             ${departTime ? new Date(departTime).toLocaleDateString() : ''}<br>
                                             <strong>
@@ -635,8 +631,8 @@
                                         </div>
                                     </div>
                                     <div class="text-end">
-                                        <div class="city-code">${destAirport.AirportCode || ''}</div>
-                                        <div class="city-name">${destAirport.CityName || ''}</div>
+                                        <div class="city-code">${dropBusDet.AirportCode || ''}</div>
+                                        <div class="city-name">${dropBusDet.CityName || ''}</div>
                                         <div class="text-end">
                                             ${arrivalTime ? new Date(arrivalTime).toLocaleDateString() : ''}<br>
                                             <strong>
