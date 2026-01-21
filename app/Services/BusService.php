@@ -347,6 +347,7 @@ class BusService
         try {
             $token = $this->authService->getToken();
 
+            dd($data);
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
