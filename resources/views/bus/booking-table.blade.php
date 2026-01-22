@@ -542,8 +542,7 @@
 
       function getDetails(booking) {
         console.log(booking);
-        notify('Working on bus getting details', 'warning');
-        return;
+       
           const passengers = booking?.Passenger || [];
 
           const originBusDet = booking?.BoardingPointdetails || {};
