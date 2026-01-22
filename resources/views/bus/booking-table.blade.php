@@ -441,30 +441,30 @@
           });
       }
 
-    //   function getSsrIcon(code) {
-    //       switch (code) {
-    //           case 'SEAT':
-    //               return '💺';
-    //           case 'MEAL':
-    //               return '🍱';
-    //           case 'BAGGAGE':
-    //               return '🧳';
-    //           case 'WCHR':
-    //               return '♿';
-    //           case 'PETC':
-    //               return '🐶';
-    //           default:
-    //               return '📝';
-    //       }
-    //   }
+      //   function getSsrIcon(code) {
+      //       switch (code) {
+      //           case 'SEAT':
+      //               return '💺';
+      //           case 'MEAL':
+      //               return '🍱';
+      //           case 'BAGGAGE':
+      //               return '🧳';
+      //           case 'WCHR':
+      //               return '♿';
+      //           case 'PETC':
+      //               return '🐶';
+      //           default:
+      //               return '📝';
+      //       }
+      //   }
 
-    //   function renderSSR(ssrList = []) {
+      //   function renderSSR(ssrList = []) {
 
-    //       if (!ssrList.length) {
-    //           return `<div class="text-muted small">No special services selected</div>`;
-    //       }
+      //       if (!ssrList.length) {
+      //           return `<div class="text-muted small">No special services selected</div>`;
+      //       }
 
-    //       return ssrList.map(ssr => `
+      //       return ssrList.map(ssr => `
     //             <div class="d-flex justify-content-between border-bottom py-1">
     //                 <div>
     //                     ${getSsrIcon(ssr.SsrCode)}
@@ -474,75 +474,75 @@
     //                 <div class="fw-semibold">₹${ssr.Price || 0}</div>
     //             </div>
     //         `).join('');
-    //   }
+      //   }
 
 
-    //   function getTicketStatus(status) {
+      //   function getTicketStatus(status) {
 
-    //       // STRING STATUS (current case)
-    //       if (typeof status === 'string') {
-    //           if (status === 'OK') {
-    //               return {
-    //                   text: 'Confirmed',
-    //                   badge: 'bg-success'
-    //               };
-    //           }
-    //           return {
-    //               text: status,
-    //               badge: 'bg-danger'
-    //           };
-    //       }
+      //       // STRING STATUS (current case)
+      //       if (typeof status === 'string') {
+      //           if (status === 'OK') {
+      //               return {
+      //                   text: 'Confirmed',
+      //                   badge: 'bg-success'
+      //               };
+      //           }
+      //           return {
+      //               text: status,
+      //               badge: 'bg-danger'
+      //           };
+      //       }
 
-    //       // NUMBER STATUS (future / other APIs)
-    //       const statusMap = {
-    //           0: {
-    //               text: 'Failed',
-    //               badge: 'bg-danger'
-    //           },
-    //           1: {
-    //               text: 'Successful',
-    //               badge: 'bg-success'
-    //           },
-    //           2: {
-    //               text: 'Not Saved',
-    //               badge: 'bg-warning text-dark'
-    //           },
-    //           3: {
-    //               text: 'Not Created',
-    //               badge: 'bg-warning text-dark'
-    //           },
-    //           4: {
-    //               text: 'Not Allowed',
-    //               badge: 'bg-secondary'
-    //           },
-    //           5: {
-    //               text: 'In Progress',
-    //               badge: 'bg-info'
-    //           },
-    //           6: {
-    //               text: 'Already Created',
-    //               badge: 'bg-primary'
-    //           },
-    //           8: {
-    //               text: 'Price Changed',
-    //               badge: 'bg-danger'
-    //           },
-    //           9: {
-    //               text: 'Other Error',
-    //               badge: 'bg-danger'
-    //           }
-    //       };
+      //       // NUMBER STATUS (future / other APIs)
+      //       const statusMap = {
+      //           0: {
+      //               text: 'Failed',
+      //               badge: 'bg-danger'
+      //           },
+      //           1: {
+      //               text: 'Successful',
+      //               badge: 'bg-success'
+      //           },
+      //           2: {
+      //               text: 'Not Saved',
+      //               badge: 'bg-warning text-dark'
+      //           },
+      //           3: {
+      //               text: 'Not Created',
+      //               badge: 'bg-warning text-dark'
+      //           },
+      //           4: {
+      //               text: 'Not Allowed',
+      //               badge: 'bg-secondary'
+      //           },
+      //           5: {
+      //               text: 'In Progress',
+      //               badge: 'bg-info'
+      //           },
+      //           6: {
+      //               text: 'Already Created',
+      //               badge: 'bg-primary'
+      //           },
+      //           8: {
+      //               text: 'Price Changed',
+      //               badge: 'bg-danger'
+      //           },
+      //           9: {
+      //               text: 'Other Error',
+      //               badge: 'bg-danger'
+      //           }
+      //       };
 
-    //       return statusMap[status] || {
-    //           text: 'Unknown',
-    //           badge: 'bg-dark'
-    //       };
-    //   }
+      //       return statusMap[status] || {
+      //           text: 'Unknown',
+      //           badge: 'bg-dark'
+      //       };
+      //   }
 
 
       function getDetails(booking) {
-        console.log(booking);
-       
+          console.log(booking);
+
           const passengers = booking?.Passenger || [];
 
           const originBusDet = booking?.BoardingPointdetails || {};
@@ -594,8 +594,8 @@
                                     <br />
                                     Airline Toll Free: ${booking.AirlineTollFreeNo
                                     ? `<a href="tel:${booking.AirlineTollFreeNo}" class="text-primary fw-semibold">
-                                                  📞 ${booking.AirlineTollFreeNo}
-                                              </a>`
+                                                    📞 ${booking.AirlineTollFreeNo}
+                                                </a>`
                                     : '-'
                                     }
                                 </div>
@@ -664,39 +664,39 @@
 
 
                             ${passengers.map((p, index) => `
-                                      <div class="passenger-card">
+                                        <div class="passenger-card">
 
-                                          <div class="row align-items-center mb-2">
-                                              <div class="col-5 text-start">
-                                                  <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
-                                                  ${p.Nationality} <span class="badge bg-label-success">${booking.PNR || '-'}</span>
-                                                  ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
-                                                  <div class="contact-box w-50 text-start">
-                                                      <div class="mb-1"><b>Mobile:</b> ${p.ContactNo}</div>
-                                                      <div class="mb-1"><b>Email:</b> ${p.Email}</div>
-                                                      <div class="mb-1"><b>City:</b> ${p.City}, ${p.CountryCode}</div>
-                                                      <div class="mb-1"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
-                                                  </div>
-                                              </div>
+                                            <div class="row align-items-center mb-2">
+                                                <div class="col-5 text-start">
+                                                    <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
+                                                    ${p.Nationality} <span class="badge bg-label-success">${booking.PNR || '-'}</span>
+                                                    ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
+                                                    <div class="contact-box w-50 text-start">
+                                                        <div class="mb-1"><b>Mobile:</b> ${p.ContactNo}</div>
+                                                        <div class="mb-1"><b>Email:</b> ${p.Email}</div>
+                                                        <div class="mb-1"><b>City:</b> ${p.City}, ${p.CountryCode}</div>
+                                                        <div class="mb-1"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
+                                                    </div>
+                                                </div>
 
-                                              <div class="col-3 text-start">
-                                                  <h5>Invoice Details</h5>
-                                                  <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNo}</div>
-                                                  <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
-                                                  <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
-                                              </div>
-                                              <div class="col-4 text-end">
-                                                  <h5>Ticket Details</h5>
-                                                  ${p.Ticket ? `
+                                                <div class="col-3 text-start">
+                                                    <h5>Invoice Details</h5>
+                                                    <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNo}</div>
+                                                    <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
+                                                    <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
+                                                </div>
+                                                <div class="col-4 text-end">
+                                                    <h5>Ticket Details</h5>
+                                                    ${p.Ticket ? `
                                         <div class="mb-1"><b>Issued On: </b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
                                         <div class="mb-1">${(() => {
                                             const s = getTicketStatus(p.Ticket.Status);
                                             return `
-                                                      <div class="mb-1">
-                                                          <b>Status:</b>
-                                                          <span class="badge ${s.badge}">${s.text}</span>
-                                                      </div>
-                                                      `;
+                                                        <div class="mb-1">
+                                                            <b>Status:</b>
+                                                            <span class="badge ${s.badge}">${s.text}</span>
+                                                        </div>
+                                                        `;
                                             })()}
                                         </div>
                                         <div class="mb-1"><b>Validating Airline: </b> ${p.Ticket.ValidatingAirline}</div>
@@ -707,12 +707,12 @@
                                         </div>
                                         `}
 
-                                              </div>
-                                          </div>
+                                                </div>
+                                            </div>
 
-                                          <div class="seat-box">
-                                              <div class="seat-title">Seat Details</div>
-                                              ${p.SeatDynamic?.map(s => `
+                                            <div class="seat-box">
+                                                <div class="seat-title">Seat Details</div>
+                                                ${p.SeatDynamic?.map(s => `
                                     <div class="seat-row">
                                         <span>${s.Origin} → ${s.Destination}</span>
                                         <span class="seat-code">${s.Code}</span>
@@ -720,19 +720,19 @@
                                         <span>₹${s.Price}</span>
                                     </div>
                                     `).join('') || '<div class="seat-row">No seat selected</div>'
-                                              }
-                                          </div>
+                                                }
+                                            </div>
 
-                                          <div class="ssr-box mt-3">
-                                              <div class="seat-title">Special Service Requests (SSR)</div>
-                                              ${renderSSR(p.Ssr)}
-                                          </div>
-                                          <div class="baggage-allow-box mt-2">
-                                              <div class="seat-title">Baggage Allowance</div>
+                                            <div class="ssr-box mt-3">
+                                                <div class="seat-title">Special Service Requests (SSR)</div>
+                                                ${renderSSR(p.Ssr)}
+                                            </div>
+                                            <div class="baggage-allow-box mt-2">
+                                                <div class="seat-title">Baggage Allowance</div>
 
 
-                                              <div class="row text-muted mb-2">
-                                                  ${p.SegmentAdditionalInfo?.map(b => `
+                                                <div class="row text-muted mb-2">
+                                                    ${p.SegmentAdditionalInfo?.map(b => `
                                             <div class="col-4 text-start">
                                                 <b>Check-in :</b>
                                                 <span>${b.Baggage || '-'}</span>
@@ -746,23 +746,23 @@
                                                 <span>${b.Meal || 'Not Included'}</span>
                                             </div>
                                         `).join('')}
-                                              </div>
-                                          </div>
-                                          <hr />
-                                          <div class="fare-box">
-                                              <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
-                                              <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
-                                              <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
-                                              <div class="fare-total">
-                                                  Total: ₹${p.Fare.PublishedFare}
-                                              </div>
-                                          </div>
-                                          <div class="barcode text-center mt-3">
-                                              <canvas id="barcodeCanvas${index}"></canvas>
-                                          </div>
+                                                </div>
+                                            </div>
+                                            <hr />
+                                            <div class="fare-box">
+                                                <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
+                                                <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
+                                                <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
+                                                <div class="fare-total">
+                                                    Total: ₹${p.Fare.PublishedFare}
+                                                </div>
+                                            </div>
+                                            <div class="barcode text-center mt-3">
+                                                <canvas id="barcodeCanvas${index}"></canvas>
+                                            </div>
 
-                                      </div>
-                                      `).join('')}
+                                        </div>
+                                        `).join('')}
                         </div>
                         <div class="mt-4 p-3 bg-white rounded text-end">
                             <span class="text-success">
@@ -910,98 +910,98 @@
       }
 
 
-    //   function makeBarcode(i, barcode) {
-    //       const canvas = document.getElementById("barcodeCanvas" + i);
+      //   function makeBarcode(i, barcode) {
+      //       const canvas = document.getElementById("barcodeCanvas" + i);
 
-    //       if (!canvas) return;
+      //       if (!canvas) return;
 
-    //       try {
-    //           bwipjs.toCanvas(canvas, {
-    //               bcid: 'pdf417',
-    //               text: barcode,
-    //               scale: 2,
-    //               height: 8,
-    //               columns: 6,
-    //               rows: 3,
-    //               includetext: false,
-    //               paddingwidth: 10,
-    //               paddingheight: 10,
-    //           });
-    //       } catch (e) {
-    //           $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
-    //       }
-    //   }
+      //       try {
+      //           bwipjs.toCanvas(canvas, {
+      //               bcid: 'pdf417',
+      //               text: barcode,
+      //               scale: 2,
+      //               height: 8,
+      //               columns: 6,
+      //               rows: 3,
+      //               includetext: false,
+      //               paddingwidth: 10,
+      //               paddingheight: 10,
+      //           });
+      //       } catch (e) {
+      //           $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
+      //       }
+      //   }
 
-    //   function printTicket() {
-    //       const printContent = document.getElementById("ticketContent").innerHTML;
-    //       const originalContent = document.body.innerHTML;
+      //   function printTicket() {
+      //       const printContent = document.getElementById("ticketContent").innerHTML;
+      //       const originalContent = document.body.innerHTML;
 
-    //       document.body.innerHTML = printContent;
-    //       window.print();
-    //       document.body.innerHTML = originalContent;
+      //       document.body.innerHTML = printContent;
+      //       window.print();
+      //       document.body.innerHTML = originalContent;
 
-    //       location.reload();
-    //   }
+      //       location.reload();
+      //   }
 
-    //   $(document).on('click', '.generate-ticket', function() {
+      //   $(document).on('click', '.generate-ticket', function() {
 
-    //       const payload = $(this).data('payload');
-    //       let journeyType = $(this).data('journeytype');
+      //       const payload = $(this).data('payload');
+      //       let journeyType = $(this).data('journeytype');
 
-    //       swal({
-    //           title: "Generate Ticket?",
-    //           html: `
+      //       swal({
+      //           title: "Generate Ticket?",
+      //           html: `
     //             <p>Are you sure you want to generate the ticket?</p>
     //             <small class="text-muted">Once generated, it cannot be reversed.</small>
     //         `,
-    //           type: "warning",
-    //           showCancelButton: true,
-    //           confirmButtonText: "Yes, Generate",
-    //           cancelButtonText: "Cancel",
-    //           allowOutsideClick: false,
-    //           allowEscapeKey: false
-    //       }).then((result) => {
-    //           if (result.value || result === true) {
-    //               ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
-    //                   '2', 'table');
-    //           }
-    //       });
+      //           type: "warning",
+      //           showCancelButton: true,
+      //           confirmButtonText: "Yes, Generate",
+      //           cancelButtonText: "Cancel",
+      //           allowOutsideClick: false,
+      //           allowEscapeKey: false
+      //       }).then((result) => {
+      //           if (result.value || result === true) {
+      //               ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
+      //                   '2', 'table');
+      //           }
+      //       });
 
-    //   });
+      //   });
 
 
-    //   $(document).on('click', '.cancel-flight', function() {
+      //   $(document).on('click', '.cancel-flight', function() {
 
-    //       const bookingId = $(this).data('bookingidcancel');
-    //       const ticketStatus = $(this).data('ticketstatus');
+      //       const bookingId = $(this).data('bookingidcancel');
+      //       const ticketStatus = $(this).data('ticketstatus');
 
-    //       if (ticketStatus !== 'Successful') {
-    //           swal({
-    //               title: 'Ticket is Not Confirmed',
-    //               text: 'Cancellation is not allowed.',
-    //               type: 'warning',
-    //               confirmButtonText: 'OK',
-    //               allowOutsideClick: false,
-    //               allowEscapeKey: false
-    //           });
-    //           return;
-    //       }
+      //       if (ticketStatus !== 'Successful') {
+      //           swal({
+      //               title: 'Ticket is Not Confirmed',
+      //               text: 'Cancellation is not allowed.',
+      //               type: 'warning',
+      //               confirmButtonText: 'OK',
+      //               allowOutsideClick: false,
+      //               allowEscapeKey: false
+      //           });
+      //           return;
+      //       }
 
-    //       const encoded = btoa(JSON.stringify(bookingId));
-    //       swal({
-    //           title: 'Cancel this flight?',
-    //           text: 'Cancellation charges may apply.',
-    //           type: 'warning',
-    //           showCancelButton: true,
-    //           confirmButtonText: 'Yes, Cancel Flight',
-    //           allowOutsideClick: false,
-    //           allowEscapeKey: false,
-    //           cancelButtonText: 'No',
-    //       }).then((result) => {
-    //           if (result.value) {
-    //               window.location.href = `/flight/cancel/${encoded}`;
-    //           }
-    //       });
+      //       const encoded = btoa(JSON.stringify(bookingId));
+      //       swal({
+      //           title: 'Cancel this flight?',
+      //           text: 'Cancellation charges may apply.',
+      //           type: 'warning',
+      //           showCancelButton: true,
+      //           confirmButtonText: 'Yes, Cancel Flight',
+      //           allowOutsideClick: false,
+      //           allowEscapeKey: false,
+      //           cancelButtonText: 'No',
+      //       }).then((result) => {
+      //           if (result.value) {
+      //               window.location.href = `/flight/cancel/${encoded}`;
+      //           }
+      //       });
 
-    //   });
+      //   });
   </script>
