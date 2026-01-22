@@ -82,44 +82,65 @@
           border-radius: 14px !important;
       }
 
-      @media print {
+    @media print {
 
-          body {
-              margin: 0;
-              padding: 0;
-          }
+    /* Reset */
+    html, body {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: auto !important;
+        overflow: hidden !important;
+    }
 
-          .container {
-              max-width: 100% !important;
-              width: 100% !important;
-          }
+    /* Hide everything */
+    body * {
+        visibility: hidden !important;
+    }
 
-          .barcode-card {
-              width: 100% !important;
-              max-width: 100% !important;
-              box-shadow: none !important;
-              page-break-inside: avoid;
-              break-inside: avoid;
-          }
+    /* Show only ticket */
+    #ticketContent,
+    #ticketContent * {
+        visibility: visible !important;
+    }
 
-          .barcode-card .row {
-              display: flex !important;
-              flex-wrap: nowrap !important;
-          }
+    #ticketContent {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px !important;
+        margin: 0 !important;
+    }
 
-          .barcode-card .col-6 {
-              width: 50% !important;
-          }
+    /* Remove bootstrap spacing */
+    .container,
+    .card,
+    .ticket-card {
+        margin: 0 !important;
+        padding: 10px !important;
+        box-shadow: none !important;
+    }
 
-          .barcode-img {
-              max-width: 100% !important;
-              height: auto !important;
-          }
+    /* Prevent page break */
+    .ticket-card,
+    .passenger-card,
+    .barcode-card {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
 
-          img {
-              page-break-inside: avoid;
-          }
-      }
+    /* Hide UI */
+    .modal-header,
+    .modal-footer,
+    .btn,
+    .dropdown,
+    .pagination,
+    .card-datatable,
+    table {
+        display: none !important;
+    }
+}
+
 
       action-btn {
           background-color: rgba(49, 84, 255, 0.1);
@@ -691,14 +712,9 @@
         }
 
         function printTicket() {
-            const printContent = document.getElementById("ticketContent").innerHTML;
-            const originalContent = document.body.innerHTML;
-
-            document.body.innerHTML = printContent;
+           
             window.print();
-            document.body.innerHTML = originalContent;
-
-            location.reload();
+          
         }
 
       //   $(document).on('click', '.generate-ticket', function() {
