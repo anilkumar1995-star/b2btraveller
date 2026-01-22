@@ -246,7 +246,7 @@
           <div class="modal-content">
 
               <div class="modal-header border-0">
-                  <h4 class="modal-title fw-semibold">Flight Ticket</h4>
+                  <h4 class="modal-title fw-semibold">Bus Ticket</h4>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
 
@@ -540,408 +540,166 @@
       //   }
 
 
-      function getDetails(booking) {
-          console.log(booking);
+    function getDetails(booking) {
+    console.log(booking);
 
-          const passengers = booking?.Passenger || [];
+    const passengers = booking?.Passenger || [];
+    const board = booking?.BoardingPointdetails || {};
+    const drop = booking?.DroppingPointdetails || {};
 
-          const originBusDet = booking?.BoardingPointdetails || {};
-          const dropBusDet = booking?.DroppingPointdetails || {};
+    let html = `
+    <div class="container">
 
-          const departTime = booking?.DepartureTime;
-          const arrivalTime = booking?.ArrTime;
+        <!-- TICKET CARD -->
+        <div class="card ticket-card shadow-sm rounded-4 p-4 mb-3">
 
-          let html = '';
+            <!-- HEADER -->
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
+                <div>
+                    <h4 class="mb-0">${booking.TravelName}</h4>
+                    <div class="text-muted">${booking.BusType}</div>
+                </div>
+                <div class="text-end">
+                    <div class="fw-semibold">Ticket No</div>
+                    <div class="fs-5">${booking.TicketNo}</div>
+                </div>
+            </div>
 
-          html += `<div>
-                    <div class="bg-white p-4 rounded shadow-sm">
-
-                        <div class="d-flex justify-content-between mb-4">
-                            <img src="{{ asset('images/logo.png') }}" style="height:58px;">
-                            <div class="text-end">
-                                <div class="fw-bold">${booking.TravelName}</div>
-
-                                <div class="text-muted small">
-                                    ${booking.AirlineCode} (${segments[0]?.Airline?.AirlineName}) •
-                                    ${segments[0]?.Airline?.FlightNumber}
-                                </div>
-                                <div>
-                                    <h4> Booking ID: ${booking.BookingId || '-'}</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <h4>✈️ ${originBusDet.AirportName || booking.Origin} → ${dropBusDet.AirportName || booking.Destination}</h4>
-
-                        <div class="row ticket-route">
-
-
-                            <div class="col-sm-6 p-3 text-center ticket-route">
-                                <div class="mt-2 border rounded p-1  bg-label-warning">
-                                    <span> PNR :
-                                        <b>${booking.PNR || '-'}</b></span>
-                                    <br />
-                                    Invoice Number : <b>${booking.InvoiceNo || '-'}</b>
-                                </div>
-
-                                <br />
-                                <div>
-                                    ${booking.IsDomestic ? '<span class="text-success">DOMESTIC</span>' : '<span class="text-danger">INTERNATIONAL</span>'} |
-                                    ${booking.IsAutoReissuanceAllowed ? '<span class="text-success">Auto Reissuance Allowed</span>' :
-                                    '<span class="text-danger">Auto Reissuance Not Allowed</span>'} |
-                                    ${booking.IsSeatsBooked ? '<span class="text-success">Seat Booked</span>' : '<span class="text-danger">Seat Not Booked</span>'} | ${booking.IsLCC ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'}
-                                    |
-                                    ${booking.NonRefundable ? '<span class="text-danger">Non-Refundable</span>' : '<span class="text-success">Refundable</span>'}
-                                    <br />
-                                    Airline Toll Free: ${booking.AirlineTollFreeNo
-                                    ? `<a href="tel:${booking.AirlineTollFreeNo}" class="text-primary fw-semibold">
-                                                    📞 ${booking.AirlineTollFreeNo}
-                                                </a>`
-                                    : '-'
-                                    }
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 p-3 ticket-route">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div class="text-start">
-                                        <div class="city-code">${originBusDet.AirportCode || ''}</div>
-                                        <div class="city-name">${originBusDet.CityName || ''}</div>
-                                        <div>
-                                            ${departTime ? new Date(departTime).toLocaleDateString() : ''}<br>
-                                            <strong>
-                                                ${departTime ? new Date(departTime).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'}) : ''}
-                                            </strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <h5>${
-                                            lastSeg?.Duration
-                                            ? Math.floor(lastSeg?.Duration / 60) + 'h ' + (lastSeg?.Duration % 60) + 'm'
-                                            : '—'
-                                            }</h5>
-                                        <div class="route-line">
-                                            <span></span>
-                                            ✈️
-                                            <span></span>
-                                        </div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="city-code">${dropBusDet.AirportCode || ''}</div>
-                                        <div class="city-name">${dropBusDet.CityName || ''}</div>
-                                        <div class="text-end">
-                                            ${arrivalTime ? new Date(arrivalTime).toLocaleDateString() : ''}<br>
-                                            <strong>
-                                                ${arrivalTime ? new Date(arrivalTime).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'}) : ''}
-                                            </strong>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                                <hr>
-
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="text-start"><b>Aircraft:</b> ${firstSeg.Craft}</div>
-                                    <div class="text-enter"><b>Fare Type:</b> ${booking.FareType}</div>
-                                    <div class="text-end"><b>Fare Class:</b> ${booking.SupplierFareClasses}</div>
-                                </div>
-                            </div>
-                        </div>
-                    
-
-                        <div class="pt-3 passenger-section">
-
-                            <div class="passenger-head">
-                                PASSENGER DETAILS
-                            </div>
-
-
-                            ${passengers.map((p, index) => `
-                                        <div class="passenger-card">
-
-                                            <div class="row align-items-center mb-2">
-                                                <div class="col-5 text-start">
-                                                    <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
-                                                    ${p.Nationality} <span class="badge bg-label-success">${booking.PNR || '-'}</span>
-                                                    ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
-                                                    <div class="contact-box w-50 text-start">
-                                                        <div class="mb-1"><b>Mobile:</b> ${p.ContactNo}</div>
-                                                        <div class="mb-1"><b>Email:</b> ${p.Email}</div>
-                                                        <div class="mb-1"><b>City:</b> ${p.City}, ${p.CountryCode}</div>
-                                                        <div class="mb-1"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-3 text-start">
-                                                    <h5>Invoice Details</h5>
-                                                    <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNo}</div>
-                                                    <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
-                                                    <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
-                                                </div>
-                                                <div class="col-4 text-end">
-                                                    <h5>Ticket Details</h5>
-                                                    ${p.Ticket ? `
-                                        <div class="mb-1"><b>Issued On: </b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
-                                        <div class="mb-1">${(() => {
-                                            const s = getTicketStatus(p.Ticket.Status);
-                                            return `
-                                                        <div class="mb-1">
-                                                            <b>Status:</b>
-                                                            <span class="badge ${s.badge}">${s.text}</span>
-                                                        </div>
-                                                        `;
-                                            })()}
-                                        </div>
-                                        <div class="mb-1"><b>Validating Airline: </b> ${p.Ticket.ValidatingAirline}</div>
-                                        <div class="mb-1"><b>Ticket Id: </b> ${p.Ticket.TicketId}</div>
-                                        ` : `
-                                        <div class="mb-1 text-danger">
-                                            <b>Status:</b> Ticket not generated
-                                        </div>
-                                        `}
-
-                                                </div>
-                                            </div>
-
-                                            <div class="seat-box">
-                                                <div class="seat-title">Seat Details</div>
-                                                ${p.SeatDynamic?.map(s => `
-                                    <div class="seat-row">
-                                        <span>${s.Origin} → ${s.Destination}</span>
-                                        <span class="seat-code">${s.Code}</span>
-                                        <span class="seat-type">${s.Text}</span>
-                                        <span>₹${s.Price}</span>
-                                    </div>
-                                    `).join('') || '<div class="seat-row">No seat selected</div>'
-                                                }
-                                            </div>
-
-                                            <div class="ssr-box mt-3">
-                                                <div class="seat-title">Special Service Requests (SSR)</div>
-                                                ${renderSSR(p.Ssr)}
-                                            </div>
-                                            <div class="baggage-allow-box mt-2">
-                                                <div class="seat-title">Baggage Allowance</div>
-
-
-                                                <div class="row text-muted mb-2">
-                                                    ${p.SegmentAdditionalInfo?.map(b => `
-                                            <div class="col-4 text-start">
-                                                <b>Check-in :</b>
-                                                <span>${b.Baggage || '-'}</span>
-                                            </div>
-                                            <div class="col-4 text-center">
-                                                <b>Cabin :</b>
-                                                <span>${b.CabinBaggage || '-'}</span>
-                                            </div>
-                                            <div class="col-4 text-end">
-                                                <b>Meal :</b>
-                                                <span>${b.Meal || 'Not Included'}</span>
-                                            </div>
-                                        `).join('')}
-                                                </div>
-                                            </div>
-                                            <hr />
-                                            <div class="fare-box">
-                                                <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
-                                                <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
-                                                <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
-                                                <div class="fare-total">
-                                                    Total: ₹${p.Fare.PublishedFare}
-                                                </div>
-                                            </div>
-                                            <div class="barcode text-center mt-3">
-                                                <canvas id="barcodeCanvas${index}"></canvas>
-                                            </div>
-
-                                        </div>
-                                        `).join('')}
-                        </div>
-                        <div class="mt-4 p-3 bg-white rounded text-end">
-                            <span class="text-success">
-                                You have paid <h4>INR ${booking?.Fare?.PublishedFare || '-'}</h4>
-                            </span>
-                        </div>
-
-                        <div class="ticket-route">
-
-                            <div class="row g-0">
-
-                                <div class="col-sm-9 border-end">
-
-                                    <div class="p-2 px-3 fw-semibold text-white" style="background:#d7261e; border-radius:8px 8px 0 0;">
-                                        Items not allowed in the aircraft
-                                    </div>
-
-                                    <div class="p-3">
-                                        <div class="d-flex flex-wrap gap-4">
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/lighter.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">LIGHTERS,<br>MATCHSTICKS</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:120px;">
-                                                <img src="{{ asset('/images/restricted/flame.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">FLAMMABLE<br>LIQUIDS</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/toxic.png') }}" style="height:50px;">
-                                                <div class="mt-1">TOXIC</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/corrosive.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">CORROSIVES</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/paper.png') }}" style="height:50px;">
-                                                <div class="mt-1">PEPPER<br>SPRAY</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:120px;">
-                                                <img src="{{ asset('/images/restricted/gas.png') }}" style="height:50px;">
-                                                <div class="mt-1">FLAMMABLE<br>GAS</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/cigrate.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">E-CIGARETTE</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:120px;">
-                                                <img src="{{ asset('/images/restricted/infection.png') }}" style="height:50px;">
-                                                <div class="mt-1">INFECTIOUS<br>SUBSTANCES</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:130px;">
-                                                <img src="{{ asset('/images/restricted/redio.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">RADIOACTIVE<br>MATERIALS</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:130px;">
-                                                <img src="{{ asset('/images/restricted/explosive.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">EXPLOSIVES<br>AMMUNITION</div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-3">
-
-                                    <div class="p-2 fw-semibold text-white text-center"
-                                        style="background:#f8a900; border-radius:8px 8px 0 0;">
-                                        Items allowed only<br>in Hand Baggage
-                                    </div>
-
-                                    <div class="p-4 text-center">
-
-                                        <div class="mb-4">
-                                            <img src="{{ asset('/images/restricted/lithium.png') }}" style="height:50px;">
-                                            <div class="mt-1">LITHIUM<br>BATTERIES</div>
-                                        </div>
-
-                                        <div>
-                                            <img src="{{ asset('/images/restricted/powerbank.png') }}" style="height:50px;">
-                                            <div class="mt-1">POWER<br>BANKS</div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        `;
-
-
-          html += `<div class="rticket-route mt-4 ticket-route">
-                            <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
-                                <div class="fw-semibold ">
-                                    🪶 Fare Rules
-                                </div>
-                            </div>
-                            <div class="p-3" style="background:#e8ffec; font-size:14px;">`;
-
-          booking.FareRules.forEach(r => {
-              html += `
-                                <div class="mb-3">
-                                    <b>${r.Origin} → ${r.Destination}</b>
-                                    <div class="small">${r.FareRuleDetail}</div>
-                                </div>`;
-          });
-
-          html += `
-                            </div>
-                        </div>
-
-                        <div class="ticket-route mt-4" style="border-left:4px solid #c2c2c2;">
-                            <h6 class="fw-semibold my-3">IMPORTANT INFORMATION</h6>
-                            <ul class="">
-                                <li>Reach airport 3 hours before departure</li>
-                                <li>Carry valid government ID</li>
-                                <li>Do not share OTP or CVV</li>
-                            </ul>
+            <!-- ROUTE -->
+            <div class="ticket-route p-3 mb-3">
+                <div class="row align-items-center text-center">
+                    <div class="col-md-4">
+                        <div class="city-code">${booking.Origin}</div>
+                        <div class="city-name">${board.CityPointName || ''}</div>
+                        <div class="fw-semibold">
+                            ${board.CityPointTime ? new Date(board.CityPointTime).toLocaleString() : '-'}
                         </div>
                     </div>
-                </div>`;
 
-          $('#ticketContent').html(html);
+                    <div class="col-md-4">
+                        <div class="route-line justify-content-center">
+                            <span></span> 🚌 <span></span>
+                        </div>
+                    </div>
 
-          setTimeout(() => {
-              passengers.forEach((p, index) => {
-                  let barcode = booking.PNR;
-                  if (p.BarcodeDetails && p.BarcodeDetails.Barcode && p.BarcodeDetails.Barcode.length >
-                      0) {
-                      barcode = p.BarcodeDetails.Barcode[0].Content ?? "N/A";
-                  }
-                  makeBarcode(index, barcode);
-              });
-          }, 100);
-      }
+                    <div class="col-md-4">
+                        <div class="city-code">${booking.Destination}</div>
+                        <div class="city-name">${drop.CityPointName || ''}</div>
+                        <div class="fw-semibold">
+                            ${booking.ArrivalTime ? new Date(booking.ArrivalTime).toLocaleString() : '-'}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOOKING INFO -->
+            <div class="row text-center mb-3">
+                <div class="col">
+                    <b>Seats</b><br>${booking.NoOfSeats}
+                </div>
+                <div class="col">
+                    <b>Status</b><br>
+                    <span class="badge bg-success">Confirmed</span>
+                </div>
+                <div class="col">
+                    <b>Invoice</b><br>${booking.InvoiceNumber}
+                </div>
+                <div class="col">
+                    <b>Amount</b><br>₹${booking.InvoiceAmount}
+                </div>
+            </div>
+
+            <!-- PASSENGERS -->
+            <div class="passenger-section p-3">
+                <div class="passenger-head">Passenger Details</div>
+
+                ${passengers.map((p, i) => `
+                    <div class="passenger-card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <div class="passenger-name">
+                                    ${p.Title} ${p.FirstName || ''}
+                                    ${p.LeadPassenger ? '<span class="lead-pax">Lead</span>' : ''}
+                                </div>
+                                <div class="text-muted">
+                                    Age: ${p.Age} | ${p.Gender == 1 ? 'Male' : 'Female'}
+                                </div>
+                            </div>
+
+                            <div class="barcode-card p-2 text-center">
+                                <canvas id="barcodeCanvas${i}" class="barcode-img"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+
+            <!-- CANCELLATION -->
+            <div class="mt-4">
+                <h6 class="fw-semibold">Cancellation Policy</h6>
+                ${booking.CancelPolicy?.map(c => `
+                    <div class="small text-muted">
+                        ${c.PolicyString} — <b>${c.CancellationCharge}%</b>
+                    </div>
+                `).join('')}
+            </div>
+
+            <!-- PAYMENT -->
+            <div class="mt-4 p-3 bg-light rounded text-end">
+                <div class="fw-semibold">Total Paid</div>
+                <h4 class="text-success mb-0">
+                    ₹${booking.Price?.PublishedPriceRoundedOff}
+                </h4>
+            </div>
+
+        </div>
+    </div>
+    `;
+
+    $('#ticketContent').html(html);
+
+    // BARCODE
+    setTimeout(() => {
+        passengers.forEach((p, i) => {
+            makeBarcode(i, booking.TicketNo + '-' + (i + 1));
+        });
+    }, 100);
+}
 
 
-      //   function makeBarcode(i, barcode) {
-      //       const canvas = document.getElementById("barcodeCanvas" + i);
 
-      //       if (!canvas) return;
+        function makeBarcode(i, barcode) {
+            const canvas = document.getElementById("barcodeCanvas" + i);
 
-      //       try {
-      //           bwipjs.toCanvas(canvas, {
-      //               bcid: 'pdf417',
-      //               text: barcode,
-      //               scale: 2,
-      //               height: 8,
-      //               columns: 6,
-      //               rows: 3,
-      //               includetext: false,
-      //               paddingwidth: 10,
-      //               paddingheight: 10,
-      //           });
-      //       } catch (e) {
-      //           $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
-      //       }
-      //   }
+            if (!canvas) return;
 
-      //   function printTicket() {
-      //       const printContent = document.getElementById("ticketContent").innerHTML;
-      //       const originalContent = document.body.innerHTML;
+            try {
+                bwipjs.toCanvas(canvas, {
+                    bcid: 'pdf417',
+                    text: barcode,
+                    scale: 2,
+                    height: 8,
+                    columns: 6,
+                    rows: 3,
+                    includetext: false,
+                    paddingwidth: 10,
+                    paddingheight: 10,
+                });
+            } catch (e) {
+                $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
+            }
+        }
 
-      //       document.body.innerHTML = printContent;
-      //       window.print();
-      //       document.body.innerHTML = originalContent;
+        function printTicket() {
+            const printContent = document.getElementById("ticketContent").innerHTML;
+            const originalContent = document.body.innerHTML;
 
-      //       location.reload();
-      //   }
+            document.body.innerHTML = printContent;
+            window.print();
+            document.body.innerHTML = originalContent;
+
+            location.reload();
+        }
 
       //   $(document).on('click', '.generate-ticket', function() {
 
