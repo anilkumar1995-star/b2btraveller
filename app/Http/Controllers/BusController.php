@@ -330,7 +330,7 @@ class BusController extends Controller
         return response()->json($response);
     }
 
-     public function cancelPage($id)
+    public function cancelPage($id)
     {
 
         $decoded = json_decode(base64_decode($id), true);
@@ -353,8 +353,19 @@ class BusController extends Controller
         $service = new BusService();
         $response = $service->cancelbus($request->all());
 
-        dd($request, $response);
-
+        if ($response['status'] == 'success') {
+            $up = [
+                'booking_status' => 'Cancelled',
+                'cancel_req' => $request->all(),
+                'cancel_res' =>$response,
+                'change_request_id' => $response['data']['Response'][0]['ChangeRequestId'],
+                'credit_note_no' => $response['data']['Response'][0]['CreditNoteNo'],
+                'refunded_amount' => $response['data']['Response'][0]['RefundedAmount'],
+                'cancellation_charge' => $response['data']['Response'][0]['CancellationCharge'],
+                'cancelled_at' => now(),
+            ];
+            DB::table('bus_bookings')->where('bus_id', $request->payload['BusId'])->update($up);
+        }
 
         return response()->json($response);
     }
