@@ -243,6 +243,9 @@
                                           <a class="dropdown-item cancel-bus" href="javascript:void(0)"
                                               data-bookingidcancel="{{ $b->booking_id_api }}"
                                               data-departuretime="{{ $b->departure_time }}"
+                                              data-changereqid="{{ $b->change_request_id }}"
+                                              data-creditnoteno="{{ $b->credit_note_no }}"
+                                              data-refundamt="{{ $b->refunded_amount }}"
                                               data-ticketstatus="{{ $b->booking_status }}">
                                               🚌 Cancel Bus
                                           </a>
@@ -580,8 +583,8 @@
                                     <br />
                                     Bus Toll Free: ${booking.BoardingPointdetails?.CityPointContactNumber
                                     ? `<a href="tel:${booking.BoardingPointdetails?.CityPointContactNumber}" class="text-primary fw-semibold">
-                                                                📞 ${booking.BoardingPointdetails?.CityPointContactNumber}
-                                                            </a>`
+                                                                  📞 ${booking.BoardingPointdetails?.CityPointContactNumber}
+                                                              </a>`
                                     : '-'
                                     }
                                 </div>
@@ -650,39 +653,39 @@
 
 
                             ${passengers.map((p, index) => `
-                                                    <div class="passenger-card">
+                                                      <div class="passenger-card">
 
-                                                        <div class="row align-items-center mb-2">
-                                                            <div class="col-5 text-start">
-                                                                <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
-                                                                <span class="badge bg-label-success">${booking.TravelOperatorPNR || '-'}</span>
-                                                                ${p.LeadPassenger ? '<span class="lead-pax">Lead</span>' : ''}
-                                                                <div class="contact-box w-50 text-start">
-                                                                    <div class="mb-1"><b>Mobile:</b> ${p.Phoneno}</div>
-                                                                    <div class="mb-1"><b>Email:</b> ${p.Email}</div>
-                                                                    <div class="mb-1"><b>City:</b> ${p.City || '-'}, ${p.State || '-'}</div>
-                                                                    <div class="mb-1"><b>Age:</b> ${p.Age}</div>
-                                                                </div>
-                                                            </div>
+                                                          <div class="row align-items-center mb-2">
+                                                              <div class="col-5 text-start">
+                                                                  <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
+                                                                  <span class="badge bg-label-success">${booking.TravelOperatorPNR || '-'}</span>
+                                                                  ${p.LeadPassenger ? '<span class="lead-pax">Lead</span>' : ''}
+                                                                  <div class="contact-box w-50 text-start">
+                                                                      <div class="mb-1"><b>Mobile:</b> ${p.Phoneno}</div>
+                                                                      <div class="mb-1"><b>Email:</b> ${p.Email}</div>
+                                                                      <div class="mb-1"><b>City:</b> ${p.City || '-'}, ${p.State || '-'}</div>
+                                                                      <div class="mb-1"><b>Age:</b> ${p.Age}</div>
+                                                                  </div>
+                                                              </div>
 
-                                                            <div class="col-3 text-start">
-                                                                <h5>Invoice Details</h5>
-                                                                <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNumber}</div>
-                                                                <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
-                                                                <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
-                                                            </div>
-                                                            <div class="col-4 text-end">
-                                                                <h5>Ticket Details</h5>
-                                                                ${booking.TicketNo ? `
+                                                              <div class="col-3 text-start">
+                                                                  <h5>Invoice Details</h5>
+                                                                  <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNumber}</div>
+                                                                  <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
+                                                                  <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
+                                                              </div>
+                                                              <div class="col-4 text-end">
+                                                                  <h5>Ticket Details</h5>
+                                                                  ${booking.TicketNo ? `
                                                             <div class="mb-1"><b>Ticket No: </b> ${booking?.TicketNo}</div>
                                                             <div class="mb-1">${(() => {
                                                                 const s = getTicketStatus(booking.Status);
                                                                 return `
-                                                                            <div class="mb-1">
-                                                                                <b>Status:</b>
-                                                                                <span class="badge ${s.badge}">${s.text}</span>
-                                                                            </div>
-                                                                            `;
+                                                                              <div class="mb-1">
+                                                                                  <b>Status:</b>
+                                                                                  <span class="badge ${s.badge}">${s.text}</span>
+                                                                              </div>
+                                                                              `;
                                                                 })()}
                                                             </div>` : `
                                         <div class="mb-1 text-danger">
@@ -690,13 +693,13 @@
                                         </div>
                                         `}
 
-                                                            </div>
-                                                        </div>
+                                                              </div>
+                                                          </div>
 
-                                                        
-                                                        <div class="seat-box">
-                                                            <div class="seat-title">Seat Details</div>
-                                                            ${p.Seat ? `
+                                                          
+                                                          <div class="seat-box">
+                                                              <div class="seat-title">Seat Details</div>
+                                                              ${p.Seat ? `
                                                         <div class="seat-row d-flex justify-content-between">
                                                             <span>${p.Seat.IsLadiesSeat ? "Ladies" : p.Seat?.IsMalesSeat ? "Male" : 'Common'} and ${p.Seat.IsUpper ? 'Upper Seat' : 'Lower Seat'}</span>
                                                             <span class="seat-code">Seat Name: ${p.Seat.SeatName} | Seat Id: ${p.Seat.SeatId}</span>
@@ -707,24 +710,24 @@
                                                         
                                                         </div>
                                                     ` : 
-                                                            '<div class="seat-row">No seat selected</div>'}
-                                                        </div>
+                                                              '<div class="seat-row">No seat selected</div>'}
+                                                          </div>
 
-                                                        <hr />
-                                                        <div class="fare-box">
-                                                            <div><b>Base Fare:</b> ₹${p?.Seat.Price.BasePrice}</div>
-                                                            <div><b>Tax:</b> ₹${p?.Seat.Price.Tax}</div>
-                                                            <div><b>Seat Charges:</b> ₹${p?.Seat.SeatFare}</div>
-                                                            <div class="fare-total">
-                                                                Total: ₹${p?.Seat.Price.PublishedPrice}
-                                                            </div>
-                                                        </div>
-                                                        <div class="barcode text-center mt-3">
-                                                            <canvas id="barcodeCanvas${index}"></canvas>
-                                                        </div>
+                                                          <hr />
+                                                          <div class="fare-box">
+                                                              <div><b>Base Fare:</b> ₹${p?.Seat.Price.BasePrice}</div>
+                                                              <div><b>Tax:</b> ₹${p?.Seat.Price.Tax}</div>
+                                                              <div><b>Seat Charges:</b> ₹${p?.Seat.SeatFare}</div>
+                                                              <div class="fare-total">
+                                                                  Total: ₹${p?.Seat.Price.PublishedPrice}
+                                                              </div>
+                                                          </div>
+                                                          <div class="barcode text-center mt-3">
+                                                              <canvas id="barcodeCanvas${index}"></canvas>
+                                                          </div>
 
-                                                    </div>
-                                                    `).join('')}
+                                                      </div>
+                                                      `).join('')}
                         </div>
                         <div class="mt-4 p-3 bg-white rounded text-end">
                             <span class="text-success">
@@ -851,10 +854,10 @@
                             <h6 class="fw-semibold my-3">Cancellation Policy</h6>
                             <div class="mt-4">
                                 ${booking.CancelPolicy?.map(c => `
-                                                  <div class="small text-muted">
-                                                      ${c.PolicyString} — <b>${c.CancellationCharge} ${c.CancellationChargeType == '1' ? "Amount" : '%'}</b>
-                                                  </div>
-                                              `).join('')}
+                                                    <div class="small text-muted">
+                                                        ${c.PolicyString} — <b>${c.CancellationCharge} ${c.CancellationChargeType == '1' ? "Amount" : '%'}</b>
+                                                    </div>
+                                                `).join('')}
                             </div>
                         </div>
                         <div class="ticket-route mt-4 p-2" style="border-left:4px solid #c2c2c2;">
@@ -939,13 +942,19 @@
           const bookingId = $(this).data('bookingidcancel');
           const depTimeStr = $(this).data('departuretime');
           const ticketStatus = $(this).data('ticketstatus');
+          const changereqid = $(this).data('changereqid');
+          const creditno = $(this).data('creditnoteno');
+          const amt = $(this).data('refundamt');
 
           const depTime = new Date(depTimeStr.replace(' ', 'T'));
           const now = new Date();
           if (ticketStatus == 'Cancelled') {
               swal({
                   title: 'Ticket Already Cancelled',
-                  text: 'No further action is allowed.',
+                  html: `Refund Amount: ${amt} 
+                  <br> Cancel Request id: ${changereqid}
+                  <br> Credit Note No: ${creditno}
+                  <br/>No further action is allowed.`,
                   type: 'warning',
                   confirmButtonText: 'OK, Got It',
                   allowOutsideClick: false,
