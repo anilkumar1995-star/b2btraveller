@@ -128,7 +128,7 @@
             }
 
             const payload = {
-                BookingId: {{ $booking->bus_id }},
+                BusId: {{ $booking->bus_id }},
                 RequestType: Number(requestType),
                 Remarks: remarks,
             };
@@ -180,14 +180,18 @@
                                 </p>
 
                                 <p>
-                                    <span>Ticket ID:</span>
-                                    <strong class="text-success">${response?.TicketId ?? '-'}</strong>
+                                    <span>Refund Amount:</span>
+                                    <strong class="text-success">${response?.RefundedAmount ?? '0'}</strong>
+                                </p>
+                                <p>
+                                    <span>Credit Note No:</span>
+                                    <strong class="text-success">${response?.CreditNoteNo ?? '-'}</strong>
                                 </p>
 
                                 <p>
-                                    <span>Status:</span>
+                                    <span>Message:</span>
                                     <strong class="text-success">
-                                        ${res?.message ?? 'Successful'}
+                                        ${res?.message ?? 'Bus Cancellation Successfully'}
                                     </strong>
                                 </p>
                             </div>

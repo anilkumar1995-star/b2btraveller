@@ -397,7 +397,7 @@ class BusService
              $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
-                "BusId" => $data['payload']['BookingId'],
+                "BusId" => $data['payload']['BusId'],
                 "RequestType" => $data['payload']['RequestType'],
                 "Remarks" => $data['payload']['Remarks'],
             ];
@@ -406,7 +406,7 @@ class BusService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = BusStaticResponseHelper::bookingCancelStaticResponse();
+                $response = BusStaticResponseHelper::busCancelResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "cancel_bus", "");
                 $response = $response['response'];

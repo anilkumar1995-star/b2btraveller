@@ -353,6 +353,9 @@ class BusController extends Controller
         $service = new BusService();
         $response = $service->cancelbus($request->all());
 
+        dd($request, $response);
+
+
         return response()->json($response);
     }
 }
