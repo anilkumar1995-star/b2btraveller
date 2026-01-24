@@ -163,6 +163,9 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
     Route::get('booking-list-failed', [BusController::class, 'bookingListFailed'])->name('flight.bookingListFailed');
 
     Route::post('booking-view', [BusController::class, 'viewTicket'])->name('flight.booking.view');
+
+     Route::get('cancel/{id}', [BusController::class, 'cancelPage']);
+    Route::post('cancel-submit', [BusController::class, 'submitCancellation']);
 });
 
 Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {

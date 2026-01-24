@@ -329,4 +329,30 @@ class BusController extends Controller
 
         return response()->json($response);
     }
+
+     public function cancelPage($id)
+    {
+
+        $decoded = json_decode(base64_decode($id), true);
+
+        if (!$decoded) {
+            abort(404, 'Invalid Data');
+        }
+
+        $booking = DB::table('bus_bookings')->where('booking_id_api', $decoded)->first();
+
+        if (!$booking) {
+            abort(404, 'Booking not found');
+        }
+
+        return view('bus.cancel', compact('booking'));
+    }
+
+    public function submitCancellation(Request $request)
+    {
+        $service = new BusService();
+        $response = $service->cancelbus($request->all());
+
+        return response()->json($response);
+    }
 }

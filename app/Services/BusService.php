@@ -54,6 +54,8 @@ class BusService
             return $this->baseUrl . '/v1/service/traveller/bus/book';
         } else if ($method == 'bookingDetails') {
             return $this->baseUrl . '/v1/service/traveller/bus/booking/details';
+        } else if ($method == 'cancelBus') {
+            return $this->baseUrl . '/v1/service/traveller/bus/booking/cancel';
         }
         return "";
     }
@@ -137,13 +139,13 @@ class BusService
 
 
             if (isset($response['status']) && strtoupper($response['status']) == 'SUCCESS') {
-                return ['status' => 'success', 'message' => "Flight search successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Bus search successfully", 'data' => $response['data']];
             } else {
 
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Flight search failed'
+                    'message' => $response['message'] ?? 'Bus search failed'
                 ];
             }
         } catch (Exception $e) {
@@ -387,58 +389,48 @@ class BusService
         }
     }
 
-    // public function cancelflight($data)
-    // {
-    //     try {
-    //         $token = $this->authService->getToken();
+    public function cancelbus($data)
+    {
+        try {
+            $token = $this->authService->getToken();
 
-    //          $payload = [
-    //             "EndUserIp" => $this->ip,
-    //             "TokenId" => $token,
-    //             "BookingId" => $data['payload']['BookingId'],
-    //             "RequestType" => $data['payload']['RequestType'],
-    //             "CancellationType" => $data['payload']['CancellationType'],
-    //             "Remarks" => $data['payload']['Remarks'],
-    //         ];
+             $payload = [
+                "EndUserIp" => $this->ip,
+                "TokenId" => $token,
+                "BusId" => $data['payload']['BookingId'],
+                "RequestType" => $data['payload']['RequestType'],
+                "Remarks" => $data['payload']['Remarks'],
+            ];
 
-    //         if ($data['payload']['RequestType'] == 2) {
-    //             if (!empty($data['payload']['TicketId'])) {
-    //                 $payload['TicketId'] = $data['payload']['TicketId'];
-    //             } else {
-    //                 $payload['Sectors'] = $data['payload']['Sectors'][0];
-    //             }
-    //         }
+            $url = $this->setFullUrl('cancelBus');
 
-    //         $url = $this->setFullUrl('cancelFlight');
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = BusStaticResponseHelper::bookingCancelStaticResponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "cancel_bus", "");
+                $response = $response['response'];
+            }
 
-    //         $baseUrl = url('/');
-    //         if ($baseUrl === 'http://127.0.0.1:8000') {
-    //             $response = StaticResponseHelper::bookingCancelStaticResponse();
-    //             // $response = StaticResponseHelper::bookingFailedCancelStaticResponse();
-    //         } else {
-    //             $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "booking_details", "");
-    //             $response = $response['response'];
-    //         }
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
 
-    //         if (is_string($response)) {
-    //             $response = json_decode(($response), true);
-    //         }
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
 
-    //         if (isset($response['data']) && is_string($response['data'])) {
-    //             $response['data'] = json_decode($response['data'], true);
-    //         }
-
-    //         if (isset($response['status']) && strtolower($response['status']) == 'success') {
-    //             return ['status' => 'success', 'message' => "Flight Cancellation successfully", 'data' => $response['data']];
-    //         } else {
-    //             return [
-    //                 'code' => $response['code'] ?? '0x0202',
-    //                 'status' => $response['status'] ?? 'failed',
-    //                 'message' => $response['message'] ?? 'Flight Cancellation failed'
-    //             ];
-    //         }
-    //     } catch (Exception $e) {
-    //         return ['status' => 'ERROR', 'message' => $e->getMessage()];
-    //     }
-    // }
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Bus Cancellation successfully", 'data' => $response['data']];
+            } else {
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Bus Cancellation failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
+    }
 }

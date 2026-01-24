@@ -973,31 +973,31 @@
           location.reload();
       }
 
-      $(document).on('click', '.generate-ticket', function() {
+    //   $(document).on('click', '.generate-ticket', function() {
 
-          const payload = $(this).data('payload');
-          let journeyType = $(this).data('journeytype');
+    //       const payload = $(this).data('payload');
+    //       let journeyType = $(this).data('journeytype');
 
-          swal({
-              title: "Generate Ticket?",
-              html: `
-                <p>Are you sure you want to generate the ticket?</p>
-                <small class="text-muted">Once generated, it cannot be reversed.</small>
-            `,
-              type: "warning",
-              showCancelButton: true,
-              confirmButtonText: "Yes, Generate",
-              cancelButtonText: "Cancel",
-              allowOutsideClick: false,
-              allowEscapeKey: false
-          }).then((result) => {
-              if (result.value || result === true) {
-                  ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
-                      '2', 'table');
-              }
-          });
+    //       swal({
+    //           title: "Generate Ticket?",
+    //           html: `
+    //             <p>Are you sure you want to generate the ticket?</p>
+    //             <small class="text-muted">Once generated, it cannot be reversed.</small>
+    //         `,
+    //           type: "warning",
+    //           showCancelButton: true,
+    //           confirmButtonText: "Yes, Generate",
+    //           cancelButtonText: "Cancel",
+    //           allowOutsideClick: false,
+    //           allowEscapeKey: false
+    //       }).then((result) => {
+    //           if (result.value || result === true) {
+    //               ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
+    //                   '2', 'table');
+    //           }
+    //       });
 
-      });
+    //   });
 
 
       $(document).on('click', '.cancel-flight', function() {
