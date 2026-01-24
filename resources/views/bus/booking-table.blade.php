@@ -589,7 +589,7 @@
             <!-- ROUTE -->
             <div class="ticket-route p-3 mb-3">
                 <div class="row align-items-center text-center">
-                    <div class="col-md-4">
+                    <div class="col-sm-4">
                         <div class="city-code">${booking.Origin}</div>
                         <div class="city-name">${board.CityPointName || ''}</div>
                         <div class="fw-semibold">
@@ -597,13 +597,13 @@
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-sm-4">
                         <div class="route-line justify-content-center">
                             <span></span> 🚌 <span></span>
                         </div>
                     </div>
 
-                    <div class="col-md-4">
+                    <div class="col-sm-4">
                         <div class="city-code">${booking.Destination}</div>
                         <div class="city-name">${drop.CityPointName || ''}</div>
                         <div class="fw-semibold">
