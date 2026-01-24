@@ -82,64 +82,65 @@
           border-radius: 14px !important;
       }
 
-    @media print {
+      @media print {
 
-    /* Reset */
-    html, body {
-        margin: 0 !important;
-        padding: 0 !important;
-        height: auto !important;
-        overflow: hidden !important;
-    }
+          /* Reset */
+          html,
+          body {
+              margin: 0 !important;
+              padding: 0 !important;
+              height: auto !important;
+              overflow: hidden !important;
+          }
 
-    /* Hide everything */
-    body * {
-        visibility: hidden !important;
-    }
+          /* Hide everything */
+          body * {
+              visibility: hidden !important;
+          }
 
-    /* Show only ticket */
-    #ticketContent,
-    #ticketContent * {
-        visibility: visible !important;
-    }
+          /* Show only ticket */
+          #ticketContent,
+          #ticketContent * {
+              visibility: visible !important;
+          }
 
-    #ticketContent {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        padding: 10px !important;
-        margin: 0 !important;
-    }
+          #ticketContent {
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              padding: 10px !important;
+              margin: 0 !important;
+          }
 
-    /* Remove bootstrap spacing */
-    .container,
-    .card,
-    .ticket-card {
-        margin: 0 !important;
-        padding: 10px !important;
-        box-shadow: none !important;
-    }
+          /* Remove bootstrap spacing */
+          .container,
+          .card,
+          .ticket-card {
+              margin: 0 !important;
+              padding: 10px !important;
+              box-shadow: none !important;
+          }
 
-    /* Prevent page break */
-    .ticket-card,
-    .passenger-card,
-    .barcode-card {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-    }
+          /* Prevent page break */
+          .ticket-card,
+          .passenger-card,
+          .barcode-card {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
+          }
 
-    /* Hide UI */
-    .modal-header,
-    .modal-footer,
-    .btn,
-    .dropdown,
-    .pagination,
-    .card-datatable,
-    table {
-        display: none !important;
-    }
-}
+          /* Hide UI */
+          .modal-header,
+          .modal-footer,
+          .btn,
+          .dropdown,
+          .pagination,
+          .card-datatable,
+          table {
+              display: none !important;
+          }
+      }
 
 
       action-btn {
@@ -479,243 +480,431 @@
       //       }
       //   }
 
-      //   function renderSSR(ssrList = []) {
 
-      //       if (!ssrList.length) {
-      //           return `<div class="text-muted small">No special services selected</div>`;
-      //       }
+      function getTicketStatus(status) {
 
-      //       return ssrList.map(ssr => `
-    //             <div class="d-flex justify-content-between border-bottom py-1">
-    //                 <div>
-    //                     ${getSsrIcon(ssr.SsrCode)}
-    //                     <b>${ssr.SsrCode}</b>
-    //                     <div class="text-muted small">${ssr.Detail}</div>
-    //                 </div>
-    //                 <div class="fw-semibold">₹${ssr.Price || 0}</div>
-    //             </div>
-    //         `).join('');
-      //   }
+          // STRING STATUS (current case)
+          if (typeof status === 'string') {
+              if (status === 'OK') {
+                  return {
+                      text: 'Confirmed',
+                      badge: 'bg-success'
+                  };
+              }
+              return {
+                  text: status,
+                  badge: 'bg-danger'
+              };
+          }
 
+          // NUMBER STATUS (future / other APIs)
+          const statusMap = {
+              4: {
+                  text: 'Failed',
+                  badge: 'bg-danger'
+              },
+              2: {
+                  text: 'Confirmed',
+                  badge: 'bg-success'
+              },
+              3: {
+                  text: 'Cancelled',
+                  badge: 'bg-warning text-dark'
+              },
+              5: {
+                  text: 'Pending',
+                  badge: 'bg-warning text-dark'
+              },
+              1: {
+                  text: 'Tentative',
+                  badge: 'bg-secondary'
+              }
+          };
 
-      //   function getTicketStatus(status) {
-
-      //       // STRING STATUS (current case)
-      //       if (typeof status === 'string') {
-      //           if (status === 'OK') {
-      //               return {
-      //                   text: 'Confirmed',
-      //                   badge: 'bg-success'
-      //               };
-      //           }
-      //           return {
-      //               text: status,
-      //               badge: 'bg-danger'
-      //           };
-      //       }
-
-      //       // NUMBER STATUS (future / other APIs)
-      //       const statusMap = {
-      //           0: {
-      //               text: 'Failed',
-      //               badge: 'bg-danger'
-      //           },
-      //           1: {
-      //               text: 'Successful',
-      //               badge: 'bg-success'
-      //           },
-      //           2: {
-      //               text: 'Not Saved',
-      //               badge: 'bg-warning text-dark'
-      //           },
-      //           3: {
-      //               text: 'Not Created',
-      //               badge: 'bg-warning text-dark'
-      //           },
-      //           4: {
-      //               text: 'Not Allowed',
-      //               badge: 'bg-secondary'
-      //           },
-      //           5: {
-      //               text: 'In Progress',
-      //               badge: 'bg-info'
-      //           },
-      //           6: {
-      //               text: 'Already Created',
-      //               badge: 'bg-primary'
-      //           },
-      //           8: {
-      //               text: 'Price Changed',
-      //               badge: 'bg-danger'
-      //           },
-      //           9: {
-      //               text: 'Other Error',
-      //               badge: 'bg-danger'
-      //           }
-      //       };
-
-      //       return statusMap[status] || {
-      //           text: 'Unknown',
-      //           badge: 'bg-dark'
-      //       };
-      //   }
+          return statusMap[status] || {
+              text: 'Unknown',
+              badge: 'bg-dark'
+          };
+      }
 
 
-    function getDetails(booking) {
-    console.log(booking);
+      function getDetails(booking) {
+          console.log(booking);
+          const passengers = booking?.Passenger || [];
 
-    const passengers = booking?.Passenger || [];
-    const board = booking?.BoardingPointdetails || {};
-    const drop = booking?.DroppingPointdetails || {};
+          const boardingDet = booking?.BoardingPointdetails || {};
+          const dropingDet = booking?.DroppingPointdetails || {};
 
-    let html = `
-    <div class="container">
 
-        <!-- TICKET CARD -->
-        <div class="card ticket-card shadow-sm rounded-4 p-4 mb-3">
+          let html = '';
 
-            <!-- HEADER -->
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
-                <div>
-                    <h4 class="mb-0">${booking.TravelName}</h4>
-                    <div class="text-muted">${booking.BusType}</div>
-                </div>
-                <div class="text-end">
-                    <div class="fw-semibold">Ticket No</div>
-                    <div class="fs-5">${booking.TicketNo}</div>
-                </div>
-            </div>
+          html += `<div>
+                    <div class="bg-white p-4 rounded shadow-sm">
 
-            <!-- ROUTE -->
-            <div class="ticket-route p-3 mb-3">
-                <div class="row align-items-center text-center">
-                    <div class="col-sm-4">
-                        <div class="city-code">${booking.Origin}</div>
-                        <div class="city-name">${board.CityPointName || ''}</div>
-                        <div class="fw-semibold">
-                            ${board.CityPointTime ? new Date(board.CityPointTime).toLocaleString() : '-'}
-                        </div>
-                    </div>
+                        <div class="d-flex justify-content-between mb-4">
+                            <img src="{{ asset('images/logo.png') }}" style="height:58px;">
+                            <div class="text-end">
+                                <div class="fw-bold">Bus Ticket</div>
 
-                    <div class="col-sm-4">
-                        <div class="route-line justify-content-center">
-                            <span></span> 🚌 <span></span>
-                        </div>
-                    </div>
-
-                    <div class="col-sm-4">
-                        <div class="city-code">${booking.Destination}</div>
-                        <div class="city-name">${drop.CityPointName || ''}</div>
-                        <div class="fw-semibold">
-                            ${booking.ArrivalTime ? new Date(booking.ArrivalTime).toLocaleString() : '-'}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BOOKING INFO -->
-            <div class="row text-center mb-3">
-                <div class="col">
-                    <b>Seats</b><br>${booking.NoOfSeats}
-                </div>
-                <div class="col">
-                    <b>Status</b><br>
-                    <span class="badge bg-success">Confirmed</span>
-                </div>
-                <div class="col">
-                    <b>Invoice</b><br>${booking.InvoiceNumber}
-                </div>
-                <div class="col">
-                    <b>Amount</b><br>₹${booking.InvoiceAmount}
-                </div>
-            </div>
-
-            <!-- PASSENGERS -->
-            <div class="passenger-section p-3">
-                <div class="passenger-head">Passenger Details</div>
-
-                ${passengers.map((p, i) => `
-                    <div class="passenger-card">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="passenger-name">
-                                    ${p.Title} ${p.FirstName || ''}
-                                    ${p.LeadPassenger ? '<span class="lead-pax">Lead</span>' : ''}
+                                <div class="text-muted small">
+                                    ${booking.TravelName} •
+                                    ${booking.ServiceName}
+                                    ${booking.BusType}
                                 </div>
-                                <div class="text-muted">
-                                    Age: ${p.Age} | ${p.Gender == 1 ? 'Male' : 'Female'}
+                                <div>
+                                    <h4> Ticket No: ${booking.TicketNo || '-'}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <h4>🚌 ${booking.Origin} → ${booking.Destination}</h4>
+
+                        <div class="row ticket-route">
+
+
+                            <div class="col-sm-6 p-3 text-center ticket-route">
+                                <div class="mt-2 border rounded p-1  bg-label-warning">
+                                    <span> PNR :
+                                        <b>${booking.TravelOperatorPNR || '-'}</b></span>
+                                    <br />
+                                    Invoice Number : <b>${booking.InvoiceNumber || '-'}</b>
+                                </div>
+
+                                <br />
+                                <div>
+                                    ${booking.IsDomestic ? '<span class="text-success">DOMESTIC</span>' : '<span class="text-danger">INTERNATIONAL</span>'} |
+                                    <span class="text-success">Journey Date: ${booking?.DateOfJourney}</span> |
+                                    <span class="text-success">${booking.NoOfSeats} No. Seat</span> |
+                                    
+                                    <span class="text-danger">Block to Book Time : ${booking.BlockDuration}</span>
+                                    <br />
+                                    Bus Toll Free: ${booking.BoardingPointdetails?.CityPointContactNumber
+                                    ? `<a href="tel:${booking.BoardingPointdetails?.CityPointContactNumber}" class="text-primary fw-semibold">
+                                                        📞 ${booking.BoardingPointdetails?.CityPointContactNumber}
+                                                    </a>`
+                                    : '-'
+                                    }
                                 </div>
                             </div>
 
-                            <div class="barcode-card p-2 text-center">
-                                <canvas id="barcodeCanvas${i}" class="barcode-img"></canvas>
+                            <div class="col-sm-6 p-3 ticket-route">
+
+                                <div class="d-flex justify-content-between align-items-center">
+
+                                    <div class="text-start">
+                                        <div class="city-code">${boardingDet.CityPointLocation || booking.Origin}</div>
+                                        <div class="city-name">${boardingDet.CityPointName ||  booking.Origin}</div>
+                                        <div>
+                                            ${boardingDet?.CityPointTime ? new Date(boardingDet?.CityPointTime).toLocaleDateString() : ''}<br>
+                                            <strong>
+                                                ${boardingDet?.CityPointTime ? new Date(boardingDet?.CityPointTime).toLocaleTimeString([],
+                                                {hour:'2-digit',minute:'2-digit'}) : 
+                                                new Date(booking?.DepartureTime).toLocaleTimeString([],
+                                                {hour:'2-digit',minute:'2-digit'})}
+                                            </strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="text-center">
+                                        <div class="route-line">
+                                            <span></span>
+                                            ✈️
+                                            <span></span>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        <div class="city-code">${dropingDet.CityPointLocation || booking?.Destination}</div>
+                                        <div class="city-name">${dropingDet.CityPointName || booking?.Destination}</div>
+                                        <div class="text-end">
+                                            ${booking?.ArrivalTime ? new Date(booking?.ArrivalTime).toLocaleDateString() : ''}<br>
+                                            <strong>
+                                                ${dropingDet?.CityPointTime ? new Date(dropingDet?.CityPointTime).toLocaleTimeString([],
+                                                {hour:'2-digit',minute:'2-digit'}) : 
+                                                new Date(booking?.ArrivalTime).toLocaleTimeString([],
+                                                {hour:'2-digit',minute:'2-digit'})}
+                                            </strong>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+
+                                <hr>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="text-start"><b>Invoice Created By:</b> ${booking?.InvoiceCreatedByName}</div>
+                                    <div class="text-enter"><b>Invoice Created At:</b> 
+                                        ${new Date(booking.InvoiceCreatedOn).toLocaleTimeString([],
+                                                {hour:'2-digit',minute:'2-digit'})}</div>
+                                </div>
                             </div>
                         </div>
+                    
+
+                        <div class="pt-3 passenger-section">
+
+                            <div class="passenger-head">
+                                PASSENGER DETAILS
+                            </div>
+
+
+                            ${passengers.map((p, index) => `
+                                            <div class="passenger-card">
+
+                                                <div class="row align-items-center mb-2">
+                                                    <div class="col-5 text-start">
+                                                        <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
+                                                        <span class="badge bg-label-success">${booking.TravelOperatorPNR || '-'}</span>
+                                                        ${p.LeadPassenger ? '<span class="lead-pax">Lead</span>' : ''}
+                                                        <div class="contact-box w-50 text-start">
+                                                            <div class="mb-1"><b>Mobile:</b> ${p.Phoneno}</div>
+                                                            <div class="mb-1"><b>Email:</b> ${p.Email}</div>
+                                                            <div class="mb-1"><b>City:</b> ${p.City || '-'}, ${p.State || '-'}</div>
+                                                            <div class="mb-1"><b>Age:</b> ${p.Age}</div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-3 text-start">
+                                                        <h5>Invoice Details</h5>
+                                                        <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNumber}</div>
+                                                        <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
+                                                        <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
+                                                    </div>
+                                                    <div class="col-4 text-end">
+                                                        <h5>Ticket Details</h5>
+                                                        ${booking.TicketNo ? `
+                                                            <div class="mb-1"><b>Ticket No: </b> ${booking?.TicketNo}</div>
+                                                            <div class="mb-1">${(() => {
+                                                                const s = getTicketStatus(booking.Status);
+                                                                return `
+                                                                    <div class="mb-1">
+                                                                        <b>Status:</b>
+                                                                        <span class="badge ${s.badge}">${s.text}</span>
+                                                                    </div>
+                                                                    `;
+                                                                })()}
+                                                            </div>` : `
+                                        <div class="mb-1 text-danger">
+                                            <b>Status:</b> Ticket not generated
+                                        </div>
+                                        `}
+
+                                                    </div>
+                                                </div>
+
+                                                
+                                                <div class="seat-box">
+                                                    <div class="seat-title">Seat Details</div>
+                                                    ${p.Seat ? `
+                                                        <div class="seat-row d-flex justify-content-between">
+                                                            <span>${p.Seat.IsLadiesSeat ? "Ladies" : p.Seat?.IsMalesSeat ? "Male" : 'Common'} and ${p.Seat.IsUpper ? 'Upper Seat' : 'Lower Seat'}</span>
+                                                            <span class="seat-code">Seat Name: ${p.Seat.SeatName} | Seat Id: ${p.Seat.SeatId}</span>
+                                                             ${p.Seat.SeatStatus ? `<span class="seat-type text-success">Seat Available</span>` :
+                                                            `<span class="seat-type text-danger">Seat Booked</span>`}
+                                                            <span>₹${p.Seat.SeatFare}</span>
+                                                           
+                                                        
+                                                        </div>
+                                                    ` : 
+                                                    '<div class="seat-row">No seat selected</div>'}
+                                                </div>
+
+                                                <hr />
+                                                <div class="fare-box">
+                                                    <div><b>Base Fare:</b> ₹${p?.Seat.Price.BasePrice}</div>
+                                                    <div><b>Tax:</b> ₹${p?.Seat.Price.Tax}</div>
+                                                    <div><b>Seat Charges:</b> ₹${p?.Seat.SeatFare}</div>
+                                                    <div class="fare-total">
+                                                        Total: ₹${p?.Seat.Price.PublishedPrice}
+                                                    </div>
+                                                </div>
+                                                <div class="barcode text-center mt-3">
+                                                    <canvas id="barcodeCanvas${index}"></canvas>
+                                                </div>
+
+                                            </div>
+                                            `).join('')}
+                        </div>
+                        <div class="mt-4 p-3 bg-white rounded text-end">
+                            <span class="text-success">
+                                You have paid <h4>INR ${booking?.Price?.PublishedPriceRoundedOff || '-'}</h4>
+                            </span>
+                        </div>
+
+                        <div class="ticket-route">
+
+                            <div class="row g-0">
+
+                                <div class="col-sm-9 border-end">
+
+                                    <div class="p-2 px-3 fw-semibold text-white" style="background:#d7261e; border-radius:8px 8px 0 0;">
+                                        Items not allowed in the bus
+                                    </div>
+
+                                    <div class="p-3">
+                                        <div class="d-flex flex-wrap gap-4">
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="{{ asset('/images/restricted/lighter.jpeg') }}" style="height:50px;">
+                                                <div class="mt-1">LIGHTERS,<br>MATCHSTICKS</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:120px;">
+                                                <img src="{{ asset('/images/restricted/flame.jpeg') }}" style="height:50px;">
+                                                <div class="mt-1">FLAMMABLE<br>LIQUIDS</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="{{ asset('/images/restricted/toxic.png') }}" style="height:50px;">
+                                                <div class="mt-1">TOXIC</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="{{ asset('/images/restricted/corrosive.jpeg') }}" style="height:50px;">
+                                                <div class="mt-1">CORROSIVES</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="{{ asset('/images/restricted/paper.png') }}" style="height:50px;">
+                                                <div class="mt-1">PEPPER<br>SPRAY</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:120px;">
+                                                <img src="{{ asset('/images/restricted/gas.png') }}" style="height:50px;">
+                                                <div class="mt-1">FLAMMABLE<br>GAS</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:100px;">
+                                                <img src="{{ asset('/images/restricted/cigrate.jpeg') }}" style="height:50px;">
+                                                <div class="mt-1">E-CIGARETTE</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:120px;">
+                                                <img src="{{ asset('/images/restricted/infection.png') }}" style="height:50px;">
+                                                <div class="mt-1">INFECTIOUS<br>SUBSTANCES</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:130px;">
+                                                <img src="{{ asset('/images/restricted/redio.jpeg') }}" style="height:50px;">
+                                                <div class="mt-1">RADIOACTIVE<br>MATERIALS</div>
+                                            </div>
+
+                                            <div class="text-center" style="width:130px;">
+                                                <img src="{{ asset('/images/restricted/explosive.jpeg') }}" style="height:50px;">
+                                                <div class="mt-1">EXPLOSIVES<br>AMMUNITION</div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-3">
+
+                                    <div class="p-2 fw-semibold text-white text-center"
+                                        style="background:#f8a900; border-radius:8px 8px 0 0;">
+                                        Items allowed only<br>in Hand Baggage
+                                    </div>
+
+                                    <div class="p-4 text-center">
+
+                                        <div class="mb-4">
+                                            <img src="{{ asset('/images/restricted/lithium.png') }}" style="height:50px;">
+                                            <div class="mt-1">LITHIUM<br>BATTERIES</div>
+                                        </div>
+
+                                        <div>
+                                            <img src="{{ asset('/images/restricted/powerbank.png') }}" style="height:50px;">
+                                            <div class="mt-1">POWER<br>BANKS</div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        `;
+
+
+          html += `<div class="rticket-route mt-4 ticket-route">
+                            <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
+                                <div class="fw-semibold ">
+                                    🪶 Booking History
+                                </div>
+                            </div>
+                            <div class="p-3" style="background:#e8ffec; font-size:14px;">`;
+
+          booking.BookingHistory.map(r => {
+              html += `
+                                <div class="mb-3">
+                                    <b>Created By: ${r.CreatedByName} (${r.CreatedBy}) <br/> Created On: ${r.CreatedOn}</b>
+                                    <b>Last Modified By: ${r.CreatedByName} (${r.LastModifiedBy}) <br/>Last Modified On: ${r.CreatedOn}</b>
+                                    <div class="small">${r.Remarks}</div>
+                                </div>`;
+          });
+
+          html += `
+                            </div>
+                        </div>
+
+                        <div class="ticket-route mt-4 p-2" style="border-left:4px solid #c2c2c2;">
+                            <h6 class="fw-semibold my-3">Cancellation Policy</h6>
+                            <div class="mt-4">
+                                ${booking.CancelPolicy?.map(c => `
+                                          <div class="small text-muted">
+                                              ${c.PolicyString} — <b>${c.CancellationCharge} ${c.CancellationChargeType == '1' ? "Amount" : '%'}</b>
+                                          </div>
+                                      `).join('')}
+                            </div>
+                        </div>
+                        <div class="ticket-route mt-4 p-2" style="border-left:4px solid #c2c2c2;">
+                            <h6 class="fw-semibold my-3">IMPORTANT INFORMATION</h6>
+                            <ul class="">
+                                <li>Reach half hour before departure</li>
+                                <li>Carry valid government ID</li>
+                            </ul>
+                        </div>
                     </div>
-                `).join('')}
-            </div>
+                </div>`;
 
-            <!-- CANCELLATION -->
-            <div class="mt-4">
-                <h6 class="fw-semibold">Cancellation Policy</h6>
-                ${booking.CancelPolicy?.map(c => `
-                    <div class="small text-muted">
-                        ${c.PolicyString} — <b>${c.CancellationCharge}%</b>
-                    </div>
-                `).join('')}
-            </div>
+          $('#ticketContent').html(html);
 
-            <!-- PAYMENT -->
-            <div class="mt-4 p-3 bg-light rounded text-end">
-                <div class="fw-semibold">Total Paid</div>
-                <h4 class="text-success mb-0">
-                    ₹${booking.Price?.PublishedPriceRoundedOff}
-                </h4>
-            </div>
-
-        </div>
-    </div>
-    `;
-
-    $('#ticketContent').html(html);
-
-    // BARCODE
-    setTimeout(() => {
-        passengers.forEach((p, i) => {
-            makeBarcode(i, booking.TicketNo + '-' + (i + 1));
-        });
-    }, 100);
-}
+          setTimeout(() => {
+              passengers.forEach((p, index) => {
+                  let barcode = booking.TravelOperatorPNR;
+                  makeBarcode(index, barcode);
+                  //   makeBarcode(i, booking.TicketNo + '-' + (i + 1));
+              });
+          }, 100);
+      }
 
 
+      function makeBarcode(i, barcode) {
+          const canvas = document.getElementById("barcodeCanvas" + i);
 
-        function makeBarcode(i, barcode) {
-            const canvas = document.getElementById("barcodeCanvas" + i);
+          if (!canvas) return;
 
-            if (!canvas) return;
+          try {
+              bwipjs.toCanvas(canvas, {
+                  bcid: 'pdf417',
+                  text: barcode,
+                  scale: 2,
+                  height: 8,
+                  columns: 6,
+                  rows: 3,
+                  includetext: false,
+                  paddingwidth: 10,
+                  paddingheight: 10,
+              });
+          } catch (e) {
+              $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
+          }
+      }
 
-            try {
-                bwipjs.toCanvas(canvas, {
-                    bcid: 'pdf417',
-                    text: barcode,
-                    scale: 2,
-                    height: 8,
-                    columns: 6,
-                    rows: 3,
-                    includetext: false,
-                    paddingwidth: 10,
-                    paddingheight: 10,
-                });
-            } catch (e) {
-                $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
-            }
-        }
+      function printTicket() {
 
-        function printTicket() {
-           
-            window.print();
-          
-        }
+          window.print();
+
+      }
 
       //   $(document).on('click', '.generate-ticket', function() {
 
