@@ -607,7 +607,7 @@
                                     <div class="text-center">
                                         <div class="route-line">
                                             <span></span>
-                                            ✈️
+                                            🚌
                                             <span></span>
                                         </div>
                                     </div>
