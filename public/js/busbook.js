@@ -885,12 +885,12 @@ function callBlockApi(bookingPayload) {
                 swal({
                     type: 'success',
                     title: 'Seats Blocked',
-                    text: 'Seats blocked successfully. Proceed to payment.',
+                    html: `Seats blocked successfully.<br/> <b class="text-success">Proceed to payment with Amount : ${res.totalAmount}</b>`,
                     confirmButtonText: 'Proceed',
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 }).then(() => {
-                    callBookApi(bookingPayload);
+                    callBookApi(bookingPayload, res.totalAmount);
                 });
             } else {
                 swal({
@@ -922,7 +922,7 @@ function callBlockApi(bookingPayload) {
     });
 }
 
-function callBookApi(bookingPayload) {
+function callBookApi(bookingPayload, amt) {
 
     swal({
         type: 'warning',
@@ -934,6 +934,9 @@ function callBookApi(bookingPayload) {
         allowOutsideClick: () => !swal.isLoading(),
         allowEscapeKey: false,
     });
+
+    
+    bookingPayload.totalAmount = amt;
 
     $.ajax({
         url: '/bus/book',
@@ -965,7 +968,7 @@ function callBookApi(bookingPayload) {
                 if (res.status == 'balance_low') {
                     swal({
                         title: 'Insufficient Wallet Balance',
-                        text: 'Please recharge wallet and try again.',
+                        text: res?.message || 'Please recharge wallet and try again.',
                         allowOutsideClick: false,
                         allowEscapeKey: false,
                         confirmButtonText: 'OK, Got it',

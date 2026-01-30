@@ -169,7 +169,8 @@ class FlightService
             // Call API using Permission::curl
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = StaticResponseHelper::fareRuleStaticResponse();
+                // $response = StaticResponseHelper::fareRuleStaticResponse();
+                $response = StaticResponseHelper::fareRuleStaticResponseInt();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "fare_rule", "");
                 $response = $response['response'];
@@ -184,7 +185,8 @@ class FlightService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Fare Rule get successfully", 'data' => $response['data']];
             } else {
                 return [
@@ -216,7 +218,8 @@ class FlightService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = StaticResponseHelper::fareQuoteStaticResponse();
+                // $response = StaticResponseHelper::fareQuoteStaticResponse();
+                $response = StaticResponseHelper::fareQuoteStaticResponseInt();
             } else {
 
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "fare_quote", "");
@@ -232,7 +235,8 @@ class FlightService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Fare Quotation get successfully", 'data' => $response['data']];
             } else {
                 return [

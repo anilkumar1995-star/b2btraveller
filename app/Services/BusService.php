@@ -308,9 +308,10 @@ class BusService
                 "ResultIndex" => $data['resultIndex'],
                 "BoardingPointId" => $data['boardingPointId'],
                 "DroppingPointId" => $data['droppingPointId'],
-                "Passenger" => $data['passenger']
+                "Passenger" => $data['passenger'],
+                "TotalAmount" => $data['totalAmount'],
+                "ClientRefId" => $data['clientRefId'],
             ];
-
 
             $url = $this->setFullUrl('bookbus');
 

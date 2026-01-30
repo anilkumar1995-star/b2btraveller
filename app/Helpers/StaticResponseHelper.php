@@ -17751,6 +17751,373 @@ class StaticResponseHelper
             }
         }';
     }
+
+    static public function fareQuoteStaticResponseInt(){
+        return '{
+            "status": "success",
+            "message": "Fare Quotation get successfully",
+            "data": {
+                "TokenId": "7b1d7541-5c3e-408e-b80e-d6d239f12857",
+                "TraceId": "b007fdd9-8176-41f2-ac63-3300ac7f4bbd",
+                "FlightDetailChangeInfo": "FlightCabinBaggageChanged, FlightBookingClassChanged, FareRuleFareBasisChanged",
+                "IsPriceChanged": true,
+                "ItineraryChangeList": [
+                    7,
+                    3,
+                    4,
+                    8
+                ],
+                "Results": {
+                    "FareInclusions": [],
+                    "FirstNameFormat": "Canada: If Given\/First Name missing, put surname in Last Name and Given Name as \"FNU\" + title (e.g., SMITH\/FNU MR).\r\nUAE: Single-name travel documents not allowed. Passports must have surname and given name separated by space.\r\nExamples:\r\n- Maryam (Given only): Not accepted\r\n- (No surname)\/Maryam: Not accepted\r\n- Ali\/Maryam: Accepted as Ali\/Maryam MS\r\n- Maryam Ali (single field, space & MRZ): Accepted as Maryam Ali\/FNU MS\r\nExemptions:\r\n- Parent\/guardian name on passport\r\n- UAE ID with two names\r\n- UAE employment visa or visa with additional names\r\n- Government duty passport\r\nAustralia\/NZ:\r\n1. Single name repeated as Last\/First (e.g., JONES\/JONES MR).\r\n2. Single-char surname repeated twice as Last Name; Given Name as First (e.g., OO\/JOE MR).",
+                    "IsBookableIfSeatNotAvailable": false,
+                    "IsExclusiveFare": false,
+                    "IsFreeMealAvailable": false,
+                    "IsHoldAllowedWithSSR": true,
+                    "IsHoldMandatoryWithSSR": false,
+                    "LastNameFormat": "For Canada: If LastName is missing, set LastName as \"LNU\" and FirstName as \"Given Name(s) Title\" (e.g., LNU\/JEREMY BROWN MR).\r\nFor UAE: If LastName is missing but full name exists in GivenName (e.g., \"Maryam Ali\"), set LastName as full name and FirstName as \"FNU Title\" (e.g., MARYAM ALI\/FNU MS).\r\nFor Australia & New Zealand: If only one name exists on the passport, repeat the name as both LastName and FirstName (e.g., JONES\/JONES MR).",
+                    "ResultIndex": "OB265[TBO]qvx5ubgJim9npx2LRhIBXvV9njhiLcRG0RL8\/EA0uZbAD0Lf9WE9hWOA3MRw9zI6GIqQ1llq7jScSnibazLt5uhMoRX2kjgNUGdWNP9uChpxeqpv6E+a1nbcnf76L88BrCcW\/qPz7XCK9PlMaye8hVOSL3aPxK8v8OHySIgnLQnAH\/EyqPKXfIIwTPta9+UyLBgGTzIxeIjtaRdGvaevdos0GAKfg2HT5N\/9AuavILNXKmrgdiy62bKm6mM1vL5xWGSWZfZYOfX1r7813\/qZEWk1mdU1TjYrxmgBDoVsxuDk5YIh87WsGtgVmR0cDwO7SntIdPC4c+TrJkIkxHu\/D5Muc6AgfRmNDev49ZWRWtazP5SRgEIwJlIpzicUQUAQAUlrECqicG4+CwFBcV3xatDUMQvp08\/\/oztrP85xkRIiDuJXNCE608RkmCK+jFlsqVTDe9VVtK5T77MQZRuPlQ7FLAGlKVT+263JgQ3QJmTS87S16SyMCacGin9aVz2uBIygcNz6BiVBQqOvhQqHbHte85JmaF8GYmSWDpGLMIqbDhEnA3vHPJrrFhhPISS+69w\/NdamiHBv97LRJsBR6BK3VqwI3MWPQmt9i\/W2bTmnFwzb+ey5QPniIJUB1IXYtWkcRGqL+Ee51jfjZBCFMWQBjhu9qBq2mqIC+mAyAMFvpah3KnR87pSzC8O61j3gqBG9i9PVxiYtKW\/Vo42O4SLpoPq5ELyhYim\/wn73Ht3PEFvcpK07OhkIbi6Z1ILgZnbfBxkR7SjlTBRGA2MVww==",
+                    "Source": 5,
+                    "IsLCC": false,
+                    "IsRefundable": true,
+                    "IsPanRequiredAtBook": false,
+                    "IsPanRequiredAtTicket": false,
+                    "IsPassportRequiredAtBook": false,
+                    "IsPassportRequiredAtTicket": true,
+                    "GSTAllowed": true,
+                    "IsCouponAppilcable": true,
+                    "IsGSTMandatory": false,
+                    "IsHoldAllowed": true,
+                    "AirlineRemark": "We are testing Airline remark node.",
+                    "IsPassportFullDetailRequiredAtBook": false,
+                    "ResultFareType": "RegularFare",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 23845,
+                        "Tax": 38893,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 2087
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 17570
+                            },
+                            {
+                                "key": "YR",
+                                "value": 320
+                            },
+                            {
+                                "key": "PSF",
+                                "value": 0
+                            },
+                            {
+                                "key": "UDF",
+                                "value": 0
+                            },
+                            {
+                                "key": "INTax",
+                                "value": 1092
+                            },
+                            {
+                                "key": "TransactionFee",
+                                "value": 0
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 17824
+                            }
+                        ],
+                        "YQTax": 17570,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 0,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 0
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 62738,
+                        "CommissionEarned": 491.06000000000000227373675443232059478759765625,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 62443.360000000000582076609134674072265625,
+                        "TdsOnCommission": 196.419999999999987494447850622236728668212890625,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "FareBreakdown": [
+                        {
+                            "CFARAmount": 0,
+                            "DCFARAmount": 0,
+                            "Currency": "INR",
+                            "PassengerType": 1,
+                            "PassengerCount": 1,
+                            "BaseFare": 23845,
+                            "Tax": 38893,
+                            "TaxBreakUp": [
+                                {
+                                    "key": "YR",
+                                    "value": 320
+                                },
+                                {
+                                    "key": "INTax",
+                                    "value": 1092
+                                },
+                                {
+                                    "key": "YQTax",
+                                    "value": 17570
+                                },
+                                {
+                                    "key": "K3",
+                                    "value": 2087
+                                },
+                                {
+                                    "key": "OtherTaxes",
+                                    "value": 17824
+                                }
+                            ],
+                            "YQTax": 17570,
+                            "AdditionalTxnFeeOfrd": 0,
+                            "AdditionalTxnFeePub": 0,
+                            "PGCharge": 0,
+                            "SupplierReissueCharges": 0
+                        }
+                    ],
+                    "Segments": [
+                        [
+                            {
+                                "Baggage": "1Piece(s)",
+                                "CabinBaggage": "7KG",
+                                "CabinClass": 2,
+                                "SupplierFareClass": "Comfort",
+                                "TripIndicator": 1,
+                                "SegmentIndicator": 1,
+                                "Airline": {
+                                    "AirlineCode": "AI",
+                                    "AirlineName": "Air India",
+                                    "FlightNumber": "2017",
+                                    "FareClass": "U",
+                                    "OperatingCarrier": ""
+                                },
+                                "Origin": {
+                                    "Airport": {
+                                        "AirportCode": "DEL",
+                                        "AirportName": "Indira Gandhi Airport",
+                                        "Terminal": "3",
+                                        "CityCode": "DEL",
+                                        "CityName": "Delhi",
+                                        "CountryCode": "IN",
+                                        "CountryName": "India"
+                                    },
+                                    "DepTime": "2026-02-06T14:10:00"
+                                },
+                                "Destination": {
+                                    "Airport": {
+                                        "AirportCode": "LHR",
+                                        "AirportName": "Heathrow",
+                                        "Terminal": "2",
+                                        "CityCode": "LON",
+                                        "CityName": "London",
+                                        "CountryCode": "GB",
+                                        "CountryName": "United Kingdom"
+                                    },
+                                    "ArrTime": "2026-02-06T19:20:00"
+                                },
+                                "Duration": 640,
+                                "GroundTime": 0,
+                                "Mile": 0,
+                                "StopOver": false,
+                                "FlightInfoIndex": "1",
+                                "StopPoint": "",
+                                "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                "Craft": "789",
+                                "Remark": null,
+                                "IsETicketEligible": true,
+                                "FlightStatus": "Confirmed",
+                                "Status": "",
+                                "FareClassification": null
+                            }
+                        ],
+                        [
+                            {
+                                "Baggage": "1Piece(s)",
+                                "CabinBaggage": "7KG",
+                                "CabinClass": 2,
+                                "IsClassChanged": true,
+                                "SupplierFareClass": "Comfort",
+                                "TripIndicator": 2,
+                                "SegmentIndicator": 1,
+                                "Airline": {
+                                    "AirlineCode": "AI",
+                                    "AirlineName": "Air India",
+                                    "FlightNumber": "2018",
+                                    "FareClass": "L",
+                                    "OperatingCarrier": ""
+                                },
+                                "Origin": {
+                                    "Airport": {
+                                        "AirportCode": "LHR",
+                                        "AirportName": "Heathrow",
+                                        "Terminal": "2",
+                                        "CityCode": "LON",
+                                        "CityName": "London",
+                                        "CountryCode": "GB",
+                                        "CountryName": "United Kingdom"
+                                    },
+                                    "DepTime": "2026-02-07T21:05:00"
+                                },
+                                "Destination": {
+                                    "Airport": {
+                                        "AirportCode": "DEL",
+                                        "AirportName": "Indira Gandhi Airport",
+                                        "Terminal": "3",
+                                        "CityCode": "DEL",
+                                        "CityName": "Delhi",
+                                        "CountryCode": "IN",
+                                        "CountryName": "India"
+                                    },
+                                    "ArrTime": "2026-02-08T11:55:00"
+                                },
+                                "Duration": 560,
+                                "GroundTime": 0,
+                                "Mile": 0,
+                                "StopOver": false,
+                                "FlightInfoIndex": "2",
+                                "StopPoint": "",
+                                "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                "Craft": "789",
+                                "Remark": null,
+                                "IsETicketEligible": true,
+                                "FlightStatus": "Confirmed",
+                                "Status": "",
+                                "FareClassification": null
+                            }
+                        ]
+                    ],
+                    "LastTicketDate": "2026-02-06T23:59:00",
+                    "TicketAdvisory": null,
+                    "FareRules": [
+                        {
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Airline": "AI",
+                            "FareBasisCode": "UL2YXSDY",
+                            "FareRuleDetail": "",
+                            "FareRestriction": "",
+                            "FareFamilyCode": "",
+                            "FareRuleIndex": ""
+                        },
+                        {
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Airline": "AI",
+                            "FareBasisCode": "LK2YXSDY",
+                            "FareRuleDetail": "",
+                            "FareRestriction": "",
+                            "FareFamilyCode": "",
+                            "FareRuleIndex": ""
+                        }
+                    ],
+                    "AirlineCode": "AI",
+                    "MiniFareRules": [
+                        [
+                            {
+                                "CFARExcludedDetails": null,
+                                "JourneyPoints": "DEL-LHR",
+                                "Type": "Reissue",
+                                "From": null,
+                                "To": null,
+                                "Unit": null,
+                                "Details": "INR 10000*",
+                                "OnlineReissueAllowed": false,
+                                "OnlineRefundAllowed": false
+                            },
+                            {
+                                "CFARExcludedDetails": null,
+                                "JourneyPoints": "DEL-LHR",
+                                "Type": "Cancellation",
+                                "From": null,
+                                "To": null,
+                                "Unit": null,
+                                "Details": "INR 18000*",
+                                "OnlineReissueAllowed": false,
+                                "OnlineRefundAllowed": false
+                            }
+                        ]
+                    ],
+                    "ValidatingAirline": "AI",
+                    "FareClassification": {
+                        "Color": "rgb(182,215,228) ",
+                        "Type": "Publish"
+                    }
+                }
+            }
+        }';
+    }
+    static public function fareRuleStaticResponseInt(){
+        return '
+        {
+            "status": "success",
+            "message": "Fare Rule get successfully",
+            "data": {
+                "TokenId": "7b1d7541-5c3e-408e-b80e-d6d239f12857",
+                "TraceId": "b007fdd9-8176-41f2-ac63-3300ac7f4bbd",
+                "FareRules": [
+                    {
+                        "Airline": "AI",
+                        "DepartureTime": "2026-02-06T14:10:00",
+                        "Destination": "LHR",
+                        "FareBasisCode": "UL2YXSDY",
+                        "FareInclusions": null,
+                        "FareRestriction": "",
+                        "FareRuleDetail": "<br\/> <br\/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.<\/li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.<\/li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINEs POLICY.<\/li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINEs POLICY.<\/li><\/ul>",
+                        "FlightId": -2147483648,
+                        "Origin": "DEL",
+                        "ReturnDate": "0001-01-01T00:00:00"
+                    },
+                    {
+                        "Airline": "AI",
+                        "DepartureTime": "2026-02-07T21:05:00",
+                        "Destination": "DEL",
+                        "FareBasisCode": "UK2YXSDY",
+                        "FareInclusions": null,
+                        "FareRestriction": "",
+                        "FareRuleDetail": "<br\/> <br\/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.<\/li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.<\/li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINEs POLICY.<\/li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINEs POLICY.<\/li><\/ul>",
+                        "FlightId": -2147483648,
+                        "Origin": "LHR",
+                        "ReturnDate": "0001-01-01T00:00:00"
+                    }
+                ]
+            }
+        }';
+    }
     static public function flightroudtripsearchresponse(){
         return '{
             "status": "success",
