@@ -459,7 +459,7 @@ class BusController extends Controller
         try {
             DB::beginTransaction();
 
-            if (strtolower($response['status'] ?? '') === 'failed') {
+            if (strtolower($response['status'] ?? '') === 'failed' || strtolower($response['status'] ?? '') === 'failure') {
 
                 User::where('id', $user->id)->increment('mainwallet', $request->debitAmount);
 
