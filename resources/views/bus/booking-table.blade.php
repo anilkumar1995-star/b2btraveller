@@ -176,7 +176,8 @@
                       'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
                       'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
                       'FAILURE' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
-                      'Pending' => ['label' => 'Pending', 'class' => 'badge bg-info'],
+                      'pending' => ['label' => 'Pending', 'class' => 'badge bg-info'],
+                      'blocked' => ['label' => 'Blocked', 'class' => 'badge bg-warning'],
                   ];
 
               @endphp
