@@ -965,28 +965,16 @@ function callBookApi(bookingPayload, amt) {
                     window.location.href = `/bus/booking-list`;
                 });
             } else {
-                if (res.status == 'balance_low') {
-                    swal({
-                        title: 'Insufficient Wallet Balance',
-                        text: res?.message || 'Please recharge wallet and try again.',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        confirmButtonText: 'OK, Got it',
-                        type: 'error'
-                    }).then(() => {
-                        window.location.href = '/bus/view';
-                    });
-                } else {
-                    swal({
-                        title: 'Booking Failed',
-                        text: res.Error?.ErrorMessage || 'Unable to confirm booking',
-                        allowOutsideClick: false,
-                        allowEscapeKey: false,
-                        type: 'error'
-                    }).then(() => {
-                        window.location.href = '/bus/booking-list-failed';
-                    });
-                }
+
+                swal({
+                    title: 'Booking Failed',
+                    text: res.message || res.Error?.ErrorMessage || 'Unable to confirm booking',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    type: 'error'
+                }).then(() => {
+                    window.location.href = '/bus/booking-list-failed';
+                });
                 return;
             }
 
