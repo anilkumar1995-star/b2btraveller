@@ -534,6 +534,7 @@ class BusController extends Controller
                 ]);
             }
 
+            
             /* ---------- PENDING ---------- */
             Report::where('id', $report->id)->update([
                 'status' => 'pending',
