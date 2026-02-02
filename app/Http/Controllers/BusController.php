@@ -213,169 +213,6 @@ class BusController extends Controller
         ]);
     }
 
-    // public function bookBus(Request $request)
-    // {
-
-    //     $user = \Auth::user();
-    //     $request['user_id'] = $user->id;
-
-
-    //     if ($user->status != "active") {
-    //         return response()->json(['status' => 'failed', 'message' => "Your account has been blocked."]);
-    //     }
-
-
-    //     do {
-    //         $request['clientRefId'] = AndroidCommonHelper::makeTxnId("BUS", 14);
-    //     } while (Report::where("txnid", "=", $request['clientRefId'])->first() instanceof Report);
-
-    //     $getLockedBalance = AndroidCommonHelper::getLockedBalance();
-
-
-    //     if ($user->mainwallet < (((float) $request->totalAmount) + $getLockedBalance['mainLockedBalance'])) {
-    //         return response()->json(['status' => 'balance_low', 'message' => 'Low Balance, Kindly recharge your wallet.']);
-    //     }
-
-    //     // if ($this->pinCheck($request) == "fail") {
-    //     //     return response()->json(['statuscode' => "ERR", "message" => "Transaction Pin is incorrect"]);
-    //     // }
-
-    //     $previousrecharge = Report::where('number', $request->TraceId)->whereBetween('created_at', [Carbon::now()->subMinutes(2)->format('Y-m-d H:i:s'), Carbon::now()->format('Y-m-d H:i:s')])->count();
-    //     if ($previousrecharge > 0) {
-    //         return response()->json(['status' => 'Same Transaction allowed after 2 min.'], 400);
-    //     }
-
-    //     $provider = Provider::where('recharge1', 'bustravel')->first();
-    //     $request['provider_id'] = $provider->id;
-
-    //     $request['profit'] = 0; //\Myhelper::getCommission($request->amount, $user->scheme_id, $request->provider_id, $user->role->slug);
-    //     $request['debitAmount'] = $request->TotalAmount - ($request->profit);
-    //     $debit = User::where('id', $user->id)->decrement('mainwallet', $request->debitAmount);
-
-    //     if ($debit) {
-    //         do {
-    //             $request['txnid'] = $this->transcode() . rand(1111111111, 9999999999);
-    //         } while (Report::where("txnid", "=", $request->txnid)->first() instanceof Report);
-
-    //         $insert = [
-    //             'number' => $request->traceId,
-    //             'mobile' => isset($request->passenger[0]['Phoneno']) ? $request->passenger[0]['Phoneno'] : $user->mobile,
-    //             'provider_id' => $provider->id,
-    //             'api_id' => $provider->api_id,
-    //             'amount' => $request->totalAmount,
-    //             'profit' => $request->profit,
-    //             'txnid' => $request->txnid,
-    //             'payid' => $request->clientRefId,
-    //             'option1' => '',
-    //             'option2' => '',
-    //             'status' => 'pending',
-    //             'user_id' => $user->id,
-    //             'credited_by' => $user->id,
-    //             'rtype' => 'main',
-    //             'via' => 'portal',
-    //             'balance' => $user->mainwallet,
-    //             'trans_type' => 'debit',
-    //             'product' => 'bustravel',
-    //             'transtype' => 'mainwallet',
-    //         ];
-
-    //         $report = Report::create($insert);
-
-    //         $service = new BusService();
-    //         $response = $service->bookBuss($request->all());
-
-
-    //         if (strtolower($response['status'] ?? '') === 'failed') {
-    //             // 1️⃣ Failed table me insert
-    //             DB::table('failed_bus_bookings_list')->insert([
-    //                 'user_id'        => \Auth::id(),
-    //                 'booking_id_api' => $request->traceId ?? null,
-    //                 'booking_status' => 'failed',
-    //                 'message'        => $response['message'] ?? 'Bus booking failed',
-    //                 'raw_payload'    => json_encode($request->all()),
-    //                 'raw_response'   => json_encode($response),
-    //                 'created_at'     => now(),
-    //                 'updated_at'     => now(),
-    //             ]);
-
-    //             // 2️⃣ Main bus_bookings ko failed mark karo
-    //             DB::table('bus_bookings')
-    //                 ->where('booking_id_api', $request->traceId)
-    //                 ->update([
-    //                     'booking_status' => 'failed',
-    //                     'payment_status' => 'failed',
-    //                     'api_type' => 'book',
-    //                     'updated_at'     => now(),
-    //                 ]);
-
-    //             User::where('id', $user->id)->increment('mainwallet', $request->debitAmount);
-    //             Report::where('id', $report->id)->update([
-    //                 'status' => 'failed',
-    //                 'refno' => $request->traceId,
-    //             ]);
-
-    //             return response()->json([
-    //                 'status'  => 'failed',
-    //                 'message' => $response['message'] ?? 'Bus booking failed'
-    //             ]);
-    //         } else if (strtolower($response['status'] ?? '') === 'success') {
-    //             $data = $response['data'] ?? null;
-
-    //             if (!$data) {
-    //                 return response()->json([
-    //                     'status'  => 'failed',
-    //                     'message' => 'Invalid bus book response'
-    //                 ]);
-    //             }
-    //             DB::table('bus_bookings')
-    //                 ->where('booking_id_api', $data['TraceId'])
-    //                 ->update([
-    //                     'ticket_no'       => $data['TicketNo'] ?? null,
-    //                     'pnr'    => $data['TravelOperatorPNR'] ?? null,
-    //                     'invoice_number' => $data['InvoiceNumber'] ?? null,
-    //                     'invoice_amount' => $data['InvoiceAmount'] ?? null,
-    //                     'bus_id'          => $data['BusId'] ?? null,
-    //                     'booking_status' => $data['BusBookingStatus'] ?? null,
-    //                     'payment_status' => 'success',
-    //                     'api_type' => 'book',
-    //                     'raw_response'   => json_encode($response),
-    //                     'updated_at'     => now(),
-    //                 ]);
-
-    //             Report::where('id', $report->id)->update([
-    //                 'status' => 'success',
-    //                 'refno' => $data['TraceId'],
-    //             ]);
-
-    //             return response()->json([
-    //                 'status'  => 'success',
-    //                 'message' => 'Bus Booked successfully',
-    //                 'data'    => $data
-    //             ]);
-    //         } else {
-    //             DB::table('bus_bookings')
-    //                 ->where('booking_id_api', $request->traceId)
-    //                 ->update([
-    //                     'booking_status' => 'pending',
-    //                     'payment_status' => 'pending',
-    //                     'api_type' => 'book',
-    //                     'updated_at'     => now(),
-    //                 ]);
-
-    //             Report::where('id', $report->id)->update([
-    //                 'status' => 'pending',
-    //                 'refno' => $request->traceId,
-    //             ]);
-    //             return response()->json([
-    //                 'status'  => 'pending',
-    //                 'message' => $response['message'] ?? 'Bus booking Pending'
-    //             ]);
-    //         }
-    //     } else {
-    //         return response()->json(['status' => 'failed', 'message' => 'Transaction Failed, please try again.']);
-    //     }
-    // }
-
     public function bookBus(Request $request)
     {
         $user = \Auth::user();
@@ -521,6 +358,7 @@ class BusController extends Controller
                         'booking_status' => $data['BusBookingStatus'] ?? null,
                         'payment_status' => 'success',
                         'api_type' => 'book',
+                        'order_ref_id'   => $data['orderRefId'] ?? null,
                         'raw_response'   => json_encode($response),
                         'updated_at'     => now(),
                     ]);
@@ -666,6 +504,8 @@ class BusController extends Controller
         if ($reportTable->status != 'success') {
             return response()->json(['status' => 'failed', 'message' => 'Only successful bookings can be cancelled.']);
         }
+
+        $request['payid'] = $reportTable->payid;
 
         $service = new BusService();
         $response = $service->cancelbus($request->all());

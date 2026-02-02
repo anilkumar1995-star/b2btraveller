@@ -310,7 +310,7 @@ class BusService
                 "DroppingPointId" => $data['droppingPointId'],
                 "Passenger" => $data['passenger'],
                 "TotalAmount" => $data['totalAmount'],
-                "ClientRefId" => $data['clientRefId'],
+                "clientRefId" => $data['clientRefId'],
             ];
 
             $url = $this->setFullUrl('bookbus');
@@ -395,12 +395,14 @@ class BusService
         try {
             $token = $this->authService->getToken();
 
+            dd($data);
              $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "BusId" => $data['payload']['BusId'],
                 "RequestType" => $data['payload']['RequestType'],
                 "Remarks" => $data['payload']['Remarks'],
+                "clientRefId" => $data['payload']['ClientRefId'],
             ];
 
             $url = $this->setFullUrl('cancelBus');
