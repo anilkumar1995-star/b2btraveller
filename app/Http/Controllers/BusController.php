@@ -534,7 +534,7 @@ class BusController extends Controller
                 ]);
             }
 
-            
+
             /* ---------- PENDING ---------- */
             Report::where('id', $report->id)->update([
                 'status' => 'pending',
@@ -656,10 +656,63 @@ class BusController extends Controller
 
     public function submitCancellation(Request $request)
     {
+
+        $bokTable = DB::table('bus_bookings')->where('bus_id', $request->payload['BusId'])->first();
+
+        $reportTable = Report::where('number', $bokTable->booking_id_api)->first();
+        if (!$reportTable) {
+            return response()->json(['status' => 'failed', 'message' => 'Report not found for this booking.']);
+        }
+        if ($reportTable->status != 'success') {
+            return response()->json(['status' => 'failed', 'message' => 'Only successful bookings can be cancelled.']);
+        }
+
         $service = new BusService();
         $response = $service->cancelbus($request->all());
 
         if ($response['status'] == 'success') {
+            $closeBal = User::select('mainwallet')->where('id', $reportTable->user_id)->first();
+            
+            if($response['data']['Response'][0]['RefundedAmount'] > 0){
+               $closeBal =  User::where('id', $reportTable->user_id)
+                ->where('status', 'active')
+                ->increment('mainwallet', $response['data']['Response'][0]['RefundedAmount']);
+            }
+            $reportTable->update([
+                'status' => 'reversed',
+                'remark' => 'Booking cancelled, refund initiated.',
+                'refno'  => $bokTable->booking_id_api
+            ]);
+
+            // new record created for refund
+            Report::create([
+                'number'      => $reportTable->number,
+                'mobile'      => $reportTable->mobile,
+                'provider_id' => $reportTable->provider_id,
+                'api_id'      => $reportTable->api_id,
+                'amount'      => $response['data']['Response'][0]['RefundedAmount'] > 0 ? $response['data']['Response'][0]['RefundedAmount'] : 0,
+                "charge" => 0.0,
+                "profit" => 0.0,
+                "gst" => 0.0,
+                "tds" => 0.0,
+                'remark'      => 'Refund for cancelled booking',
+                'txnid'       => $reportTable->id,
+                'payid'       => $reportTable->payid,
+                'status'      => 'refunded',
+                'user_id'     => $reportTable->user_id,
+                'credited_by' => $reportTable->user_id,
+                'rtype'       => 'main',
+                'via'         => 'portal',
+                'balance'     => $closeBal->mainwallet,
+                "closing_balance" => $closeBal->mainwallet + $response['data']['Response'][0]['RefundedAmount'],
+                'trans_type'  => 'credit',
+                'product'     => 'bus',
+                'transtype'   => 'mainwallet',
+                "apitxnid" => null,
+                "refno" => $reportTable->number,
+            ]);
+
+
             $up = [
                 'booking_status' => 'Cancelled',
                 'cancel_req' => $request->all(),
