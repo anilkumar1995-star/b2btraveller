@@ -671,13 +671,15 @@ class BusController extends Controller
         $response = $service->cancelbus($request->all());
 
         if ($response['status'] == 'success') {
-            $closeBal = User::select('mainwallet')->where('id', $reportTable->user_id)->first();
-            
-            if($response['data']['Response'][0]['RefundedAmount'] > 0){
-               $closeBal =  User::where('id', $reportTable->user_id)
-                ->where('status', 'active')
-                ->increment('mainwallet', $response['data']['Response'][0]['RefundedAmount']);
+            $refundAmount = (float) $response['data']['Response'][0]['RefundedAmount'] ?? 0.0;
+            $old = User::select('mainwallet')->where('id', $reportTable->user_id)->first();
+            $oldBalance = $old->mainwallet;
+            if ($refundAmount > 0) {
+                User::where('id', $reportTable->user_id)
+                    ->where('status', 'active')
+                    ->increment('mainwallet', $refundAmount);
             }
+
             $reportTable->update([
                 'status' => 'reversed',
                 'remark' => 'Booking cancelled, refund initiated.',
@@ -690,7 +692,7 @@ class BusController extends Controller
                 'mobile'      => $reportTable->mobile,
                 'provider_id' => $reportTable->provider_id,
                 'api_id'      => $reportTable->api_id,
-                'amount'      => $response['data']['Response'][0]['RefundedAmount'] > 0 ? $response['data']['Response'][0]['RefundedAmount'] : 0,
+                'amount'      => $refundAmount > 0 ? $refundAmount : 0,
                 "charge" => 0.0,
                 "profit" => 0.0,
                 "gst" => 0.0,
@@ -703,8 +705,8 @@ class BusController extends Controller
                 'credited_by' => $reportTable->user_id,
                 'rtype'       => 'main',
                 'via'         => 'portal',
-                'balance'     => $closeBal->mainwallet,
-                "closing_balance" => $closeBal->mainwallet + $response['data']['Response'][0]['RefundedAmount'],
+                'balance'     =>  $oldBalance,
+                "closing_balance" => $oldBalance + $refundAmount,
                 'trans_type'  => 'credit',
                 'product'     => 'bus',
                 'transtype'   => 'mainwallet',
