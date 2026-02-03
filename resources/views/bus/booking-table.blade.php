@@ -857,7 +857,7 @@
                             <div class="mt-4">
                                 ${booking.CancelPolicy?.map(c => `
                                                     <div class="small text-muted">
-                                                        ${c.PolicyString} — <b>${c.CancellationCharge} ${c.CancellationChargeType == '1' ? "Amount" : '%'}</b>
+                                                        ${c.PolicyString} — <b>${c.CancellationCharge ? c.CancellationCharge : '0'} ${c.CancellationChargeType == '1' ? "Amount" : '%'}</b>
                                                     </div>
                                                 `).join('')}
                             </div>
