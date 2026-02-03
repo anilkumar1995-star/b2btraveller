@@ -400,7 +400,7 @@ class BusService
                 "BusId" => $data['payload']['BusId'],
                 "RequestType" => $data['payload']['RequestType'],
                 "Remarks" => $data['payload']['Remarks'],
-                "clientRefId" => $data['payload']['ClientRefId'],
+                "clientRefId" => $data['payid'],
             ];
 
             $url = $this->setFullUrl('cancelBus');
