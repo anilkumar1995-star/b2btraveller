@@ -2244,6 +2244,14 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
 
             if (response.status !== 'success') {
                 notify("No SSR Details found", "error");
+
+                $("#baggageContainer").html(`<div class="alert alert-danger text-center">Baggage Not Found</div>`);
+                $("#mealContainer").html(`<div class="alert alert-danger text-center">Meal Not Found</div>`);
+                $("#mainPlaneWrapper").html(`<div class="alert alert-danger text-center">Seat Layout Not found</div>`);
+
+                $("#baggageContainerRet").html(`<div class="alert alert-danger text-center">Baggage Not Found</div>`);
+                $("#mealContainerRet").html(`<div class="alert alert-danger text-center">Meal Not Found</div>`);
+                $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger text-center">Seat Layout Not found</div>`);
                 return;
             }
 
@@ -2266,7 +2274,7 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
 
             let ssr = response.data;
 
-            if (Array.isArray(ssr?.SeatDynamic) &&  ssr.SeatDynamic.length > 0) {
+            if (Array.isArray(ssr?.SeatDynamic) && ssr.SeatDynamic.length > 0) {
                 if (ssr.SeatDynamic?.[0]) {
                     renderSeatLayout([ssr.SeatDynamic[0]], totalPassengers, 'departure');
                 }
