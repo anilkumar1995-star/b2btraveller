@@ -2277,9 +2277,13 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
             if (Array.isArray(ssr?.SeatDynamic) && ssr.SeatDynamic.length > 0) {
                 if (ssr.SeatDynamic?.[0]) {
                     renderSeatLayout([ssr.SeatDynamic[0]], totalPassengers, 'departure');
+                } else {
+                    $("#mainPlaneWrapper").html(`<div class="alert alert-danger text-center"> No Seat available for this flight.</div>`);
                 }
                 if (ssr.SeatDynamic?.[1]) {
                     renderSeatLayout([ssr.SeatDynamic[1]], totalPassengers, 'return');
+                } else {
+                    $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger text-center">No Seat available for this flight.</div>`);
                 }
             } else {
                 $("#mainPlaneWrapper").html(`<div class="alert alert-danger text-center"> No Seat available for this flight.</div>`);
