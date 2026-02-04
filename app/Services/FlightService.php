@@ -135,7 +135,7 @@ class FlightService
             }
 
 
-            if (isset($response['status']) && strtoupper($response['status']) == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Flight search successfully", 'data' => $response['data']];
             } else {
 
@@ -268,7 +268,9 @@ class FlightService
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 // $response = StaticResponseHelper::flightSSRStaticResponse();
-                $response = StaticResponseHelper::flightSSROneStaticResponse();
+                // $response = StaticResponseHelper::flightSSROneStaticResponse();
+                
+                $response = StaticResponseHelper::flightSSRStaticResponseInt();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "ssr", "");
                 $response = $response['response'];
@@ -282,7 +284,7 @@ class FlightService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Seat Layout get successfully", 'data' => $response['data']];
             } else {
                 return [
@@ -330,7 +332,7 @@ class FlightService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Flight Booking successfully", 'data' => $response['data']];
             } else {
                 return [
@@ -412,7 +414,7 @@ class FlightService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Flight Ticket generated successfully", 'data' => $response['data']];
             } else {
                 return [
