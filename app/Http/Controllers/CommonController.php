@@ -140,6 +140,34 @@ class CommonController extends Controller
 				$request['parentData'] = 'all';
 				break;
 
+			case 'vanlist':
+				$request['table'] = '\App\Models\Van';
+				$request['searchdata'] = ['id', 'root_type', 'label', 'account_holder_name', 'vpa_address', 'virtual_account_number', 'ifsc'];
+				$request['select'] = 'all';
+				$request['order'] = ['id', 'desc'];
+				if (\Myhelper::hasRole('admin')) {
+					$request['parentData'] = 'all';
+					$request['whereIn'] = 'user_id';
+				} else {
+					$request['parentData'] = [\Auth::id()];
+					$request['whereIn'] = 'user_id';
+				}
+				break;
+
+			case 'upicollect':
+				$request['table'] = '\App\Models\UpiCollect';
+				$request['searchdata'] = ['id', 'event', 'remitter_full_name', 'remitter_account_number', 'status', 'amount', 'remitter_full_name', 'utr', 'payment_mode', 'remitter_ifsc'];
+				$request['select'] = 'all';
+				$request['order'] = ['id', 'desc'];
+				if (\Myhelper::hasRole('admin')) {
+					$request['parentData'] = 'all';
+					$request['whereIn'] = 'user_id';
+				} else {
+					$request['parentData'] = [\Auth::id()];
+					$request['whereIn'] = 'user_id';
+				}
+				break;
+
 				
 		   	case 'wallet2walletstatement':
 				$request['table'] = '\App\Models\Report';
@@ -1248,6 +1276,8 @@ class CommonController extends Controller
 			$request->type != "setupapi" &&
 			$request->type != "setuplinks" &&
 			$request->type != "apilogs" &&
+			$request->type != "vanlist" &&
+			$request->type != "upicollect" &&
 			$request->type != "setupoperator" &&
 			$request->type != "resourcescheme" &&
 			$request->type != "resourcecompany" &&
