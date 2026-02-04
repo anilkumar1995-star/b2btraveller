@@ -2243,7 +2243,7 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
         success: function (response) {
 
             if (response.status !== 'success') {
-                notify("SSR not found", "error");
+                notify("No SSR Details found", "error");
                 return;
             }
 
@@ -2269,22 +2269,21 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
             /* ======================
                SEATS (MOST IMPORTANT)
             ====================== */
-            if (ssr.SeatDynamic?.[0]) {
-                renderSeatLayout([ssr.SeatDynamic[0]], totalPassengers, 'departure');
-            }
-            if (ssr.SeatDynamic?.[1]) {
-                renderSeatLayout([ssr.SeatDynamic[1]], totalPassengers, 'return');
+            if (ssrDetails?.SeatDynamic && ssrDetails?.SeatDynamic.length > 0) {
+                if (ssr.SeatDynamic?.[0]) {
+                    renderSeatLayout([ssr.SeatDynamic[0]], totalPassengers, 'departure');
+                }
+                if (ssr.SeatDynamic?.[1]) {
+                    renderSeatLayout([ssr.SeatDynamic[1]], totalPassengers, 'return');
+                }
+            } else {
+                $("#mainPlaneWrapper").html(`<div class="alert alert-danger">No seat layout found</div>`);
+                $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger">No seat layout found</div>`);
             }
 
-            /* ======================
-               BAGGAGE
-            ====================== */
             renderInternationalBaggage(ssr.Baggage?.[0], 'departure');
             renderInternationalBaggage(ssr.Baggage?.[1], 'return');
 
-            /* ======================
-               MEALS
-            ====================== */
             renderInternationalMeal(ssr.Meal?.[0], 'departure');
             renderInternationalMeal(ssr.Meal?.[1], 'return');
         }
