@@ -2266,9 +2266,6 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
 
             let ssr = response.data;
 
-            /* ======================
-               SEATS (MOST IMPORTANT)
-            ====================== */
             if (Array.isArray(ssr?.SeatDynamic) &&  ssr.SeatDynamic.length > 0) {
                 if (ssr.SeatDynamic?.[0]) {
                     renderSeatLayout([ssr.SeatDynamic[0]], totalPassengers, 'departure');
