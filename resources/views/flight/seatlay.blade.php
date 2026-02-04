@@ -347,7 +347,7 @@
                         const resultIndex = localStorage.getItem('ResultIndex');
                         const traceId = localStorage.getItem('TraceId');
                         if (resultIndex && traceId) {
-                            getSSRDetails(resultIndex, traceId, 'departure');
+                           getSSRDetailsInternationalRT(resultIndex, traceId);
                         } else {
                             notify('No SSR details found in localStorage.', 'error');
                         }
