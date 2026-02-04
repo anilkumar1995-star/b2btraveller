@@ -347,7 +347,7 @@
         $(document).ready(function() {
 
             const payload = JSON.parse(localStorage.getItem('payload'));
-            
+
             let isInternational = localStorage.getItem("isInternational") || false;
 
             if (!payload) {
@@ -364,7 +364,7 @@
                 return;
             }
 
-            if (payload.JourneyType == 1 || isInternational) {
+            if (payload.JourneyType == 1) {
                 const storedFlight = localStorage.getItem('selectedFlightDetails');
                 const resultIndex = localStorage.getItem('ResultIndex');
                 const traceId = localStorage.getItem('TraceId');
@@ -377,29 +377,41 @@
                     getFareQuote(resultIndex, traceId, 'departure');
 
                 } else {
-                    console.log('No flight details found in localStorage.');
+                    notify('No flight details found in localStorage.', 'error');
                 }
             } else if (payload.JourneyType == 2) {
 
                 const storedFlight = localStorage.getItem('selectedFlightDetails');
-                const depresultIndex = localStorage.getItem('DepartureResultIndex');
-                const rettresultIndex = localStorage.getItem('ReturnResultIndex');
                 const traceId = localStorage.getItem('TraceId');
 
                 // $('#return-tab').show();
                 if (storedFlight) {
                     const flightDetails = JSON.parse(storedFlight);
 
-                    displayFlightDetails(flightDetails?.departure, 'departure');
-                    getFareRules(depresultIndex, traceId, 'departure');
-                    getFareQuote(depresultIndex, traceId, 'departure');
+                    if (isInternational) {
 
-                    displayFlightDetails(flightDetails?.return, 'return');
-                    getFareRules(rettresultIndex, traceId, 'return');
-                    getFareQuote(rettresultIndex, traceId, 'return');
+                        const resultIndex = flightDetails.ResultIndex;
 
+                        displayInternationalRTFlightDetails(flightDetails, 'departure', 0);
+                        displayInternationalRTFlightDetails(flightDetails, 'return', 1);
+
+                        getFareRulesInternationalRoundtrip(resultIndex, traceId);
+                        getInternationalRoundTripFareQuote(resultIndex, traceId);
+                    } else {
+
+                        const depresultIndex = localStorage.getItem('DepartureResultIndex');
+                        const rettresultIndex = localStorage.getItem('ReturnResultIndex');
+
+                        displayFlightDetails(flightDetails?.departure, 'departure');
+                        getFareRules(depresultIndex, traceId, 'departure');
+                        getFareQuote(depresultIndex, traceId, 'departure');
+
+                        displayFlightDetails(flightDetails?.return, 'return');
+                        getFareRules(rettresultIndex, traceId, 'return');
+                        getFareQuote(rettresultIndex, traceId, 'return');
+                    }
                 } else {
-                    console.log('No flight details found in localStorage.');
+                    notify('No flight details found in localStorage.', 'error');
                 }
             }
         });

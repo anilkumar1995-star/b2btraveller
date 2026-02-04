@@ -316,8 +316,9 @@
 
             const payload = JSON.parse(localStorage.getItem('payload'));
             const travelerDet = JSON.parse(localStorage.getItem('travelerDetails'));
+            let isInternational = localStorage.getItem("isInternational") || false;
 
-             if (!payload || !travelerDet) {
+            if (!payload || !travelerDet) {
                 swal({
                     title: "Data Missing",
                     html: "Your booking session missing some info, <br/> Please try again",
@@ -339,20 +340,28 @@
                         getSSRDetails(resultIndex, traceId, 'departure');
 
                     } else {
-                        console.log('No SSR details found in localStorage.');
+                        notify('No SSR details found in localStorage.', 'error');
                     }
                 } else if (payload.JourneyType == 2) {
-                    // notify('We will working on roundtrip ssr api integration', 'error');
-                    // return;
-                    const depresultIndex = localStorage.getItem('DepartureResultIndex');
-                    const rettresultIndex = localStorage.getItem('ReturnResultIndex');
-                    const traceId = localStorage.getItem('TraceId');
-
-                    if (depresultIndex && rettresultIndex && traceId) {
-                        getSSRDetails(depresultIndex, traceId, 'departure');
-                        getSSRDetails(rettresultIndex, traceId, 'return');
+                    if (isInternational) {
+                        const resultIndex = localStorage.getItem('ResultIndex');
+                        const traceId = localStorage.getItem('TraceId');
+                        if (resultIndex && traceId) {
+                            getSSRDetails(resultIndex, traceId, 'departure');
+                        } else {
+                            notify('No SSR details found in localStorage.', 'error');
+                        }
                     } else {
-                        console.log('No SSR details found in localStorage.');
+                        const depresultIndex = localStorage.getItem('DepartureResultIndex');
+                        const rettresultIndex = localStorage.getItem('ReturnResultIndex');
+                        const traceId = localStorage.getItem('TraceId');
+
+                        if (depresultIndex && rettresultIndex && traceId) {
+                            getSSRDetails(depresultIndex, traceId, 'departure');
+                            getSSRDetails(rettresultIndex, traceId, 'return');
+                        } else {
+                            notify('No SSR details found in localStorage.', 'error');
+                        }
                     }
                 }
             } else {
