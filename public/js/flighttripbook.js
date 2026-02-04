@@ -2223,397 +2223,144 @@ function getSSRDetails(resultIndex, traceId, trip) {
 
 function getSSRDetailsInternationalRT(resultIndex, traceId) {
 
-    if (resultIndex && traceId) {
-        $('#seatLayoutContainer').addClass('d-none');
-        $('.preloader').removeClass('d-none');
+    if (!resultIndex || !traceId) return;
 
-        $('#returnTabLi').addClass('d-none');
-        $.ajax({
-            url: "/flight/ssr",
-            method: "POST",
-            data: {
-                ResultIndex: resultIndex,
-                TraceId: traceId,
-                _token: $('meta[name="csrf-token"]').attr('content')
-            },
-            beforeSend: function () {
-                $('#seatLayoutContainer').addClass('d-none');
-                $('.preloader').removeClass('d-none');
-            },
-            complete: function () {
-                $('#seatLayoutContainer').removeClass('d-none');
-                $('.preloader').addClass('d-none');
-            },
-            success: function (response) {
-                if (response.status == 'success') {
-                  
+    $('.preloader').removeClass('d-none');
+    $('#seatLayoutContainer').addClass('d-none');
 
-                    let searchPayload = JSON.parse(localStorage.getItem('payload')) || {};
-                    let adults = parseInt(searchPayload.AdultCount) || 1;
-                    let children = parseInt(searchPayload.ChildCount) || 0;
-                    let infants = parseInt(searchPayload.InfantCount) || 0;
+    $.ajax({
+        url: "/flight/ssr",
+        method: "POST",
+        data: {
+            ResultIndex: resultIndex,
+            TraceId: traceId,
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        complete: function () {
+            $('.preloader').addClass('d-none');
+            $('#seatLayoutContainer').removeClass('d-none');
+        },
+        success: function (response) {
 
-                    totalPassengers = adults + children + infants;
-
-                      
-                    // if (trip == 'return') {
-                        $('#returnTabLi').removeClass('d-none');
-                    // }
-
-                    // if (trip === 'departure') {
-                        selectedMeals = [];
-                        selectedBaggage = [];
-                        selectedSeats = {};
-                    // }
-
-                    // if (trip === 'return') {
-                        selectedMealsRet = [];
-                        selectedBaggageRet = [];
-                        selectedSeatsRet = {};
-                    // }
-
-                    let ssrDetails = response.data;
-                    // Baggae Details
-                    if (ssrDetails.Baggage && ssrDetails.Baggage.length > 0) {
-                        let baggageHtml = '';
-
-                        $.each(ssrDetails.Baggage, function (pIndex, passengerBaggage) {
-                            if (!passengerBaggage || passengerBaggage.length === 0) return;
-
-                            baggageHtml += `
-                                        <div class="table-responsive mt-3">
-                                            <table class="table table-bordered align-middle text-center mb-0">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th>Text</th>
-                                                        <th>Description</th>
-                                                        <th>Weight (kg)</th>
-                                                        <th>Price</th>
-                                                        <th>Select</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                            `;
-
-                            $.each(passengerBaggage, function (index, baggage) {
-                                let desc = '';
-                                let waytype = '';
-                                switch (baggage.Description) {
-                                    case 1: desc = "Included (Can be upgraded)"; break;
-                                    case 2: desc = "Direct (Purchase - Can't be upgraded)"; break;
-                                    case 3: desc = "Imported"; break;
-                                    case 4: desc = "UpGrade"; break;
-                                    case 5: desc = "ImportedUpgrade"; break;
-                                    default: desc = "NotSet"; break;
-                                }
-
-                                let priceText = baggage.Price == 0 ? "Included" : `${baggage?.Currency} ${baggage.Price}`;
-
-                                if (baggage?.WayType == 1) {
-                                    waytype = "Segment";
-                                } else if (baggage?.WayType == 2) {
-                                    waytype = "FullJourney ";
-                                }
-                                if (index == 0) {
-                                    $('#baggageSectionHead').html(`${baggage?.Origin} - ${baggage?.Destination} [${baggage?.AirlineCode} - ${baggage?.FlightNumber}]
-                                        <span class="badge bg-info">${waytype}</span>`);
-                                }
-
-                                baggageHtml += `
-                                    <tr>
-                                        <td>${baggage?.Text ?? '-'}</td>
-                                        <td>${baggage?.Code} - ${desc}</td>
-                                        <td>${baggage.Weight || '0'} Kg</td>
-                                        <td>${priceText}</td>
-                                        <td>
-                                            <input type="checkbox" name="baggage-checkbox${trip}" 
-                                            data-code="${baggage?.Code}" 
-                                            data-price="${priceText}"  
-                                            data-description="${baggage?.Description}"
-                                            data-bagobjdata='${JSON.stringify(baggage)}'>
-                                        </td>
-                                    </tr>
-                                `;
-                            });
-
-                            baggageHtml += `
-                                                </tbody>
-                                            </table>
-                                             <small class="text-muted d-block mt-1 text-end">
-                                                <span class="baggage-count${trip}">0</span> / ${totalPassengers} selected
-                                            </small>
-                                        </div>
-                            `;
-                        });
-
-                        if (trip == 'departure') {
-                            $("#baggageContainer").html(baggageHtml);
-                        }
-                        if (trip == 'return') {
-                            $("#baggageContainerRet").html(baggageHtml);
-                        }
-
-                    } else {
-                        // if (trip == 'departure') {
-                            $("#baggageContainer").html(`
-                            <div class="alert alert-warning text-center mb-0">
-                                No baggage options available for this flight.
-                            </div>
-                        `);
-                        // }
-                        // if (trip == 'return') {
-                            $("#baggageContainerRet").html(`
-                            <div class="alert alert-warning text-center mb-0">
-                                No baggage options available for this flight.
-                            </div>
-                        `);
-                        // }
-
-                    }
-
-                    // Meal Details
-                    if (ssrDetails.Meal && ssrDetails.Meal.length > 0) {
-                        let mealHtml = '';
-
-                        $.each(ssrDetails.Meal, function (pIndex, passengerMeal) {
-                            if (!passengerMeal || passengerMeal.length === 0) return;
-
-                            mealHtml += `
-                                        <div class="table-responsive mt-3">
-                                            <table class="table table-bordered align-middle text-center mb-0">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th>Text</th>
-                                                        <th>Description</th>
-                                                        <th>Quantity</th>
-                                                        <th>Price</th>
-                                                        <th>Select</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                            `;
-
-                            $.each(passengerMeal, function (index, meal) {
-                                let desc = '';
-                                let waytype = '';
-                                switch (meal.Description) {
-                                    case 1: desc = "The fare includes the Meal"; break;
-                                    case 2: desc = "The Meal charges are added while making the ticket"; break;
-                                    case 3: desc = "Meal charges are added while importing the ticket"; break;
-                                    default: desc = "NotSet"; break;
-                                }
-
-                                let priceText = meal.Price == 0 ? "Included" : `${meal?.Currency} ${meal.Price}`;
-
-                                if (meal?.WayType == 1) {
-                                    waytype = "Segment";
-                                } else if (meal?.WayType == 2) {
-                                    waytype = "FullJourney ";
-                                }
-                                if (index == 0) {
-                                    $('#mealSectionHead').html(`${meal?.Origin} - ${meal?.Destination} [${meal?.AirlineCode} - ${meal?.FlightNumber}]
-                                        <span class="badge bg-info">${waytype}</span>`);
-                                }
-
-                                mealHtml += `
-                                    <tr>
-                                        <td>${meal?.AirlineDescription || 'No Meal'}</td>
-                                        <td>${meal?.Code} - ${desc}</td>
-                                        <td>${meal.Quantity || '0'} </td>
-                                        <td>${priceText}</td>
-                                        <td>
-                                            <input type="checkbox" name="meal-checkbox${trip}" 
-                                            data-code="${meal?.Code}" 
-                                            data-price="${priceText}" 
-                                            data-description="${meal?.Description}"
-                                            data-mealobjdata='${JSON.stringify(meal)}'>
-                                        </td>
-                                    </tr>
-                                `;
-                            });
-
-                            mealHtml += `
-                                                </tbody>
-                                            </table>
-                                             <small class="text-muted d-block mt-1 text-end">
-                                                <span class="meal-count${trip}">0</span> / ${totalPassengers} selected
-                                            </small>
-                                        </div>
-                            `;
-                        });
-
-                        if (trip == 'departure') {
-                            $("#mealContainer").html(mealHtml);
-                        }
-                        if (trip == 'return') {
-                            $("#mealContainerRet").html(mealHtml);
-                        }
-                    } else {
-                        if (trip == 'departure') {
-                            $("#mealContainer").html(`
-                            <div class="alert alert-warning text-center mb-0">
-                                No Meal options available for this flight.
-                            </div>
-                        `);
-                        }
-                        if (trip == 'return') {
-                            $("#mealContainerRet").html(`
-                            <div class="alert alert-warning text-center mb-0">
-                                No Meal options available for this flight.
-                            </div>
-                        `);
-                        }
-
-                    }
-
-                    if (ssrDetails?.SeatDynamic && ssrDetails?.SeatDynamic.length > 0) {
-                        renderSeatLayout(ssrDetails?.SeatDynamic, totalPassengers, trip);
-                    } else {
-
-                        if (trip == 'departure') {
-                            $("#mainPlaneWrapper").html(`<div class="alert alert-danger">No seat layout found</div>`);
-                        }
-                        if (trip == 'return') {
-                            $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger">No seat layout found</div>`);
-                        }
-
-                    }
-
-                    // Baggage checkbox handler
-                    $(document).on('change', `input[name="baggage-checkbox${trip}"]`, function () {
-                        let checkedCount = $(`input[name="baggage-checkbox${trip}"]:checked`).length;
-
-                        if ($(this).is(':checked')) {
-                            if (checkedCount > totalPassengers) {
-                                $(this).prop('checked', false);
-                                notify(`You can select baggages only for ${totalPassengers} passenger(s).`, 'error');
-                                return;
-                            }
-
-                            let bdesc = $(this).data('description');
-                            let bagDesc = '';
-                            if (bdesc == 1) {
-                                bagDesc = 'Included (The fare includes the Baggage)';
-                            } else if (bdesc == 2) {
-                                bagDesc = 'Direct (The Baggage charges are added while making the ticket)';
-                            } else if (bdesc == 3) {
-                                bagDesc = 'Imported (Baggage charges are added while importing the ticket.)';
-                            }
-
-
-                            // 🟢 Add selected baggage details to array
-                            let baggageData = {
-                                Code: $(this).data('code'),
-                                price: $(this).data('price'),
-                                Description: bdesc,
-                                bagObjData: $(this).data('bagobjdata')
-                            };
-                            if (trip === 'departure') {
-                                selectedBaggage.push(baggageData);
-                            }
-                            if (trip === 'return') {
-                                selectedBaggageRet.push(baggageData);
-                            }
-
-
-                        } else {
-
-                            let codeToRemove = $(this).data('code');
-                            if (trip === 'departure') {
-                                selectedBaggage = selectedBaggage.filter(baggage => baggage.Code !== codeToRemove);
-                            }
-                            if (trip === 'return') {
-                                selectedBaggageRet = selectedBaggageRet.filter(baggage => baggage.Code !== codeToRemove);
-                            }
-                        }
-
-                        if (trip === 'departure') {
-                            $(`.baggage-count${trip}`).text(selectedBaggage.length);
-                        }
-                        if (trip === 'return') {
-                            $(`.baggage-count${trip}`).text(selectedBaggageRet.length);
-                        }
-
-                        updateSummaryUI(trip);
-                    });
-
-
-                    $(document).on('change', `input[name="meal-checkbox${trip}"]`, function () {
-                        let checkedCount = $(`input[name="meal-checkbox${trip}"]:checked`).length;
-
-
-                        if ($(this).is(':checked')) {
-                            if (checkedCount > totalPassengers) {
-                                $(this).prop('checked', false);
-                                notify(`You can select meals only for ${totalPassengers} passenger(s).`, 'error');
-                                return;
-                            }
-                            let mdesc = $(this).data('description');
-                            let mealDesc = '';
-                            if (mdesc == 1) {
-                                mealDesc = 'Included (The fare includes the Meal)';
-                            } else if (mdesc == 2) {
-                                mealDesc = 'Direct (The Meal charges are added while making the ticket)';
-                            } else if (mdesc == 3) {
-                                mealDesc = 'Imported (Meal charges are added while importing the ticket.)';
-                            }
-
-                            // 🟢 Add selected meal details to array
-                            let mealData = {
-                                Code: $(this).data('code'),
-                                price: $(this).data('price'),
-                                Description: mdesc,
-                                mealObjData: $(this).data('mealobjdata')
-                            };
-
-                            if (trip === 'departure') {
-                                selectedMeals.push(mealData);
-                            }
-                            if (trip === 'return') {
-                                selectedMealsRet.push(mealData);
-                            }
-
-                        } else {
-                            let codeToRemove = $(this).data('code');
-                            if (trip === 'departure') {
-                                selectedMeals = selectedMeals.filter(meal => meal.Code !== codeToRemove);
-                            }
-                            if (trip === 'return') {
-                                selectedMealsRet = selectedMealsRet.filter(meal => meal.Code !== codeToRemove);
-                            }
-                        }
-
-                        // 🧮 Update selected count display
-                        if (trip == 'departure') {
-                            $(`.meal-count${trip}`).text(selectedMeals.length);
-                        }
-                        if (trip === 'return') {
-                            $(`.meal-count${trip}`).text(selectedMealsRet.length);
-                        }
-
-                        updateSummaryUI(trip);
-                    });
-
-                } else {
-                    if (trip == "departure") {
-                        $("#baggageContainer").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
-                        $("#mealContainer").html(`<div class="alert alert-danger">Meal Not Found</div>`);
-                        $("#mainPlaneWrapper").html(`<div class="alert alert-danger">Seat Layout Not found</div>`);
-                    }
-                    if (trip == 'return') {
-                        $("#baggageContainerRet").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
-                        $("#mealContainerRet").html(`<div class="alert alert-danger">Meal Not Found</div>`);
-                        $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger">Seat Layout Not found</div>`);
-                    }
-                }
-            },
-            error: function (xhr) {
-                notify("Failed to fetch fare quote. Please try again.", "error");
+            if (response.status !== 'success') {
+                notify("SSR not found", "error");
+                return;
             }
-        });
 
-    }
+            $('#returnTabLi').removeClass('d-none');
+
+            let payload = JSON.parse(localStorage.getItem('payload')) || {};
+            totalPassengers =
+                (parseInt(payload.AdultCount) || 0) +
+                (parseInt(payload.ChildCount) || 0) +
+                (parseInt(payload.InfantCount) || 0);
+
+            /* RESET */
+            selectedMeals = [];
+            selectedBaggage = [];
+            selectedSeats = {};
+
+            selectedMealsRet = [];
+            selectedBaggageRet = [];
+            selectedSeatsRet = {};
+
+            let ssr = response.data;
+
+            /* ======================
+               SEATS (MOST IMPORTANT)
+            ====================== */
+            if (ssr.SeatDynamic?.[0]) {
+                renderSeatLayout([ssr.SeatDynamic[0]], totalPassengers, 'departure');
+            }
+            if (ssr.SeatDynamic?.[1]) {
+                renderSeatLayout([ssr.SeatDynamic[1]], totalPassengers, 'return');
+            }
+
+            /* ======================
+               BAGGAGE
+            ====================== */
+            renderInternationalBaggage(ssr.Baggage?.[0], 'departure');
+            renderInternationalBaggage(ssr.Baggage?.[1], 'return');
+
+            /* ======================
+               MEALS
+            ====================== */
+            renderInternationalMeal(ssr.Meal?.[0], 'departure');
+            renderInternationalMeal(ssr.Meal?.[1], 'return');
+        }
+    });
 }
+
+function renderInternationalMeal(mealData, trip) {
+
+    let container = trip === 'departure' ? '#mealContainer' : '#mealContainerRet';
+
+    if (!mealData || mealData.length === 0) {
+        $(container).html(`<div class="alert alert-warning text-center">No Meal Available</div>`);
+        return;
+    }
+
+    let html = `<table class="table table-bordered text-center">
+        <thead><tr>
+            <th>Meal</th><th>Code</th><th>Price</th><th>Select</th>
+        </tr></thead><tbody>`;
+
+    mealData.forEach(m => {
+        let price = m.Price == 0 ? 'Included' : `${m.Currency} ${m.Price}`;
+        html += `
+            <tr>
+                <td>${m.AirlineDescription || '-'}</td>
+                <td>${m.Code}</td>
+                <td>${price}</td>
+                <td>
+                    <input type="checkbox"
+                        name="meal-checkbox-${trip}"
+                        data-code="${m.Code}"
+                        data-price="${price}"
+                        data-mealobjdata='${JSON.stringify(m)}'>
+                </td>
+            </tr>`;
+    });
+
+    html += `</tbody></table>`;
+    $(container).html(html);
+}
+
+function renderInternationalBaggage(bagData, trip) {
+
+    let container = trip === 'departure' ? '#baggageContainer' : '#baggageContainerRet';
+
+    if (!bagData || bagData.length === 0) {
+        $(container).html(`<div class="alert alert-warning text-center">No Baggage Available</div>`);
+        return;
+    }
+
+    let html = `<table class="table table-bordered text-center">
+        <thead><tr>
+            <th>Code</th><th>Weight</th><th>Price</th><th>Select</th>
+        </tr></thead><tbody>`;
+
+    bagData.forEach(b => {
+        let price = b.Price == 0 ? 'Included' : `${b.Currency} ${b.Price}`;
+        html += `
+            <tr>
+                <td>${b.Code}</td>
+                <td>${b.Weight} KG</td>
+                <td>${price}</td>
+                <td>
+                    <input type="checkbox"
+                        name="baggage-checkbox-${trip}"
+                        data-code="${b.Code}"
+                        data-price="${price}"
+                        data-bagobjdata='${JSON.stringify(b)}'>
+                </td>
+            </tr>`;
+    });
+
+    html += `</tbody></table>`;
+    $(container).html(html);
+}
+
 
 
 function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
