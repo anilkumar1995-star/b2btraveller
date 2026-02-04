@@ -2263,7 +2263,6 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
                 (parseInt(payload.ChildCount) || 0) +
                 (parseInt(payload.InfantCount) || 0);
 
-            /* RESET */
             selectedMeals = [];
             selectedBaggage = [];
             selectedSeats = {};
