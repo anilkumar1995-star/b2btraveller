@@ -112,6 +112,27 @@
             </ul>
         </li>
 
+         <li class="menu-item {{ Request::is('payment/*') ? 'active open' : '' }}">
+            <a href="#menu-design" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-wallet"></i>
+                <div data-i18n="Payment">Payment</div>
+            </a>
+            <ul class="menu-sub" id="menu-design {{ Request::is('payment/*') ? 'show' : '' }}">
+
+             <li class="menu-item {{ Request::is('payment/vanlist') ? 'active' : '' }}">
+                    <a href="{{ url('payment/vanlist') }}" class="menu-link">
+                        <div data-i18n="Van List">Van List</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('payment/upicollect') ? 'active' : '' }}">
+                    <a href="{{ url('payment/upicollect') }}" class="menu-link">
+                        <div data-i18n="Upi Collect">Upi Collect</div>
+                    </a>
+                </li>
+               
+            </ul>
+        </li>
+
 
         {{--  @if (Myhelper::can(['recharge_service'])) --}}
         <li class="menu-item {{ Request::is('recharge/*') ? 'active open' : '' }}">

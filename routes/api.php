@@ -29,7 +29,8 @@ use App\Http\Controllers\BulkSMSContolloller;
 use App\Http\Controllers\Callbacks\IYDACallbackContoller;
 use App\Http\Controllers\Android\CcpaymentsController;  
 use App\Http\Controllers\Android\UpiController;  
-use App\Http\Controllers\Android\IpayDmtController;   
+use App\Http\Controllers\Android\IpayDmtController;
+use App\Http\Controllers\Api\FundCallBackController;
 use App\Http\Controllers\IYDABillPayController; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -149,7 +150,6 @@ Route::group(['prefix' => 'android/user', 'middleware' => ['apiCheck','androidLo
       Route::post('update', [MatmController::class, 'microatmUpdate'])->middleware('transactionlog:matm');
     });
   });
-
   Route::group(['prefix' => 'pan', 'middleware' => ['apiCheck']], function () {
     Route::get('initiate', [IYDAPanCardController::class, 'initiatePan'])->middleware('transactionlog:pan');
   });
@@ -164,6 +164,10 @@ Route::group(['prefix' => 'android/user', 'middleware' => ['apiCheck','androidLo
 
 
 }); 
+
+  Route::group(['prefix' => 'v1'], function () {
+    Route::any('fund/callbacks/{route}', [FundCallBackController::class, 'callback']);
+});
 
 Route::get('android/state', [UserController::class, 'GetState']);
 Route::get('android/districtbystateid', [UserController::class, 'GetDistrictByState']);

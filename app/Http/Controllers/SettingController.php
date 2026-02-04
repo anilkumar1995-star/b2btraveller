@@ -45,6 +45,14 @@ class SettingController extends Controller
     {
         return view('certificate');
     }
+    public function vanlist(Request $request)
+    {
+        return view('payment.vanlist');
+    }
+     public function upicollect()
+    {
+        return view('payment.upicollect');
+    }
 
     public function profileUpdate(Request $post)
     {
