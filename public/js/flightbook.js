@@ -2274,8 +2274,8 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
                     renderSeatLayout([ssr.SeatDynamic[1]], totalPassengers, 'return');
                 }
             } else {
-                $("#mainPlaneWrapper").html(`<div class="alert alert-danger">No seat layout found</div>`);
-                $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger">No seat layout found</div>`);
+                $("#mainPlaneWrapper").html(`<div class="alert alert-danger text-center"> No Seat available for this flight.</div>`);
+                $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger text-center">No Seat available for this flight.</div>`);
             }
 
             renderInternationalBaggage(ssr.Baggage?.[0], 'departure');
@@ -2292,7 +2292,7 @@ function renderInternationalMeal(mealData, trip) {
     let container = trip === 'departure' ? '#mealContainer' : '#mealContainerRet';
 
     if (!mealData || mealData.length === 0) {
-        $(container).html(`<div class="alert alert-warning text-center">No Meal Available</div>`);
+        $(container).html(`<div class="alert alert-warning text-center mt-3"> No meal options available for this flight.</div>`);
         return;
     }
 
@@ -2327,7 +2327,7 @@ function renderInternationalBaggage(bagData, trip) {
     let container = trip === 'departure' ? '#baggageContainer' : '#baggageContainerRet';
 
     if (!bagData || bagData.length === 0) {
-        $(container).html(`<div class="alert alert-warning text-center">No Baggage Available</div>`);
+        $(container).html(`<div class="alert alert-warning text-center mt-3"> No baggage options available for this flight.</div>`);
         return;
     }
 
