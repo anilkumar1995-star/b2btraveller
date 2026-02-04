@@ -13,6 +13,7 @@
 
 use App\Http\Controllers\AepsController;
 use App\Http\Controllers\AffliateController;
+use App\Http\Controllers\Api\v1\EasebuzzVanController;
 use App\Http\Controllers\PayoutController;
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BillpayController;
@@ -66,6 +67,17 @@ Route::group(['prefix' => 'auth', "middleware" => ['webActivityLog']], function 
     Route::post('getotp', [UserController::class, 'getotp'])->name('getotp');
     Route::post('setpin', [UserController::class, 'setpin'])->name('setpin')->middleware('CheckPasswordAndPin:tpin');
     Route::post('gettxnotp', [UserController::class, 'gettxnotp'])->name('gettxnotp');
+});
+
+Route::group(['prefix' => 'payment', 'middleware' => ['auth']], function () {
+    Route::get('upicollect', [SettingController::class, 'upicollect'])->name('upicollect');
+    Route::get('vanlist', [SettingController::class, 'vanlist'])->name('vanlist');
+    Route::post('createvan', [EasebuzzVanController::class, 'createvan'])->name('generate');
+    // Route::post('vancreate', [EasebuzzVanController::class, 'generateVan'])->name('generateVan');
+    // Route::post('updatevan', [EasebuzzVanController::class, 'updateVanInfo'])->name('updatevan');
+    Route::post('vandelete/{account_id}', [EasebuzzVanController::class, 'updateVanStatus']);
+
+
 });
 
 Route::group(['prefix' => 'loanenquiry', 'middleware' => 'auth'], function () {
