@@ -19073,7 +19073,119 @@ class StaticResponseHelper
                         "SegmentSeat": [
                             {
                                 "RowSeats": [
-                                 {
+                                    {
+                                        "Seats": [
+                                            {
+                                                "AirlineCode": "6E",
+                                                "FlightNumber": "906",
+                                                "CraftType": "A320-186",
+                                                "Origin": "LKO",
+                                                "Destination": "BLR",
+                                                "AvailablityType": 3,
+                                                "Description": 2,
+                                                "Code": "1A",
+                                                "RowNo": "1",
+                                                "SeatNo": "A",
+                                                "SeatType": 1,
+                                                "SeatWayType": 1,
+                                                "Compartment": 1,
+                                                "Deck": 1,
+                                                "Currency": "INR",
+                                                "Price": 0
+                                            },
+                                            {
+                                                "AirlineCode": "6E",
+                                                "FlightNumber": "906",
+                                                "CraftType": "A320-186",
+                                                "Origin": "LKO",
+                                                "Destination": "BLR",
+                                                "AvailablityType": 1,
+                                                "Description": 2,
+                                                "Code": "1B",
+                                                "RowNo": "1",
+                                                "SeatNo": "B",
+                                                "SeatType": 3,
+                                                "SeatWayType": 1,
+                                                "Compartment": 1,
+                                                "Deck": 1,
+                                                "Currency": "INR",
+                                                "Price": 0
+                                            },
+                                            {
+                                                "AirlineCode": "6E",
+                                                "FlightNumber": "906",
+                                                "CraftType": "A320-186",
+                                                "Origin": "LKO",
+                                                "Destination": "BLR",
+                                                "AvailablityType": 1,
+                                                "Description": 2,
+                                                "Code": "1C",
+                                                "RowNo": "1",
+                                                "SeatNo": "C",
+                                                "SeatType": 2,
+                                                "SeatWayType": 1,
+                                                "Compartment": 1,
+                                                "Deck": 1,
+                                                "Currency": "INR",
+                                                "Price": 0
+                                            },
+                                            {
+                                                "AirlineCode": "6E",
+                                                "FlightNumber": "906",
+                                                "CraftType": "A320-186",
+                                                "Origin": "LKO",
+                                                "Destination": "BLR",
+                                                "AvailablityType": 1,
+                                                "Description": 2,
+                                                "Code": "1D",
+                                                "RowNo": "1",
+                                                "SeatNo": "D",
+                                                "SeatType": 2,
+                                                "SeatWayType": 1,
+                                                "Compartment": 1,
+                                                "Deck": 1,
+                                                "Currency": "INR",
+                                                "Price": 0
+                                            },
+                                            {
+                                                "AirlineCode": "6E",
+                                                "FlightNumber": "906",
+                                                "CraftType": "A320-186",
+                                                "Origin": "LKO",
+                                                "Destination": "BLR",
+                                                "AvailablityType": 1,
+                                                "Description": 2,
+                                                "Code": "1E",
+                                                "RowNo": "1",
+                                                "SeatNo": "E",
+                                                "SeatType": 3,
+                                                "SeatWayType": 1,
+                                                "Compartment": 1,
+                                                "Deck": 1,
+                                                "Currency": "INR",
+                                                "Price": 0
+                                            },
+                                            {
+                                                "AirlineCode": "6E",
+                                                "FlightNumber": "906",
+                                                "CraftType": "A320-186",
+                                                "Origin": "LKO",
+                                                "Destination": "BLR",
+                                                "AvailablityType": 1,
+                                                "Description": 2,
+                                                "Code": "1F",
+                                                "RowNo": "1",
+                                                "SeatNo": "F",
+                                                "SeatType": 1,
+                                                "SeatWayType": 1,
+                                                "Compartment": 1,
+                                                "Deck": 1,
+                                                "Currency": "INR",
+                                                "Price": 0
+                                            }
+                                        ]
+                                    },
+                                    {
                                         "Seats": [
                                             {
                                                 "AirlineCode": "6E",
