@@ -115,7 +115,7 @@
                             </div>
                         </div>
                     </aside>
-                    
+
                 </div>
             </div>
         </section>
@@ -131,7 +131,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf417-js/2.1.7/pdf417.min.js"></script> --}}
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="{{ asset('') }}js/flighttripbook.js"></script>
+    <script src="{{ asset('') }}js/flightbooktrip.js"></script>
     <script>
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');
@@ -144,6 +144,8 @@
             let selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
             let selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
             let selectedBaggage = JSON.parse(localStorage.getItem('selectedBaggage')) || [];
+
+            let isInternational = localStorage.getItem("isInternational") || false;
 
             if (!payload || !traceId || !selectedFlightDetails) {
                 swal({
@@ -164,14 +166,18 @@
                     selectedBaggage, 'departure', '1');
             }
             if (payload.JourneyType == 2) {
-                selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
-                selectedMealsRet = JSON.parse(localStorage.getItem('selectedMealsReturn')) || [];
-                selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
+                if (isInternational == 'true' || isInternational == true) {
+                    notify('International flight booking in progress. This may take a while.', 'warning');
+                } else {
+                    selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
+                    selectedMealsRet = JSON.parse(localStorage.getItem('selectedMealsReturn')) || [];
+                    selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
 
-                hitBookingAPI(traceId, selectedFlightDetails.departure, selectedSeats, selectedMeals,
-                    selectedBaggage, 'departure', '2');
-                hitBookingAPI(traceId, selectedFlightDetails.return, selectedSeatsRet, selectedMealsRet,
-                    selectedBaggageRet, 'return', '2');
+                    hitBookingAPI(traceId, selectedFlightDetails.departure, selectedSeats, selectedMeals,
+                        selectedBaggage, 'departure', '2');
+                    hitBookingAPI(traceId, selectedFlightDetails.return, selectedSeatsRet, selectedMealsRet,
+                        selectedBaggageRet, 'return', '2');
+                }
             }
         });
     </script>
