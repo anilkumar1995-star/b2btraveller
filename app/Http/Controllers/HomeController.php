@@ -17,6 +17,7 @@ use App\Models\Microatmreport;
 use App\Models\Paymode;
 use App\Models\Ccreport;
 use App\Models\Role;
+use App\Models\Van;
 use App\Services\Traveller\TravelService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -140,6 +141,12 @@ class HomeController extends Controller
         }
 
         $data['recentBookings'] = $recentBookingsQuery->get();
+        
+       if (\Myhelper::hasRole('admin')) {
+                $data['payment'] = Van::orderBy('id', 'desc')->take(5)->get();
+            } else {
+                $data['payment'] = Van::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+            }
 
         $revenueQuery = DB::table('bookings')
             ->select(

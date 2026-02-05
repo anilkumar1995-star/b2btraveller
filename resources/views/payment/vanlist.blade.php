@@ -23,7 +23,7 @@ $table = "yes";
         <div class="card">
           
 
-            <div class="card-header bg-light pb-0 d-flex justify-content-between position-relative align-items-center">
+            <div class="card-header bg-label-warning pb-0 d-flex justify-content-between position-relative align-items-center">
                 <div class="card-title">
                     <h5 class="mb-0">
                         <span>@yield('pagetitle')</span>
@@ -31,8 +31,8 @@ $table = "yes";
                 </div>
 
                 <div>
-                    <button type="button" class="btn btn-success mb-3 btn-sm" onclick="addVan()">
-                        <i class="ti ti-plus"></i> Create Virtual Account
+                    <button type="button" class="btn btn-success mb-3" onclick="addVan()">
+                        Create Virtual Account
                    </button>
                 </div>
             </div>
@@ -49,7 +49,7 @@ $table = "yes";
                             <th>VPA Address </th>
                             <th>QR Code </th>
                             <th>Status </th>
-                            <!-- <th>Action </th> -->
+                            <th>Action </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -171,7 +171,7 @@ $table = "yes";
                         </div>
 
                         <div class="modal-footer py-0 mt-2">
-                            <button class="btn btn-primary" type="submit"
+                            <button class="btn btn-success" type="submit"
                                 data-loading-text="<i class='fa fa-spin fa-spinner'></i> Submitting">Submit
                             </button>
                         </div>
@@ -455,7 +455,22 @@ $table = "yes";
                         }
                     }
                 },
-               
+                {
+                    "data": "is_verify",
+                    render: function(data, type, full, meta) {
+                        let out = '';
+                        @if (\Myhelper::hasRole('retailer') || \Myhelper::hasRole('admin') )
+                            out += `
+                                <span class="btn m-1 btn-sm btn-danger cursor-pointer" 
+                                    onclick="ChangeStatusVan('${full?.account_id}')">
+                               <i class="ti ti-arrows-exchange" title="Status Update"></i>
+                                </span>`;
+                        @else
+                            out += `N/A`;
+                        @endif
+                        return out;
+                    }
+                },
 
             ];
 
@@ -473,23 +488,23 @@ $table = "yes";
 
          function ChangeStatusVan(account_id) {
 
-            Swal.fire({
+            swal({
                 title: "Are you sure?",
                 text: "You want to Status Update this virtual account?",
-                icon: "warning",
+                type: "warning",
                 showCancelButton: true,
                 confirmButtonColor: "#d33",
                 cancelButtonColor: "#3085d6",
                 confirmButtonText: "Yes, Change Status !",
                 cancelButtonText: "Cancel"
             }).then((result) => {
-                if (result.isConfirmed) {
-                        Swal.fire({
+                if (result.isConfirmed || result.value) {
+                        swal({
                         title: "Please wait...",
                         text: "Changing Status...",
                         allowOutsideClick: false,
-                        didOpen: () => {
-                            Swal.showLoading();
+                        onOpen: () => {
+                            swal.showLoading();
                         }
                     });
 
@@ -502,15 +517,15 @@ $table = "yes";
                         success: function(res) {
 
                             if (res.status === "SUCCESS" && res.statusCode ==="0x0200") {
-                                Swal.fire("Changed!", res.message, "success");
+                                swal("Changed!", res.message, "success");
 
                                 $('#datatable').DataTable().ajax.reload();
                             } else {
-                                Swal.fire("Error!", res.message, "error");
+                                swal("Error!", res.message, "error");
                             }
                         },
                         error: function(xhr) {
-                            Swal.fire("Error!", xhr?.responseJSON?.message || "Something went wrong", "error");
+                            swal("Error!", xhr?.responseJSON?.message || "Something went wrong", "error");
                         }
                     });
                 }

@@ -36,7 +36,7 @@
     <ul class="menu-inner py-3">
         <li class="{{ Request::is('dashboard') ? 'active' : '' }} menu-item ">
             <a href="{{ route('home') }}" class="menu-link">
-                <i class="menu-icon tf-icons ti ti-smart-home"></i>
+                <i class="menu-icon tf-icons ti ti-smart-home" style="color: #7367f0;"></i>
                 <div data-i18n="Dashboards">Dashboards</div>
             </a>
 
@@ -44,7 +44,7 @@
 
         <li class="menu-item {{ Request::is('flight/*') ? 'active open' : '' }}">
             <a href="#menu-design" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-plane"></i>
+                <i class="menu-icon tf-icons ti ti-plane" style="color: #00cfdd;"></i>
                 <div data-i18n="Flight">Flight</div>
             </a>
             <ul class="menu-sub" id="menu-design {{ Request::is('flight/*') ? 'show' : '' }}">
@@ -69,7 +69,7 @@
 
         <li class="menu-item {{ Request::is('bus/*') ? 'active open' : '' }}">
             <a href="#menu-design" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-bus"></i>
+                <i class="menu-icon tf-icons ti ti-bus" style="color: #ea5455;"></i>
                 <div data-i18n="Bus">Bus</div>
             </a>
             <ul class="menu-sub" id="menu-design {{ Request::is('bus/*') ? 'show' : '' }}">
@@ -94,7 +94,7 @@
 
         <li class="menu-item {{ Request::is('hotel/*') ? 'active open' : '' }}">
             <a href="#menu-design" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-building"></i>
+                <i class="menu-icon tf-icons ti ti-building" style="color: #ff9f43;"></i>
                 <div data-i18n="Hotel">Hotel</div>
             </a>
             <ul class="menu-sub" id="menu-design {{ Request::is('hotel/*') ? 'show' : '' }}">
@@ -114,7 +114,7 @@
 
          <li class="menu-item {{ Request::is('payment/*') ? 'active open' : '' }}">
             <a href="#menu-design" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-wallet"></i>
+                <i class="menu-icon tf-icons ti ti-wallet" style="color: #28c76f;"></i>
                 <div data-i18n="Payment">Payment</div>
             </a>
             <ul class="menu-sub" id="menu-design {{ Request::is('payment/*') ? 'show' : '' }}">
@@ -137,7 +137,7 @@
         {{--  @if (Myhelper::can(['recharge_service'])) --}}
         <li class="menu-item {{ Request::is('recharge/*') ? 'active open' : '' }}">
             <a href="#menu-design" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-file-dollar"></i>
+                <i class="menu-icon tf-icons ti ti-file-dollar" style="color: #00cfe8;"></i>
                 <div data-i18n="Utility Recharge">Recharge</div>
             </a>
             <ul class="menu-sub" id="menu-design {{ Request::is('recharge/*') ? 'show' : '' }}">
@@ -158,7 +158,7 @@
 
         <li class="menu-item {{ Request::is('billpay/*') ? 'active open' : '' }}">
             <a href="#userinfo" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-smart-home"></i>
+                <i class="menu-icon tf-icons ti ti-smart-home" style="color: #a855f7;"></i>
                 <div data-i18n="Bill Payment">Bill Payment</div>
             </a>
             <ul class="menu-sub {{ Request::is('billpay/*') ? 'show' : '' }}" id="userinfo">
@@ -313,7 +313,7 @@
             ]))
             <li class="menu-item {{ Request::is('member/*') ? 'active open' : '' }}">
                 <a href="#member" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons ti ti-users"></i>
+                    <i class="menu-icon tf-icons ti ti-users" style="color: #7367f0;"></i>
                     <div data-i18n="Member">Member</div>
                 </a>
                 <ul class="menu-sub {{ Request::is('member/*') ? 'show' : '' }}" id="member">
@@ -369,7 +369,7 @@
         <li
             class="menu-item {{ Request::is('statement/aeps') || Request::is('fund/aepsrequest') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/affiliateList') || Request::is('statement/cmsreport') ? 'active open' : '' }}">
             <a href="#txnreport" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-file"></i>
+                <i class="menu-icon tf-icons ti ti-file" style="color: #6c96b9ff;"></i>
                 <div data-i18n="Transaction Report">Transaction Report</div>
             </a>
             <ul class="menu-sub {{ Request::is('statement/aeps') || Request::is('fund/aepsrequest') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/cmsreport') || Request::is('statement/affiliateList') ? 'show' : '' }}"
@@ -478,7 +478,7 @@
 
         <li class="menu-item {{ Request::is('profile/*') ? 'active open' : '' }}">
             <a href="#accountSetting" class="menu-link menu-toggle">
-                <i class="menu-icon tf-icons ti ti-file-description"></i>
+                <i class="menu-icon tf-icons ti ti-file-description" style="color: #dc3d72ff;"></i>
                 <div data-i18n="Account Settings">Account Settings</div>
             </a>
             <ul class="menu-sub {{ Request::is('profile/*') ? 'show' : '' }}" id="accountSetting">
@@ -492,7 +492,7 @@
         @if (Myhelper::hasRole('admin'))
             <li class="menu-item {{ Request::is('api/*') ? 'active open' : '' }}">
                 <a href="#apilog" class="menu-link menu-toggle">
-                    <i class="menu-icon tf-icons ti ti-activity"></i>
+                    <i class="menu-icon tf-icons ti ti-activity" style="color: #ea5455;"></i>
                     <div data-i18n="API Log">API Logs</div>
                 </a>
                 <ul class="menu-sub {{ Request::is('api/*') ? 'show' : '' }}" id="apilog">

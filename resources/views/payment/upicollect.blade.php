@@ -23,7 +23,7 @@ $table = "yes";
         <div class="card">
           
 
-            <div class="card-header bg-light pb-0 d-flex justify-content-between position-relative align-items-center">
+            <div class="card-header bg-label-success pb-0 d-flex justify-content-between position-relative align-items-center">
                 <div class="card-title">
                     <h5 class="mb-0">
                         <span>@yield('pagetitle')</span>
@@ -154,7 +154,7 @@ $table = "yes";
                         if (full.status == "unsettled") {
                             return `<span class="badge bg-success">Completed</span>`;
                         } else if (full.status == "received") {
-                            return `<span class="badge bg-success">${full.status}</span>`;
+                            return `<span class="badge bg-success">Received</span>`;
                         }
                         else {
                             return `<span class="badge bg-danger">${full.status}</span>`;

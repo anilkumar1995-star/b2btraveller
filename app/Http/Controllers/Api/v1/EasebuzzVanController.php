@@ -930,7 +930,7 @@ class EasebuzzVanController extends  Controller
      */
    public function updateVanStatus($account_id)
 {
-    if (\Myhelper::hasRole('employee') || \Myhelper::hasRole('admin')) {
+    if (\Myhelper::hasRole('retailer') || \Myhelper::hasRole('admin')) {
         try {
             if (empty($account_id)) {
                 return ResponseHelper::failed("Account ID is required.");
