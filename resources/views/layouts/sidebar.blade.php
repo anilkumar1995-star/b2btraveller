@@ -133,6 +133,22 @@
             </ul>
         </li>
 
+        <li class="menu-item {{ Request::is('customer/*') ? 'active open' : '' }}">
+            <a href="#menu-design" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-users" style="color: #c7c728;"></i>
+                <div data-i18n="Customer">Customer</div>
+            </a>
+            <ul class="menu-sub" id="menu-design {{ Request::is('customer/*') ? 'show' : '' }}">
+
+                <li class="menu-item {{ Request::is('customer/list') ? 'active' : '' }}">
+                    <a href="{{ route('customerlist') }}" class="menu-link">
+                        <div data-i18n="Customer List">Customer List</div>
+                    </a>
+                </li>
+               
+            </ul>
+        </li>
+
 
         {{--  @if (Myhelper::can(['recharge_service'])) --}}
         <li class="menu-item {{ Request::is('recharge/*') ? 'active open' : '' }}">
