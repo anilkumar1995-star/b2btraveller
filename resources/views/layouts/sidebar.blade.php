@@ -36,7 +36,7 @@
     <ul class="menu-inner py-3">
         <li class="{{ Request::is('dashboard') ? 'active' : '' }} menu-item ">
             <a href="{{ route('home') }}" class="menu-link">
-                <i class="menu-icon tf-icons ti ti-smart-home" style="color: #7367f0;"></i>
+                <i class="menu-icon tf-icons ti ti-smart-home" style="color: #f06795;"></i>
                 <div data-i18n="Dashboards">Dashboards</div>
             </a>
 
