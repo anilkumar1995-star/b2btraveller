@@ -95,7 +95,7 @@
                                 <span class="dropdown-shortcuts-icon rounded-circle mb-2">
                                     <i class="ti ti-calendar fs-4"></i>
                                 </span>
-                                <a href="{{ route('statement', ['type' => 'account']) }}" class="stretched-link">Main Wallet</a>
+                                <a href="{{ route('statement', ['type' => 'account']) }}" class="stretched-link">Card Balance</a>
                                 <small class="text-muted mb-0">&#8377; {{Auth::user()->mainwallet}} /-</small>
                             </div>
                             {{-- <div class="dropdown-shortcuts-item col">

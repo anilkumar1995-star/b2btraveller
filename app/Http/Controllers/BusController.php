@@ -430,6 +430,13 @@ class BusController extends Controller
         if ($request->ajax()) {
             return view('bus.booking-table')->with($data)->render();
         }
+        $data['customers'] = DB::table('customer_list')
+            ->where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->get();
+
+        return view('bus.bookinglist', $data);
+
 
         return view('bus.bookinglist')->with($data);
     }
