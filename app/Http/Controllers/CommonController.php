@@ -183,7 +183,7 @@ class CommonController extends Controller
 				break;
 			case 'refundlist':
 				$request['table'] = '\App\Models\Refundlist';
-				$request['searchdata'] = ['id', 'amount', 'status', 'refund_date'];
+				$request['searchdata'] = ['id', 'amount', 'status'];
 				$request['select'] = 'all';
 				$request['order'] = ['id', 'desc'];
 				if (\Myhelper::hasRole('admin')) {

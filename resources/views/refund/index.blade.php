@@ -29,11 +29,11 @@
                         <thead class="text-center bg-light">
                             <tr>
                                 <th>ID</th>
-                                <!-- <th>Created By</th> -->
+                                <th>User Details</th>
                                 <th>Customer Details</th>
-                                <th>Account Number</th>
-                                <th>Bank Details</th>
-                                <th>Address</th>
+                                <th>Amount</th>
+                                <th>Refund Date</th>
+                                <th>Remarks</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -56,63 +56,65 @@
                     </button>
                 </div>
 
-                    <form id="refundForm" method="POST" action="{{ route('createrefund') }}">
-                        @csrf
+                <form id="refundForm" method="POST" action="{{ route('createrefund') }}">
+                    @csrf
 
-                        <div class="modal-body">
-                            <div class="row g-3">
+                    <div class="modal-body">
+                        <div class="row g-3">
 
-                                <div class="col-md-6">
-                                    <label>Select Customer *</label>
-                                    <select class="form-control" id="refund_customer" name="customer_id" required>
-                                        <option value="">-- Select Customer --</option>
-                                        @foreach ($customers as $customer)
-                                            <option value="{{ $customer->id }}"
-                                                data-account="{{ $customer->account_number }}"
-                                                data-ifsc="{{ $customer->ifsc_code }}"
-                                                data-bank="{{ $customer->bank_name }}">
-                                                {{ $customer->name }} ({{ $customer->email }})
-                                            </option>
-                                        @endforeach
-                                    </select>
+                            <div class="col-md-6">
+                                <label>Select Customer *</label>
+                                <select class="form-control" id="refund_customer" name="customer_id" required>
+                                    <option value="">-- Select Customer --</option>
+                                    @foreach ($customers as $customer)
+                                        <option value="{{ $customer->id }}" data-account="{{ $customer->account_number }}"
+                                            data-ifsc="{{ $customer->ifsc_code }}" data-bank="{{ $customer->bank_name }}">
+                                            {{ $customer->name }} ({{ $customer->email }})
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label>Refund Amount *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text w-25">₹</span>
+                                    <input type="number" step="0.01" min="1" max="100000" name="amount"
+                                        id="refund_amount" class="form-control w-75" placeholder="Enter amount" required>
                                 </div>
+                                <small class="text-muted">Minimum ₹1 | Maximum ₹1,00,000</small>
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label>Refund Amount *</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text w-25">₹</span>
-                                        <input type="number" step="0.01" min="1" max="100000" name="amount"
-                                            id="refund_amount" class="form-control w-75" placeholder="Enter amount" required>
-                                    </div>
-                                    <small class="text-muted">Minimum ₹1 | Maximum ₹1,00,000</small>
-                                </div>
+                            <div class="col-md-6">
+                                <label>Account Number</label>
+                                <input type="text" id="show_account" name="account_number" class="form-control bg-light"
+                                    readonly required>
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label>Account Number</label>
-                                    <input type="text" id="show_account" name="account_number" class="form-control bg-light" readonly required>
-                                </div>
+                            <div class="col-md-6">
+                                <label>IFSC Code</label>
+                                <input type="text" id="show_ifsc" name="ifsc_code" class="form-control bg-light" readonly
+                                    required>
+                            </div>
 
-                                <div class="col-md-6">
-                                    <label>IFSC Code</label>
-                                    <input type="text" id="show_ifsc" name="ifsc_code" class="form-control bg-light" readonly required>
-                                </div>
+                            <div class="col-md-6">
+                                <label>Bank Name</label>
+                                <input type="text" id="show_bank" name="bank_name" class="form-control bg-light" readonly
+                                    required>
+                            </div>
+                            {{-- Remarke --}}
 
-                                <div class="col-md-6">
-                                    <label>Bank Name</label>
-                                    <input type="text" id="show_bank" name="bank_name" class="form-control bg-light" readonly required>
-                                </div>
-                                {{-- Remarke --}}
-
-                                <div class="col-md-6">
-                                    <label>Remarks</label>
-                                    <textarea name="remarks" class="form-control" rows="1" placeholder="Enter remarks (optional)"></textarea>
+                            <div class="col-md-6">
+                                <label>Remarks</label>
+                                <textarea name="remarks" class="form-control" rows="1" placeholder="Enter remarks (optional)"></textarea>
                             </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Refund Amount</button>
+                    </div>
 
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-success">Refund Amount</button>
-                        </div>
-                    </form>
+                </form>
 
 
             </div>
@@ -148,7 +150,7 @@
                 let ifsc = selectedOption.data('ifsc') || '';
                 let bank = selectedOption.data('bank') || '';
 
-                
+
                 account = account.toString();
                 if (account.length > 4) {
                     let masked = 'XXXXXX' + account.slice(-4);
@@ -224,17 +226,29 @@
                     "data": "name",
                     render: function(data, type, full, meta) {
                         return `
-                        <strong>${full?.name ?? '-'}</strong><br>
-                        <small>${full?.email ?? '-'}</small><br>
-                        <span>${full?.mobile ?? '-'}</span>
+                        <strong>${full?.user.name ?? '-'}</strong><br>
+                        <small>${full?.user.email ?? '-'}</small><br>
+                        <span>${full?.user.mobile ?? '-'}</span>
+                    `;
+                    }
+                },
+                {
+                    "data": "customer_id",
+                    render: function(data, type, full, meta) {
+                        return `
+                        <small>${full?.customer.name ?? '-'}</small><br>
+                        <small>${full?.customer.bank_name ?? '-'}</small><br>
+                        <small>${full?.customer.account_number ?? '-'}</small><br>
+                        <span>${full?.customer.ifsc_code ?? '-'}</span>
                     `;
                     }
                 },
 
+
                 {
                     "data": "amount",
                     render: function(data, type, full, meta) {
-                        return `<span> ${full?.amount}</span>`;
+                        return `₹<span>${full?.amount}</span>`;
                     }
                 },
                 {
@@ -242,7 +256,7 @@
                     render: function(data, type, full, meta) {
                         return `
                         <div>
-                            <div class="fw-semibold">${full?.refund_date ?? '-'}</div>
+                            <div class="fw-semibold">${full?.created_at ?? '-'}</div>
                         </div>
                     `;
                     }
@@ -250,17 +264,17 @@
                 {
                     "data": "remarks",
                     render: function(data, type, full, meta) {
-                        return `<span> ${full?.remarks}</span>`;
+                        return `<span> ${full?.remarks ?? 'N/A'}</span>`;
                     }
                 },
                 {
                     "data": "status",
                     render: function(data, type, full, meta) {
-                        const status = full?.status === 'active';
+                        const status = full?.status === 'success';
                         if (status) {
-                            return `<span class="btn btn-sm btn-success ">Active</span>`;
+                            return `<span class="btn btn-sm btn-success ">Success</span>`;
                         } else {
-                            return `<span class="btn btn-sm btn-danger ">In Active</span>`;
+                            return `<span class="btn btn-sm btn-danger ">Failed</span>`;
                         }
                     }
                 },

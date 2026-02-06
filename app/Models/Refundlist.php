@@ -9,15 +9,20 @@ class Refundlist extends Model
 {
     protected $table = 'customer_refunds';
 
-    protected $fillable = ['id','user_id', 'customer_id', 'amount','refund_date','remarks','status'];
+    protected $fillable = ['id','user_id', 'customer_id', 'amount','remarks','status'];
 
     
 
-    public $with = ['user'];
+    public $with = ['user', 'customer'];
 
      public function user()
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customerlist::class, 'customer_id', 'id');
     }
     public function getUpdatedAtAttribute($value)
     {
