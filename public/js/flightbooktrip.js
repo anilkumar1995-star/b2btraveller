@@ -2559,8 +2559,11 @@ function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
                     updateSummaryUI(trip);
                 });
 
+                
+                if (idx === 6) rowDiv.append("<br>");
                 rowDiv.append(seatDiv);
                 if (idx === 2) rowDiv.append("<br>");
+                
             });
 
             $(`#planeContainer_${segIndex}${trip}`).append(rowDiv);
