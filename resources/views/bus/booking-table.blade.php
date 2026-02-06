@@ -175,6 +175,7 @@
                       'Confirmed' => ['label' => 'Confirmed', 'class' => 'badge bg-success'],
                       'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
                       'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                      'failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
                       'FAILURE' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
                       'pending' => ['label' => 'Pending', 'class' => 'badge bg-warning'],
                       'blocked' => ['label' => 'Blocked', 'class' => 'badge bg-info'],

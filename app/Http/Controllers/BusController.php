@@ -295,8 +295,8 @@ class BusController extends Controller
 
         try {
             DB::beginTransaction();
-
-            if (strtolower($response['status'] ?? '') === 'failed' || strtolower($response['status'] ?? '') === 'failure') {
+          
+            if (strtolower($response['status'] ?? '') == 'failed' || strtolower($response['status'] ?? '') == 'failure') {
 
                 User::where('id', $user->id)->increment('mainwallet', $request->debitAmount);
 
@@ -305,19 +305,19 @@ class BusController extends Controller
                     'refno'  => $request->traceId,
                 ]);
 
-                //  1️⃣ Failed table me insert
                 DB::table('failed_bus_bookings_list')->insert([
                     'user_id'        => \Auth::id(),
-                    'booking_id_api' => $request->traceId ?? null,
                     'booking_status' => 'failed',
                     'message'        => $response['message'] ?? 'Bus booking failed',
-                    'raw_payload'    => json_encode($request->all()),
                     'raw_response'   => json_encode($response),
+                    'base_fare'      => $request->totalAmount,
+                    'total_amount' => $request->totalAmount,
                     'created_at'     => now(),
                     'updated_at'     => now(),
                 ]);
 
-                // 2️⃣ Main bus_bookings ko failed mark karo
+
+
                 DB::table('bus_bookings')
                     ->where('booking_id_api', $request->traceId)
                     ->update([
@@ -326,6 +326,7 @@ class BusController extends Controller
                         'api_type' => 'book',
                         'updated_at'     => now(),
                     ]);
+
                 DB::commit();
 
                 return response()->json([
@@ -335,7 +336,7 @@ class BusController extends Controller
             }
 
             /* ---------- SUCCESS ---------- */
-            if (strtolower($response['status'] ?? '') === 'success') {
+            if (strtolower($response['status'] ?? '') == 'success') {
 
                 $data = $response['data'] ?? null;
                 if (!$data) {
