@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\AndroidCommonHelper;
 use App\Models\Apilog;
+use App\Models\Bus;
 use App\Models\Provider;
 use App\Models\Report;
 use App\Repo\BillPaymentRepo;
@@ -412,6 +413,28 @@ class BusController extends Controller
 
     public function bookingList(Request $request)
     {
+        if (\Myhelper::hasRole('admin')) {
+            $data['totalsuccess'] = Bus::where('booking_status', 'Confirmed')->sum('total_amount');
+            $data['totalsuccessCount'] = Bus::where('booking_status', 'Confirmed')->count();
+            $data['totalpending'] = Bus::where('booking_status', 'pending')->sum('total_amount');
+            $data['totalpendingCount'] = Bus::where('booking_status', 'pending')->count();
+
+            $data['totalblocked'] = Bus::where('booking_status', 'blocked')->sum('total_amount');
+            $data['totalblockedCount'] = Bus::where('booking_status', 'blocked')->count();
+            $data['totalcancelled'] = Bus::where('booking_status', 'Cancelled')->sum('total_amount');
+            $data['totalcancelledCount'] = Bus::where('booking_status', 'Cancelled')->count();
+     
+        } else {
+            $data['totalbussuccess'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Confirmed')->sum('total_amount');
+            $data['totalsuccessCount'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Confirmed')->count();
+            $data['totalpending'] = Bus::where('user_id', auth()->id())->where('booking_status', 'pending')->sum('total_amount');
+            $data['totalpendingCount'] = Bus::where('user_id', auth()->id())->where('booking_status', 'pending')->count();
+
+            $data['totalblocked'] = Bus::where('user_id', auth()->id())->where('booking_status', 'blocked')->sum('total_amount');
+            $data['totalblockedCount'] = Bus::where('user_id', auth()->id())->where('booking_status', 'blocked')->count();
+            $data['totalcancelled'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Cancelled')->sum('total_amount');
+            $data['totalcancelledCount'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Cancelled')->count();
+        }
         $userId = \Auth::user()->id;
 
         $data['bookings'] = DB::table('bus_bookings')
