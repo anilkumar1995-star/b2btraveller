@@ -23,7 +23,7 @@ $table = "yes";
         <div class="card">
           
 
-            <div class="card-header bg-label-warning pb-0 d-flex justify-content-between position-relative align-items-center">
+            <div class="card-header bg-light pb-0 d-flex justify-content-between position-relative align-items-center">
                 <div class="card-title">
                     <h5 class="mb-0">
                         <span>@yield('pagetitle')</span>

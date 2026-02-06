@@ -7,6 +7,7 @@ use App\Helpers\ImageHelper;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Circle;
+use App\Models\Customerlist;
 use App\Models\Role;
 use App\Models\User as ModelsUser;
 use Illuminate\Support\Facades\DB;
@@ -296,6 +297,43 @@ class SettingController extends Controller
             return response()->json(['status' => 'success'], 200);
         } else {
             return response()->json(['status' => 'fail'], 400);
+        }
+    }
+
+    public function customerlist()
+    {
+       
+        return view('customer.index');
+    }
+
+    public function createcustomer(Request $request)
+    {
+         $request->validate([
+            'name' => 'required',
+            'email' => 'required',
+            'mobile' => 'required',
+            'account_number' => 'required',
+            'ifsc' => 'required','bank_name' => 'required',
+            'address' => 'required',
+            'status' => 'required',
+        ]);
+
+        $data = Customerlist::create([
+            'user_id' => $request->user_id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'mobile' => $request->mobile,
+            'account_number' => $request->account_number,
+            'ifsc_code' => $request->ifsc,
+            'bank_name' => $request->bank_name,
+            'address' => $request->address,
+            'status' => $request->status,
+        ]);
+
+        if ($data) {
+            return response()->json(['status' => 'success', 'message' => 'Customer Added successfully']);
+        } else {
+            return response()->json(['status' => 'fail', 'message' => 'Customer not Added']);
         }
     }
 }

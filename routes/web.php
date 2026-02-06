@@ -77,6 +77,11 @@ Route::group(['prefix' => 'payment', 'middleware' => ['auth']], function () {
     // Route::post('updatevan', [EasebuzzVanController::class, 'updateVanInfo'])->name('updatevan');
     Route::post('vandelete/{account_id}', [EasebuzzVanController::class, 'updateVanStatus']);
 
+});
+
+Route::group(['prefix' => 'customer', 'middleware' => ['auth']], function () {
+    Route::get('list', [SettingController::class, 'customerlist'])->name('customerlist');
+    Route::post('add', [SettingController::class, 'createcustomer'])->name('addcustomer');
 
 });
 

@@ -168,6 +168,20 @@ class CommonController extends Controller
 				}
 				break;
 
+			case 'customerlist':
+				$request['table'] = '\App\Models\Customerlist';
+				$request['searchdata'] = ['id', 'name', 'email', 'mobile', 'account_number', 'bank_name', 'address', 'status', 'ifsc'];
+				$request['select'] = 'all';
+				$request['order'] = ['id', 'desc'];
+				if (\Myhelper::hasRole('admin')) {
+					$request['parentData'] = 'all';
+					$request['whereIn'] = 'user_id';
+				} else {
+					$request['parentData'] = [\Auth::id()];
+					$request['whereIn'] = 'user_id';
+				}
+				break;
+
 				
 		   	case 'wallet2walletstatement':
 				$request['table'] = '\App\Models\Report';
@@ -1277,6 +1291,7 @@ class CommonController extends Controller
 			$request->type != "setuplinks" &&
 			$request->type != "apilogs" &&
 			$request->type != "vanlist" &&
+			$request->type != "customerlist" &&
 			$request->type != "upicollect" &&
 			$request->type != "setupoperator" &&
 			$request->type != "resourcescheme" &&
