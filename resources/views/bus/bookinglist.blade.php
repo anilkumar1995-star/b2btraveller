@@ -6,7 +6,6 @@
 @section('content')
     <main>
         <section>
-            @dd($totalsuccess, $totalpending, $totalblocked, $totalcancelled);
               <div class="row">
                  <div class="col-lg-3 col-sm-6">
                     <div class="card border h-100">
