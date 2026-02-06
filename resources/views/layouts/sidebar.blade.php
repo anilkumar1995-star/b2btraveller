@@ -148,6 +148,21 @@
                
             </ul>
         </li>
+        <li class="menu-item {{ Request::is('refund/*') ? 'active open' : '' }}">
+            <a href="#menu-design" class="menu-link menu-toggle">
+                <i class="menu-icon tf-icons ti ti-wallet" style="color: #c76828;"></i>
+                <div data-i18n="Refund">Refund</div>
+            </a>
+            <ul class="menu-sub" id="menu-design {{ Request::is('refund/*') ? 'show' : '' }}">
+
+                <li class="menu-item {{ Request::is('refund/list') ? 'active' : '' }}">
+                    <a href="{{ route('refund.list') }}" class="menu-link">
+                        <div data-i18n="Refund List">Refund List</div>
+                    </a>
+                </li>
+               
+            </ul>
+        </li>
 
 
         {{--  @if (Myhelper::can(['recharge_service'])) --}}

@@ -8,8 +8,10 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Circle;
 use App\Models\Customerlist;
+use App\Models\Refundlist;
 use App\Models\Role;
 use App\Models\User as ModelsUser;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class SettingController extends Controller
@@ -301,8 +303,7 @@ class SettingController extends Controller
     }
 
     public function customerlist()
-    {
-       
+    {       
         return view('customer.index');
     }
 
@@ -334,6 +335,44 @@ class SettingController extends Controller
             return response()->json(['status' => 'success', 'message' => 'Customer Added successfully']);
         } else {
             return response()->json(['status' => 'fail', 'message' => 'Customer not Added']);
+        }
+    }
+    
+    public function refundlist()
+    {       
+         $data['customers'] = DB::table('customer_list')
+            ->where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->get();
+
+        return view('refund.index', $data);
+    }
+
+    public function createrefund(Request $request)
+    {
+         $request->validate([
+            'customer_id' => 'required',
+            'account_number' => 'required',
+            'ifsc_code' => 'required',
+            'bank_name' => 'required',
+            'amount' => 'required'
+        ]);
+
+        $data = Refundlist::create([
+            'user_id' => Auth::id(),
+            'customer_id' => $request->customer_id,
+            'account_number' => $request->account_number,
+            'ifsc_code' => $request->ifsc_code,
+            'bank_name' => $request->bank_name,
+            'amount' => $request->amount,
+            'remarks' => $request->remarks,
+            'status' => 'success'
+        ]);
+
+        if ($data) {
+            return response()->json(['status' => 'success', 'message' => 'Refund created successfully']);
+        } else {
+            return response()->json(['status' => 'fail', 'message' => 'Refund not created']);
         }
     }
 }

@@ -252,7 +252,7 @@
                                               🚌 Cancel Bus
                                           </a>
                                       </li>
-                                      @if(strtolower($b->booking_status) == 'cancelled')
+                                      {{-- @if(strtolower($b->booking_status) == 'cancelled')
                                       <li>
                                           <a class="dropdown-item refund-btn" href="javascript:void(0)"
                                               data-bookingid="{{ $b->booking_id_api }}"
@@ -260,7 +260,7 @@
                                               💰 Refund to Customer
                                           </a>
                                       </li>
-                                      @endif
+                                      @endif --}}
                                   </ul>
                               </div>
                           </td>
@@ -280,7 +280,7 @@
   </div>
 
   <!-- Refund Modal -->
-  <div class="modal fade" id="refundModal" tabindex="-1">
+  {{-- <div class="modal fade" id="refundModal" tabindex="-1">
       <div class="modal-dialog">
           <div class="modal-content">
               <div class="modal-header">
@@ -312,7 +312,7 @@
               </div>
           </div>
       </div>
-  </div>
+  </div> --}}
 
 
   <div class="modal fade" id="viewTicketModal" tabindex="-1" aria-hidden="true">
@@ -471,44 +471,43 @@
   <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
   <script src="{{ asset('') }}js/busbook.js"></script>
   <script type="text/javascript">
-      $(document).on('click', '.refund-btn', function() {
+    //   $(document).on('click', '.refund-btn', function() {
 
-          let bookingId = $(this).data('bookingid');
-          let refundAmt = $(this).data('refundamt');
+    //       let bookingId = $(this).data('bookingid');
+    //       let refundAmt = $(this).data('refundamt');
 
-          $('#refund_booking_id').val(bookingId);
-          $('#refund_amount').val(refundAmt);
+    //       $('#refund_booking_id').val(bookingId);
+    //       $('#refund_amount').val(refundAmt);
 
-          $('#refundModal').modal('show');
-      });
+    //       $('#refundModal').modal('show');
+    //   });
 
+    //   $('#confirmRefund').click(function() {
 
-      $('#confirmRefund').click(function() {
+    //       let customer = $('#customer_select').val();
 
-          let customer = $('#customer_select').val();
+    //       if (customer == '') {
+    //           notify("Please select a customer before proceeding.", "warning");
+    //           return;
+    //       }
 
-          if (customer == '') {
-              notify("Please select a customer before proceeding.", "warning");
-              return;
-          }
+    //       swal({
+    //           title: "Refund Successful ✅",
+    //           html: `
+    //                 <p>Amount successfully added to customer account.</p>
+    //             `,
+    //           type: "success",
+    //           confirmButtonText: "OK"
+    //       }).then(() => {
+    //           $('#customer_select').val('').trigger('change');
 
-          swal({
-              title: "Refund Successful ✅",
-              html: `
-                    <p>Amount successfully added to customer account.</p>
-                `,
-              type: "success",
-              confirmButtonText: "OK"
-          }).then(() => {
-              $('#customer_select').val('').trigger('change');
+    //           $('#refund_booking_id').val('');
+    //           $('#refund_amount').val('');
+    //       });
 
-              $('#refund_booking_id').val('');
-              $('#refund_amount').val('');
-          });
+    //       $('#refundModal').modal('hide');
 
-          $('#refundModal').modal('hide');
-
-      });
+    //   });
 
 
       function openBookingDetails(busId) {
