@@ -82,7 +82,11 @@ Route::group(['prefix' => 'payment', 'middleware' => ['auth']], function () {
 Route::group(['prefix' => 'customer', 'middleware' => ['auth']], function () {
     Route::get('list', [SettingController::class, 'customerlist'])->name('customerlist');
     Route::post('add', [SettingController::class, 'createcustomer'])->name('addcustomer');
+});
 
+Route::group(['prefix' => 'refund', 'middleware' => ['auth']], function () {
+    Route::get('list', [SettingController::class, 'refundlist'])->name('refund.list');
+    Route::post('add', [SettingController::class, 'createrefund'])->name('createrefund');
 });
 
 Route::group(['prefix' => 'loanenquiry', 'middleware' => 'auth'], function () {

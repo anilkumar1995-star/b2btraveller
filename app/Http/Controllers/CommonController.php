@@ -181,6 +181,19 @@ class CommonController extends Controller
 					$request['whereIn'] = 'user_id';
 				}
 				break;
+			case 'refundlist':
+				$request['table'] = '\App\Models\Refundlist';
+				$request['searchdata'] = ['id', 'amount', 'status', 'refund_date'];
+				$request['select'] = 'all';
+				$request['order'] = ['id', 'desc'];
+				if (\Myhelper::hasRole('admin')) {
+					$request['parentData'] = 'all';
+					$request['whereIn'] = 'user_id';
+				} else {
+					$request['parentData'] = [\Auth::id()];
+					$request['whereIn'] = 'user_id';
+				}
+				break;
 
 				
 		   	case 'wallet2walletstatement':
