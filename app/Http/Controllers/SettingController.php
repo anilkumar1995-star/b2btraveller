@@ -361,9 +361,6 @@ class SettingController extends Controller
         $data = Refundlist::create([
             'user_id' => Auth::id(),
             'customer_id' => $request->customer_id,
-            'account_number' => $request->account_number,
-            'ifsc_code' => $request->ifsc_code,
-            'bank_name' => $request->bank_name,
             'amount' => $request->amount,
             'remarks' => $request->remarks,
             'status' => 'success'
