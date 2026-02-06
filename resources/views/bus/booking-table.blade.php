@@ -252,6 +252,7 @@
                                               🚌 Cancel Bus
                                           </a>
                                       </li>
+                                      @if(strtolower($b->booking_status) == 'cancelled')
                                       <li>
                                           <a class="dropdown-item refund-btn" href="javascript:void(0)"
                                               data-bookingid="{{ $b->booking_id_api }}"
@@ -259,6 +260,7 @@
                                               💰 Refund to Customer
                                           </a>
                                       </li>
+                                      @endif
                                   </ul>
                               </div>
                           </td>
