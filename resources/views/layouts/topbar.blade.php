@@ -22,7 +22,8 @@
             <marquee>
                 <div class="notification-slider">
                     <div class="d-flex h-100"> 
-                        <h6 class="mb-0 f-w-500"><span class="font-primary text-danger">&nbsp;&nbsp;Welcome to <img src="{{ asset('images/logo.png') }}" width="100" height="30" class="ms-2"> </span></h6>
+                        <h6 class="mb-0 f-w-500"><span class="font-primary text-danger">&nbsp;&nbsp;Welcome to iPaymnt Tech </span></h6>
+                        {{-- <h6 class="mb-0 f-w-500"><span class="font-primary text-danger">&nbsp;&nbsp;Welcome to <img src="{{ asset('images/logo.png') }}" width="100" height="30" class="ms-2"> </span></h6> --}}
                     </div>
                 </div>
             </marquee>

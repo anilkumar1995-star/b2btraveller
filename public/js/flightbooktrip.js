@@ -2816,6 +2816,119 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
     }
 }
 
+function hitBookingAPIInternationalRoundtrip(
+    traceId,
+    selectedFlightDetails,
+    selectedSeatsOnward,
+    selectedSeatsReturn,
+    selectedMealsOnward,
+    selectedMealsReturn,
+    selectedBaggageOnward,
+    selectedBaggageReturn,
+    journeyType
+) {
+
+    const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
+    const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
+    const formatDate = (date) => date ? `${date}T00:00:00` : null;
+
+    /* ================= FARE ================= */
+
+    const fareBreakdown = JSON.parse(localStorage.getItem(`fareFlightDetailsinternational`)) || [];
+    const fareMap = {};
+
+    fareBreakdown.forEach(fb => {
+        fareMap[fb.PassengerType] = fb;
+    });
+
+    /* ================= PASSENGERS ================= */
+
+    const passengers = travelerDetails.map((trav, index) => {
+
+        const paxType =
+            trav.type === "Child" ? 2 :
+            trav.type === "Infant" ? 3 : 1;
+
+        const fb = fareMap[paxType] || {};
+
+        return {
+            Title: trav.title,
+            FirstName: trav.firstName,
+            LastName: trav.lastName,
+            PaxType: paxType,
+            DateOfBirth: formatDate(trav.dob),
+            Gender: trav.gender,
+            PassportNo: trav.passportNo || "",
+            PassportExpiry: formatDate(trav.passportExpiry),
+            AddressLine1: trav.address1 || "",
+            AddressLine2: trav.address2 || "",
+            City: trav.city || "",
+            CountryCode: trav.nationality || "IN",
+            CountryName: trav.countryName || "India",
+            Nationality: trav.nationality || "IN",
+            ContactNo: contactDetails.mobile,
+            Email: contactDetails.email,
+            IsLeadPax: index === 0,
+
+            GSTCompanyAddress: trav.gstAddress || "",
+            GSTCompanyContactNumber: trav.gstContact || "",
+            GSTCompanyName: trav.gstName || "",
+            GSTNumber: trav.gstNumber || "",
+            GSTCompanyEmail: trav.gstEmail || "",
+
+            Fare: {
+                Currency: fb.Currency || "INR",
+                PassengerType: paxType,
+                PassengerCount: fb.PassengerCount || 1,
+                BaseFare: fb.BaseFare || 0,
+                Tax: fb.Tax || 0,
+                YQTax: fb.YQTax || 0,
+                AdditionalTxnFeeOfrd: fb.AdditionalTxnFeeOfrd || 0,
+                AdditionalTxnFeePub: fb.AdditionalTxnFeePub || 0,
+                PGCharge: fb.PGCharge || 0
+            },
+
+            /* ===== Onward SSR ===== */
+            ...(selectedMealsOnward[index] ? {
+                Meal: selectedMealsOnward[index].mealObjData
+            } : {}),
+
+            ...(selectedBaggageOnward[index] ? {
+                Baggage: selectedBaggageOnward[index].bagObjData
+            } : {})
+        };
+    });
+
+    /* ================= RESULT INDEX ================= */
+
+    const payload = {
+        resultIndex: [
+            selectedFlightDetails.departure.ResultIndex,
+            selectedFlightDetails.return.ResultIndex
+        ],
+        passengers: passengers,
+        traceId: traceId,
+        _token: $('meta[name="csrf-token"]').attr('content')
+    };
+
+    /* ================= LCC DECISION ================= */
+
+    const isOnwardLCC = selectedFlightDetails.departure?.IsLCC || false;
+    const isReturnLCC = selectedFlightDetails.return?.IsLCC || false;
+
+    const isBothLCC = isOnwardLCC && isReturnLCC;
+
+    console.log("International Roundtrip Payload:", payload);
+
+    if (isBothLCC) {
+        ViewTicketAjax(payload, '/flight/ticket', 'international', journeyType);
+    } else {
+        ViewTicketAjax(payload, '/flight/book', 'international', journeyType, '', true);
+    }
+}
+
+
+
 let bookingResult = {
     departure: null,
     return: null
