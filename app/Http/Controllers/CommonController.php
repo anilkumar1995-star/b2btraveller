@@ -170,7 +170,7 @@ class CommonController extends Controller
 
 			case 'customerlist':
 				$request['table'] = '\App\Models\Customerlist';
-				$request['searchdata'] = ['id', 'name', 'email', 'mobile', 'account_number', 'bank_name', 'address', 'status', 'ifsc'];
+				$request['searchdata'] = ['id', 'name', 'email', 'mobile', 'address', 'status'];
 				$request['select'] = 'all';
 				$request['order'] = ['id', 'desc'];
 				if (\Myhelper::hasRole('admin')) {
@@ -183,7 +183,7 @@ class CommonController extends Controller
 				break;
 			case 'refundlist':
 				$request['table'] = '\App\Models\Refundlist';
-				$request['searchdata'] = ['id', 'amount', 'status'];
+				$request['searchdata'] = ['id', 'amount', 'status', 'account_number', 'bank_name', 'ifsc_code'];
 				$request['select'] = 'all';
 				$request['order'] = ['id', 'desc'];
 				if (\Myhelper::hasRole('admin')) {

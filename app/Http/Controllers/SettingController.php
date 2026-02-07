@@ -313,8 +313,6 @@ class SettingController extends Controller
             'name' => 'required',
             'email' => 'required',
             'mobile' => 'required',
-            'account_number' => 'required',
-            'ifsc' => 'required','bank_name' => 'required',
             'address' => 'required',
             'status' => 'required',
         ]);
@@ -324,9 +322,6 @@ class SettingController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'mobile' => $request->mobile,
-            'account_number' => $request->account_number,
-            'ifsc_code' => $request->ifsc,
-            'bank_name' => $request->bank_name,
             'address' => $request->address,
             'status' => $request->status,
         ]);
@@ -362,6 +357,9 @@ class SettingController extends Controller
             'user_id' => Auth::id(),
             'customer_id' => $request->customer_id,
             'amount' => $request->amount,
+            'account_number' => $request->account_number,
+            'ifsc_code' => $request->ifsc_code,
+            'bank_name' => $request->bank_name,
             'remarks' => $request->remarks,
             'status' => 'success'
         ]);
