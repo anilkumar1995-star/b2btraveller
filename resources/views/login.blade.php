@@ -159,7 +159,7 @@
                 </div>
 
                 <h3 class="mb-1 fw-bold">
-                    Welcome to {{ @$company->companyname }}! 👋
+                    Welcome to <img src="{{ asset('images/logo.png') }}" width="150" height="50" class="ms-2"> 
                 </h3>
                 <p class="mb-4">
                 Sign in to your account and begin your journey               
