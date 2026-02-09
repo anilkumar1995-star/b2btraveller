@@ -52,8 +52,8 @@ $('#busSearchForm').on('submit', function (e) {
                 let html = '';
 
                 results.forEach(function (bus) {
-                    let boarding = bus.BoardingPointsDetails.map(bp => bp.CityPointName).join(', ');
-                    let dropping = bus.DroppingPointsDetails.map(dp => dp.CityPointName).join(', ');
+                    // let boarding = bus.BoardingPointsDetails.map(bp => bp.CityPointName).join(', ');
+                    // let dropping = bus.DroppingPointsDetails.map(dp => dp.CityPointName).join(', ');
 
                     html += `
                         <div class="card border mb-3">
