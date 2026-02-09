@@ -38,7 +38,7 @@ class BusAuthService
     public function setFullUrl($method): string
     {
         if ($method == 'authenticate')
-            return $this->baseUrl . '/v1/service/traveller/flight/authenticate';
+            return $this->baseUrl . '/v1/service/traveller/bus/authenticate';
         return "";
     }
 
