@@ -2243,7 +2243,7 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
         success: function (response) {
 
             if (response.status !== 'success') {
-                notify("No SSR Details found", "error");
+                notify(response.message || "No SSR Details found", "error");
 
                 $("#baggageContainer").html(`<div class="alert alert-danger text-center">Baggage Not Found</div>`);
                 $("#mealContainer").html(`<div class="alert alert-danger text-center">Meal Not Found</div>`);
@@ -2378,7 +2378,7 @@ function renderInternationalMeal(mealData, trip) {
             : (typeof meal.Price !== "undefined"
                 ? `${meal.Currency} ${meal.Price}`
                 : "Included");
-                
+
         html += `
             <tr>
                 <td>${meal?.Description || '-'}</td>
