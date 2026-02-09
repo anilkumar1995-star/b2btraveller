@@ -3138,8 +3138,16 @@ function ViewTicketAjaxInternational(payload, apiUrl, trip, journeyType, callTic
                 );
                 return;
             } else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
-                notify(response?.message || 'Booking failed', 'error');
-                window.location.href = "/flight/detail";
+                swal({
+                    title: "Error",
+                    text: response?.message || 'Booking failed',
+                    type: "error",
+                    confirmButtonText: "OK, Got It",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
             } else {
                 bookingResult[trip] = response;
                 checkFinalBookingStatus(trip, journeyType);
@@ -3196,8 +3204,17 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
                 ViewTicketAjax(payload, '/flight/ticket', trip, journeyType, $val, false);
                 return;
             } else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
-                notify(response?.message || 'Booking failed', 'error');
-                window.location.href = "/flight/detail";
+
+                swal({
+                    title: "Error",
+                    text: response?.message || 'Booking failed',
+                    type: "error",
+                    confirmButtonText: "OK, Got It",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
             } else {
                 bookingResult[trip] = response;
                 checkFinalBookingStatus(trip, journeyType, $val);
