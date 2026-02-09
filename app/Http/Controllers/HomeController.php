@@ -18,7 +18,7 @@ use App\Models\Paymode;
 use App\Models\Ccreport;
 use App\Models\Role;
 use App\Models\Van;
-use App\Services\Traveller\TravelService;
+// use App\Services\Traveller\TravelService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
@@ -32,11 +32,11 @@ class HomeController extends Controller
      *
      * @return void
      */
-    protected $travelService;
+    // protected $travelService;
     public function __construct()
     {
         $this->middleware('auth');
-        $this->travelService = new TravelService();
+        // $this->travelService = new TravelService();
     }
 
     /**
@@ -44,19 +44,19 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function generateTravellerUrl()
-    {
-        try {
-            $response = $this->travelService->generateUrl();
+    // public function generateTravellerUrl()
+    // {
+    //     try {
+    //         $response = $this->travelService->generateUrl();
 
-            return response()->json($response);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage()
-            ], 500);
-        }
-    }
+    //         return response()->json($response);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'status' => false,
+    //             'message' => $e->getMessage()
+    //         ], 500);
+    //     }
+    // }
 
     public function comingsoon()
     {
