@@ -19,7 +19,7 @@ class FlightService
 
     public function __construct()
     {
-        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travels');
+        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travelsflight');
 
         if ($getApiCred['status']) {
             $this->authKey = @$getApiCred['apidata']['client_id'];
