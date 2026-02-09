@@ -2289,13 +2289,63 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
                 $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger text-center">No Seat available for this flight.</div>`);
             }
 
-            renderInternationalBaggage(ssr.Baggage?.[0], 'departure');
-            renderInternationalBaggage(ssr.Baggage?.[1], 'return');
+            if (Array.isArray(ssr.Meal?.[0])) {
+                renderInternationalMeal(ssr.Meal[0], 'departure');
+                renderInternationalMeal(ssr.Meal[1] || [], 'return');
+            } else {
+                renderInternationalMeal(ssr.Meal || [], 'departure');
+                renderInternationalMeal([], 'return');
+            }
 
-            renderInternationalMeal(ssr.Meal?.[0], 'departure');
-            renderInternationalMeal(ssr.Meal?.[1], 'return');
+            if (Array.isArray(ssr.Baggage?.[0])) {
+                renderInternationalBaggage(ssr.Baggage[0], 'departure');
+                renderInternationalBaggage(ssr.Baggage[1] || [], 'return');
+            } else {
+                renderInternationalBaggage(ssr.Baggage || [], 'departure');
+                renderInternationalBaggage([], 'return');
+            }
+
         }
     });
+
+    $(document).off('change', 'input[name^="meal-checkbox"]');
+    $(document).off('change', 'input[name^="baggage-checkbox"]');
+
+    $(document).on('change', 'input[name^="meal-checkbox"]', function () {
+
+        let trip = $(this).attr('name').includes('return') ? 'return' : 'departure';
+        let total = window.totalPassengers || 1;
+
+        let checkedCount = $(`input[name="meal-checkbox-${trip}"]:checked`).length;
+
+        if ($(this).is(':checked') && checkedCount > total) {
+            $(this).prop('checked', false);
+            notify(`You can select meals only for ${total} passenger(s).`, 'error');
+            return;
+        }
+
+        let mealData = {
+            Code: $(this).data('code'),
+            price: $(this).data('price'),
+            mealObjData: $(this).data('mealobjdata')
+        };
+
+        if ($(this).is(':checked')) {
+            trip === 'departure' ? selectedMeals.push(mealData) : selectedMealsRet.push(mealData);
+        } else {
+            if (trip === 'departure')
+                selectedMeals = selectedMeals.filter(m => m.Code !== mealData.Code);
+            else
+                selectedMealsRet = selectedMealsRet.filter(m => m.Code !== mealData.Code);
+        }
+
+        $(`.meal-count${trip}`).text(
+            trip === 'departure' ? selectedMeals.length : selectedMealsRet.length
+        );
+
+        updateSummaryUI(trip);
+    });
+
 }
 
 function renderInternationalMeal(mealData, trip) {
@@ -2303,71 +2353,106 @@ function renderInternationalMeal(mealData, trip) {
     let container = trip === 'departure' ? '#mealContainer' : '#mealContainerRet';
 
     if (!mealData || mealData.length === 0) {
-        $(container).html(`<div class="alert alert-warning text-center mt-3"> No meal options available for this flight.</div>`);
+        $(container).html(`<div class="alert alert-warning text-center">No Meal options available</div>`);
         return;
     }
 
-    let html = `<table class="table table-bordered text-center">
-        <thead><tr>
-            <th>Meal</th><th>Code</th><th>Price</th><th>Select</th>
-        </tr></thead><tbody>`;
+    let html = `
+        <div class="table-responsive mt-3">
+        <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Meal</th>
+                <th>Code</th>
+                <th>Price</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
 
-    mealData.forEach(m => {
-        let price = m.Price == 0 ? 'Included' : `${m.Currency} ${m.Price}`;
+    mealData.flat().forEach(meal => {
+
+        let priceText = (typeof meal.Price !== "undefined" && meal.Price == 0)
+            ? "Included"
+            : (typeof meal.Price !== "undefined"
+                ? `${meal.Currency} ${meal.Price}`
+                : "Included");
+                
         html += `
             <tr>
-                <td>${m.AirlineDescription || '-'}</td>
-                <td>${m.Code}</td>
-                <td>${price}</td>
+                <td>${meal?.Description || '-'}</td>
+                <td>${meal?.Code}</td>
+                <td>${priceText}</td>
                 <td>
                     <input type="checkbox"
                         name="meal-checkbox-${trip}"
-                        data-code="${m.Code}"
-                        data-price="${price}"
-                        data-mealobjdata='${JSON.stringify(m)}'>
+                        data-code="${meal?.Code}"
+                        data-price="${priceText}"
+                        data-mealobjdata='${JSON.stringify(meal)}'>
                 </td>
-            </tr>`;
+            </tr>
+        `;
     });
 
-    html += `</tbody></table>`;
+    html += `</tbody></table></div>`;
+
     $(container).html(html);
 }
 
 function renderInternationalBaggage(bagData, trip) {
 
-    let container = trip === 'departure' ? '#baggageContainer' : '#baggageContainerRet';
+    let container = trip === 'departure'
+        ? '#baggageContainer'
+        : '#baggageContainerRet';
 
     if (!bagData || bagData.length === 0) {
-        $(container).html(`<div class="alert alert-warning text-center mt-3"> No baggage options available for this flight.</div>`);
+        $(container).html(`<div class="alert alert-warning text-center">No Baggage options available</div>`);
         return;
     }
 
-    let html = `<table class="table table-bordered text-center">
-        <thead><tr>
-            <th>Code</th><th>Weight</th><th>Price</th><th>Select</th>
-        </tr></thead><tbody>`;
+    let html = `
+        <div class="table-responsive mt-3">
+        <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Weight</th>
+                <th>Price</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
 
-    bagData.forEach(b => {
-        let price = b.Price == 0 ? 'Included' : `${b.Currency} ${b.Price}`;
+    bagData.flat().forEach(b => {
+
+        let priceText = (typeof b.Price !== "undefined" && b.Price == 0)
+            ? "Included"
+            : (typeof b.Price !== "undefined"
+                ? `${b.Currency} ${b.Price}`
+                : "Included");
+
         html += `
             <tr>
                 <td>${b.Code}</td>
-                <td>${b.Weight} KG</td>
-                <td>${price}</td>
+                <td>${b.Weight || 0} KG</td>
+                <td>${priceText}</td>
                 <td>
                     <input type="checkbox"
                         name="baggage-checkbox-${trip}"
                         data-code="${b.Code}"
-                        data-price="${price}"
+                        data-price="${priceText}"
                         data-bagobjdata='${JSON.stringify(b)}'>
                 </td>
-            </tr>`;
+            </tr>
+        `;
     });
 
-    html += `</tbody></table>`;
+    html += `</tbody></table></div>`;
+
     $(container).html(html);
 }
-
 
 
 function renderSeatLayout(seatDynamicData, totalPassengers, trip) {

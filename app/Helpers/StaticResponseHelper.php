@@ -16108,7 +16108,8 @@ class StaticResponseHelper
         }';
     }
 
-    static public function flightTicketLCCStaticResponse(){
+    static public function flightTicketLCCStaticResponse()
+    {
         return '{
             "code": "0x0200",
             "message": "success",
@@ -16488,7 +16489,8 @@ class StaticResponseHelper
         }';
     }
 
-    static public function flightroudtripsearchresponseInt(){
+    static public function flightroudtripsearchresponseInt()
+    {
         return '{
             "code": "0x0200",
             "message": "success",
@@ -17752,7 +17754,8 @@ class StaticResponseHelper
         }';
     }
 
-    static public function fareQuoteStaticResponseInt(){
+    static public function fareQuoteStaticResponseInt()
+    {
         return '{
             "status": "success",
             "message": "Fare Quotation get successfully",
@@ -18081,7 +18084,8 @@ class StaticResponseHelper
             }
         }';
     }
-    static public function fareRuleStaticResponseInt(){
+    static public function fareRuleStaticResponseInt()
+    {
         return '
         {
             "status": "success",
@@ -18119,15 +18123,336 @@ class StaticResponseHelper
         }';
     }
 
-    static public function flightSSRStaticResponseInt(){
+    static public function flightSSRStaticResponseInt()
+    {
         return '{
             "status": "success",
             "message": "Seat Layout get successfully",
             "data": {
                 "TokenId": "a9d6e1c0-b2a8-4a1f-89df-f8614428b553",
                 "TraceId": "bf861c01-4518-4a02-9b35-ed5f00226d9e",
-                "Meal": null,
-                "Baggage": null,
+                "Meal": [
+                    {
+                        "Code": "BBML",
+                        "Description": "BABY MEAL"
+                    },
+                    {
+                        "Code": "DBML",
+                        "Description": "DIABETIC MEAL"
+                    },
+                    {
+                        "Code": "HNML",
+                        "Description": "HINDU (NON VEGETARIAN) MEAL"
+                    },
+                    {
+                        "Code": "MOML",
+                        "Description": "MUSLIM MEAL"
+                    },
+                    {
+                        "Code": "SFML",
+                        "Description": "SEA FOOD MEAL"
+                    },
+                    {
+                        "Code": "VGML",
+                        "Description": "VEGETARIAN VEGAN MEAL"
+                    },
+                    {
+                        "Code": "VJML",
+                        "Description": "VEGETARIAN INDIAN MEAL"
+                    }
+                ],
+                "Baggage": [
+                    [
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "NoBaggage",
+                            "Description": 2,
+                            "Weight": 0,
+                            "Currency": "INR",
+                            "Price": 0,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "No Baggage"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG05",
+                            "Description": 2,
+                            "Weight": 5,
+                            "Currency": "INR",
+                            "Price": 11858,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO11LB 5KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG10",
+                            "Description": 2,
+                            "Weight": 10,
+                            "Currency": "INR",
+                            "Price": 23715,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO22LB 10KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG15",
+                            "Description": 2,
+                            "Weight": 15,
+                            "Currency": "INR",
+                            "Price": 35571,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO33LB 15KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG20",
+                            "Description": 2,
+                            "Weight": 20,
+                            "Currency": "INR",
+                            "Price": 47429,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO44LB 20KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG25",
+                            "Description": 2,
+                            "Weight": 25,
+                            "Currency": "INR",
+                            "Price": 59286,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO55LB 25KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG30",
+                            "Description": 2,
+                            "Weight": 30,
+                            "Currency": "INR",
+                            "Price": 71142,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO66LB 30KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG35",
+                            "Description": 2,
+                            "Weight": 35,
+                            "Currency": "INR",
+                            "Price": 82999,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO35KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG40",
+                            "Description": 2,
+                            "Weight": 40,
+                            "Currency": "INR",
+                            "Price": 94856,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO40KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG45",
+                            "Description": 2,
+                            "Weight": 45,
+                            "Currency": "INR",
+                            "Price": 106713,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO100LB 45KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "192",
+                            "WayType": 2,
+                            "Code": "BG50",
+                            "Description": 2,
+                            "Weight": 50,
+                            "Currency": "INR",
+                            "Price": 118570,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "Text": "UPTO110LB 50KG BAGGAGE"
+                        }
+                    ],
+                    [
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "NoBaggage",
+                            "Description": 2,
+                            "Weight": 0,
+                            "Currency": "INR",
+                            "Price": 0,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "No Baggage"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG05",
+                            "Description": 2,
+                            "Weight": 5,
+                            "Currency": "INR",
+                            "Price": 11858,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO11LB 5KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG10",
+                            "Description": 2,
+                            "Weight": 10,
+                            "Currency": "INR",
+                            "Price": 23715,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO22LB 10KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG15",
+                            "Description": 2,
+                            "Weight": 15,
+                            "Currency": "INR",
+                            "Price": 35571,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO33LB 15KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG20",
+                            "Description": 2,
+                            "Weight": 20,
+                            "Currency": "INR",
+                            "Price": 47429,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO44LB 20KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG25",
+                            "Description": 2,
+                            "Weight": 25,
+                            "Currency": "INR",
+                            "Price": 59286,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO55LB 25KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG30",
+                            "Description": 2,
+                            "Weight": 30,
+                            "Currency": "INR",
+                            "Price": 71142,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO66LB 30KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG35",
+                            "Description": 2,
+                            "Weight": 35,
+                            "Currency": "INR",
+                            "Price": 82999,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO35KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG40",
+                            "Description": 2,
+                            "Weight": 40,
+                            "Currency": "INR",
+                            "Price": 94856,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO40KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG45",
+                            "Description": 2,
+                            "Weight": 45,
+                            "Currency": "INR",
+                            "Price": 106713,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO100LB 45KG BAGGAGE"
+                        },
+                        {
+                            "AirlineCode": "UL",
+                            "FlightNumber": "504",
+                            "WayType": 2,
+                            "Code": "BG50",
+                            "Description": 2,
+                            "Weight": 50,
+                            "Currency": "INR",
+                            "Price": 118570,
+                            "Origin": "LHR",
+                            "Destination": "DEL",
+                            "Text": "UPTO110LB 50KG BAGGAGE"
+                        }
+                    ]
+                ],
                 "SeatDynamic": [
                     {
                         "SegmentSeat": [
@@ -23396,7 +23721,8 @@ class StaticResponseHelper
             }
         }';
     }
-    static public function flightroudtripsearchresponse(){
+    static public function flightroudtripsearchresponse()
+    {
         return '{
             "status": "success",
             "message": "Flight search successfully",
@@ -27112,13 +27438,16 @@ class StaticResponseHelper
         }';
     }
 
-    static public function flightfailedsearchresponse(){
+    static public function flightfailedsearchresponse()
+    {
         return '{"code":"0x0202","status":"FAILURE","message":"Departure date of 2nd segment cant be less than arrival of 1st segment."}';
     }
-    static public function flightfailedbookingresponse(){
+    static public function flightfailedbookingresponse()
+    {
         return '{"code":"0x0202","status":"FAILURE","message":"Booking failed from supplier side."}';
     }
-    static public function bookingdetStaticResponse(){
+    static public function bookingdetStaticResponse()
+    {
         return '{
             "status": "success",
             "message": "Booking Details get successfully",
@@ -27995,11 +28324,13 @@ class StaticResponseHelper
         // }';
     }
 
-    static public function bookingFailedCancelStaticResponse(){
+    static public function bookingFailedCancelStaticResponse()
+    {
         return '
         {"code":"0x0202","status":"FAILURE","message":"Either Sectors OR Ticket IDs should be passed for Partial Cancellation request."}';
-    } 
-    static public function bookingCancelStaticResponse(){
+    }
+    static public function bookingCancelStaticResponse()
+    {
         return '
         {
             "status": "success",
@@ -28017,5 +28348,5 @@ class StaticResponseHelper
                 ]
             }
         }';
-    } 
+    }
 }
