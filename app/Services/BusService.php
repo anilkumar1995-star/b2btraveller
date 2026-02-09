@@ -34,7 +34,7 @@ class BusService
         } else {
             throw new \Exception("Travels API credentials not found or inactive");
         }
-        $this->authService = new AuthService();
+        $this->authService = new BusAuthService();
     }
 
 

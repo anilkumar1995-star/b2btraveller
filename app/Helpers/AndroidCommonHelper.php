@@ -12,8 +12,11 @@ class AndroidCommonHelper
     {
         //Check Service Status From API
         switch ($type) {
-            case 'travels':
+            case 'travelsflight':
                 $checkAPIS = ServiceCredential::where('code', 'flight')->first();
+                break;
+            case 'travelsbus':
+                $checkAPIS = ServiceCredential::where('code', 'bus')->first();
                 break;
             case 'iydaaeps':
                 $checkAPIS = Api::where('code', 'iydaAEPS')->first();
