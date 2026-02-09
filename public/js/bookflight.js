@@ -3139,6 +3139,7 @@ function ViewTicketAjaxInternational(payload, apiUrl, trip, journeyType, callTic
                 return;
             } else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
                 notify(response?.message || 'Booking failed', 'error');
+                window.location.href = "/flight/detail";
             } else {
                 bookingResult[trip] = response;
                 checkFinalBookingStatus(trip, journeyType);
@@ -3196,6 +3197,7 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
                 return;
             } else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
                 notify(response?.message || 'Booking failed', 'error');
+                window.location.href = "/flight/detail";
             } else {
                 bookingResult[trip] = response;
                 checkFinalBookingStatus(trip, journeyType, $val);
