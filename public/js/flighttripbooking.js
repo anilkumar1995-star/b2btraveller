@@ -3137,14 +3137,17 @@ function ViewTicketAjaxInternational(payload, apiUrl, trip, journeyType, callTic
                     false
                 );
                 return;
+            } else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
+                notify(response?.message || 'Booking failed', 'error');
+            } else {
+                bookingResult[trip] = response;
+                checkFinalBookingStatus(trip, journeyType);
             }
 
-            bookingResult[trip] = response;
-            checkFinalBookingStatus(trip, journeyType);
         },
 
         error: function () {
-
+            notify('An error occurred while processing your booking. Please try again.', 'error');
             bookingResult[trip] = { status: 'failed' };
             checkFinalBookingStatus(trip, journeyType);
         }
@@ -3191,8 +3194,7 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
                 }
                 ViewTicketAjax(payload, '/flight/ticket', trip, journeyType, $val, false);
                 return;
-            }
-             else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
+            } else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
                 notify(response?.message || 'Booking failed', 'error');
             } else {
                 bookingResult[trip] = response;
