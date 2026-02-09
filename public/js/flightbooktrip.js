@@ -2559,11 +2559,11 @@ function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
                     updateSummaryUI(trip);
                 });
 
-                
+
                 if (idx === 6) rowDiv.append("<br>");
                 rowDiv.append(seatDiv);
                 if (idx === 2) rowDiv.append("<br>");
-                
+
             });
 
             $(`#planeContainer_${segIndex}${trip}`).append(rowDiv);
@@ -2816,6 +2816,19 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
     }
 }
 
+function formatSelection(data) {
+
+    if (!data || data.length === 0) {
+        return undefined;
+    }
+
+    if (data.length === 1) {
+        return data[0];
+    }
+
+    return data;
+}
+
 function hitBookingAPIInternationalRoundtrip(
     traceId,
     selectedFlightDetails,
@@ -2832,14 +2845,33 @@ function hitBookingAPIInternationalRoundtrip(
     const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
     const formatDate = (date) => date ? `${date}T00:00:00` : null;
 
-    /* ================= FARE ================= */
+    /* ================= FARE LOGIC SAME AS hitBookingAPI ================= */
 
-    const fareBreakdown = JSON.parse(localStorage.getItem(`fareFlightDetailsinternational`)) || [];
+    const fareBreakdown = JSON.parse(localStorage.getItem(`fareFlightDetails`)) || [];
+
     const fareMap = {};
-
     fareBreakdown.forEach(fb => {
         fareMap[fb.PassengerType] = fb;
     });
+
+    const getFareForPassenger = (paxType) => {
+        const fb = fareMap[paxType];
+        if (!fb) return {};
+
+        const count = fb.PassengerCount || 1;
+
+        return {
+            Currency: fb.Currency,
+            PassengerType: paxType,
+            PassengerCount: 1, // always 1 per passenger
+            BaseFare: +(fb.BaseFare / count).toFixed(2),
+            Tax: +(fb.Tax / count).toFixed(2),
+            YQTax: fb.YQTax || 0,
+            AdditionalTxnFeeOfrd: fb.AdditionalTxnFeeOfrd || 0,
+            AdditionalTxnFeePub: fb.AdditionalTxnFeePub || 0,
+            PGCharge: fb.PGCharge || 0
+        };
+    };
 
     /* ================= PASSENGERS ================= */
 
@@ -2847,9 +2879,7 @@ function hitBookingAPIInternationalRoundtrip(
 
         const paxType =
             trav.type === "Child" ? 2 :
-            trav.type === "Infant" ? 3 : 1;
-
-        const fb = fareMap[paxType] || {};
+                trav.type === "Infant" ? 3 : 1;
 
         return {
             Title: trav.title,
@@ -2876,63 +2906,166 @@ function hitBookingAPIInternationalRoundtrip(
             GSTNumber: trav.gstNumber || "",
             GSTCompanyEmail: trav.gstEmail || "",
 
-            Fare: {
-                Currency: fb.Currency || "INR",
-                PassengerType: paxType,
-                PassengerCount: fb.PassengerCount || 1,
-                BaseFare: fb.BaseFare || 0,
-                Tax: fb.Tax || 0,
-                YQTax: fb.YQTax || 0,
-                AdditionalTxnFeeOfrd: fb.AdditionalTxnFeeOfrd || 0,
-                AdditionalTxnFeePub: fb.AdditionalTxnFeePub || 0,
-                PGCharge: fb.PGCharge || 0
-            },
+            Fare: getFareForPassenger(paxType),
+            ...(
+                (
+                    (selectedSeatsOnward[index] && selectedSeatsOnward[index].length) ||
+                    (selectedSeatsReturn[index] && selectedSeatsReturn[index].length)
+                )
+                    ? {
+                        SeatDynamic: (() => {
 
-            /* ===== Onward SSR ===== */
-            ...(selectedMealsOnward[index] ? {
-                Meal: selectedMealsOnward[index].mealObjData
-            } : {}),
+                            let onwardSeats = selectedSeatsOnward[index] || [];
+                            let returnSeats = selectedSeatsReturn[index] || [];
 
-            ...(selectedBaggageOnward[index] ? {
-                Baggage: selectedBaggageOnward[index].bagObjData
-            } : {})
+                            let allSeats = [
+                                ...onwardSeats.map(s => s.SeatObjData),
+                                ...returnSeats.map(s => s.SeatObjData)
+                            ];
+
+                            return allSeats.length === 1 ? allSeats[0] : allSeats;
+                        })()
+                    }
+                    : {}
+            ),
+
+            ...(
+                (
+                    (selectedMealsOnward[index] && selectedMealsOnward[index].length) ||
+                    (selectedMealsReturn[index] && selectedMealsReturn[index].length)
+                )
+                    ? {
+                        Meal: (() => {
+
+                            let onwardMeals = selectedMealsOnward[index] || [];
+                            let returnMeals = selectedMealsReturn[index] || [];
+
+                            let allMeals = [
+                                ...onwardMeals.map(m => m.mealObjData),
+                                ...returnMeals.map(m => m.mealObjData)
+                            ];
+
+                            return allMeals.length === 1 ? allMeals[0] : allMeals;
+                        })()
+                    }
+                    : {}
+            ),
+
+            ...(
+                (
+                    (selectedBaggageOnward[index] && selectedBaggageOnward[index].length) ||
+                    (selectedBaggageReturn[index] && selectedBaggageReturn[index].length)
+                )
+                    ? {
+                        Baggage: (() => {
+
+                            let onwardBaggage = selectedBaggageOnward[index] || [];
+                            let returnBaggage = selectedBaggageReturn[index] || [];
+
+                            let allBaggage = [
+                                ...onwardBaggage.map(b => b.bagObjData),
+                                ...returnBaggage.map(b => b.bagObjData)
+                            ];
+
+                            return allBaggage.length === 1 ? allBaggage[0] : allBaggage;
+                        })()
+                    }
+                    : {}
+            ),
+
         };
     });
 
     /* ================= RESULT INDEX ================= */
 
     const payload = {
-        resultIndex: [
-            selectedFlightDetails.departure.ResultIndex,
-            selectedFlightDetails.return.ResultIndex
-        ],
+        resultIndex: selectedFlightDetails.ResultIndex,
         passengers: passengers,
         traceId: traceId,
+        islcc: selectedFlightDetails?.IsLCC || false,
         _token: $('meta[name="csrf-token"]').attr('content')
     };
 
     /* ================= LCC DECISION ================= */
 
-    const isOnwardLCC = selectedFlightDetails.departure?.IsLCC || false;
-    const isReturnLCC = selectedFlightDetails.return?.IsLCC || false;
-
-    const isBothLCC = isOnwardLCC && isReturnLCC;
-
-    console.log("International Roundtrip Payload:", payload);
-
-    if (isBothLCC) {
-        ViewTicketAjax(payload, '/flight/ticket', 'international', journeyType);
+    const isflightLCC = selectedFlightDetails?.IsLCC || false;
+    if (isflightLCC) {
+        ViewTicketAjaxInternational(payload, '/flight/ticket', 'international', journeyType, false);
     } else {
-        ViewTicketAjax(payload, '/flight/book', 'international', journeyType, '', true);
+        ViewTicketAjaxInternational(payload, '/flight/book', 'international', journeyType, true);
     }
 }
 
 
-
 let bookingResult = {
     departure: null,
-    return: null
+    return: null,
 };
+
+function ViewTicketAjaxInternational(payload, apiUrl, trip, journeyType, callTicketAfterBook = false) {
+
+    $('#bookingData').addClass('d-none');
+    $('.preloader').removeClass('d-none');
+
+    $.ajax({
+        url: apiUrl,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(payload),
+
+        beforeSend: function () {
+            $('#bookingData').addClass('d-none');
+            $('.preloader').removeClass('d-none');
+        },
+
+        success: function (response) {
+
+            if (callTicketAfterBook && response?.status === 'success') {
+
+                bookingResult[trip] = response;
+
+                const bookingResponse = response?.data?.Response?.Response || {};
+
+                payload.bookingId = bookingResponse.BookingId || '';
+                payload.pnr = bookingResponse.PNR || '';
+
+                const passengers = bookingResponse?.FlightItinerary?.Passenger || [];
+
+                const passportArr = passengers
+                    .filter(pax => pax.IsPassportRequired)
+                    .map(pax => ({
+                        PaxId: pax.PaxId,
+                        PassportNo: pax.PassportNo || '',
+                        PassportExpiry: pax.PassportExpiry || '',
+                        DateOfBirth: pax.DateOfBirth
+                    }));
+
+                if (passportArr.length) {
+                    payload.Passport = passportArr;
+                }
+
+                ViewTicketAjaxInternational(
+                    payload,
+                    '/flight/ticket',
+                    trip,
+                    journeyType,
+                    false
+                );
+                return;
+            }
+
+            bookingResult[trip] = response;
+            checkFinalBookingStatus(trip, journeyType);
+        },
+
+        error: function () {
+
+            bookingResult[trip] = { status: 'failed' };
+            checkFinalBookingStatus(trip, journeyType);
+        }
+    });
+}
+
 
 function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callTicketAfterBook = false) {
     $('#bookingData').addClass('d-none');
@@ -3027,6 +3160,8 @@ function checkFinalBookingStatus(trip, journeyType, source) {
         }
     }
 
+
+    console.log("Booking Result:", bookingResult);
     if (journeyType == '2') {
         $('#bookingData').removeClass('d-none');
         $('.preloader').addClass('d-none');

@@ -167,8 +167,8 @@
             }
             if (payload.JourneyType == 2) {
                 if (isInternational == 'true' || isInternational == true) {
-                    notify('International flight booking in progress. This may take a while.', 'warning');
-                    return;
+                    // notify('International flight booking in progress. This may take a while.', 'warning');
+                    // return;
                     selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
                     selectedMealsRet = JSON.parse(localStorage.getItem('selectedMealsReturn')) || [];
                     selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
