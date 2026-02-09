@@ -21,6 +21,7 @@ class BusAuthService
     {
         $getApiCred = AndroidCommonHelper::CheckServiceStatus('travelsbus');
 
+        dd($getApiCred);
         if ($getApiCred['status']) {
             $this->authKey = @$getApiCred['apidata']['client_id'];
             $this->authSecret = @$getApiCred['apidata']['client_secret'];
