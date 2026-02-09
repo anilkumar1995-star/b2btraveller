@@ -3237,8 +3237,6 @@ function checkFinalBookingStatus(trip, journeyType, source) {
     }
 }
 
-
-
 function removeExtraKey(obj, keys) {
     if (keys === 'baggage') {
         if (!obj) return null;
