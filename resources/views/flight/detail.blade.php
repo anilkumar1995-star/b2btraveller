@@ -340,7 +340,7 @@
 
 
 @push('script')
-    <script src="{{ asset('') }}js/bookflight.js"></script>
+    <script src="{{ asset('') }}js/bookingflighttrip.js"></script>
 
 
     <script>
