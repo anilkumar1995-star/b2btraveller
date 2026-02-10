@@ -828,7 +828,7 @@
                                     <script>
                                         document.write(new Date().getFullYear());
                                     </script>
-                                    , made with ❤️ by <a href="#" target="_blank" class="fw-semibold">Incognic</a>
+                                    , made with ❤️ by <a href="#" target="_blank" class="fw-semibold">iPaymnt Tech</a>
                                 </div>
                                 <div>
                                     {{-- <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank">License</a> --}}
