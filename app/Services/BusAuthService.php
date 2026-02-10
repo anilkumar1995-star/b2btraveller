@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
-class AuthService
+class BusAuthService
 {
     private $authKey = "";
     private $authSecret = "";
@@ -19,7 +19,7 @@ class AuthService
 
     public function __construct()
     {
-        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travelsflight');
+        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travelsbus');
 
         if ($getApiCred['status']) {
             $this->authKey = @$getApiCred['apidata']['client_id'];
@@ -38,7 +38,7 @@ class AuthService
     public function setFullUrl($method): string
     {
         if ($method == 'authenticate')
-            return $this->baseUrl . '/v1/service/traveller/flight/authenticate';
+            return $this->baseUrl . '/v1/service/traveller/bus/authenticate';
         return "";
     }
 
@@ -46,7 +46,7 @@ class AuthService
     public function getToken()
     {
 
-        $dbToken = Token::where('service_name', 'tektravelsflight')->first();
+        $dbToken = Token::where('service_name', 'tektravelsbus')->first();
 
         if ($dbToken && Carbon::parse($dbToken->expires_at)->isFuture()) {
             return $dbToken->token;
@@ -87,7 +87,7 @@ class AuthService
 
 
         Token::updateOrCreate(
-            ['service_name' => 'tektravelsflight'],
+            ['service_name' => 'tektravelsbus'],
             [
                 'token' => $token,
                 'expires_at' => now()->addHours(11)

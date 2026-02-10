@@ -9,9 +9,7 @@ class Customerlist extends Model
 {
     protected $table = 'customer_list';
 
-    protected $fillable = ['id','user_id', 'name','email','mobile','account_number','address','bank_name','address','status', 'ifsc_code'];
-
-    
+    protected $fillable = ['id','user_id', 'name','email','mobile','address','status'];    
 
     public $with = ['user'];
 

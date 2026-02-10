@@ -1,6 +1,6 @@
 @extends('layouts.app')
-@section('title', "UPI Collect")
-@section('pagetitle', "UPI Collect")
+@section('title', "Balance Update via UPI")
+@section('pagetitle', "Balance Update via UPI")
 
 @php
 $table = "yes";

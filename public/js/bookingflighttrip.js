@@ -2243,7 +2243,7 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
         success: function (response) {
 
             if (response.status !== 'success') {
-                notify("No SSR Details found", "error");
+                notify(response.message || "No SSR Details found", "error");
 
                 $("#baggageContainer").html(`<div class="alert alert-danger text-center">Baggage Not Found</div>`);
                 $("#mealContainer").html(`<div class="alert alert-danger text-center">Meal Not Found</div>`);
@@ -2289,13 +2289,63 @@ function getSSRDetailsInternationalRT(resultIndex, traceId) {
                 $("#mainPlaneWrapperRet").html(`<div class="alert alert-danger text-center">No Seat available for this flight.</div>`);
             }
 
-            renderInternationalBaggage(ssr.Baggage?.[0], 'departure');
-            renderInternationalBaggage(ssr.Baggage?.[1], 'return');
+            if (Array.isArray(ssr.Meal?.[0])) {
+                renderInternationalMeal(ssr.Meal[0], 'departure');
+                renderInternationalMeal(ssr.Meal[1] || [], 'return');
+            } else {
+                renderInternationalMeal(ssr.Meal || [], 'departure');
+                renderInternationalMeal([], 'return');
+            }
 
-            renderInternationalMeal(ssr.Meal?.[0], 'departure');
-            renderInternationalMeal(ssr.Meal?.[1], 'return');
+            if (Array.isArray(ssr.Baggage?.[0])) {
+                renderInternationalBaggage(ssr.Baggage[0], 'departure');
+                renderInternationalBaggage(ssr.Baggage[1] || [], 'return');
+            } else {
+                renderInternationalBaggage(ssr.Baggage || [], 'departure');
+                renderInternationalBaggage([], 'return');
+            }
+
         }
     });
+
+    $(document).off('change', 'input[name^="meal-checkbox"]');
+    $(document).off('change', 'input[name^="baggage-checkbox"]');
+
+    $(document).on('change', 'input[name^="meal-checkbox"]', function () {
+
+        let trip = $(this).attr('name').includes('return') ? 'return' : 'departure';
+        let total = window.totalPassengers || 1;
+
+        let checkedCount = $(`input[name="meal-checkbox-${trip}"]:checked`).length;
+
+        if ($(this).is(':checked') && checkedCount > total) {
+            $(this).prop('checked', false);
+            notify(`You can select meals only for ${total} passenger(s).`, 'error');
+            return;
+        }
+
+        let mealData = {
+            Code: $(this).data('code'),
+            price: $(this).data('price'),
+            mealObjData: $(this).data('mealobjdata')
+        };
+
+        if ($(this).is(':checked')) {
+            trip === 'departure' ? selectedMeals.push(mealData) : selectedMealsRet.push(mealData);
+        } else {
+            if (trip === 'departure')
+                selectedMeals = selectedMeals.filter(m => m.Code !== mealData.Code);
+            else
+                selectedMealsRet = selectedMealsRet.filter(m => m.Code !== mealData.Code);
+        }
+
+        $(`.meal-count${trip}`).text(
+            trip === 'departure' ? selectedMeals.length : selectedMealsRet.length
+        );
+
+        updateSummaryUI(trip);
+    });
+
 }
 
 function renderInternationalMeal(mealData, trip) {
@@ -2303,71 +2353,106 @@ function renderInternationalMeal(mealData, trip) {
     let container = trip === 'departure' ? '#mealContainer' : '#mealContainerRet';
 
     if (!mealData || mealData.length === 0) {
-        $(container).html(`<div class="alert alert-warning text-center mt-3"> No meal options available for this flight.</div>`);
+        $(container).html(`<div class="alert alert-warning text-center">No Meal options available</div>`);
         return;
     }
 
-    let html = `<table class="table table-bordered text-center">
-        <thead><tr>
-            <th>Meal</th><th>Code</th><th>Price</th><th>Select</th>
-        </tr></thead><tbody>`;
+    let html = `
+        <div class="table-responsive mt-3">
+        <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Meal</th>
+                <th>Code</th>
+                <th>Price</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
 
-    mealData.forEach(m => {
-        let price = m.Price == 0 ? 'Included' : `${m.Currency} ${m.Price}`;
+    mealData.flat().forEach(meal => {
+
+        let priceText = (typeof meal.Price !== "undefined" && meal.Price == 0)
+            ? "Included"
+            : (typeof meal.Price !== "undefined"
+                ? `${meal.Currency} ${meal.Price}`
+                : "Included");
+
         html += `
             <tr>
-                <td>${m.AirlineDescription || '-'}</td>
-                <td>${m.Code}</td>
-                <td>${price}</td>
+                <td>${meal?.Description || '-'}</td>
+                <td>${meal?.Code}</td>
+                <td>${priceText}</td>
                 <td>
                     <input type="checkbox"
                         name="meal-checkbox-${trip}"
-                        data-code="${m.Code}"
-                        data-price="${price}"
-                        data-mealobjdata='${JSON.stringify(m)}'>
+                        data-code="${meal?.Code}"
+                        data-price="${priceText}"
+                        data-mealobjdata='${JSON.stringify(meal)}'>
                 </td>
-            </tr>`;
+            </tr>
+        `;
     });
 
-    html += `</tbody></table>`;
+    html += `</tbody></table></div>`;
+
     $(container).html(html);
 }
 
 function renderInternationalBaggage(bagData, trip) {
 
-    let container = trip === 'departure' ? '#baggageContainer' : '#baggageContainerRet';
+    let container = trip === 'departure'
+        ? '#baggageContainer'
+        : '#baggageContainerRet';
 
     if (!bagData || bagData.length === 0) {
-        $(container).html(`<div class="alert alert-warning text-center mt-3"> No baggage options available for this flight.</div>`);
+        $(container).html(`<div class="alert alert-warning text-center">No Baggage options available</div>`);
         return;
     }
 
-    let html = `<table class="table table-bordered text-center">
-        <thead><tr>
-            <th>Code</th><th>Weight</th><th>Price</th><th>Select</th>
-        </tr></thead><tbody>`;
+    let html = `
+        <div class="table-responsive mt-3">
+        <table class="table table-bordered text-center">
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Weight</th>
+                <th>Price</th>
+                <th>Select</th>
+            </tr>
+        </thead>
+        <tbody>
+    `;
 
-    bagData.forEach(b => {
-        let price = b.Price == 0 ? 'Included' : `${b.Currency} ${b.Price}`;
+    bagData.flat().forEach(b => {
+
+        let priceText = (typeof b.Price !== "undefined" && b.Price == 0)
+            ? "Included"
+            : (typeof b.Price !== "undefined"
+                ? `${b.Currency} ${b.Price}`
+                : "Included");
+
         html += `
             <tr>
                 <td>${b.Code}</td>
-                <td>${b.Weight} KG</td>
-                <td>${price}</td>
+                <td>${b.Weight || 0} KG</td>
+                <td>${priceText}</td>
                 <td>
                     <input type="checkbox"
                         name="baggage-checkbox-${trip}"
                         data-code="${b.Code}"
-                        data-price="${price}"
+                        data-price="${priceText}"
                         data-bagobjdata='${JSON.stringify(b)}'>
                 </td>
-            </tr>`;
+            </tr>
+        `;
     });
 
-    html += `</tbody></table>`;
+    html += `</tbody></table></div>`;
+
     $(container).html(html);
 }
-
 
 
 function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
@@ -2559,8 +2644,11 @@ function renderSeatLayout(seatDynamicData, totalPassengers, trip) {
                     updateSummaryUI(trip);
                 });
 
+
+                if (idx === 6) rowDiv.append("<br>");
                 rowDiv.append(seatDiv);
                 if (idx === 2) rowDiv.append("<br>");
+
             });
 
             $(`#planeContainer_${segIndex}${trip}`).append(rowDiv);
@@ -2813,10 +2901,268 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
     }
 }
 
+function formatSelection(data) {
+
+    if (!data || data.length === 0) {
+        return undefined;
+    }
+
+    if (data.length === 1) {
+        return data[0];
+    }
+
+    return data;
+}
+
+function hitBookingAPIInternationalRoundtrip(
+    traceId,
+    selectedFlightDetails,
+    selectedSeatsOnward,
+    selectedSeatsReturn,
+    selectedMealsOnward,
+    selectedMealsReturn,
+    selectedBaggageOnward,
+    selectedBaggageReturn,
+    journeyType
+) {
+
+    const travelerDetails = JSON.parse(localStorage.getItem('travelerDetails'));
+    const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
+    const formatDate = (date) => date ? `${date}T00:00:00` : null;
+
+    /* ================= FARE LOGIC SAME AS hitBookingAPI ================= */
+
+    const fareBreakdown = JSON.parse(localStorage.getItem(`fareFlightDetails`)) || [];
+
+    const fareMap = {};
+    fareBreakdown.forEach(fb => {
+        fareMap[fb.PassengerType] = fb;
+    });
+
+    const getFareForPassenger = (paxType) => {
+        const fb = fareMap[paxType];
+        if (!fb) return {};
+
+        const count = fb.PassengerCount || 1;
+
+        return {
+            Currency: fb.Currency,
+            PassengerType: paxType,
+            PassengerCount: 1, // always 1 per passenger
+            BaseFare: +(fb.BaseFare / count).toFixed(2),
+            Tax: +(fb.Tax / count).toFixed(2),
+            YQTax: fb.YQTax || 0,
+            AdditionalTxnFeeOfrd: fb.AdditionalTxnFeeOfrd || 0,
+            AdditionalTxnFeePub: fb.AdditionalTxnFeePub || 0,
+            PGCharge: fb.PGCharge || 0
+        };
+    };
+
+    /* ================= PASSENGERS ================= */
+
+    const passengers = travelerDetails.map((trav, index) => {
+
+        const paxType =
+            trav.type === "Child" ? 2 :
+                trav.type === "Infant" ? 3 : 1;
+
+        return {
+            Title: trav.title,
+            FirstName: trav.firstName,
+            LastName: trav.lastName,
+            PaxType: paxType,
+            DateOfBirth: formatDate(trav.dob),
+            Gender: trav.gender,
+            PassportNo: trav.passportNo || "",
+            PassportExpiry: formatDate(trav.passportExpiry),
+            AddressLine1: trav.address1 || "",
+            AddressLine2: trav.address2 || "",
+            City: trav.city || "",
+            CountryCode: trav.nationality || "IN",
+            CountryName: trav.countryName || "India",
+            Nationality: trav.nationality || "IN",
+            ContactNo: contactDetails.mobile,
+            Email: contactDetails.email,
+            IsLeadPax: index === 0,
+
+            GSTCompanyAddress: trav.gstAddress || "",
+            GSTCompanyContactNumber: trav.gstContact || "",
+            GSTCompanyName: trav.gstName || "",
+            GSTNumber: trav.gstNumber || "",
+            GSTCompanyEmail: trav.gstEmail || "",
+
+            Fare: getFareForPassenger(paxType),
+            ...(
+                (
+                    (selectedSeatsOnward[index] && selectedSeatsOnward[index].length) ||
+                    (selectedSeatsReturn[index] && selectedSeatsReturn[index].length)
+                )
+                    ? {
+                        SeatDynamic: (() => {
+
+                            let onwardSeats = selectedSeatsOnward[index] || [];
+                            let returnSeats = selectedSeatsReturn[index] || [];
+
+                            let allSeats = [
+                                ...onwardSeats.map(s => s.SeatObjData),
+                                ...returnSeats.map(s => s.SeatObjData)
+                            ];
+
+                            return allSeats.length === 1 ? allSeats[0] : allSeats;
+                        })()
+                    }
+                    : {}
+            ),
+
+            ...(
+                (
+                    (selectedMealsOnward[index] && selectedMealsOnward[index].length) ||
+                    (selectedMealsReturn[index] && selectedMealsReturn[index].length)
+                )
+                    ? {
+                        Meal: (() => {
+
+                            let onwardMeals = selectedMealsOnward[index] || [];
+                            let returnMeals = selectedMealsReturn[index] || [];
+
+                            let allMeals = [
+                                ...onwardMeals.map(m => m.mealObjData),
+                                ...returnMeals.map(m => m.mealObjData)
+                            ];
+
+                            return allMeals.length === 1 ? allMeals[0] : allMeals;
+                        })()
+                    }
+                    : {}
+            ),
+
+            ...(
+                (
+                    (selectedBaggageOnward[index] && selectedBaggageOnward[index].length) ||
+                    (selectedBaggageReturn[index] && selectedBaggageReturn[index].length)
+                )
+                    ? {
+                        Baggage: (() => {
+
+                            let onwardBaggage = selectedBaggageOnward[index] || [];
+                            let returnBaggage = selectedBaggageReturn[index] || [];
+
+                            let allBaggage = [
+                                ...onwardBaggage.map(b => b.bagObjData),
+                                ...returnBaggage.map(b => b.bagObjData)
+                            ];
+
+                            return allBaggage.length === 1 ? allBaggage[0] : allBaggage;
+                        })()
+                    }
+                    : {}
+            ),
+
+        };
+    });
+
+    /* ================= RESULT INDEX ================= */
+
+    const payload = {
+        resultIndex: selectedFlightDetails.ResultIndex,
+        passengers: passengers,
+        traceId: traceId,
+        islcc: selectedFlightDetails?.IsLCC || false,
+        _token: $('meta[name="csrf-token"]').attr('content')
+    };
+
+    /* ================= LCC DECISION ================= */
+
+    const isflightLCC = selectedFlightDetails?.IsLCC || false;
+    if (isflightLCC) {
+        ViewTicketAjaxInternational(payload, '/flight/ticket', 'international', journeyType, false);
+    } else {
+        ViewTicketAjaxInternational(payload, '/flight/book', 'international', journeyType, true);
+    }
+}
+
+
 let bookingResult = {
     departure: null,
-    return: null
+    return: null,
 };
+
+function ViewTicketAjaxInternational(payload, apiUrl, trip, journeyType, callTicketAfterBook = false) {
+
+    $('#bookingData').addClass('d-none');
+    $('.preloader').removeClass('d-none');
+
+    $.ajax({
+        url: apiUrl,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(payload),
+
+        beforeSend: function () {
+            $('#bookingData').addClass('d-none');
+            $('.preloader').removeClass('d-none');
+        },
+
+        success: function (response) {
+
+            if (callTicketAfterBook && response?.status === 'success') {
+
+                bookingResult[trip] = response;
+
+                const bookingResponse = response?.data?.Response?.Response || {};
+
+                payload.bookingId = bookingResponse.BookingId || '';
+                payload.pnr = bookingResponse.PNR || '';
+
+                const passengers = bookingResponse?.FlightItinerary?.Passenger || [];
+
+                const passportArr = passengers
+                    .filter(pax => pax.IsPassportRequired)
+                    .map(pax => ({
+                        PaxId: pax.PaxId,
+                        PassportNo: pax.PassportNo || '',
+                        PassportExpiry: pax.PassportExpiry || '',
+                        DateOfBirth: pax.DateOfBirth
+                    }));
+
+                if (passportArr.length) {
+                    payload.Passport = passportArr;
+                }
+
+                ViewTicketAjaxInternational(
+                    payload,
+                    '/flight/ticket',
+                    trip,
+                    journeyType,
+                    false
+                );
+                return;
+            } else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
+                swal({
+                    title: "Error",
+                    text: response?.message || 'Booking failed',
+                    type: "error",
+                    confirmButtonText: "OK, Got It",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+            } else {
+                bookingResult[trip] = response;
+                checkFinalBookingStatus(trip, journeyType);
+            }
+
+        },
+
+        error: function () {
+            notify('An error occurred while processing your booking. Please try again.', 'error');
+            bookingResult[trip] = { status: 'failed' };
+            checkFinalBookingStatus(trip, journeyType);
+        }
+    });
+}
+
 
 function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callTicketAfterBook = false) {
     $('#bookingData').addClass('d-none');
@@ -2857,15 +3203,29 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
                 }
                 ViewTicketAjax(payload, '/flight/ticket', trip, journeyType, $val, false);
                 return;
+            } else if (response?.status?.toLowerCase() == 'failure' || response?.status?.toLowerCase() == 'failed') {
+
+                swal({
+                    title: "Error",
+                    text: response?.message || 'Booking failed',
+                    type: "error",
+                    confirmButtonText: "OK, Got It",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+            } else {
+                bookingResult[trip] = response;
+                checkFinalBookingStatus(trip, journeyType, $val);
             }
 
-            bookingResult[trip] = response;
-            checkFinalBookingStatus(trip, journeyType, $val);
         },
 
         error: function () {
+            notify('An error occurred while processing your booking. Please try again.', 'error');
             bookingResult[trip] = { status: 'failed' };
-            checkFinalBookingStatus(trip, journeyType.$val);
+            checkFinalBookingStatus(trip, journeyType, $val);
         }
     });
 }
@@ -2914,79 +3274,116 @@ function checkFinalBookingStatus(trip, journeyType, source) {
     if (journeyType == '2') {
         $('#bookingData').removeClass('d-none');
         $('.preloader').addClass('d-none');
-        if (!bookingResult.departure || !bookingResult.return) return;
 
-        const depRes = bookingResult.departure;
-        const retRes = bookingResult.return;
+        if (bookingResult.international) {
 
-        if (depRes.status == 'success' && retRes.status == 'success') {
+            const intlRes = bookingResult.international;
 
-            const dep = depRes.data.Response.Response;
-            const ret = retRes.data.Response.Response;
+            if (intlRes.status === 'success') {
 
+                const intl = intlRes.data.Response.Response;
 
-            swal({
-                title: "Booking Successful!",
-                html: `
-            <p>Your ticket has been booked successfully 🎉</p>
-            <p><strong>Departure PNR:</strong> ${dep?.PNR || "Not Available"}</p>
-           
-            <p><strong>Return PNR:</strong> ${ret?.PNR || "Not Available"}</p>
-        `,
-                type: "success",
-                confirmButtonText: "👁️ Booking Details",
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then(() => {
-                window.location.href = "/flight/booking-list";
-                localStorage.clear();
-            });
-        } else if (depRes.status === 'success' || retRes.status === 'success') {
-            let confirmedLeg = '';
-            let confirmedPNR = '';
-
-            if (depRes.status === 'success') {
-                confirmedLeg = 'Departure';
-                confirmedPNR = depRes?.data?.Response?.Response?.PNR || 'N/A';
-            } else if (retRes.status === 'success') {
-                confirmedLeg = 'Return';
-                confirmedPNR = retRes?.data?.Response?.Response?.PNR || 'N/A';
-            }
-
-            swal({
-                title: "Partial Booking Completed",
-                html: `${confirmedLeg} is confirmed ✅ <br/>
-                <p><strong>PNR:</strong> ${confirmedPNR}</p><br/>
-                 Please book the remaining leg separately.`,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonText: "👁️ Booking Details",
-                cancelButtonText: "Search Again",
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then((result) => {
-                if (result.value) {
+                swal({
+                    title: "International Booking Successful! 🌍",
+                    html: `
+                        <p>Your international roundtrip ticket has been booked successfully 🎉</p>
+                        <p><strong>PNR:</strong> ${intl?.PNR || "Not Available"}</p>
+                        <p><strong>Booking Id:</strong> ${intl?.BookingId || "Not Available"}</p>
+                    `,
+                    type: "success",
+                    confirmButtonText: "👁️ Booking Details",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
                     window.location.href = "/flight/booking-list";
                     localStorage.clear();
-                } else {
-                    window.location.href = "/flight/view";
-                }
-            });
+                });
 
+            } else {
+
+                swal({
+                    title: "International Booking Failed ❌",
+                    text: intlRes.message || "Flight Booking Failed, Please search again",
+                    type: "error"
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+            }
+            return;
         } else {
-            swal({
-                title: "Booking Failed ❌",
-                html: `${depRes?.message ? `<strong>Departure Error:</strong> ${depRes.message}` : 'Booking failed'}
-                <br/>${retRes.message ? `<strong>Return Error:</strong> ${retRes.message}` : 'Booking failed'}`,
-                type: "error"
-            }).then(() => {
-                window.location.href = "/flight/view";
-            });
+
+            if (!bookingResult.departure || !bookingResult.return) return;
+
+            const depRes = bookingResult.departure;
+            const retRes = bookingResult.return;
+
+            if (depRes.status == 'success' && retRes.status == 'success') {
+
+                const dep = depRes.data.Response.Response;
+                const ret = retRes.data.Response.Response;
+
+
+                swal({
+                    title: "Booking Successful!",
+                    html: `
+                <p>Your ticket has been booked successfully 🎉</p>
+                <p><strong>Departure PNR:</strong> ${dep?.PNR || "Not Available"}</p>
+            
+                <p><strong>Return PNR:</strong> ${ret?.PNR || "Not Available"}</p>
+            `,
+                    type: "success",
+                    confirmButtonText: "👁️ Booking Details",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/booking-list";
+                    localStorage.clear();
+                });
+            } else if (depRes.status === 'success' || retRes.status === 'success') {
+                let confirmedLeg = '';
+                let confirmedPNR = '';
+
+                if (depRes.status === 'success') {
+                    confirmedLeg = 'Departure';
+                    confirmedPNR = depRes?.data?.Response?.Response?.PNR || 'N/A';
+                } else if (retRes.status === 'success') {
+                    confirmedLeg = 'Return';
+                    confirmedPNR = retRes?.data?.Response?.Response?.PNR || 'N/A';
+                }
+
+                swal({
+                    title: "Partial Booking Completed",
+                    html: `${confirmedLeg} is confirmed ✅ <br/>
+                    <p><strong>PNR:</strong> ${confirmedPNR}</p><br/>
+                    Please book the remaining leg separately.`,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "👁️ Booking Details",
+                    cancelButtonText: "Search Again",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href = "/flight/booking-list";
+                        localStorage.clear();
+                    } else {
+                        window.location.href = "/flight/view";
+                    }
+                });
+
+            } else {
+                swal({
+                    title: "Booking Failed ❌",
+                    html: `${depRes?.message ? `<strong>Departure Error:</strong> ${depRes.message}` : 'Booking failed'}
+                    <br/>${retRes.message ? `<strong>Return Error:</strong> ${retRes.message}` : 'Booking failed'}`,
+                    type: "error"
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+            }
         }
     }
 }
-
-
 
 function removeExtraKey(obj, keys) {
     if (keys === 'baggage') {

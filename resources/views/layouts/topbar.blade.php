@@ -22,7 +22,8 @@
             <marquee>
                 <div class="notification-slider">
                     <div class="d-flex h-100"> 
-                        <h6 class="mb-0 f-w-500"><span class="font-primary text-danger">&nbsp;&nbsp;Welcome to {{ @json_decode(app\Models\Company::where('website', $_SERVER['HTTP_HOST'])->first(['companyname']))->companyname }} Dashboard </span></h6><i class="icon-arrow-top-right f-light"></i>
+                        <h6 class="mb-0 f-w-500"><span class="font-primary text-danger">&nbsp;&nbsp;Welcome to iPaymnt Tech </span></h6>
+                        {{-- <h6 class="mb-0 f-w-500"><span class="font-primary text-danger">&nbsp;&nbsp;Welcome to <img src="{{ asset('images/logo.png') }}" width="100" height="30" class="ms-2"> </span></h6> --}}
                     </div>
                 </div>
             </marquee>
@@ -71,15 +72,15 @@
             <!--/ Style Switcher -->
 
             <!-- Quick links  -->
-            @if (Myhelper::hasRole('admin'))
+            {{-- @if (Myhelper::hasRole('admin'))
             <li class="nav-item me-2 me-xl-0 cursor-pointer">
                 <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="offcanvas" data-bs-target="#walletloadModal">
                     Load Wallet<i class="ti ti-wallet ti-sm"></i>
                 </button>
             </li>
-            @endif
+            @endif --}}
 
-            <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
+            {{-- <li class="nav-item dropdown-shortcuts navbar-dropdown dropdown me-2 me-xl-0">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                     <i class="ti ti-wallet ti-md"></i>
                 </a>
@@ -98,13 +99,13 @@
                                 <a href="{{ route('statement', ['type' => 'account']) }}" class="stretched-link">Card Balance</a>
                                 <small class="text-muted mb-0">&#8377; {{Auth::user()->mainwallet}} /-</small>
                             </div>
-                            {{-- <div class="dropdown-shortcuts-item col">
+                            <div class="dropdown-shortcuts-item col">
                                 <span class="dropdown-shortcuts-icon rounded-circle mb-2">
                                     <i class="ti ti-file-invoice fs-4"></i>
                                 </span>
                                 <a href="{{ route('statement', ['type' => 'awallet']) }}" class="stretched-link">AEPS Wallet</a>
                                 <small class="text-muted mb-0"> &#8377; {{Auth::user()->aepsbalance}} /-</small>
-                            </div> --}}
+                            </div>
                              <div class="dropdown-shortcuts-item col">
                                 <span class="dropdown-shortcuts-icon rounded-circle mb-2">
                                     <i class="ti ti-file-invoice fs-4"></i>
@@ -121,18 +122,18 @@
                                     <small class="text-muted mb-0"> &#8377; {{Auth::user()->commission_wallet}} /-</small>
                             </div>
                             @endif
-                            {{-- <div class="dropdown-shortcuts-item col">
+                            <div class="dropdown-shortcuts-item col">
                                     <span class="dropdown-shortcuts-icon rounded-circle mb-2">
                                         <i class="ti ti-file fs-4"></i>
                                     </span>
                                 <a href="#" class="stretched-link">Reward Wallet</a>
                                     <small class="text-muted mb-0"> &#8377; {{Auth::user()->reward_wallet}} /-</small>
-                            </div> --}}
+                            </div>
                         </div>
 
                     </div>
                 </div>
-            </li>
+            </li> --}}
             <!-- Quick links -->
 
             <!-- Notification -->

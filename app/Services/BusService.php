@@ -20,7 +20,7 @@ class BusService
 
     public function __construct()
     {
-        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travels');
+        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travelsbus');
 
         if ($getApiCred['status']) {
             $this->authKey = @$getApiCred['apidata']['client_id'];
@@ -34,7 +34,7 @@ class BusService
         } else {
             throw new \Exception("Travels API credentials not found or inactive");
         }
-        $this->authService = new AuthService();
+        $this->authService = new BusAuthService();
     }
 
 

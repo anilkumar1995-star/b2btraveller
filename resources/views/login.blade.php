@@ -90,13 +90,23 @@
                         data-bs-ride="carousel"
                         data-bs-interval="4000">
 
-                        <div class="carousel-inner h-100 rounded">
+                    <div class="carousel-inner h-100 rounded">
 
-                            <div class="carousel-item active h-100">
-                                <img src="{{ asset('images/Air-India.jpg') }}"
-                                    class="d-block w-100 h-100"
-                                    alt="Flight">
-                                {{-- <div class="carousel-caption d-none d-md-block">
+
+                        <div class="carousel-item active h-100">
+                            <img src="{{ asset('images/slider1.jpeg') }}"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            {{-- <div class="carousel-caption d-none d-md-block">
+                                <h3>Book Flights Worldwide</h3>
+                                <p>Fast, Secure & Affordable Air Travel</p>
+                            </div> --}}
+                        </div>
+                        <div class="carousel-item h-100">
+                            <img src="{{ asset('images/Air-India.jpg') }}"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Book Flights Worldwide</h3>
                                 <p>Fast, Secure & Affordable Air Travel</p>
                             </div> --}}
@@ -159,26 +169,27 @@
                         <a href="{{ route('home') }}" class="app-brand-link gap-2"></a>
                     </div>
 
-                    <h3 class="mb-1 fw-bold">
-                        Welcome to {{ @$company->companyname }}! 👋
-                    </h3>
-                    <p class="mb-4">
-                        Sign in to your account and begin your journey
-                    </p>
-
-                    <form action="{{ route('authCheck') }}" method="POST" class="login-form">
-                        @csrf
-                        <b class="errorText text-danger d-block mb-2"></b>
-                        <b class="successText text-success d-block mb-2"></b>
-                        <div class="mb-3">
-                            <label class="form-label">Mobile No.</label>
-                            <input type="tel"
-                                class="form-control"
-                                name="mobile"
-                                maxlength="10"
-                                minlength="10"
-                                required>
-                        </div>
+                <h3 class="mb-1 fw-bold">
+                    Welcome to iPaymnt Tech 
+                    {{-- Welcome to <img src="{{ asset('images/logo.png') }}" width="150" height="50" class="ms-2">  --}}
+                </h3>
+                <p class="mb-4">
+                Sign in to your account and begin your journey               
+                </p>
+                
+                <form action="{{ route('authCheck') }}" method="POST" class="login-form">
+                    @csrf
+                <b class="errorText text-danger d-block mb-2"></b>
+                <b class="successText text-success d-block mb-2"></b>
+                    <div class="mb-3">
+                        <label class="form-label">Mobile No.</label>
+                        <input type="tel"
+                               class="form-control"
+                               name="mobile"
+                               maxlength="10"
+                               minlength="10"
+                               required>
+                    </div>
 
                         <div class="mb-3">
                             <div class="d-flex justify-content-between">
