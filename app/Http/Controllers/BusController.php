@@ -426,7 +426,7 @@ class BusController extends Controller
             $data['totalcancelledCount'] = Bus::where('booking_status', 'Cancelled')->count();
      
         } else {
-            $data['totalbussuccess'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Confirmed')->sum('total_amount');
+            $data['totalsuccess'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Confirmed')->sum('total_amount');
             $data['totalsuccessCount'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Confirmed')->count();
             $data['totalpending'] = Bus::where('user_id', auth()->id())->where('booking_status', 'pending')->sum('total_amount');
             $data['totalpendingCount'] = Bus::where('user_id', auth()->id())->where('booking_status', 'pending')->count();

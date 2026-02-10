@@ -131,7 +131,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf417-js/2.1.7/pdf417.min.js"></script> --}}
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="{{ asset('') }}js/flightbooktrip.js"></script>
+    <script src="{{ asset('') }}js/bookingflighttrip.js"></script>
     <script>
         $(document).ready(function() {
             $('#bookingData').addClass('d-none');
@@ -167,7 +167,15 @@
             }
             if (payload.JourneyType == 2) {
                 if (isInternational == 'true' || isInternational == true) {
-                    notify('International flight booking in progress. This may take a while.', 'warning');
+                    // notify('International flight booking in progress. This may take a while.', 'warning');
+                    // return;
+                    selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
+                    selectedMealsRet = JSON.parse(localStorage.getItem('selectedMealsReturn')) || [];
+                    selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
+
+                    hitBookingAPIInternationalRoundtrip(traceId, selectedFlightDetails, selectedSeats,
+                        selectedSeatsRet, selectedMeals, selectedMealsRet, selectedBaggage, selectedBaggageRet,
+                        '2');
                 } else {
                     selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
                     selectedMealsRet = JSON.parse(localStorage.getItem('selectedMealsReturn')) || [];

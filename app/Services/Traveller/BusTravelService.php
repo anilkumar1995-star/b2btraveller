@@ -5,7 +5,7 @@ namespace App\Services\Traveller;
 use App\Helpers\AndroidCommonHelper;
 use App\Helpers\Permission;
 
-class TravelService
+class BusTravelService
 {
     private $authKey = "";
     private $authSecret = "";
@@ -16,7 +16,7 @@ class TravelService
 
     public function __construct()
     {
-        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travelsflight');
+        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travelsbus');
 
         if ($getApiCred['status']) {
             $this->authKey = @$getApiCred['apidata']['username'];

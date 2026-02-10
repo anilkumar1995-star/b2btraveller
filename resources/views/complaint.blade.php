@@ -21,13 +21,13 @@ $product['type'] = "Service";
     <div class="col-12 col-xl-12 col-sm-12 order-1 order-lg-2 mb-4 mb-lg-0">
         <div class="card">
             <div class="card-header pb-1 bg-light d-flex justify-content-between mb-lg-n4 ">
-                <div class="card-title mb-5">
+                <div class="card-title">
                     <h5 class="mb-0">
                         <span>@yield('pagetitle') </span>
                     </h5>
                 </div>
             </div>
-            <div class="card-datatable table-responsive">
+            <div class="card-datatable table-responsive mt-5">
                 <table width="100%" class="table border-top mb-5" id="datatable" role="grid" aria-describedby="user-list-page-info">
                     <thead class=" text-center bg-light">
                         <tr>

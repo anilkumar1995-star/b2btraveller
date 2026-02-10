@@ -91,7 +91,17 @@
 
                     <div class="carousel-inner h-100 rounded">
 
+
                         <div class="carousel-item active h-100">
+                            <img src="{{ asset('images/slider1.jpeg') }}"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            {{-- <div class="carousel-caption d-none d-md-block">
+                                <h3>Book Flights Worldwide</h3>
+                                <p>Fast, Secure & Affordable Air Travel</p>
+                            </div> --}}
+                        </div>
+                        <div class="carousel-item h-100">
                             <img src="{{ asset('images/Air-India.jpg') }}"
                                  class="d-block w-100 h-100"
                                  alt="Flight">
@@ -159,7 +169,8 @@
                 </div>
 
                 <h3 class="mb-1 fw-bold">
-                    Welcome to {{ @$company->companyname }}! 👋
+                    Welcome to iPaymnt Tech 
+                    {{-- Welcome to <img src="{{ asset('images/logo.png') }}" width="150" height="50" class="ms-2">  --}}
                 </h3>
                 <p class="mb-4">
                 Sign in to your account and begin your journey               

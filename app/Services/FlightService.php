@@ -19,7 +19,7 @@ class FlightService
 
     public function __construct()
     {
-        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travels');
+        $getApiCred = AndroidCommonHelper::CheckServiceStatus('travelsflight');
 
         if ($getApiCred['status']) {
             $this->authKey = @$getApiCred['apidata']['client_id'];
@@ -398,7 +398,8 @@ class FlightService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = StaticResponseHelper::flightTicketLCCStaticResponse();
+                $response = StaticResponseHelper::flightTicketLCCStaticResponseInt();
+                // $response = StaticResponseHelper::flightTicketLCCStaticResponse();
                 // $response = StaticResponseHelper::flightfailedbookingresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "ticketlcc", "");
@@ -450,7 +451,8 @@ class FlightService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = StaticResponseHelper::bookingdetStaticResponse();
+                $response = StaticResponseHelper::bookingdetStaticResponseInt();
+                // $response = StaticResponseHelper::bookingdetStaticResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "booking_details", "");
                 $response = $response['response'];

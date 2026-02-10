@@ -84,7 +84,7 @@
                         <div data-i18n="Booking List">Booking List</div>
                     </a>
                 </li>
-                 <li class="menu-item {{ Request::is('bus/booking-list-failed') ? 'active' : '' }}">
+                <li class="menu-item {{ Request::is('bus/booking-list-failed') ? 'active' : '' }}">
                     <a href="{{ url('bus/booking-list-failed') }}" class="menu-link">
                         <div data-i18n="Failed List">Failed List</div>
                     </a>
@@ -112,14 +112,14 @@
             </ul>
         </li>
 
-         <li class="menu-item {{ Request::is('payment/*') ? 'active open' : '' }}">
+        <li class="menu-item {{ Request::is('payment/*') ? 'active open' : '' }}">
             <a href="#menu-design" class="menu-link menu-toggle">
                 <i class="menu-icon tf-icons ti ti-wallet" style="color: #28c76f;"></i>
                 <div data-i18n="Payment">Payment</div>
             </a>
             <ul class="menu-sub" id="menu-design {{ Request::is('payment/*') ? 'show' : '' }}">
 
-             <li class="menu-item {{ Request::is('payment/vanlist') ? 'active' : '' }}">
+                <li class="menu-item {{ Request::is('payment/vanlist') ? 'active' : '' }}">
                     <a href="{{ url('payment/vanlist') }}" class="menu-link">
                         <div data-i18n="Van List">Van List</div>
                     </a>
@@ -129,7 +129,7 @@
                         <div data-i18n="Upi Collect">Upi Collect</div>
                     </a>
                 </li>
-               
+
             </ul>
         </li>
 
@@ -145,7 +145,7 @@
                         <div data-i18n="Customer List">Customer List</div>
                     </a>
                 </li>
-               
+
             </ul>
         </li>
         <li class="menu-item {{ Request::is('refund/*') ? 'active open' : '' }}">
@@ -160,7 +160,7 @@
                         <div data-i18n="Refund List">Refund List</div>
                     </a>
                 </li>
-               
+
             </ul>
         </li>
 
@@ -405,7 +405,7 @@
             </a>
             <ul class="menu-sub {{ Request::is('statement/aeps') || Request::is('fund/aepsrequest') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/cmsreport') || Request::is('statement/affiliateList') ? 'show' : '' }}"
                 id="txnreport">
-                 {{-- @if (Myhelper::can('aeps_statement'))
+                {{-- @if (Myhelper::can('aeps_statement'))
                     <li class="menu-item {{ Request::is('statement/aeps') ? 'active' : '' }}">
                                 <a href="{{ route('statement', ['type' => 'aeps']) }}" class="menu-link">
                                     <div data-i18n="AePS CW Statement">AePS CW Statement</div>
@@ -430,20 +430,20 @@
                     </a>
                 </li> --}}
                 {{-- @if (Myhelper::hasRole('admin')) --}}
-                    <li class="menu-item {{ Request::is('fund/aepsrequest') ? 'active' : '' }}">
-                        <a href="{{ route('fund', ['type' => 'aepsrequest']) }}" class="menu-link">
-                            <div data-i18n="Commission Statement">Commission Statement</div>
-                        </a>
-                    </li>
+                <li class="menu-item {{ Request::is('fund/aepsrequest') ? 'active' : '' }}">
+                    <a href="{{ route('fund', ['type' => 'aepsrequest']) }}" class="menu-link">
+                        <div data-i18n="Commission Statement">Commission Statement</div>
+                    </a>
+                </li>
                 {{-- @endif --}}
 
                 {{-- @if (Myhelper::can('billpayment_statement')) --}}
-                    <li class="menu-item {{ Request::is('statement/billpay') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'billpay']) }}" class="menu-link">
-                            <div data-i18n="Billpay Statement">Billpay Statement</div>
-                        </a>
-                    </li>
-                    {{-- <li class="menu-item {{ Request::is('statement/ccpay') ? 'active' : '' }}">
+                <li class="menu-item {{ Request::is('statement/billpay') ? 'active' : '' }}">
+                    <a href="{{ route('statement', ['type' => 'billpay']) }}" class="menu-link">
+                        <div data-i18n="Billpay Statement">Billpay Statement</div>
+                    </a>
+                </li>
+                {{-- <li class="menu-item {{ Request::is('statement/ccpay') ? 'active' : '' }}">
                         <a href="{{ route('statement', ['type' => 'ccpay']) }}" class="menu-link">
                             <div data-i18n="Credit Card Payment">Credit Card Payment</div>
                         </a>
@@ -485,11 +485,11 @@
                 @endif --}}
 
                 {{-- @if (Myhelper::can('recharge_statement')) --}}
-                    <li class="menu-item {{ Request::is('statement/recharge') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'recharge']) }}" class="menu-link">
-                            <div data-i18n="Recharge Statement">Recharge Statement</div>
-                        </a>
-                    </li>
+                <li class="menu-item {{ Request::is('statement/recharge') ? 'active' : '' }}">
+                    <a href="{{ route('statement', ['type' => 'recharge']) }}" class="menu-link">
+                        <div data-i18n="Recharge Statement">Recharge Statement</div>
+                    </a>
+                </li>
                 {{-- @endif --}}
                 {{-- <li class="menu-item {{ Request::is('statement/vancollection') ? 'active' : '' }}">
                     <a href="{{ route('statement', ['type' => 'vancollection']) }}" class="menu-link">
@@ -519,6 +519,13 @@
                     </a>
                 </li>
             </ul>
+        </li>
+        <li class="{{ Request::is('complaint') ? 'active' : '' }} menu-item ">
+            <a href="{{ route('complaint') }}" class="menu-link">
+                <i class="menu-icon tf-icons ti ti-file" style="color: #f06795;"></i>
+                <div data-i18n="Complaint">Complaint</div>
+            </a>
+
         </li>
         @if (Myhelper::hasRole('admin'))
             <li class="menu-item {{ Request::is('api/*') ? 'active open' : '' }}">

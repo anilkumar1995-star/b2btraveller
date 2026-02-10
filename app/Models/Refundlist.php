@@ -9,7 +9,7 @@ class Refundlist extends Model
 {
     protected $table = 'customer_refunds';
 
-    protected $fillable = ['id','user_id', 'customer_id', 'amount','remarks','status'];
+    protected $fillable = ['id','user_id', 'customer_id', 'amount','remarks','status', 'account_number', 'ifsc_code', 'bank_name'];
 
     
 

@@ -18,8 +18,15 @@
                     </div>
 
                     <div>
-                        <button type="button" class="btn btn-success mb-3" onclick="refundtocustomer()">
+
+
+                        <button type="button" class="btn btn-success mb-3" data-bs-toggle="modal"
+                            data-bs-target="#refundModal">
                             💰 Refund to Customer
+                        </button>
+                        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal"
+                            data-bs-target="#customerModal">
+                            + Add Customer
                         </button>
                     </div>
                 </div>
@@ -29,11 +36,11 @@
                         <thead class="text-center bg-light">
                             <tr>
                                 <th>ID</th>
-                                <th>User Details</th>
-                                <th>Customer Details</th>
+                                <th>User Info</th>
+                                <th>Customer Info</th>
+                                <th>Bank Info</th>
                                 <th>Amount</th>
-                                <th>Refund Date</th>
-                                <th>Remarks</th>
+                                <th>Refund/Remarks</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -46,11 +53,13 @@
         </div>
     </div>
 
-    <div class="modal" id="customerModal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
+
+
+    <div class="modal" id="refundModal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Add Refund</h5>
+                    <h5 class="modal-title">Refund to Customer</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true"></span>
                     </button>
@@ -67,8 +76,7 @@
                                 <select class="form-control" id="refund_customer" name="customer_id" required>
                                     <option value="">-- Select Customer --</option>
                                     @foreach ($customers as $customer)
-                                        <option value="{{ $customer->id }}" data-account="{{ $customer->account_number }}"
-                                            data-ifsc="{{ $customer->ifsc_code }}" data-bank="{{ $customer->bank_name }}">
+                                        <option value="{{ $customer->id }}">
                                             {{ $customer->name }} ({{ $customer->email }})
                                         </option>
                                     @endforeach
@@ -78,31 +86,28 @@
                             <div class="col-md-6">
                                 <label>Refund Amount *</label>
                                 <div class="input-group">
-                                    <span class="input-group-text w-25">₹</span>
-                                    <input type="number" step="0.01" min="1" max="100000" name="amount"
-                                        id="refund_amount" class="form-control w-75" placeholder="Enter amount" required>
+                                    <span class="input-group-text" style="width: 10%">₹</span>
+                                    <input type="number" style="width: 90%" step="0.01" min="1" max="100000"
+                                        name="amount" id="refund_amount" class="form-control w-75"
+                                        placeholder="Enter amount" required>
                                 </div>
                                 <small class="text-muted">Minimum ₹1 | Maximum ₹1,00,000</small>
                             </div>
 
                             <div class="col-md-6">
                                 <label>Account Number</label>
-                                <input type="text" id="show_account" name="account_number" class="form-control bg-light"
-                                    readonly required>
+                                <input type="text" name="account_number" class="form-control" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label>IFSC Code</label>
-                                <input type="text" id="show_ifsc" name="ifsc_code" class="form-control bg-light" readonly
-                                    required>
+                                <input type="text" name="ifsc_code" class="form-control" required>
                             </div>
 
                             <div class="col-md-6">
                                 <label>Bank Name</label>
-                                <input type="text" id="show_bank" name="bank_name" class="form-control bg-light" readonly
-                                    required>
+                                <input type="text" name="bank_name" class="form-control" required>
                             </div>
-                            {{-- Remarke --}}
 
                             <div class="col-md-6">
                                 <label>Remarks</label>
@@ -121,57 +126,116 @@
         </div>
     </div>
 
+    <div class="modal" id="customerModal" tabindex="-1" role="dialog" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true"></span>
+                    </button>
+                </div>
+
+                <form id="customerFormCreate" action="{{ route('addcustomer') }}" method="post">
+                    {{ csrf_field() }}
+                    <input type="hidden" name="id">
+                    <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+                    <div class="modal-body">
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label>Name : <b class="text-danger">*</b></label>
+                                <input type="text" name="name" class="form-control" required
+                                    placeholder="Enter Customer Name "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label>Email : <b class="text-danger">*</b></label>
+                                <input type="email" name="email" class="form-control" required
+                                    placeholder="Enter Customer Email "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Mobile : <b class="text-danger">*</b></label>
+                                <input type="text" name="mobile" class="form-control" required
+                                    placeholder="Enter Customer Mobile Number "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Address: <b class="text-danger">*</b></label>
+                                <input type="text" name="address" class="form-control" required
+                                    placeholder="Enter Customer Address "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label>Status: <b class="text-danger">*</b></label>
+                                <select name="status" id="Status" class="form-control" required>
+                                    <option value="active">Active</option>
+                                    <option value="inactive">Inactive</option>
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <div class="modal-footer py-0 mt-2">
+                            <button class="btn btn-success" type="submit"
+                                data-loading-text="<i class='fa fa-spin fa-spinner'></i> Submitting">Submit
+                            </button>
+                        </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 @endsection
 
 @push('script')
     <script>
-        $(document).ready(function() {
-
-            $('#refund_customer').select2({
-                dropdownParent: $('#customerModal'),
-                placeholder: "Search Customer...",
-                width: '100%'
-            });
-
-
-            $(document).on('change', '#refund_customer', function() {
-
-                if ($(this).val() == '') {
-                    $('#show_account').val('');
-                    $('#show_ifsc').val('');
-                    $('#show_bank').val('');
-                    return;
-                }
-
-                let selectedOption = $(this).find(':selected');
-
-                let account = selectedOption.data('account') || '';
-                let ifsc = selectedOption.data('ifsc') || '';
-                let bank = selectedOption.data('bank') || '';
-
-
-                account = account.toString();
-                if (account.length > 4) {
-                    let masked = 'XXXXXX' + account.slice(-4);
-                    $('#show_account').val(masked);
-                } else {
-                    $('#show_account').val(account);
-                }
-
-                // IFSC uppercase
-                $('#show_ifsc').val(ifsc.toUpperCase());
-
-                $('#show_bank').val(bank);
-
-            });
-
+        $("#customerFormCreate").validate({
+            submitHandler: function() {
+                var form = $('form#customerFormCreate');
+                form.ajaxSubmit({
+                    dataType: 'json',
+                    beforeSubmit: function() {
+                        form.find('button:submit').html('Please wait...').attr(
+                            'disabled', true).addClass('btn-secondary');
+                    },
+                    success: function(data) {
+                        form.find('button:submit').html('Submit').attr(
+                            'disabled',
+                            false).removeClass('btn-secondary');
+                        if (data.status == "success") {
+                            notify("Customer Added Successfully", 'success');
+                            $('#customerModal').modal('hide');
+                        } else {
+                            notify(data.status, 'error');
+                        }
+                    },
+                    error: function(errors) {
+                        form.find('button:submit').html('Submit').attr(
+                            'disabled',
+                            false).removeClass('btn-secondary');
+                        notify(errors?.responseJSON?.message ||
+                            "Something went wrong",
+                            'error');
+                    }
+                });
+            }
         });
 
 
-        function refundtocustomer() {
-            $('#customerModal').modal('show');
-        }
+
+        $(document).ready(function() {
+
+            $('#refund_customer').select2({
+                dropdownParent: $('#refundModal'),
+                placeholder: "Search Customer...",
+                width: '100%'
+            });
+        });
+
+
         $("#refundForm").validate({
             submitHandler: function() {
                 var form = $('form#refundForm');
@@ -188,7 +252,7 @@
                         if (data.status == "success") {
                             $('#datatable').dataTable().api().ajax.reload();
                             notify("Refund Added Successfully", 'success');
-                            $('#customerModal').modal('hide');
+                            $('#refundModal').modal('hide');
                         } else {
                             notify(data.status, 'error');
                         }
@@ -227,7 +291,7 @@
                     render: function(data, type, full, meta) {
                         return `
                         <strong>${full?.user.name ?? '-'}</strong><br>
-                        <small>${full?.user.email ?? '-'}</small><br>
+                        <span>${full?.user.email ?? '-'}</span><br>
                         <span>${full?.user.mobile ?? '-'}</span>
                     `;
                     }
@@ -236,15 +300,24 @@
                     "data": "customer_id",
                     render: function(data, type, full, meta) {
                         return `
-                        <small>${full?.customer.name ?? '-'}</small><br>
-                        <small>${full?.customer.bank_name ?? '-'}</small><br>
-                        <small>${full?.customer.account_number ?? '-'}</small><br>
-                        <span>${full?.customer.ifsc_code ?? '-'}</span>
+                        <span>${full?.customer.name ?? '-'}</span><br>
+                        <span>${full?.customer.email ?? '-'}</span><br>
+                        <span>${full?.customer.mobile ?? '-'}</span><br>
+                        
                     `;
                     }
                 },
-
-
+                {
+                    "data": "bank_name",
+                    render: function(data, type, full, meta) {
+                        return `
+                        <span>${full?.bank_name ?? '-'}</span><br>
+                        <span>${full?.account_number ?? '-'}</span><br>
+                        <span>${full?.ifsc_code ?? '-'}</span><br>
+                        
+                    `;
+                    }
+                },
                 {
                     "data": "amount",
                     render: function(data, type, full, meta) {
@@ -252,19 +325,10 @@
                     }
                 },
                 {
-                    "data": "refund_date",
-                    render: function(data, type, full, meta) {
-                        return `
-                        <div>
-                            <div class="fw-semibold">${full?.created_at ?? '-'}</div>
-                        </div>
-                    `;
-                    }
-                },
-                {
                     "data": "remarks",
                     render: function(data, type, full, meta) {
-                        return `<span> ${full?.remarks ?? 'N/A'}</span>`;
+                        return ` <div class="fw-semibold">${full?.created_at ?? '-'}</div>
+                        <span> ${full?.remarks ?? 'N/A'}</span>`;
                     }
                 },
                 {
