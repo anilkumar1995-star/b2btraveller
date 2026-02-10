@@ -3271,79 +3271,116 @@ function checkFinalBookingStatus(trip, journeyType, source) {
         }
     }
 
-
-    console.log("Booking Result:", bookingResult);
     if (journeyType == '2') {
         $('#bookingData').removeClass('d-none');
         $('.preloader').addClass('d-none');
-        if (!bookingResult.departure || !bookingResult.return) return;
 
-        const depRes = bookingResult.departure;
-        const retRes = bookingResult.return;
+        if (bookingResult.international) {
 
-        if (depRes.status == 'success' && retRes.status == 'success') {
+            const intlRes = bookingResult.international;
 
-            const dep = depRes.data.Response.Response;
-            const ret = retRes.data.Response.Response;
+            if (intlRes.status === 'success') {
 
+                const intl = intlRes.data.Response.Response;
 
-            swal({
-                title: "Booking Successful!",
-                html: `
-            <p>Your ticket has been booked successfully 🎉</p>
-            <p><strong>Departure PNR:</strong> ${dep?.PNR || "Not Available"}</p>
-           
-            <p><strong>Return PNR:</strong> ${ret?.PNR || "Not Available"}</p>
-        `,
-                type: "success",
-                confirmButtonText: "👁️ Booking Details",
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then(() => {
-                window.location.href = "/flight/booking-list";
-                localStorage.clear();
-            });
-        } else if (depRes.status === 'success' || retRes.status === 'success') {
-            let confirmedLeg = '';
-            let confirmedPNR = '';
-
-            if (depRes.status === 'success') {
-                confirmedLeg = 'Departure';
-                confirmedPNR = depRes?.data?.Response?.Response?.PNR || 'N/A';
-            } else if (retRes.status === 'success') {
-                confirmedLeg = 'Return';
-                confirmedPNR = retRes?.data?.Response?.Response?.PNR || 'N/A';
-            }
-
-            swal({
-                title: "Partial Booking Completed",
-                html: `${confirmedLeg} is confirmed ✅ <br/>
-                <p><strong>PNR:</strong> ${confirmedPNR}</p><br/>
-                 Please book the remaining leg separately.`,
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonText: "👁️ Booking Details",
-                cancelButtonText: "Search Again",
-                allowOutsideClick: false,
-                allowEscapeKey: false
-            }).then((result) => {
-                if (result.value) {
+                swal({
+                    title: "International Booking Successful! 🌍",
+                    html: `
+                        <p>Your international roundtrip ticket has been booked successfully 🎉</p>
+                        <p><strong>PNR:</strong> ${intl?.PNR || "Not Available"}</p>
+                        <p><strong>Booking Id:</strong> ${intl?.BookingId || "Not Available"}</p>
+                    `,
+                    type: "success",
+                    confirmButtonText: "👁️ Booking Details",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
                     window.location.href = "/flight/booking-list";
                     localStorage.clear();
-                } else {
-                    window.location.href = "/flight/view";
-                }
-            });
+                });
 
+            } else {
+
+                swal({
+                    title: "International Booking Failed ❌",
+                    text: intlRes.message || "Flight Booking Failed, Please search again",
+                    type: "error"
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+            }
+            return;
         } else {
-            swal({
-                title: "Booking Failed ❌",
-                html: `${depRes?.message ? `<strong>Departure Error:</strong> ${depRes.message}` : 'Booking failed'}
-                <br/>${retRes.message ? `<strong>Return Error:</strong> ${retRes.message}` : 'Booking failed'}`,
-                type: "error"
-            }).then(() => {
-                window.location.href = "/flight/view";
-            });
+
+            if (!bookingResult.departure || !bookingResult.return) return;
+
+            const depRes = bookingResult.departure;
+            const retRes = bookingResult.return;
+
+            if (depRes.status == 'success' && retRes.status == 'success') {
+
+                const dep = depRes.data.Response.Response;
+                const ret = retRes.data.Response.Response;
+
+
+                swal({
+                    title: "Booking Successful!",
+                    html: `
+                <p>Your ticket has been booked successfully 🎉</p>
+                <p><strong>Departure PNR:</strong> ${dep?.PNR || "Not Available"}</p>
+            
+                <p><strong>Return PNR:</strong> ${ret?.PNR || "Not Available"}</p>
+            `,
+                    type: "success",
+                    confirmButtonText: "👁️ Booking Details",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/booking-list";
+                    localStorage.clear();
+                });
+            } else if (depRes.status === 'success' || retRes.status === 'success') {
+                let confirmedLeg = '';
+                let confirmedPNR = '';
+
+                if (depRes.status === 'success') {
+                    confirmedLeg = 'Departure';
+                    confirmedPNR = depRes?.data?.Response?.Response?.PNR || 'N/A';
+                } else if (retRes.status === 'success') {
+                    confirmedLeg = 'Return';
+                    confirmedPNR = retRes?.data?.Response?.Response?.PNR || 'N/A';
+                }
+
+                swal({
+                    title: "Partial Booking Completed",
+                    html: `${confirmedLeg} is confirmed ✅ <br/>
+                    <p><strong>PNR:</strong> ${confirmedPNR}</p><br/>
+                    Please book the remaining leg separately.`,
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "👁️ Booking Details",
+                    cancelButtonText: "Search Again",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then((result) => {
+                    if (result.value) {
+                        window.location.href = "/flight/booking-list";
+                        localStorage.clear();
+                    } else {
+                        window.location.href = "/flight/view";
+                    }
+                });
+
+            } else {
+                swal({
+                    title: "Booking Failed ❌",
+                    html: `${depRes?.message ? `<strong>Departure Error:</strong> ${depRes.message}` : 'Booking failed'}
+                    <br/>${retRes.message ? `<strong>Return Error:</strong> ${retRes.message}` : 'Booking failed'}`,
+                    type: "error"
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+            }
         }
     }
 }

@@ -1572,7 +1572,7 @@ class CommonController extends Controller
 						break;
 
 					case 'complaints':
-						dd($request->product);
+						
 						$data->where('product', $request->product);
 						break;
 

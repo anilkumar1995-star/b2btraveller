@@ -16489,6 +16489,956 @@ class StaticResponseHelper
         }';
     }
 
+     static public function flightTicketLCCStaticResponseInt()
+    {
+        return '{
+            "status": "success",
+            "message": "Flight Ticket Done Successfully",
+            "data": {
+                "TokenId": "7d774599-ea5f-4c6e-99a8-45b63cfe2d6d",
+                "TraceId": "384ff7d6-b2c5-4f2e-9ff4-a80d6bc28ce8",
+                "Response": {
+                    "B2B2BStatus": false,
+                    "Error": {
+                        "ErrorCode": 0,
+                        "ErrorMessage": ""
+                    },
+                    "ResponseStatus": 1,
+                    "TraceId": "384ff7d6-b2c5-4f2e-9ff4-a80d6bc28ce8",
+                    "Response": {
+                        "ItineraryChangeList": null,
+                        "PNR": "DWWTWI",
+                        "BookingId": 2076307,
+                        "SSRDenied": false,
+                        "SSRMessage": null,
+                        "Status": 1,
+                        "IsPriceChanged": false,
+                        "IsTimeChanged": false,
+                        "FlightItinerary": {
+                            "CommentDetails": null,
+                            "FareClassification": "Publish#rgb(182,215,228) ",
+                            "IsAutoReissuanceAllowed": true,
+                            "IsPartialVoidAllowed": true,
+                            "IsSeatsBooked": false,
+                            "IssuancePcc": "OTI011",
+                            "JourneyType": 2,
+                            "SearchCombinationType": 2,
+                            "SupplierFareClasses": "Return Special",
+                            "TBOConfNo": "TBFBWMXNR",
+                            "TBOTripID": null,
+                            "TripIndicator": 1,
+                            "BookingAllowedForRoamer": true,
+                            "BookingId": 2076307,
+                            "IsCouponAppilcable": true,
+                            "IsManual": false,
+                            "PNR": "DWWTWI",
+                            "IsDomestic": false,
+                            "ResultFareType": "RegularFare",
+                            "Source": 6,
+                            "Origin": "DEL",
+                            "Destination": "LHR",
+                            "AirlineCode": "6E",
+                            "LastTicketDate": "2026-02-10T22:07:40",
+                            "ValidatingAirlineCode": "6E",
+                            "AirlineRemark": "6E main",
+                            "AirlineTollFreeNo": "1800-0001-5456-51515",
+                            "IsLCC": true,
+                            "NonRefundable": false,
+                            "FareType": "RP",
+                            "CreditNoteNo": null,
+                            "Fare": {
+                                "CFARAmount": 0,
+                                "DCFARAmount": 0,
+                                "ServiceFeeDisplayType": 0,
+                                "Currency": "INR",
+                                "BaseFare": 226543,
+                                "Tax": 59311.139999999999417923390865325927734375,
+                                "TaxBreakup": [
+                                    {
+                                        "key": "TotalTax",
+                                        "value": 58930.139999999999417923390865325927734375
+                                    },
+                                    {
+                                        "key": "K3",
+                                        "value": 0
+                                    }
+                                ],
+                                "YQTax": 0,
+                                "AdditionalTxnFeeOfrd": 0,
+                                "AdditionalTxnFeePub": 0,
+                                "PGCharge": 0,
+                                "OtherCharges": 0,
+                                "ChargeBU": [
+                                    {
+                                        "key": "TBOMARKUP",
+                                        "value": 0
+                                    },
+                                    {
+                                        "key": "GLOBALPROCUREMENTCHARGE",
+                                        "value": 0
+                                    },
+                                    {
+                                        "key": "OTHERCHARGE",
+                                        "value": 0
+                                    },
+                                    {
+                                        "key": "CONVENIENCECHARGE",
+                                        "value": 0
+                                    }
+                                ],
+                                "Discount": 0,
+                                "PublishedFare": 285854.140000000013969838619232177734375,
+                                "CommissionEarned": 8597.6800000000002910383045673370361328125,
+                                "PLBEarned": 9731.9599999999991268850862979888916015625,
+                                "IncentiveEarned": 3298.079999999999927240423858165740966796875,
+                                "OfferedFare": 272877.5399999999790452420711517333984375,
+                                "TdsOnCommission": 3439.079999999999927240423858165740966796875,
+                                "TdsOnPLB": 3892.8000000000001818989403545856475830078125,
+                                "TdsOnIncentive": 1319.240000000000009094947017729282379150390625,
+                                "ServiceFee": 0,
+                                "TotalBaggageCharges": 0,
+                                "TotalMealCharges": 0,
+                                "TotalSeatCharges": 0,
+                                "TotalSpecialServiceCharges": 0
+                            },
+                            "CreditNoteCreatedOn": null,
+                            "Passenger": [
+                                {
+                                    "BarcodeDetails": {
+                                        "Id": 3346903,
+                                        "Barcode": [
+                                            {
+                                                "Index": 1,
+                                                "Format": "PDF417",
+                                                "Content": "M1PANDEY\/SHIVANI       DWWTWI DELLHR6E 0001 058Y000000000000",
+                                                "BarCodeInBase64": null,
+                                                "JourneyWayType": 3
+                                            },
+                                            {
+                                                "Index": 2,
+                                                "Format": "PDF417",
+                                                "Content": "M1PANDEY\/SHIVANI       DWWTWI LHRDEL6E 0002 059Y000000000000",
+                                                "BarCodeInBase64": null,
+                                                "JourneyWayType": 3
+                                            }
+                                        ]
+                                    },
+                                    "DocumentDetails": null,
+                                    "GuardianDetails": null,
+                                    "IsReissued": false,
+                                    "PaxId": 3346903,
+                                    "Title": "Mrs",
+                                    "FirstName": "Shivani",
+                                    "LastName": "Pandey",
+                                    "PaxType": 1,
+                                    "DateOfBirth": "2002-05-21T00:00:00",
+                                    "Gender": 2,
+                                    "IsPANRequired": false,
+                                    "IsPassportRequired": false,
+                                    "PAN": "",
+                                    "PassportNo": "",
+                                    "AddressLine1": "Lucknow",
+                                    "AddressLine2": "Lucknow",
+                                    "Fare": {
+                                        "CFARAmount": 0,
+                                        "DCFARAmount": 0,
+                                        "ServiceFeeDisplayType": 0,
+                                        "Currency": "INR",
+                                        "BaseFare": 52425,
+                                        "Tax": 19920.90999999999985448084771633148193359375,
+                                        "TaxBreakup": [
+                                            {
+                                                "key": "K3",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "TotalTax",
+                                                "value": 19920.90999999999985448084771633148193359375
+                                            }
+                                        ],
+                                        "YQTax": 0,
+                                        "AdditionalTxnFeeOfrd": 0,
+                                        "AdditionalTxnFeePub": 0,
+                                        "PGCharge": 0,
+                                        "OtherCharges": 0,
+                                        "ChargeBU": [
+                                            {
+                                                "key": "TBOMARKUP",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "GLOBALPROCUREMENTCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "OTHERCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "CONVENIENCECHARGE",
+                                                "value": 0
+                                            }
+                                        ],
+                                        "Discount": 0,
+                                        "PublishedFare": 72345.91000000000349245965480804443359375,
+                                        "CommissionEarned": 2149.420000000000072759576141834259033203125,
+                                        "PLBEarned": 2432.989999999999781721271574497222900390625,
+                                        "IncentiveEarned": 824.51999999999998181010596454143524169921875,
+                                        "OfferedFare": 69101.759999999994761310517787933349609375,
+                                        "TdsOnCommission": 859.76999999999998181010596454143524169921875,
+                                        "TdsOnPLB": 973.200000000000045474735088646411895751953125,
+                                        "TdsOnIncentive": 329.81000000000000227373675443232059478759765625,
+                                        "ServiceFee": 0,
+                                        "TotalBaggageCharges": 0,
+                                        "TotalMealCharges": 0,
+                                        "TotalSeatCharges": 0,
+                                        "TotalSpecialServiceCharges": 0
+                                    },
+                                    "City": "Lucknow",
+                                    "CountryCode": "IN",
+                                    "CountryName": "India",
+                                    "Nationality": "IN",
+                                    "ContactNo": "7007422419",
+                                    "Email": "shivani@ipayments.org.in",
+                                    "IsLeadPax": true,
+                                    "FFAirlineCode": null,
+                                    "FFNumber": null,
+                                    "Ssr": [],
+                                    "Ticket": {
+                                        "TicketId": 2362115,
+                                        "TicketNumber": "DWWTWI",
+                                        "IssueDate": "2026-02-10T16:12:43",
+                                        "ValidatingAirline": "708",
+                                        "Remarks": "",
+                                        "ServiceFeeDisplayType": "ShowInTax",
+                                        "Status": "OK",
+                                        "ConjunctionNumber": "",
+                                        "TicketType": "N"
+                                    },
+                                    "SegmentAdditionalInfo": [
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "30 Kilograms",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": "7 KG"
+                                        },
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "30 Kilograms",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": "7 KG"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "BarcodeDetails": {
+                                        "Id": 3346904,
+                                        "Barcode": [
+                                            {
+                                                "Index": 1,
+                                                "Format": "PDF417",
+                                                "Content": "M1KUMAR\/SUNIL          DWWTWI DELLHR6E 0001 058Y000000000000",
+                                                "BarCodeInBase64": null,
+                                                "JourneyWayType": 3
+                                            },
+                                            {
+                                                "Index": 2,
+                                                "Format": "PDF417",
+                                                "Content": "M1KUMAR\/SUNIL          DWWTWI LHRDEL6E 0002 059Y000000000000",
+                                                "BarCodeInBase64": null,
+                                                "JourneyWayType": 3
+                                            }
+                                        ]
+                                    },
+                                    "DocumentDetails": null,
+                                    "GuardianDetails": null,
+                                    "IsReissued": false,
+                                    "PaxId": 3346904,
+                                    "Title": "Mr",
+                                    "FirstName": "Sunil",
+                                    "LastName": "Kumar",
+                                    "PaxType": 1,
+                                    "DateOfBirth": "1999-11-20T00:00:00",
+                                    "Gender": 1,
+                                    "IsPANRequired": false,
+                                    "IsPassportRequired": false,
+                                    "PAN": "",
+                                    "PassportNo": "",
+                                    "AddressLine1": "Sonbhdra",
+                                    "AddressLine2": "Sonbhdra",
+                                    "Fare": {
+                                        "CFARAmount": 0,
+                                        "DCFARAmount": 0,
+                                        "ServiceFeeDisplayType": 0,
+                                        "Currency": "INR",
+                                        "BaseFare": 52425,
+                                        "Tax": 19920.90999999999985448084771633148193359375,
+                                        "TaxBreakup": [
+                                            {
+                                                "key": "K3",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "TotalTax",
+                                                "value": 19920.90999999999985448084771633148193359375
+                                            }
+                                        ],
+                                        "YQTax": 0,
+                                        "AdditionalTxnFeeOfrd": 0,
+                                        "AdditionalTxnFeePub": 0,
+                                        "PGCharge": 0,
+                                        "OtherCharges": 0,
+                                        "ChargeBU": [
+                                            {
+                                                "key": "TBOMARKUP",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "GLOBALPROCUREMENTCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "OTHERCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "CONVENIENCECHARGE",
+                                                "value": 0
+                                            }
+                                        ],
+                                        "Discount": 0,
+                                        "PublishedFare": 72345.91000000000349245965480804443359375,
+                                        "CommissionEarned": 2149.420000000000072759576141834259033203125,
+                                        "PLBEarned": 2432.989999999999781721271574497222900390625,
+                                        "IncentiveEarned": 824.51999999999998181010596454143524169921875,
+                                        "OfferedFare": 69101.759999999994761310517787933349609375,
+                                        "TdsOnCommission": 859.76999999999998181010596454143524169921875,
+                                        "TdsOnPLB": 973.200000000000045474735088646411895751953125,
+                                        "TdsOnIncentive": 329.81000000000000227373675443232059478759765625,
+                                        "ServiceFee": 0,
+                                        "TotalBaggageCharges": 0,
+                                        "TotalMealCharges": 0,
+                                        "TotalSeatCharges": 0,
+                                        "TotalSpecialServiceCharges": 0
+                                    },
+                                    "City": "Sonbhdra",
+                                    "CountryCode": "IN",
+                                    "CountryName": "India",
+                                    "Nationality": "IN",
+                                    "ContactNo": "7007422419",
+                                    "Email": "shivani@ipayments.org.in",
+                                    "IsLeadPax": false,
+                                    "FFAirlineCode": null,
+                                    "FFNumber": null,
+                                    "Ssr": [],
+                                    "Ticket": {
+                                        "TicketId": 2362116,
+                                        "TicketNumber": "DWWTWI",
+                                        "IssueDate": "2026-02-10T16:12:43",
+                                        "ValidatingAirline": "708",
+                                        "Remarks": "",
+                                        "ServiceFeeDisplayType": "ShowInTax",
+                                        "Status": "OK",
+                                        "ConjunctionNumber": "",
+                                        "TicketType": "N"
+                                    },
+                                    "SegmentAdditionalInfo": [
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "30 Kilograms",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": "7 KG"
+                                        },
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "30 Kilograms",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": "7 KG"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "BarcodeDetails": {
+                                        "Id": 3346905,
+                                        "Barcode": [
+                                            {
+                                                "Index": 1,
+                                                "Format": "PDF417",
+                                                "Content": "M1SRIVASTAVA\/SHIVI     DWWTWI DELLHR6E 0001 058Y000000000000",
+                                                "BarCodeInBase64": null,
+                                                "JourneyWayType": 3
+                                            },
+                                            {
+                                                "Index": 2,
+                                                "Format": "PDF417",
+                                                "Content": "M1SRIVASTAVA\/SHIVI     DWWTWI LHRDEL6E 0002 059Y000000000000",
+                                                "BarCodeInBase64": null,
+                                                "JourneyWayType": 3
+                                            }
+                                        ]
+                                    },
+                                    "DocumentDetails": null,
+                                    "GuardianDetails": null,
+                                    "IsReissued": false,
+                                    "PaxId": 3346905,
+                                    "Title": "Mrs",
+                                    "FirstName": "Shivi",
+                                    "LastName": "Srivastava",
+                                    "PaxType": 2,
+                                    "DateOfBirth": "2017-11-20T00:00:00",
+                                    "Gender": 2,
+                                    "IsPANRequired": false,
+                                    "IsPassportRequired": false,
+                                    "PAN": "",
+                                    "PassportNo": "",
+                                    "AddressLine1": "Bikapur",
+                                    "AddressLine2": "Bikapur",
+                                    "Fare": {
+                                        "CFARAmount": 0,
+                                        "DCFARAmount": 0,
+                                        "ServiceFeeDisplayType": 0,
+                                        "Currency": "INR",
+                                        "BaseFare": 52425,
+                                        "Tax": 9544.15999999999985448084771633148193359375,
+                                        "TaxBreakup": [
+                                            {
+                                                "key": "K3",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "TotalTax",
+                                                "value": 9544.15999999999985448084771633148193359375
+                                            }
+                                        ],
+                                        "YQTax": 0,
+                                        "AdditionalTxnFeeOfrd": 0,
+                                        "AdditionalTxnFeePub": 0,
+                                        "PGCharge": 0,
+                                        "OtherCharges": 0,
+                                        "ChargeBU": [
+                                            {
+                                                "key": "TBOMARKUP",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "GLOBALPROCUREMENTCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "OTHERCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "CONVENIENCECHARGE",
+                                                "value": 0
+                                            }
+                                        ],
+                                        "Discount": 0,
+                                        "PublishedFare": 61969.16000000000349245965480804443359375,
+                                        "CommissionEarned": 2149.420000000000072759576141834259033203125,
+                                        "PLBEarned": 2432.989999999999781721271574497222900390625,
+                                        "IncentiveEarned": 824.51999999999998181010596454143524169921875,
+                                        "OfferedFare": 58725.0100000000020372681319713592529296875,
+                                        "TdsOnCommission": 859.76999999999998181010596454143524169921875,
+                                        "TdsOnPLB": 973.200000000000045474735088646411895751953125,
+                                        "TdsOnIncentive": 329.81000000000000227373675443232059478759765625,
+                                        "ServiceFee": 0,
+                                        "TotalBaggageCharges": 0,
+                                        "TotalMealCharges": 0,
+                                        "TotalSeatCharges": 0,
+                                        "TotalSpecialServiceCharges": 0
+                                    },
+                                    "City": "Bikapur",
+                                    "CountryCode": "IN",
+                                    "CountryName": "India",
+                                    "Nationality": "IN",
+                                    "ContactNo": "7007422419",
+                                    "Email": "shivani@ipayments.org.in",
+                                    "IsLeadPax": false,
+                                    "FFAirlineCode": null,
+                                    "FFNumber": null,
+                                    "Ssr": [],
+                                    "Ticket": {
+                                        "TicketId": 2362117,
+                                        "TicketNumber": "DWWTWI",
+                                        "IssueDate": "2026-02-10T16:12:43",
+                                        "ValidatingAirline": "708",
+                                        "Remarks": "",
+                                        "ServiceFeeDisplayType": "ShowInTax",
+                                        "Status": "OK",
+                                        "ConjunctionNumber": "",
+                                        "TicketType": "N"
+                                    },
+                                    "SegmentAdditionalInfo": [
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "30 Kilograms",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": "7 KG"
+                                        },
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "30 Kilograms",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": "7 KG"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "BarcodeDetails": {
+                                        "Id": 3346906,
+                                        "Barcode": [
+                                            {
+                                                "Index": 1,
+                                                "Format": "PDF417",
+                                                "Content": "M1SRIVASTAVA\/APOORVA   DWWTWI DELLHR6E 0001 058Y000000000000",
+                                                "BarCodeInBase64": null,
+                                                "JourneyWayType": 3
+                                            },
+                                            {
+                                                "Index": 2,
+                                                "Format": "PDF417",
+                                                "Content": "M1SRIVASTAVA\/APOORVA   DWWTWI LHRDEL6E 0002 059Y000000000000",
+                                                "BarCodeInBase64": null,
+                                                "JourneyWayType": 3
+                                            }
+                                        ]
+                                    },
+                                    "DocumentDetails": null,
+                                    "GuardianDetails": null,
+                                    "IsReissued": false,
+                                    "PaxId": 3346906,
+                                    "Title": "Mrs",
+                                    "FirstName": "Apoorva",
+                                    "LastName": "Srivastava",
+                                    "PaxType": 2,
+                                    "DateOfBirth": "2016-02-23T00:00:00",
+                                    "Gender": 2,
+                                    "IsPANRequired": false,
+                                    "IsPassportRequired": false,
+                                    "PAN": "",
+                                    "PassportNo": "",
+                                    "AddressLine1": "Bikapur",
+                                    "AddressLine2": "Bikapur",
+                                    "Fare": {
+                                        "CFARAmount": 0,
+                                        "DCFARAmount": 0,
+                                        "ServiceFeeDisplayType": 0,
+                                        "Currency": "INR",
+                                        "BaseFare": 52425,
+                                        "Tax": 9544.15999999999985448084771633148193359375,
+                                        "TaxBreakup": [
+                                            {
+                                                "key": "K3",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "TotalTax",
+                                                "value": 9544.15999999999985448084771633148193359375
+                                            }
+                                        ],
+                                        "YQTax": 0,
+                                        "AdditionalTxnFeeOfrd": 0,
+                                        "AdditionalTxnFeePub": 0,
+                                        "PGCharge": 0,
+                                        "OtherCharges": 0,
+                                        "ChargeBU": [
+                                            {
+                                                "key": "TBOMARKUP",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "GLOBALPROCUREMENTCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "OTHERCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "CONVENIENCECHARGE",
+                                                "value": 0
+                                            }
+                                        ],
+                                        "Discount": 0,
+                                        "PublishedFare": 61969.16000000000349245965480804443359375,
+                                        "CommissionEarned": 2149.420000000000072759576141834259033203125,
+                                        "PLBEarned": 2432.989999999999781721271574497222900390625,
+                                        "IncentiveEarned": 824.51999999999998181010596454143524169921875,
+                                        "OfferedFare": 58725.0100000000020372681319713592529296875,
+                                        "TdsOnCommission": 859.76999999999998181010596454143524169921875,
+                                        "TdsOnPLB": 973.200000000000045474735088646411895751953125,
+                                        "TdsOnIncentive": 329.81000000000000227373675443232059478759765625,
+                                        "ServiceFee": 0,
+                                        "TotalBaggageCharges": 0,
+                                        "TotalMealCharges": 0,
+                                        "TotalSeatCharges": 0,
+                                        "TotalSpecialServiceCharges": 0
+                                    },
+                                    "City": "Bikapur",
+                                    "CountryCode": "IN",
+                                    "CountryName": "India",
+                                    "Nationality": "IN",
+                                    "ContactNo": "7007422419",
+                                    "Email": "shivani@ipayments.org.in",
+                                    "IsLeadPax": false,
+                                    "FFAirlineCode": null,
+                                    "FFNumber": null,
+                                    "Ssr": [],
+                                    "Ticket": {
+                                        "TicketId": 2362118,
+                                        "TicketNumber": "DWWTWI",
+                                        "IssueDate": "2026-02-10T16:12:45",
+                                        "ValidatingAirline": "708",
+                                        "Remarks": "",
+                                        "ServiceFeeDisplayType": "ShowInTax",
+                                        "Status": "OK",
+                                        "ConjunctionNumber": "",
+                                        "TicketType": "N"
+                                    },
+                                    "SegmentAdditionalInfo": [
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "30 Kilograms",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": "7 KG"
+                                        },
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "30 Kilograms",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": "7 KG"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "BarcodeDetails": null,
+                                    "DocumentDetails": null,
+                                    "GuardianDetails": null,
+                                    "IsReissued": false,
+                                    "PaxId": 3346907,
+                                    "Title": "Mstr",
+                                    "FirstName": "Anil",
+                                    "LastName": "kumar",
+                                    "PaxType": 3,
+                                    "DateOfBirth": "2025-12-31T00:00:00",
+                                    "Gender": 1,
+                                    "IsPANRequired": false,
+                                    "IsPassportRequired": false,
+                                    "PAN": "",
+                                    "PassportNo": "",
+                                    "AddressLine1": "Ayodhya",
+                                    "AddressLine2": "Ayodhya",
+                                    "Fare": {
+                                        "CFARAmount": 0,
+                                        "DCFARAmount": 0,
+                                        "ServiceFeeDisplayType": 0,
+                                        "Currency": "INR",
+                                        "BaseFare": 16843,
+                                        "Tax": 381,
+                                        "TaxBreakup": [
+                                            {
+                                                "key": "K3",
+                                                "value": 0
+                                            }
+                                        ],
+                                        "YQTax": 0,
+                                        "AdditionalTxnFeeOfrd": 0,
+                                        "AdditionalTxnFeePub": 0,
+                                        "PGCharge": 0,
+                                        "OtherCharges": 0,
+                                        "ChargeBU": [
+                                            {
+                                                "key": "TBOMARKUP",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "GLOBALPROCUREMENTCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "OTHERCHARGE",
+                                                "value": 0
+                                            },
+                                            {
+                                                "key": "CONVENIENCECHARGE",
+                                                "value": 0
+                                            }
+                                        ],
+                                        "Discount": 0,
+                                        "PublishedFare": 17224,
+                                        "CommissionEarned": 0,
+                                        "PLBEarned": 0,
+                                        "IncentiveEarned": 0,
+                                        "OfferedFare": 17224,
+                                        "TdsOnCommission": 0,
+                                        "TdsOnPLB": 0,
+                                        "TdsOnIncentive": 0,
+                                        "ServiceFee": 0,
+                                        "TotalBaggageCharges": 0,
+                                        "TotalMealCharges": 0,
+                                        "TotalSeatCharges": 0,
+                                        "TotalSpecialServiceCharges": 0
+                                    },
+                                    "City": "Ayodhya",
+                                    "CountryCode": "IN",
+                                    "CountryName": "India",
+                                    "Nationality": "IN",
+                                    "ContactNo": "7007422419",
+                                    "Email": "shivani@ipayments.org.in",
+                                    "IsLeadPax": false,
+                                    "FFAirlineCode": null,
+                                    "FFNumber": null,
+                                    "Ssr": [],
+                                    "Ticket": {
+                                        "TicketId": 2362119,
+                                        "TicketNumber": "DWWTWI",
+                                        "IssueDate": "2026-02-10T16:12:45",
+                                        "ValidatingAirline": "708",
+                                        "Remarks": "",
+                                        "ServiceFeeDisplayType": "ShowInTax",
+                                        "Status": "OK",
+                                        "ConjunctionNumber": "",
+                                        "TicketType": "N"
+                                    },
+                                    "SegmentAdditionalInfo": [
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "0 Kg",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": ""
+                                        },
+                                        {
+                                            "FareBasis": "Q0INTRT",
+                                            "NVA": "",
+                                            "NVB": "",
+                                            "Baggage": "0 Kg",
+                                            "Meal": "0 Platter",
+                                            "Seat": "",
+                                            "SpecialService": "",
+                                            "CabinBaggage": ""
+                                        }
+                                    ]
+                                }
+                            ],
+                            "CancellationCharges": null,
+                            "Segments": [
+                                {
+                                    "Baggage": "30 Kilograms",
+                                    "CabinBaggage": "7 KG",
+                                    "CabinClass": 2,
+                                    "SupplierFareClass": null,
+                                    "TripIndicator": 1,
+                                    "SegmentIndicator": 1,
+                                    "Airline": {
+                                        "AirlineCode": "6E",
+                                        "AirlineName": "IndiGo",
+                                        "FlightNumber": "1",
+                                        "FareClass": "QN",
+                                        "OperatingCarrier": ""
+                                    },
+                                    "AirlinePNR": "",
+                                    "Origin": {
+                                        "Airport": {
+                                            "AirportCode": "DEL",
+                                            "AirportName": "Indira Gandhi Airport",
+                                            "Terminal": "3",
+                                            "CityCode": "DEL",
+                                            "CityName": "Delhi",
+                                            "CountryCode": "IN",
+                                            "CountryName": "India"
+                                        },
+                                        "DepTime": "2026-02-27T10:10:00"
+                                    },
+                                    "Destination": {
+                                        "Airport": {
+                                            "AirportCode": "LHR",
+                                            "AirportName": "Heathrow",
+                                            "Terminal": "",
+                                            "CityCode": "LON",
+                                            "CityName": "London",
+                                            "CountryCode": "GB",
+                                            "CountryName": "United Kingdom"
+                                        },
+                                        "ArrTime": "2026-02-27T14:30:00"
+                                    },
+                                    "Duration": 530,
+                                    "GroundTime": 0,
+                                    "Mile": 0,
+                                    "StopOver": false,
+                                    "FlightInfoIndex": "1",
+                                    "StopPoint": "",
+                                    "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                    "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                    "Craft": "789",
+                                    "Remark": "Return Special",
+                                    "IsETicketEligible": true,
+                                    "FlightStatus": "Confirmed",
+                                    "Status": "HK",
+                                    "FareClassification": {
+                                        "Color": "rgb(182,215,228) ",
+                                        "Type": "Publish"
+                                    }
+                                },
+                                {
+                                    "Baggage": "30 Kilograms",
+                                    "CabinBaggage": "7 KG",
+                                    "CabinClass": 2,
+                                    "SupplierFareClass": null,
+                                    "TripIndicator": 2,
+                                    "SegmentIndicator": 2,
+                                    "Airline": {
+                                        "AirlineCode": "6E",
+                                        "AirlineName": "IndiGo",
+                                        "FlightNumber": "2",
+                                        "FareClass": "QN",
+                                        "OperatingCarrier": ""
+                                    },
+                                    "AirlinePNR": "",
+                                    "Origin": {
+                                        "Airport": {
+                                            "AirportCode": "LHR",
+                                            "AirportName": "Heathrow",
+                                            "Terminal": "",
+                                            "CityCode": "LON",
+                                            "CityName": "London",
+                                            "CountryCode": "GB",
+                                            "CountryName": "United Kingdom"
+                                        },
+                                        "DepTime": "2026-02-28T21:00:00"
+                                    },
+                                    "Destination": {
+                                        "Airport": {
+                                            "AirportCode": "DEL",
+                                            "AirportName": "Indira Gandhi Airport",
+                                            "Terminal": "3",
+                                            "CityCode": "DEL",
+                                            "CityName": "Delhi",
+                                            "CountryCode": "IN",
+                                            "CountryName": "India"
+                                        },
+                                        "ArrTime": "2026-03-01T11:10:00"
+                                    },
+                                    "Duration": 580,
+                                    "GroundTime": 0,
+                                    "Mile": 0,
+                                    "StopOver": false,
+                                    "FlightInfoIndex": "3",
+                                    "StopPoint": "",
+                                    "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                    "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                    "Craft": "789",
+                                    "Remark": "Return Special",
+                                    "IsETicketEligible": true,
+                                    "FlightStatus": "Confirmed",
+                                    "Status": "HK",
+                                    "FareClassification": {
+                                        "Color": "rgb(182,215,228) ",
+                                        "Type": "Publish"
+                                    }
+                                }
+                            ],
+                            "FareRules": [
+                                {
+                                    "Origin": "DEL",
+                                    "Destination": "LHR",
+                                    "Airline": "6E",
+                                    "FareBasisCode": "Q0INTRT",
+                                    "FareRuleDetail": "The FareBasisCode is: Q0INTRT<br \/><p>Please <a target=\"_blank\" href=\"https:\/\/www.goindigo.in\/information\/fees-and-charges.html?linkNav=fees-and-charges_header\" style=\"font-weight: bold;\">click here<\/a> for FareRules Details<\/p><br\/> <br\/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.<\/li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.<\/li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.<\/li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.<\/li><\/ul>",
+                                    "FareRestriction": null,
+                                    "FareInclusions": [
+                                        ""
+                                    ]
+                                },
+                                {
+                                    "Origin": "LHR",
+                                    "Destination": "DEL",
+                                    "Airline": "6E",
+                                    "FareBasisCode": "Q0INTRT",
+                                    "FareRuleDetail": "Please refer above<br\/> <br\/>",
+                                    "FareRestriction": null,
+                                    "FareInclusions": [
+                                        "Please refer above."
+                                    ]
+                                }
+                            ],
+                            "MiniFareRules": [
+                                {
+                                    "CFARExcludedDetails": null,
+                                    "JourneyPoints": "",
+                                    "Type": "",
+                                    "From": "",
+                                    "To": "",
+                                    "Unit": "",
+                                    "Details": "",
+                                    "OnlineReissueAllowed": false,
+                                    "OnlineRefundAllowed": false
+                                }
+                            ],
+                            "PenaltyCharges": [],
+                            "Status": 5,
+                            "Invoice": [
+                                {
+                                    "CreditNoteGSTIN": null,
+                                    "GSTIN": null,
+                                    "InvoiceCreatedOn": "2026-02-10T16:12:45",
+                                    "InvoiceId": 23124,
+                                    "InvoiceNo": "IW\/2526\/23124",
+                                    "InvoiceAmount": 272878,
+                                    "Remarks": "",
+                                    "InvoiceStatus": 3
+                                }
+                            ],
+                            "InvoiceAmount": 272878,
+                            "InvoiceNo": "IW\/2526\/23124",
+                            "InvoiceStatus": 3,
+                            "InvoiceCreatedOn": "2026-02-10T16:12:45",
+                            "Remarks": "",
+                            "IsWebCheckInAllowed": false
+                        },
+                        "TicketStatus": 1
+                    }
+                }
+            }
+        }';
+    }
+
     static public function flightroudtripsearchresponseInt()
     {
         return '{
@@ -27445,6 +28395,966 @@ class StaticResponseHelper
     static public function flightfailedbookingresponse()
     {
         return '{"code":"0x0202","status":"FAILURE","message":"Booking failed from supplier side."}';
+    }
+    static public function bookingdetStaticResponseInt(){
+        return '{
+            "status": "success",
+            "message": "Booking Details get successfully",
+            "data": {
+                "TokenId": "7d774599-ea5f-4c6e-99a8-45b63cfe2d6d",
+                "TraceId": null,
+                "Response": {
+                    "Error": {
+                        "ErrorCode": 0,
+                        "ErrorMessage": ""
+                    },
+                    "ResponseStatus": 1,
+                    "TraceId": "384ff7d6-b2c5-4f2e-9ff4-a80d6bc28ce8",
+                    "FlightItinerary": {
+                        "AgentRemarks": "",
+                        "CommentDetails": null,
+                        "FareClassification": "Publish#rgb(182,215,228)",
+                        "IsAutoReissuanceAllowed": true,
+                        "IsPartialVoidAllowed": true,
+                        "IsSeatsBooked": false,
+                        "IssuancePcc": "OTI011",
+                        "JourneyType": 2,
+                        "SearchCombinationType": 2,
+                        "SupplierFareClasses": "Return Special",
+                        "TBOConfNo": "TBFBWMXNR",
+                        "TBOTripID": null,
+                        "TripIndicator": 1,
+                        "BookingAllowedForRoamer": true,
+                        "BookingId": 2076307,
+                        "IsCouponAppilcable": true,
+                        "IsManual": false,
+                        "PNR": "DWWTWI",
+                        "IsDomestic": false,
+                        "ResultFareType": "RegularFare",
+                        "Source": 6,
+                        "Origin": "DEL",
+                        "Destination": "LHR",
+                        "AirlineCode": "6E",
+                        "LastTicketDate": "2026-02-10T22:07:40",
+                        "ValidatingAirlineCode": "6E",
+                        "AirlineRemark": "6E main",
+                        "AirlineTollFreeNo": "1800-0001-5456-51515",
+                        "IsLCC": true,
+                        "NonRefundable": false,
+                        "FareType": "RP",
+                        "CreditNoteNo": null,
+                        "Fare": {
+                            "CFARAmount": 0,
+                            "DCFARAmount": 0,
+                            "ServiceFeeDisplayType": 0,
+                            "Currency": "INR",
+                            "BaseFare": 226543,
+                            "Tax": 59311.139999999999417923390865325927734375,
+                            "TaxBreakup": [
+                                {
+                                    "key": "TotalTax",
+                                    "value": 58930.139999999999417923390865325927734375
+                                },
+                                {
+                                    "key": "K3",
+                                    "value": 0
+                                }
+                            ],
+                            "YQTax": 0,
+                            "AdditionalTxnFeeOfrd": 0,
+                            "AdditionalTxnFeePub": 0,
+                            "PGCharge": 0,
+                            "OtherCharges": 0,
+                            "ChargeBU": [
+                                {
+                                    "key": "TBOMARKUP",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "GLOBALPROCUREMENTCHARGE",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "OTHERCHARGE",
+                                    "value": 0
+                                },
+                                {
+                                    "key": "CONVENIENCECHARGE",
+                                    "value": 0
+                                }
+                            ],
+                            "Discount": 0,
+                            "PublishedFare": 285854.140000000013969838619232177734375,
+                            "CommissionEarned": 8597.6800000000002910383045673370361328125,
+                            "PLBEarned": 9731.9599999999991268850862979888916015625,
+                            "IncentiveEarned": 3298.079999999999927240423858165740966796875,
+                            "OfferedFare": 272877.5399999999790452420711517333984375,
+                            "TdsOnCommission": 3439.079999999999927240423858165740966796875,
+                            "TdsOnPLB": 3892.8000000000001818989403545856475830078125,
+                            "TdsOnIncentive": 1319.240000000000009094947017729282379150390625,
+                            "ServiceFee": 0,
+                            "TotalBaggageCharges": 0,
+                            "TotalMealCharges": 0,
+                            "TotalSeatCharges": 0,
+                            "TotalSpecialServiceCharges": 0
+                        },
+                        "CreditNoteCreatedOn": null,
+                        "Passenger": [
+                            {
+                                "BarcodeDetails": {
+                                    "Id": 3346903,
+                                    "Barcode": [
+                                        {
+                                            "Index": 1,
+                                            "Format": "PDF417",
+                                            "Content": "M1PANDEY\/SHIVANI       DWWTWI DELLHR6E 0001 058Y000000000000",
+                                            "BarCodeInBase64": null,
+                                            "JourneyWayType": 3
+                                        },
+                                        {
+                                            "Index": 2,
+                                            "Format": "PDF417",
+                                            "Content": "M1PANDEY\/SHIVANI       DWWTWI LHRDEL6E 0002 059Y000000000000",
+                                            "BarCodeInBase64": null,
+                                            "JourneyWayType": 3
+                                        }
+                                    ]
+                                },
+                                "DocumentDetails": null,
+                                "GuardianDetails": null,
+                                "IsReissued": false,
+                                "PaxId": 3346903,
+                                "Title": "Mrs",
+                                "FirstName": "Shivani",
+                                "LastName": "Pandey",
+                                "PaxType": 1,
+                                "DateOfBirth": "2002-05-21T00:00:00",
+                                "Gender": 2,
+                                "IsPANRequired": false,
+                                "IsPassportRequired": false,
+                                "PAN": "",
+                                "PassportNo": "",
+                                "AddressLine1": "Lucknow",
+                                "AddressLine2": "Lucknow",
+                                "Fare": {
+                                    "CFARAmount": 0,
+                                    "DCFARAmount": 0,
+                                    "ServiceFeeDisplayType": 0,
+                                    "Currency": "INR",
+                                    "BaseFare": 52425,
+                                    "Tax": 19920.90999999999985448084771633148193359375,
+                                    "TaxBreakup": [
+                                        {
+                                            "key": "K3",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "TotalTax",
+                                            "value": 19920.90999999999985448084771633148193359375
+                                        }
+                                    ],
+                                    "YQTax": 0,
+                                    "AdditionalTxnFeeOfrd": 0,
+                                    "AdditionalTxnFeePub": 0,
+                                    "PGCharge": 0,
+                                    "OtherCharges": 0,
+                                    "ChargeBU": [
+                                        {
+                                            "key": "TBOMARKUP",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "GLOBALPROCUREMENTCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "OTHERCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "CONVENIENCECHARGE",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "Discount": 0,
+                                    "PublishedFare": 72345.91000000000349245965480804443359375,
+                                    "CommissionEarned": 2149.420000000000072759576141834259033203125,
+                                    "PLBEarned": 2432.989999999999781721271574497222900390625,
+                                    "IncentiveEarned": 824.51999999999998181010596454143524169921875,
+                                    "OfferedFare": 69101.759999999994761310517787933349609375,
+                                    "TdsOnCommission": 859.76999999999998181010596454143524169921875,
+                                    "TdsOnPLB": 973.200000000000045474735088646411895751953125,
+                                    "TdsOnIncentive": 329.81000000000000227373675443232059478759765625,
+                                    "ServiceFee": 0,
+                                    "TotalBaggageCharges": 0,
+                                    "TotalMealCharges": 0,
+                                    "TotalSeatCharges": 0,
+                                    "TotalSpecialServiceCharges": 0
+                                },
+                                "City": "Lucknow",
+                                "CountryCode": "IN",
+                                "Nationality": "IN",
+                                "ContactNo": "7007422419",
+                                "Email": "shivani@ipayments.org.in",
+                                "IsLeadPax": true,
+                                "FFAirlineCode": null,
+                                "FFNumber": null,
+                                "Ssr": [],
+                                "Ticket": {
+                                    "TicketId": 2362115,
+                                    "TicketNumber": "DWWTWI",
+                                    "IssueDate": "2026-02-10T16:12:43",
+                                    "ValidatingAirline": "708",
+                                    "Remarks": "",
+                                    "ServiceFeeDisplayType": "ShowInTax",
+                                    "Status": "OK",
+                                    "ConjunctionNumber": "",
+                                    "TicketType": "N"
+                                },
+                                "SegmentAdditionalInfo": [
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "30 Kilograms",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": "7 KG"
+                                    },
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "30 Kilograms",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": "7 KG"
+                                    }
+                                ]
+                            },
+                            {
+                                "BarcodeDetails": {
+                                    "Id": 3346904,
+                                    "Barcode": [
+                                        {
+                                            "Index": 1,
+                                            "Format": "PDF417",
+                                            "Content": "M1KUMAR\/SUNIL          DWWTWI DELLHR6E 0001 058Y000000000000",
+                                            "BarCodeInBase64": null,
+                                            "JourneyWayType": 3
+                                        },
+                                        {
+                                            "Index": 2,
+                                            "Format": "PDF417",
+                                            "Content": "M1KUMAR\/SUNIL          DWWTWI LHRDEL6E 0002 059Y000000000000",
+                                            "BarCodeInBase64": null,
+                                            "JourneyWayType": 3
+                                        }
+                                    ]
+                                },
+                                "DocumentDetails": null,
+                                "GuardianDetails": null,
+                                "IsReissued": false,
+                                "PaxId": 3346904,
+                                "Title": "Mr",
+                                "FirstName": "Sunil",
+                                "LastName": "Kumar",
+                                "PaxType": 1,
+                                "DateOfBirth": "1999-11-20T00:00:00",
+                                "Gender": 1,
+                                "IsPANRequired": false,
+                                "IsPassportRequired": false,
+                                "PAN": "",
+                                "PassportNo": "",
+                                "AddressLine1": "Sonbhdra",
+                                "AddressLine2": "Sonbhdra",
+                                "Fare": {
+                                    "CFARAmount": 0,
+                                    "DCFARAmount": 0,
+                                    "ServiceFeeDisplayType": 0,
+                                    "Currency": "INR",
+                                    "BaseFare": 52425,
+                                    "Tax": 19920.90999999999985448084771633148193359375,
+                                    "TaxBreakup": [
+                                        {
+                                            "key": "K3",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "TotalTax",
+                                            "value": 19920.90999999999985448084771633148193359375
+                                        }
+                                    ],
+                                    "YQTax": 0,
+                                    "AdditionalTxnFeeOfrd": 0,
+                                    "AdditionalTxnFeePub": 0,
+                                    "PGCharge": 0,
+                                    "OtherCharges": 0,
+                                    "ChargeBU": [
+                                        {
+                                            "key": "TBOMARKUP",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "GLOBALPROCUREMENTCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "OTHERCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "CONVENIENCECHARGE",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "Discount": 0,
+                                    "PublishedFare": 72345.91000000000349245965480804443359375,
+                                    "CommissionEarned": 2149.420000000000072759576141834259033203125,
+                                    "PLBEarned": 2432.989999999999781721271574497222900390625,
+                                    "IncentiveEarned": 824.51999999999998181010596454143524169921875,
+                                    "OfferedFare": 69101.759999999994761310517787933349609375,
+                                    "TdsOnCommission": 859.76999999999998181010596454143524169921875,
+                                    "TdsOnPLB": 973.200000000000045474735088646411895751953125,
+                                    "TdsOnIncentive": 329.81000000000000227373675443232059478759765625,
+                                    "ServiceFee": 0,
+                                    "TotalBaggageCharges": 0,
+                                    "TotalMealCharges": 0,
+                                    "TotalSeatCharges": 0,
+                                    "TotalSpecialServiceCharges": 0
+                                },
+                                "City": "Sonbhdra",
+                                "CountryCode": "IN",
+                                "Nationality": "IN",
+                                "ContactNo": "7007422419",
+                                "Email": "shivani@ipayments.org.in",
+                                "IsLeadPax": false,
+                                "FFAirlineCode": null,
+                                "FFNumber": null,
+                                "Ssr": [],
+                                "Ticket": {
+                                    "TicketId": 2362116,
+                                    "TicketNumber": "DWWTWI",
+                                    "IssueDate": "2026-02-10T16:12:43",
+                                    "ValidatingAirline": "708",
+                                    "Remarks": "",
+                                    "ServiceFeeDisplayType": "ShowInTax",
+                                    "Status": "OK",
+                                    "ConjunctionNumber": "",
+                                    "TicketType": "N"
+                                },
+                                "SegmentAdditionalInfo": [
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "30 Kilograms",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": "7 KG"
+                                    },
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "30 Kilograms",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": "7 KG"
+                                    }
+                                ]
+                            },
+                            {
+                                "BarcodeDetails": {
+                                    "Id": 3346905,
+                                    "Barcode": [
+                                        {
+                                            "Index": 1,
+                                            "Format": "PDF417",
+                                            "Content": "M1SRIVASTAVA\/SHIVI     DWWTWI DELLHR6E 0001 058Y000000000000",
+                                            "BarCodeInBase64": null,
+                                            "JourneyWayType": 3
+                                        },
+                                        {
+                                            "Index": 2,
+                                            "Format": "PDF417",
+                                            "Content": "M1SRIVASTAVA\/SHIVI     DWWTWI LHRDEL6E 0002 059Y000000000000",
+                                            "BarCodeInBase64": null,
+                                            "JourneyWayType": 3
+                                        }
+                                    ]
+                                },
+                                "DocumentDetails": null,
+                                "GuardianDetails": null,
+                                "IsReissued": false,
+                                "PaxId": 3346905,
+                                "Title": "Mrs",
+                                "FirstName": "Shivi",
+                                "LastName": "Srivastava",
+                                "PaxType": 2,
+                                "DateOfBirth": "2017-11-20T00:00:00",
+                                "Gender": 2,
+                                "IsPANRequired": false,
+                                "IsPassportRequired": false,
+                                "PAN": "",
+                                "PassportNo": "",
+                                "AddressLine1": "Bikapur",
+                                "AddressLine2": "Bikapur",
+                                "Fare": {
+                                    "CFARAmount": 0,
+                                    "DCFARAmount": 0,
+                                    "ServiceFeeDisplayType": 0,
+                                    "Currency": "INR",
+                                    "BaseFare": 52425,
+                                    "Tax": 9544.15999999999985448084771633148193359375,
+                                    "TaxBreakup": [
+                                        {
+                                            "key": "K3",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "TotalTax",
+                                            "value": 9544.15999999999985448084771633148193359375
+                                        }
+                                    ],
+                                    "YQTax": 0,
+                                    "AdditionalTxnFeeOfrd": 0,
+                                    "AdditionalTxnFeePub": 0,
+                                    "PGCharge": 0,
+                                    "OtherCharges": 0,
+                                    "ChargeBU": [
+                                        {
+                                            "key": "TBOMARKUP",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "GLOBALPROCUREMENTCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "OTHERCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "CONVENIENCECHARGE",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "Discount": 0,
+                                    "PublishedFare": 61969.16000000000349245965480804443359375,
+                                    "CommissionEarned": 2149.420000000000072759576141834259033203125,
+                                    "PLBEarned": 2432.989999999999781721271574497222900390625,
+                                    "IncentiveEarned": 824.51999999999998181010596454143524169921875,
+                                    "OfferedFare": 58725.0100000000020372681319713592529296875,
+                                    "TdsOnCommission": 859.76999999999998181010596454143524169921875,
+                                    "TdsOnPLB": 973.200000000000045474735088646411895751953125,
+                                    "TdsOnIncentive": 329.81000000000000227373675443232059478759765625,
+                                    "ServiceFee": 0,
+                                    "TotalBaggageCharges": 0,
+                                    "TotalMealCharges": 0,
+                                    "TotalSeatCharges": 0,
+                                    "TotalSpecialServiceCharges": 0
+                                },
+                                "City": "Bikapur",
+                                "CountryCode": "IN",
+                                "Nationality": "IN",
+                                "ContactNo": "7007422419",
+                                "Email": "shivani@ipayments.org.in",
+                                "IsLeadPax": false,
+                                "FFAirlineCode": null,
+                                "FFNumber": null,
+                                "Ssr": [
+                                    {
+                                        "Detail": "20\/11\/2017",
+                                        "SsrCode": "CHLD",
+                                        "SsrStatus": null,
+                                        "Status": 1
+                                    }
+                                ],
+                                "Ticket": {
+                                    "TicketId": 2362117,
+                                    "TicketNumber": "DWWTWI",
+                                    "IssueDate": "2026-02-10T16:12:43",
+                                    "ValidatingAirline": "708",
+                                    "Remarks": "",
+                                    "ServiceFeeDisplayType": "ShowInTax",
+                                    "Status": "OK",
+                                    "ConjunctionNumber": "",
+                                    "TicketType": "N"
+                                },
+                                "SegmentAdditionalInfo": [
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "30 Kilograms",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": "7 KG"
+                                    },
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "30 Kilograms",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": "7 KG"
+                                    }
+                                ]
+                            },
+                            {
+                                "BarcodeDetails": {
+                                    "Id": 3346906,
+                                    "Barcode": [
+                                        {
+                                            "Index": 1,
+                                            "Format": "PDF417",
+                                            "Content": "M1SRIVASTAVA\/APOORVA   DWWTWI DELLHR6E 0001 058Y000000000000",
+                                            "BarCodeInBase64": null,
+                                            "JourneyWayType": 3
+                                        },
+                                        {
+                                            "Index": 2,
+                                            "Format": "PDF417",
+                                            "Content": "M1SRIVASTAVA\/APOORVA   DWWTWI LHRDEL6E 0002 059Y000000000000",
+                                            "BarCodeInBase64": null,
+                                            "JourneyWayType": 3
+                                        }
+                                    ]
+                                },
+                                "DocumentDetails": null,
+                                "GuardianDetails": null,
+                                "IsReissued": false,
+                                "PaxId": 3346906,
+                                "Title": "Mrs",
+                                "FirstName": "Apoorva",
+                                "LastName": "Srivastava",
+                                "PaxType": 2,
+                                "DateOfBirth": "2016-02-23T00:00:00",
+                                "Gender": 2,
+                                "IsPANRequired": false,
+                                "IsPassportRequired": false,
+                                "PAN": "",
+                                "PassportNo": "",
+                                "AddressLine1": "Bikapur",
+                                "AddressLine2": "Bikapur",
+                                "Fare": {
+                                    "CFARAmount": 0,
+                                    "DCFARAmount": 0,
+                                    "ServiceFeeDisplayType": 0,
+                                    "Currency": "INR",
+                                    "BaseFare": 52425,
+                                    "Tax": 9544.15999999999985448084771633148193359375,
+                                    "TaxBreakup": [
+                                        {
+                                            "key": "K3",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "TotalTax",
+                                            "value": 9544.15999999999985448084771633148193359375
+                                        }
+                                    ],
+                                    "YQTax": 0,
+                                    "AdditionalTxnFeeOfrd": 0,
+                                    "AdditionalTxnFeePub": 0,
+                                    "PGCharge": 0,
+                                    "OtherCharges": 0,
+                                    "ChargeBU": [
+                                        {
+                                            "key": "TBOMARKUP",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "GLOBALPROCUREMENTCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "OTHERCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "CONVENIENCECHARGE",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "Discount": 0,
+                                    "PublishedFare": 61969.16000000000349245965480804443359375,
+                                    "CommissionEarned": 2149.420000000000072759576141834259033203125,
+                                    "PLBEarned": 2432.989999999999781721271574497222900390625,
+                                    "IncentiveEarned": 824.51999999999998181010596454143524169921875,
+                                    "OfferedFare": 58725.0100000000020372681319713592529296875,
+                                    "TdsOnCommission": 859.76999999999998181010596454143524169921875,
+                                    "TdsOnPLB": 973.200000000000045474735088646411895751953125,
+                                    "TdsOnIncentive": 329.81000000000000227373675443232059478759765625,
+                                    "ServiceFee": 0,
+                                    "TotalBaggageCharges": 0,
+                                    "TotalMealCharges": 0,
+                                    "TotalSeatCharges": 0,
+                                    "TotalSpecialServiceCharges": 0
+                                },
+                                "City": "Bikapur",
+                                "CountryCode": "IN",
+                                "Nationality": "IN",
+                                "ContactNo": "7007422419",
+                                "Email": "shivani@ipayments.org.in",
+                                "IsLeadPax": false,
+                                "FFAirlineCode": null,
+                                "FFNumber": null,
+                                "Ssr": [
+                                    {
+                                        "Detail": "23\/02\/2016",
+                                        "SsrCode": "CHLD",
+                                        "SsrStatus": null,
+                                        "Status": 1
+                                    }
+                                ],
+                                "Ticket": {
+                                    "TicketId": 2362118,
+                                    "TicketNumber": "DWWTWI",
+                                    "IssueDate": "2026-02-10T16:12:45",
+                                    "ValidatingAirline": "708",
+                                    "Remarks": "",
+                                    "ServiceFeeDisplayType": "ShowInTax",
+                                    "Status": "OK",
+                                    "ConjunctionNumber": "",
+                                    "TicketType": "N"
+                                },
+                                "SegmentAdditionalInfo": [
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "30 Kilograms",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": "7 KG"
+                                    },
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "30 Kilograms",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": "7 KG"
+                                    }
+                                ]
+                            },
+                            {
+                                "BarcodeDetails": null,
+                                "DocumentDetails": null,
+                                "GuardianDetails": null,
+                                "IsReissued": false,
+                                "PaxId": 3346907,
+                                "Title": "Mstr",
+                                "FirstName": "Anil",
+                                "LastName": "kumar",
+                                "PaxType": 3,
+                                "DateOfBirth": "2025-12-31T00:00:00",
+                                "Gender": 1,
+                                "IsPANRequired": false,
+                                "IsPassportRequired": false,
+                                "PAN": "",
+                                "PassportNo": "",
+                                "AddressLine1": "Ayodhya",
+                                "AddressLine2": "Ayodhya",
+                                "Fare": {
+                                    "CFARAmount": 0,
+                                    "DCFARAmount": 0,
+                                    "ServiceFeeDisplayType": 0,
+                                    "Currency": "INR",
+                                    "BaseFare": 16843,
+                                    "Tax": 381,
+                                    "TaxBreakup": [
+                                        {
+                                            "key": "K3",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "YQTax": 0,
+                                    "AdditionalTxnFeeOfrd": 0,
+                                    "AdditionalTxnFeePub": 0,
+                                    "PGCharge": 0,
+                                    "OtherCharges": 0,
+                                    "ChargeBU": [
+                                        {
+                                            "key": "TBOMARKUP",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "GLOBALPROCUREMENTCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "OTHERCHARGE",
+                                            "value": 0
+                                        },
+                                        {
+                                            "key": "CONVENIENCECHARGE",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "Discount": 0,
+                                    "PublishedFare": 17224,
+                                    "CommissionEarned": 0,
+                                    "PLBEarned": 0,
+                                    "IncentiveEarned": 0,
+                                    "OfferedFare": 17224,
+                                    "TdsOnCommission": 0,
+                                    "TdsOnPLB": 0,
+                                    "TdsOnIncentive": 0,
+                                    "ServiceFee": 0,
+                                    "TotalBaggageCharges": 0,
+                                    "TotalMealCharges": 0,
+                                    "TotalSeatCharges": 0,
+                                    "TotalSpecialServiceCharges": 0
+                                },
+                                "City": "Ayodhya",
+                                "CountryCode": "IN",
+                                "Nationality": "IN",
+                                "ContactNo": "7007422419",
+                                "Email": "shivani@ipayments.org.in",
+                                "IsLeadPax": false,
+                                "FFAirlineCode": null,
+                                "FFNumber": null,
+                                "Ssr": [
+                                    {
+                                        "Detail": "31\/12\/2025",
+                                        "SsrCode": "INFT",
+                                        "SsrStatus": null,
+                                        "Status": 1
+                                    }
+                                ],
+                                "Ticket": {
+                                    "TicketId": 2362119,
+                                    "TicketNumber": "DWWTWI",
+                                    "IssueDate": "2026-02-10T16:12:45",
+                                    "ValidatingAirline": "708",
+                                    "Remarks": "",
+                                    "ServiceFeeDisplayType": "ShowInTax",
+                                    "Status": "OK",
+                                    "ConjunctionNumber": "",
+                                    "TicketType": "N"
+                                },
+                                "SegmentAdditionalInfo": [
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "0 Kg",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": ""
+                                    },
+                                    {
+                                        "FareBasis": "Q0INTRT",
+                                        "NVA": "",
+                                        "NVB": "",
+                                        "Baggage": "0 Kg",
+                                        "Meal": "0 Platter",
+                                        "Seat": "",
+                                        "SpecialService": "",
+                                        "CabinBaggage": ""
+                                    }
+                                ]
+                            }
+                        ],
+                        "CancellationCharges": null,
+                        "Segments": [
+                            {
+                                "Baggage": null,
+                                "CabinBaggage": null,
+                                "CabinClass": 2,
+                                "SupplierFareClass": null,
+                                "TripIndicator": 1,
+                                "SegmentIndicator": 1,
+                                "Airline": {
+                                    "AirlineCode": "6E",
+                                    "AirlineName": "IndiGo",
+                                    "FlightNumber": "1",
+                                    "FareClass": "QN",
+                                    "OperatingCarrier": ""
+                                },
+                                "AirlinePNR": "",
+                                "Origin": {
+                                    "Airport": {
+                                        "AirportCode": "DEL",
+                                        "AirportName": "Indira Gandhi Airport",
+                                        "Terminal": "3",
+                                        "CityCode": "DEL",
+                                        "CityName": "Delhi",
+                                        "CountryCode": "IN",
+                                        "CountryName": "India"
+                                    },
+                                    "DepTime": "2026-02-27T10:10:00"
+                                },
+                                "Destination": {
+                                    "Airport": {
+                                        "AirportCode": "LHR",
+                                        "AirportName": "Heathrow",
+                                        "Terminal": "",
+                                        "CityCode": "LON",
+                                        "CityName": "London",
+                                        "CountryCode": "GB",
+                                        "CountryName": "United Kingdom"
+                                    },
+                                    "ArrTime": "2026-02-27T14:30:00"
+                                },
+                                "Duration": 530,
+                                "GroundTime": 0,
+                                "Mile": 0,
+                                "StopOver": false,
+                                "FlightInfoIndex": "1",
+                                "StopPoint": "",
+                                "StopPointArrivalTime": null,
+                                "StopPointDepartureTime": null,
+                                "Craft": "789",
+                                "Remark": "Return Special",
+                                "IsETicketEligible": true,
+                                "FlightStatus": "Confirmed",
+                                "Status": "HK",
+                                "FareClassification": {
+                                    "Color": "rgb(182,215,228) ",
+                                    "Type": "Publish"
+                                }
+                            },
+                            {
+                                "Baggage": null,
+                                "CabinBaggage": null,
+                                "CabinClass": 2,
+                                "SupplierFareClass": null,
+                                "TripIndicator": 2,
+                                "SegmentIndicator": 2,
+                                "Airline": {
+                                    "AirlineCode": "6E",
+                                    "AirlineName": "IndiGo",
+                                    "FlightNumber": "2",
+                                    "FareClass": "QN",
+                                    "OperatingCarrier": ""
+                                },
+                                "AirlinePNR": "",
+                                "Origin": {
+                                    "Airport": {
+                                        "AirportCode": "LHR",
+                                        "AirportName": "Heathrow",
+                                        "Terminal": "",
+                                        "CityCode": "LON",
+                                        "CityName": "London",
+                                        "CountryCode": "GB",
+                                        "CountryName": "United Kingdom"
+                                    },
+                                    "DepTime": "2026-02-28T21:00:00"
+                                },
+                                "Destination": {
+                                    "Airport": {
+                                        "AirportCode": "DEL",
+                                        "AirportName": "Indira Gandhi Airport",
+                                        "Terminal": "3",
+                                        "CityCode": "DEL",
+                                        "CityName": "Delhi",
+                                        "CountryCode": "IN",
+                                        "CountryName": "India"
+                                    },
+                                    "ArrTime": "2026-03-01T11:10:00"
+                                },
+                                "Duration": 580,
+                                "GroundTime": 0,
+                                "Mile": 0,
+                                "StopOver": false,
+                                "FlightInfoIndex": "2",
+                                "StopPoint": "",
+                                "StopPointArrivalTime": null,
+                                "StopPointDepartureTime": null,
+                                "Craft": "789",
+                                "Remark": "Return Special",
+                                "IsETicketEligible": true,
+                                "FlightStatus": "Confirmed",
+                                "Status": "HK",
+                                "FareClassification": {
+                                    "Color": "rgb(182,215,228) ",
+                                    "Type": "Publish"
+                                }
+                            }
+                        ],
+                        "FareRules": [
+                            {
+                                "Origin": "DEL",
+                                "Destination": "LHR",
+                                "Airline": "6E",
+                                "FareBasisCode": "Q0INTRT",
+                                "FareRuleDetail": "The FareBasisCode is: Q0INTRT<br \/><p>Please <a target=\"_blank\" href=\"https:\/\/www.goindigo.in\/information\/fees-and-charges.html?linkNav=fees-and-charges_header\" style=\"font-weight: bold;\">click here<\/a> for FareRules Details<\/p><br\/> <br\/><ul><li>GST, RAF AND ANY OTHER APPLICABLE CHARGES ARE EXTRA.<\/li><li>FEES ARE INDICATIVE PER PAX AND PER SECTOR.<\/li><li>FOR DOMESTIC BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 2 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.<\/li><li>FOR INTERNATIONAL BOOKINGS, PASSENGERS MUST SUBMIT THE CANCELLATION OR REISSUE REQUEST AT LEAST 4 HOURS BEFORE THE TIME LIMIT DEFINED IN THE AIRLINE's POLICY.<\/li><\/ul>",
+                                "FareRestriction": "",
+                                "FareFamilyCode": "",
+                                "FareRuleIndex": "",
+                                "FareInclusions": [
+                                    ""
+                                ]
+                            },
+                            {
+                                "Origin": "LHR",
+                                "Destination": "DEL",
+                                "Airline": "6E",
+                                "FareBasisCode": "Q0INTRT",
+                                "FareRuleDetail": "Please refer above<br\/> <br\/>",
+                                "FareRestriction": "",
+                                "FareFamilyCode": "",
+                                "FareRuleIndex": "",
+                                "FareInclusions": [
+                                    "Please refer above."
+                                ]
+                            }
+                        ],
+                        "MiniFareRules": [
+                            {
+                                "CFARExcludedDetails": null,
+                                "JourneyPoints": "",
+                                "Type": "",
+                                "From": "",
+                                "To": "",
+                                "Unit": "",
+                                "Details": "",
+                                "OnlineReissueAllowed": false,
+                                "OnlineRefundAllowed": false
+                            }
+                        ],
+                        "PenaltyCharges": {
+                            "ReissueCharge": "",
+                            "CancellationCharge": ""
+                        },
+                        "Status": 5,
+                        "Invoice": [
+                            {
+                                "CreditNoteGSTIN": null,
+                                "GSTIN": null,
+                                "InvoiceCreatedOn": "2026-02-10T16:12:45",
+                                "InvoiceId": 23124,
+                                "InvoiceNo": "IW\/2526\/23124",
+                                "InvoiceAmount": 272878,
+                                "Remarks": "",
+                                "InvoiceStatus": 3
+                            }
+                        ],
+                        "InvoiceAmount": 272878,
+                        "InvoiceNo": "IW\/2526\/23124",
+                        "InvoiceStatus": 3,
+                        "InvoiceCreatedOn": "2026-02-10T16:12:45",
+                        "Remarks": "",
+                        "IsWebCheckInAllowed": false
+                    }
+                }
+            }
+        }';
     }
     static public function bookingdetStaticResponse()
     {
