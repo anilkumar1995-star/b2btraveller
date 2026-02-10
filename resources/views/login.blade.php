@@ -51,23 +51,24 @@
         .form-group p {
             color: red;
         }
-          .carousel,
-    .carousel-inner,
-    .carousel-item {
-        height: 100%;
-    }
 
-    .carousel-item img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+        .carousel,
+        .carousel-inner,
+        .carousel-item {
+            height: 100%;
+        }
 
-    .carousel-caption {
-        background: rgba(0,0,0,0.45);
-        padding: 15px 20px;
-        border-radius: 10px;
-    }
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-caption {
+            background: rgba(0, 0, 0, 0.45);
+            padding: 15px 20px;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
@@ -77,17 +78,17 @@
     {{ Artisan::call('down') }}
     @endif
 
-  <div class="authentication-wrapper authentication-cover authentication-bg vh-100">
-    <div class="authentication-inner row m-0 vh-100">
+    <div class="authentication-wrapper authentication-cover authentication-bg vh-100">
+        <div class="authentication-inner row m-0 vh-100">
 
-      
-        <div class="d-none d-lg-flex col-lg-7 p-5 h-100">
-            <div class="w-100 h-100">
 
-                <div id="flightSlider"
-                     class="carousel slide carousel-fade h-100 w-100"
-                     data-bs-ride="carousel"
-                     data-bs-interval="4000">
+            <div class="d-none d-lg-flex col-lg-7 p-5 h-100">
+                <div class="w-100 h-100">
+
+                    <div id="flightSlider"
+                        class="carousel slide carousel-fade h-100 w-100"
+                        data-bs-ride="carousel"
+                        data-bs-interval="4000">
 
                     <div class="carousel-inner h-100 rounded">
 
@@ -109,64 +110,64 @@
                                 <h3>Book Flights Worldwide</h3>
                                 <p>Fast, Secure & Affordable Air Travel</p>
                             </div> --}}
-                        </div>
+                            </div>
 
-                        <div class="carousel-item h-100">
-                            <img src="{{ asset('images/02.jpg') }}"
-                                 class="d-block w-100 h-100"
-                                 alt="Flight">
-                            {{-- <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/02.jpg') }}"
+                                    class="d-block w-100 h-100"
+                                    alt="Flight">
+                                {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Explore the World</h3>
                                 <p>Best deals on domestic & international flights</p>
                             </div> --}}
-                        </div>
+                            </div>
 
-                        <div class="carousel-item h-100">
-                            <img src="{{ asset('images/bus01.jpeg') }}"
-                                 class="d-block w-100 h-100"
-                                 alt="Flight">
-                            {{-- <div class="carousel-caption d-none d-md-block">
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/bus01.jpeg') }}"
+                                    class="d-block w-100 h-100"
+                                    alt="Flight">
+                                {{-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Travel Smarter</h3>
                                 <p>Your journey starts here</p>
                             </div> --}}
-                        </div>
-                        
-                        <div class="carousel-item h-100">
-                            <img src="{{ asset('images/hotel.jpeg') }}"
-                                 class="d-block w-100 h-100"
-                                 alt="Flight">
-                            <!-- <div class="carousel-caption d-none d-md-block">
+                            </div>
+
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/hotel.jpeg') }}"
+                                    class="d-block w-100 h-100"
+                                    alt="Flight">
+                                <!-- <div class="carousel-caption d-none d-md-block">
                                 <h3>Travel Smarter</h3>
                                 <p>Your journey starts here</p>
                             </div> -->
+                            </div>
+
                         </div>
+
+
+                        <button class="carousel-control-prev" type="button"
+                            data-bs-target="#flightSlider" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+
+                        <button class="carousel-control-next" type="button"
+                            data-bs-target="#flightSlider" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
 
                     </div>
 
-                  
-                    <button class="carousel-control-prev" type="button"
-                            data-bs-target="#flightSlider" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon"></span>
-                    </button>
-
-                    <button class="carousel-control-next" type="button"
-                            data-bs-target="#flightSlider" data-bs-slide="next">
-                        <span class="carousel-control-next-icon"></span>
-                    </button>
-
                 </div>
-
             </div>
-        </div>
- 
-
-        <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
-           <div class="w-px-400 mx-auto sign-in-from mt-n5">
 
 
-                <div class="app-brand mb-4">
-                    <a href="{{ route('home') }}" class="app-brand-link gap-2"></a>
-                </div>
+            <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
+                <div class="w-px-400 mx-auto sign-in-from mt-n5">
+
+
+                    <div class="app-brand mb-4">
+                        <a href="{{ route('home') }}" class="app-brand-link gap-2"></a>
+                    </div>
 
                 <h3 class="mb-1 fw-bold">
                     Welcome to iPaymnt Tech 
@@ -190,53 +191,59 @@
                                required>
                     </div>
 
-                    <div class="mb-3">
-                        <div class="d-flex justify-content-between">
-                            <label class="form-label">Password</label>
-                            <a href="javascript:void(0)" onclick="forgetPassword()">
-                                <small>Forgot Password?</small>
-                            </a>
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label">Password</label>
+                                <a href="javascript:void(0)" onclick="forgetPassword()">
+                                    <small>Forgot Password?</small>
+                                </a>
+                            </div>
+                            <input type="password"
+                                name="password"
+                                class="form-control"
+                                required>
                         </div>
-                        <input type="password"
-                               name="password"
-                               class="form-control"
-                               required>
-                    </div>
 
-                    <button class="btn btn-primary w-100 mb-3">
-                        Sign in
-                    </button>
 
-                    <p class="text-center">
-                        <span>New on our platform?</span>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">
-                            <span>Create an account</span>
-                        </a>
-                    </p>
-                </form>
+                        <div class="formdata">
+
+                        </div>
+
+                        <button class="btn btn-primary w-100 mb-3" id="login-btn">
+                            Sign in
+                        </button>
+
+                        <p class="text-center">
+                            <span>New on our platform?</span>
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">
+                                <span>Create an account</span>
+                            </a>
+                        </p>
+                    </form>
                     <div class=" divider my-4">
                         <div class="divider-text">or</div>
                     </div>
 
-                <div class="bottom-links">
-                    <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
-                    <span>|</span>
-                    <a href="{{ route('refund-policy') }}">Refund Policy</a>
-                    <span>|</span>
-                    <a href="{{ route('term-of-use') }}">Terms & Conditions</a>
-                      <span>|</span>
-                   <div class="text-center"><a href="{{ route('about') }}">About Us</a>
-                    <span>|</span>
-                    <a href="{{ route('contact') }}">Contact Us</a></div>  
+                    <div class="bottom-links">
+                        <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="{{ route('refund-policy') }}">Refund Policy</a>
+                        <span>|</span>
+                        <a href="{{ route('term-of-use') }}">Terms & Conditions</a>
+                        <span>|</span>
+                        <div class="text-center"><a href="{{ route('about') }}">About Us</a>
+                            <span>|</span>
+                            <a href="{{ route('contact') }}">Contact Us</a>
+                        </div>
+
+                    </div>
 
                 </div>
-            
             </div>
+
+
         </div>
-
-
     </div>
-</div>
 
 
     <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-hidden="true">
@@ -498,7 +505,7 @@
                     },
                     password: {
                         required: true,
-                      
+
                     },
                     capchaConfirm: {
                         required: true,
@@ -556,6 +563,7 @@
                         success: function(data) {
                             swal.close();
                             if (data.status == "Login") {
+                                $('#login-btn').attr("disabled", false).removeClass('btn-secondary').text('Sign In');
                                 swal({
                                     type: 'success',
                                     title: 'Success',
@@ -563,33 +571,39 @@
                                     showConfirmButton: false,
                                     timer: 2000,
                                     onClose: () => {
-                                        window.location.reload();
+                                        window
+                                            .location
+                                            .reload();
                                     },
                                 });
-                            } else if (data.status == "otpsent" || data.status ==
+                            } else if (data.status ==
+                                "otpsent" || data.status ==
                                 "preotp") {
+                                $('#login-btn').attr("disabled", false).removeClass('btn-secondary').text('Verify OTP');
                                 $('div.formdata').append(`
-                                <div class="form-group my-3">
-                                    <div class="d-flex justify-content-between">
-                                        <label for="exampleInputPassword1">OTP</label>
-                                        <a href="javascript:void(0)" onclick="OTPRESEND()">
-                                            <small>Resend OTP</small>
-                                        </a>
-                                    </div>
-                                    <input type="password" class="form-control my-1" placeholder="Enter Otp" name="otp" required
-                                        aria-label="Recipient's username" aria-describedby="basic-addon2">
-                                </div>`);
-
-                                if (data.status == "preotp") {
+                                                    <div class="form-group my-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <label for="otp">OTP</label>
+                                                            <a href="javascript:void(0)" onclick="OTPRESEND()">
+                                                                <small>Resend OTP</small>
+                                                            </a>
+                                                        </div>
+                                                        <input type="password" class="form-control my-1" placeholder="Enter Otp" name="otp" required>
+                                                    </div>
+                                                `);
+                                if (data.status ==
+                                    "preotp") {
                                     $('b.successText').text(
-                                        'Please use previous otp sent on your mobile.');
-                                    setTimeout(function() {
-                                        $('b.successText').text('');
-                                    }, 5000);
+                                        'Please use previous otp sent on your mobile.'
+                                    );
+                                    setTimeout(() => $(
+                                            'b.successText'
+                                        ).text(''),
+                                        5000);
                                 }
                             }
                         },
-                       error: function(xhr) {
+                        error: function(xhr) {
                             swal.close();
 
                             let msg = 'Something went wrong, try again later.';
@@ -604,7 +618,7 @@
 
                             $('b.errorText').text(msg);
 
-                            setTimeout(function () {
+                            setTimeout(function() {
                                 $('b.errorText').text('');
                             }, 5000);
                         }
@@ -794,10 +808,10 @@
                     form.ajaxSubmit({
                         dataType: 'json',
                         beforeSubmit: function() {
-                        form.find('button[type="submit"]').html('Please wait...').attr('disabled',true).addClass('btn-secondary');
+                            form.find('button[type="submit"]').html('Please wait...').attr('disabled', true).addClass('btn-secondary');
                         },
-                        complete:function(){
-                            form.find('button[type="submit"]').html('Reset Password').attr('disabled',false).removeClass('btn-secondary');
+                        complete: function() {
+                            form.find('button[type="submit"]').html('Reset Password').attr('disabled', false).removeClass('btn-secondary');
                         },
                         success: function(data) {
                             if (data.status == "TXN") {
@@ -974,15 +988,15 @@
                         "mobile": mobile
                     },
                     beforeSubmit: function() {
-                        form.find('button[type="submit"]').html('Please wait...').attr('disabled',true).addClass('btn-secondary');
+                        form.find('button[type="submit"]').html('Please wait...').attr('disabled', true).addClass('btn-secondary');
                     },
-                    complete:function(){
-                        form.find('button[type="submit"]').html('Reset Password').attr('disabled',false).removeClass('btn-secondary');
+                    complete: function() {
+                        form.find('button[type="submit"]').html('Reset Password').attr('disabled', false).removeClass('btn-secondary');
                     },
                     success: function(data) {
                         swal.close();
                         if (data.status == "TXN") {
-                            notify(data.message,'success');
+                            notify(data.message, 'success');
                             $('#passwordResetModal').modal('hide');
                             $('#passwordForm').find('input[name="mobile"]').val(mobile);
                             $('#passwordModal').modal('show');
@@ -994,8 +1008,8 @@
                         }
                     },
                     error: function(errors) {
-                        form.find('button[type="submit"]').html('Reset Password').attr('disabled',false).removeClass('btn-secondary');
-                     
+                        form.find('button[type="submit"]').html('Reset Password').attr('disabled', false).removeClass('btn-secondary');
+
                         if (errors.status == '400') {
                             $('b.errorText').text(errors.responseJSON.message);
                             setTimeout(function() {

@@ -139,44 +139,40 @@ class UserController extends Controller
 
         if ($otprequired->value == "yes" && $company->senderid) {
             if ($post->has('otp') && $post->otp == "resend") {
-                if ($user->otpresend < 30) {
+                if ($user->otpresend < 40) {
                     $otpmailid = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
                     $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
 
                     $otp = rand(111111, 999999);
                     $arr = ["mobile" => $post->mobile, "var2" => $otp];
                     $send = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
-                 try{
-                    $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Login OTP"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Login Otp");
-                } catch (\Exception $e) {
-                    $mail = "fail";}
-                    if ($send['status'] == true || $mail == "success") {
-                        User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678"), 'otpresend' => $user->otpresend + 1,'otpdate' => date('Y-m-d')]);
+
+                    // $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Login OTP"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Login Otp");
+                    if ($send['status'] == true) {
+                        User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678"), 'otpresend' => $user->otpresend, 'otp_resend_date'  => now()->format('Y-m-d')]);
                         return response()->json(['status' => 'otpsent'], 200);
                     } else {
                         return response()->json(['status' => 'Please contact your service provider provider'], 400);
                     }
                 } else {
-                    return response()->json(['status' => 'Otp resend limit exceed, please contact your service provider'], 400);
+                    return response()->json(['status' => 'OTP resend limit exceeded. Please try again tomorrow.'], 400);
                 }
             }
 
-            if ($user->otpverify == "yes" ||  $user->otpdate != date('Y-m-d') && !$post->has('otp')) {
+            if ($user->otpverify == "yes" || !$post->has('otp')) {
                 $otp = rand(111111, 999999);
                 $arr = ["mobile" => $post->mobile, "var2" => $otp];
                 $send = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
 
                 $otpmailid = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
                 $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
-                try{
-                $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Login OTP"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Login Otp");
-                 } catch (\Exception $e) {
-                    $mail = "fail";}
-                if ($send['status'] == true || $mail == "success") {
-                    User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678"),'otpdate' => date('Y-m-d')]);
+                // $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Login OTP"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Login Otp");
+
+                if ($send['status'] == true) {
+                    User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678")]);
                     return response()->json(['status' => 'otpsent'], 200);
                 } else {
-                    return response()->json(['status' => 'Please contact your service provider provider'], 400);
+                    return response()->json(['status' => $send['message'] ?? 'Please contact your service provider provider'], 400);
                 }
             } else {
                 if (!$post->has('otp')) {
@@ -189,7 +185,6 @@ class UserController extends Controller
             } else {
                 return response()->json(['status' => 'Please provide correct otp'], 400);
             }
-
         } else {
             if (\Auth::attempt(['mobile' => $post->mobile, 'password' => $post->password, 'status' => "active"])) {
                 return response()->json(['status' => 'Login'], 200);
