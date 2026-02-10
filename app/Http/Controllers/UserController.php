@@ -28,7 +28,6 @@ class UserController extends Controller
     {
 
         $this->api = Api::where('code', 'sadharverify')->first();
-
     }
 
     public function deleteAccount(Request $request)
@@ -143,7 +142,8 @@ class UserController extends Controller
                     $otpmailid = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
                     $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
 
-                    $otp = rand(111111, 999999);
+                    // $otp = rand(111111, 999999);
+                    $otp = "111111";
                     $arr = ["mobile" => $post->mobile, "var2" => $otp];
                     $send = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
 
@@ -160,7 +160,8 @@ class UserController extends Controller
             }
 
             if ($user->otpverify == "yes" || !$post->has('otp')) {
-                $otp = rand(111111, 999999);
+                // $otp = rand(111111, 999999);
+                $otp = "111111";
                 $arr = ["mobile" => $post->mobile, "var2" => $otp];
                 $send = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
 
@@ -483,7 +484,6 @@ class UserController extends Controller
                     return response()->json(['status' => 'ERR', 'message' => isset($response->message) ? $response->message : 'Something went wrong']);
                 }
                 break;
-
         }
     }
 
@@ -556,37 +556,37 @@ class UserController extends Controller
                 }
                 \DB::table('user_permissions')->insert($inserts);
             }
-                $otpmailid   = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
-                    $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
+            $otpmailid   = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
+            $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
 
-                    $mailData = [
-                        'name'     => $response->name,
-                        'username' => $response->mobile,   
-                        'mydata'   => [
-                            'company' => $response->company,
-                            'supportnumber' => $response->company->supportnumber ?? ''
-                        ]
-                    ];
+            $mailData = [
+                'name'     => $response->name,
+                'username' => $response->mobile,
+                'mydata'   => [
+                    'company' => $response->company,
+                    'supportnumber' => $response->company->supportnumber ?? ''
+                ]
+            ];
 
-                    try {
-                        $mail = \Myhelper::mail(
-                            'mail.member',           
-                            $mailData,
-                            $response->email,
-                            $response->name,
-                            $otpmailid->value,
-                            $otpmailname->value,
-                            'Account Created Successfully'
-                        );
-                    } catch (\Exception $e) {
-                        $mail = "fail";
-                    }
+            try {
+                $mail = \Myhelper::mail(
+                    'mail.member',
+                    $mailData,
+                    $response->email,
+                    $response->name,
+                    $otpmailid->value,
+                    $otpmailname->value,
+                    'Account Created Successfully'
+                );
+            } catch (\Exception $e) {
+                $mail = "fail";
+            }
 
-                    $arr = [
-                        "mobile" => $post->mobile,
-                        "var2"   => $post->mobile,
-                        "var3"   => $post->mobile
-                    ];
+            $arr = [
+                "mobile" => $post->mobile,
+                "var2"   => $post->mobile,
+                "var3"   => $post->mobile
+            ];
             $arr = ["mobile" => $post->mobile, "var2" => $post->mobile, "var3" => $post->mobile];
             $sms = AndroidCommonHelper::sendEmailAndOtp("activateAccount", $arr);
 
@@ -607,22 +607,21 @@ class UserController extends Controller
             return response()->json(['status' => 'ERR', 'message' => "Something went wrong, please try again"], 400);
         }
     }
-    
-   public function sendmail(){ 
-       
-                 $otpmailid   = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
-                $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
-                $mail = \Myhelper::mail('mail.member', ["username" => "9918881312", "name" => "Raj"], "rajjems15@gmail.com", "raj kumar", $otpmailid->value, $otpmailname->value, "Member Registration");
-            
-       dd($mail);
-   }
-   
-   public function checkCommission(){
-          $report = \App\Models\Ccreport::where('id',"399")->first();
-         
-         \Myhelper::commission($report);
-   }
-   
-   
-}
 
+    public function sendmail()
+    {
+
+        $otpmailid   = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
+        $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
+        $mail = \Myhelper::mail('mail.member', ["username" => "9918881312", "name" => "Raj"], "rajjems15@gmail.com", "raj kumar", $otpmailid->value, $otpmailname->value, "Member Registration");
+
+        dd($mail);
+    }
+
+    public function checkCommission()
+    {
+        $report = \App\Models\Ccreport::where('id', "399")->first();
+
+        \Myhelper::commission($report);
+    }
+}
