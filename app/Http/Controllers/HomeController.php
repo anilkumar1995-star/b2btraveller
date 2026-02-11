@@ -202,7 +202,7 @@ class HomeController extends Controller
         $data['recentBookings'] = DB::query()
             ->fromSub($finalQuery, 'combined')
             ->orderBy('created_at', 'desc')
-            ->limit(10)
+            ->limit(15)
             ->get();
 
         if (\Myhelper::hasRole('admin')) {
