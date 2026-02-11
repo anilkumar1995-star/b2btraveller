@@ -306,8 +306,6 @@
                                     <div>
                                         <strong>{{ $booking->user_name }}</strong>
                                         |
-                                        {{-- If Bus ho toh bus icon flight ho toh flight --}}
-                                        {{-- ✈️ --}}
 
                                         @if ($booking->type == 'flight')
                                             ✈️
