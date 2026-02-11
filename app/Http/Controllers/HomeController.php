@@ -100,6 +100,7 @@ class HomeController extends Controller
 
         $data['bookingSuccessAmount'] = DB::table('bookings')
             ->where('booking_status', 'Successful')
+            ->where('payment_status', 'success')
             ->whereBetween('created_at', [
                 Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
                 Carbon::createFromFormat('Y-m-d', $toDate)->endOfDay()
@@ -109,6 +110,7 @@ class HomeController extends Controller
             ->sum('total_amount');
 
         $data['bookingCount'] = DB::table('bookings')
+            ->where('booking_status', 'Successful')
             ->where('payment_status', 'success')
             ->whereBetween('created_at', [
                 Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
@@ -119,11 +121,52 @@ class HomeController extends Controller
             })
             ->count();
 
+        $data['bookingSuccessAmountBus'] = DB::table('bus_bookings')
+            ->where('booking_status', 'Confirmed')
+            ->where('payment_status', 'success')
+            ->whereBetween('created_at', [
+                Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
+                Carbon::createFromFormat('Y-m-d', $toDate)->endOfDay()
+            ])->when(!\Myhelper::hasRole('admin'), function ($q) {
+                $q->where('user_id', \Auth::id());
+            })
+            ->sum('total_amount');
+
+        $data['bookingCountBus'] = DB::table('bus_bookings')
+            ->where('booking_status', 'Confirmed')
+            ->where('payment_status', 'success')
+            ->whereBetween('created_at', [
+                Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
+                Carbon::createFromFormat('Y-m-d', $toDate)->endOfDay()
+            ])
+            ->when(!\Myhelper::hasRole('admin'), function ($q) {
+                $q->where('user_id', \Auth::id());
+            })
+            ->count();
+
+        $data['totalRevenueAmount'] = $data['bookingSuccessAmount'] + $data['bookingSuccessAmountBus'];
+
+        // $recentBookingsQuery = DB::table('bookings')
+        //     ->join('users', 'users.id', '=', 'bookings.user_id')
+        //     ->select(
+        //         'bookings.origin',
+        //         'bookings.destination',
+        //         'bookings.journey_date',
+        //         'bookings.payment_status',
+        //         'bookings.booking_status',
+        //         'users.name as user_name'
+        //     )
+        //     ->orderBy('bookings.created_at', 'desc')
+        //     ->limit(7);
+
+        // if (!\Myhelper::hasRole('admin')) {
+        //     $recentBookingsQuery->where('bookings.user_id', \Auth::id());
+        // }
+
+        // $data['recentBookings'] = $recentBookingsQuery->get();
 
 
-        $data['totalRevenueAmount'] = $data['bookingSuccessAmount'];
-
-        $recentBookingsQuery = DB::table('bookings')
+        $flightQuery = DB::table('bookings')
             ->join('users', 'users.id', '=', 'bookings.user_id')
             ->select(
                 'bookings.origin',
@@ -131,22 +174,42 @@ class HomeController extends Controller
                 'bookings.journey_date',
                 'bookings.payment_status',
                 'bookings.booking_status',
-                'users.name as user_name'
-            )
-            ->orderBy('bookings.created_at', 'desc')
-            ->limit(5);
+                'users.name as user_name',
+                'bookings.created_at',
+                DB::raw("'flight' as type")
+            );
+
+        $busQuery = DB::table('bus_bookings')
+            ->join('users', 'users.id', '=', 'bus_bookings.user_id')
+            ->select(
+                'bus_bookings.origin',
+                'bus_bookings.destination',
+                'bus_bookings.journey_date',
+                'bus_bookings.payment_status',
+                'bus_bookings.booking_status',
+                'users.name as user_name',
+                'bus_bookings.created_at',
+                DB::raw("'bus' as type")
+            );
 
         if (!\Myhelper::hasRole('admin')) {
-            $recentBookingsQuery->where('bookings.user_id', \Auth::id());
+            $flightQuery->where('bookings.user_id', \Auth::id());
+            $busQuery->where('bus_bookings.user_id', \Auth::id());
         }
 
-        $data['recentBookings'] = $recentBookingsQuery->get();
-        
-       if (\Myhelper::hasRole('admin')) {
-                $data['payment'] = Van::orderBy('id', 'desc')->take(5)->get();
-            } else {
-                $data['payment'] = Van::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
-            }
+        $finalQuery = $flightQuery->unionAll($busQuery);
+
+        $data['recentBookings'] = DB::query()
+            ->fromSub($finalQuery, 'combined')
+            ->orderBy('created_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        if (\Myhelper::hasRole('admin')) {
+            $data['payment'] = Van::orderBy('id', 'desc')->take(5)->get();
+        } else {
+            $data['payment'] = Van::where('user_id', auth()->id())->orderBy('id', 'desc')->get();
+        }
 
         $revenueQuery = DB::table('bookings')
             ->select(
@@ -161,14 +224,54 @@ class HomeController extends Controller
             ->groupBy('booking_date')
             ->orderBy('booking_date');
 
+        $revenueQueryBus = DB::table('bus_bookings')
+            ->select(
+                DB::raw('DATE(created_at) as booking_date'),
+                DB::raw('SUM(total_amount) as total_revenue')
+            )
+            ->where('payment_status', 'success')
+            ->whereBetween('created_at', [
+                Carbon::createFromFormat('Y-m-d', $fromDate)->startOfDay(),
+                Carbon::createFromFormat('Y-m-d', $toDate)->endOfDay()
+            ])
+            ->groupBy('booking_date')
+            ->orderBy('booking_date');
+
         if (!\Myhelper::hasRole('admin')) {
             $revenueQuery->where('user_id', \Auth::id());
+            $revenueQueryBus->where('user_id', \Auth::id());
         }
 
+        $finalQuery = $revenueQuery
+            ->unionAll($revenueQueryBus);
 
-        $revenueData = $revenueQuery->get();
+
+        $revenueData = DB::query()
+            ->fromSub($finalQuery, 'combined')
+            ->select(
+                'booking_date',
+                DB::raw('SUM(total_revenue) as total_revenue')
+            )
+            ->groupBy('booking_date')
+            ->orderBy('booking_date')
+            ->get();
+
+
+        // $revenueData = $revenueQuery->get();
+        // $revenueDataBus = $revenueQueryBus->get();
 
         // Chart labels & data
+        // $data['revenueLabels'] = $revenueData->pluck('booking_date')->map(function ($date) {
+        //     return Carbon::parse($date)->format('d M');
+        // });
+        // $data['revenueLabelsBus'] = $revenueDataBus->pluck('booking_date')->map(function ($date) {
+        //     return Carbon::parse($date)->format('d M');
+        // });
+
+        // $data['revenueValues'] = $revenueData->pluck('total_revenue');
+        // $data['revenueValuesBus'] = $revenueDataBus->pluck('total_revenue');
+
+
         $data['revenueLabels'] = $revenueData->pluck('booking_date')->map(function ($date) {
             return Carbon::parse($date)->format('d M');
         });
