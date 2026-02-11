@@ -177,8 +177,8 @@ class BusController extends Controller
             'ticket_no' => $data['TicketNo'] ?? null,
             'bus_id' => $data['BusId'] ?? null,
 
-            'origin'         => $data['BoardingPointdetails']['CityPointLocation'] ?? null,
-            'destination'    => $data['DropingPointdetails']['CityPointLocation'] ?? null,
+            'origin'         => $data['BoardingPointdetails']['CityPointLocation'] ?? 'N/A',
+            'destination'    => $data['DropingPointdetails']['CityPointLocation'] ?? 'N/A',
             'travel_name'    => $data['TravelName'] ?? null,
             'service_name'    => $data['ServiceName'] ?? null,
             'bus_type'       => $data['BusType'] ?? null,
