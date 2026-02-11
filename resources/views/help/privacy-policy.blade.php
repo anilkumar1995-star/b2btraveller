@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy | iPayment Tech Private Limited</title>
+    <title>Privacy Policy | iPaymnt Tech Private Limited</title>
     
     <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -195,9 +195,9 @@
                 <div class="tab-pane fade show active" id="privacy-content" role="tabpanel">
                     <h3 class="fw-bold mb-4">Introduction</h3>
                     <div class="policy-intro">
-                        <p class="mb-3">This privacy notice will explain how our organization, <strong>iPayment Tech Private Limited</strong> (“iPayment Tech”, also referred to below as “we”, “our” and “us”), uses the Personal Information we collect from you when you use our services. </p>
-                        <p class="mb-3">iPayment Tech provides several products and services including <strong>Flight Bookings, Hotel Reservations, Bus Tickets, and Digital Financial Services</strong>, each with their own Personal Information processing needs. This privacy notice applies to our website (www.ipayments.in), online portal, mobile applications, and any other means through which we may collect your Personal Information.</p>
-                        <p class="mb-0"><strong>Data Controller:</strong> iPayment Tech Private Limited, can be considered the Data Controller for the Personal Information that we process in connection with our products, services and offers.</p>
+                        <p class="mb-3">This privacy notice will explain how our organization, <strong>iPaymnt Tech Private Limited</strong> (“iPaymnt Tech”, also referred to below as “we”, “our” and “us”), uses the Personal Information we collect from you when you use our services. </p>
+                        <p class="mb-3">iPaymnt Tech provides several products and services including <strong>Flight Bookings, Hotel Reservations, Bus Tickets, and Digital Financial Services</strong>, each with their own Personal Information processing needs. This privacy notice applies to our website (www.ipayments.in), online portal, mobile applications, and any other means through which we may collect your Personal Information.</p>
+                        <p class="mb-0"><strong>Data Controller:</strong> iPaymnt Tech Private Limited, can be considered the Data Controller for the Personal Information that we process in connection with our products, services and offers.</p>
                     </div>
 
                     <div class="accordion" id="privacyAccordion">
@@ -211,7 +211,7 @@
                             </h2>
                             <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#privacyAccordion">
                                 <div class="accordion-body">
-                                    <p>iPayment Tech will only process your Personal Information where we have a legal basis to do so:</p>
+                                    <p>iPaymnt Tech will only process your Personal Information where we have a legal basis to do so:</p>
                                     <ul class="bullet-list">
                                         <li><strong>Performance of a contract:</strong> When you book flight tickets, hotels, or buses, we process details to fulfill your travel plans.</li>
                                         <li><strong>Public interest:</strong> As a travel aggregator, we may process info for security and safety maintenance.</li>
@@ -261,7 +261,7 @@
                             </h2>
                             <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
                                 <div class="accordion-body">
-                                    <p>You directly provide iPayment Tech with most of the data. We collect it when:</p>
+                                    <p>You directly provide iPaymnt Tech with most of the data. We collect it when:</p>
                                     <ul class="bullet-list">
                                         <li>You book a flight, bus, or hotel on our platform.</li>
                                         <li>You create an online account or subscribe to our newsletter.</li>
@@ -371,7 +371,7 @@
                             </h2>
                             <div id="collapseContact" class="accordion-collapse collapse" data-bs-parent="#privacyAccordion">
                                 <div class="accordion-body">
-                                    <p>If you have questions about iPayment Tech’s privacy notice, contact us:</p>
+                                    <p>If you have questions about iPaymnt Tech’s privacy notice, contact us:</p>
                                     <p class="mb-1"><strong>Email:</strong> <a href="mailto:info@ipayments.org.in">info@ipayments.org.in</a></p>
                                     <p class="mb-1"><strong>Grievance Officer:</strong> AppellateAuthority@ipayments.in</p>
                                     <p class="mb-1"><strong>Customer Support:</strong> +91 9147317821</p>
@@ -385,8 +385,8 @@
 
                 <!-- COOKIE POLICY PANEL -->
                 <div class="tab-pane fade" id="cookie-content" role="tabpanel">
-                    <h3 class="fw-bold mb-4">iPayment Tech’s <span class="text-green">Cookie Policy</span></h3>
-                    <p class="text-secondary mb-4">To improve the user experience, iPayment Tech sets and uses cookies on its website and third-party providers. This enables us to remember your preferences and deliver better services.</p>
+                    <h3 class="fw-bold mb-4">iPaymnt Tech’s <span class="text-green">Cookie Policy</span></h3>
+                    <p class="text-secondary mb-4">To improve the user experience, iPaymnt Tech sets and uses cookies on its website and third-party providers. This enables us to remember your preferences and deliver better services.</p>
                     
                     <h4 class="fw-bold mb-3">What is a <span class="text-green">cookie</span>?</h4>
                     <p class="text-secondary mb-4">A cookie is a small amount of data generated by a website and saved by your web browser. It is used to identify the user or device and to remember information like login status or search history.</p>

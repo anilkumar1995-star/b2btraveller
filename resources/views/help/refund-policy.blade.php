@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Refund & Cancellation Policy | iPayment Tech Private Limited</title>
+    <title>Refund & Cancellation Policy | iPaymnt Tech Private Limited</title>
     
     <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -152,7 +152,7 @@
     <section class="hero-section">
         <div class="container">
             <h1 class="display-4 fw-bold">Refund & <span class="text-green">Cancellation</span></h1>
-            <p class="lead opacity-90">Transparent policies for iPayment Tech travel and digital services.</p>
+            <p class="lead opacity-90">Transparent policies for iPaymnt Tech travel and digital services.</p>
         </div>
     </section>
 
@@ -226,7 +226,7 @@
                 <!-- FLIGHTS PANEL -->
                 <div class="tab-pane fade" id="flight-content" role="tabpanel">
                     <h3 class="fw-bold mb-4">Flight <span class="text-green">Cancellation & Refunds</span></h3>
-                    <p class="text-muted mb-4">iPayment Tech acts as a facilitator; flight cancellation charges depend strictly on the airline's specific fare rules.</p>
+                    <p class="text-muted mb-4">iPaymnt Tech acts as a facilitator; flight cancellation charges depend strictly on the airline's specific fare rules.</p>
                     
                     <div class="accordion" id="flightAccordion">
                         <div class="accordion-item">
