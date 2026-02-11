@@ -113,6 +113,9 @@ Route::get('unauthorized', [HomeController::class, 'unauthorized'])->name('unaut
 Route::get('/dashboard', [HomeController::class, 'index'])->name('home');
 Route::post('/dashboard', [HomeController::class, 'index'])->name('home');
 
+Route::get('/wallet-dashboard', [HomeController::class, 'walletDashboard'])->name('wallet.dashboard');
+
+
 Route::get('/search-txnid', [HomeController::class, 'searchTxnid'])->name('searchTxnid');
 Route::get('/search-user', [HomeController::class, 'searchUser'])->name('searchUser');
 

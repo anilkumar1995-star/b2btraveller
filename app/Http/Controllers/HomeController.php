@@ -67,6 +67,27 @@ class HomeController extends Controller
         return view('unauthorized');
     }
 
+    public function walletDashboard()
+    {
+        $user = \Auth::user();
+
+        $data['wallets'] = [
+            'Main Wallet'        => $user->mainwallet,
+            'CC Wallet'          => $user->ccwallet,
+            'Micro ATM Balance'  => $user->microatmbalance,
+            'NSDL Wallet'        => $user->nsdlwallet,
+            'AEPS Balance'       => $user->aepsbalance,
+            'Commission Wallet'  => $user->commission_wallet,
+            'Reward Wallet'      => $user->reward_wallet,
+            'Locked Amount'      => $user->lockedamount,
+            'AEPS Locked Amount' => $user->aepslockedamount,
+            'CC Locked Amount'   => $user->cclockedamount,
+        ];
+
+        return view('wallet', $data);
+    }
+
+
     public function index(Request $post)
     {
 
