@@ -306,11 +306,21 @@
                                     <div>
                                         <strong>{{ $booking->user_name }}</strong>
                                         |
-                                        ✈️
+                                        {{-- If Bus ho toh bus icon flight ho toh flight --}}
+                                        {{-- ✈️ --}}
+
+                                        @if ($booking->type == 'flight')
+                                            ✈️
+                                        @elseif($booking->type == 'bus')
+                                        🚍
+                                        @else
+                                            📑
+                                        @endif
+
                                         <small class="text-muted">
-                                            {{ $booking->origin }}
+                                            {{ $booking->origin ?? 'N/A' }}
                                             →
-                                            {{ $booking->destination }}
+                                            {{ $booking->destination ?? 'N/A' }}
                                             •
                                             {{ \Carbon\Carbon::parse($booking->journey_date)->format('d M') }}
                                         </small>
