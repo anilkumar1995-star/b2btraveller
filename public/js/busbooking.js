@@ -535,36 +535,8 @@ function renderSeatLayout(apiResponse) {
                 </div>
             </div>
             <div class="card-body p-4">
-               <!-- Decks Container -->
-                <div class="row g-4">
-                    <!-- Lower Deck -->
-                    <div class="col-lg-6">
-                        <div class="deck-header-row d-flex justify-content-between align-items-center mb-3">
-                            <div class="deck-label fw-bold text-primary fs-5">Lower Deck ⬇️</div>
-                            <div class="lower-deck-driver">
-                                <div class="steering-wheel">🛞</div>
-                            </div>
-                        </div>
-                        <div class="deck-content border rounded p-3 bg-white">
-                            ${lowerHTML}
-                        </div>
-                    </div>
-
-                    <!-- Upper Deck -->
-                    <div class="col-lg-6 ">
-                        <div class="deck-header-row d-flex justify-content-between align-items-center mb-3">
-                            <div class="deck-label fw-bold text-info fs-5">Upper Deck ⬆️</div>
-                            <div class="lower-deck-driver ">
-                                <div>💺</div>
-                            </div>
-                        </div>
-                        <div class="deck-content border rounded p-3 bg-white">
-                            ${upperHTML}
-                        </div>
-                    </div>
-                </div>
-
-                 <!-- Legend -->
+            
+                <!-- Legend -->
                 <div class="seat-legend mb-5 p-3 bg-light rounded-3">
                     <div class="row text-center g-3">
                         <div class="col-sm-auto mx-auto">
@@ -600,9 +572,39 @@ function renderSeatLayout(apiResponse) {
                     </div>
                 </div>
 
+                <!-- Decks Container -->
+                <div class="row g-4">
+                    <!-- Lower Deck -->
+                    <div class="col-lg-6">
+                        <div class="deck-header-row d-flex justify-content-between align-items-center mb-3">
+                            <div class="deck-label fw-bold text-primary fs-5">Lower Deck ⬇️</div>
+                            <div class="lower-deck-driver">
+                                <div class="steering-wheel">🛞</div>
+                            </div>
+                        </div>
+                        <div class="deck-content border rounded p-3 bg-white">
+                            ${lowerHTML}
+                        </div>
+                    </div>
+
+                    <!-- Upper Deck -->
+                    <div class="col-lg-6 ">
+                        <div class="deck-header-row d-flex justify-content-between align-items-center mb-3">
+                            <div class="deck-label fw-bold text-info fs-5">Upper Deck ⬆️</div>
+                            <div class="lower-deck-driver ">
+                                <div>💺</div>
+                            </div>
+                        </div>
+                        <div class="deck-content border rounded p-3 bg-white">
+                            ${upperHTML}
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     `);
+
+    // Add inline CSS for seat layout
     addSeatLayoutStyles();
 
 }
