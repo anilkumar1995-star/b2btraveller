@@ -89,7 +89,7 @@ class BusService
             }
 
 
-            if (isset($response['status']) && strtoupper($response['status']) == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Bus City Fetch successfully", 'data' => $response['data']];
             } else {
 
@@ -186,7 +186,7 @@ class BusService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Boarding Details get successfully", 'data' => $response['data']];
             } else {
                 return [
@@ -232,7 +232,7 @@ class BusService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Seat Layout get successfully", 'data' => $response['data']];
             } else {
                 return [
@@ -282,7 +282,7 @@ class BusService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Bus Block successfully", 'data' => $response['data']];
             } else {
                 return [
@@ -331,7 +331,7 @@ class BusService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Bus Booked successfully", 'data' => $response['data']];
             } else {
                 return [
@@ -375,7 +375,7 @@ class BusService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            if (isset($response['status']) && $response['status'] == 'SUCCESS') {
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Booking details get successfully", 'data' => $response['data']];
             } else {
                 return [
