@@ -603,8 +603,6 @@ function renderSeatLayout(apiResponse) {
             </div>
         </div>
     `);
-
-    // Add inline CSS for seat layout
     addSeatLayoutStyles();
 
 }
