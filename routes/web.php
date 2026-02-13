@@ -154,6 +154,7 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::get('token/refresh', [FlightController::class, 'refreshToken'])->name('flight.token.refresh');
     Route::post('search', [FlightController::class, 'search'])->name('flight.search');
     Route::get('list', [FlightController::class, 'searchlist']);
+    Route::get('passengers', [FlightController::class, 'passengerForm'])->name('flight.passengers');
     Route::get('detail', [FlightController::class, 'flightdetailslist']);
     Route::get('seatlayout', [FlightController::class, 'seatlayList']);
     Route::post('farerule', [FlightController::class, 'fareRule'])->name('flight.farerule');

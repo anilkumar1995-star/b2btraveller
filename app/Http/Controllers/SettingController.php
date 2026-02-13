@@ -310,20 +310,35 @@ class SettingController extends Controller
     public function createcustomer(Request $request)
     {
          $request->validate([
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => 'required',
             'mobile' => 'required',
-            'address' => 'required',
+            'address1' => 'required',
+            'address2' => 'required',
+            'address3' => 'required',
+            'dob' => 'required',
+            'gender' => 'required',
+            'nationality' => 'required',
             'status' => 'required',
         ]);
 
         $data = Customerlist::create([
             'user_id' => $request->user_id,
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'mobile' => $request->mobile,
-            'address' => $request->address,
+            'address1' => $request->address1,
+            'address2' => $request->address2,
+            'address3' => $request->address3,
+            'dob' => $request->dob,
+            'gender' => $request->gender,
+            'nationality' => $request->nationality,
             'status' => $request->status,
+            'pan_number' => $request->pan_number,
+            'passport_number' => $request->passport_number,
+            'passport_expiry' => $request->passport_expiry,
         ]);
 
         if ($data) {

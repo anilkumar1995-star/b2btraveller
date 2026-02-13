@@ -77,7 +77,7 @@
                                     <option value="">-- Select Customer --</option>
                                     @foreach ($customers as $customer)
                                         <option value="{{ $customer->id }}">
-                                            {{ $customer->name }} ({{ $customer->email }})
+                                            {{ $customer->first_name }} {{ $customer->last_name }} ({{ $customer->email }})
                                         </option>
                                     @endforeach
                                 </select>
@@ -143,32 +143,100 @@
                     <div class="modal-body">
 
                         <div class="row g-3">
-                            <div class="col-md-6">
-                                <label>Name : <b class="text-danger">*</b></label>
-                                <input type="text" name="name" class="form-control" required
-                                    placeholder="Enter Customer Name "><span class="text-danger error-label"
+                            <div class="col-md-4">
+                                <label>First Name : <b class="text-danger">*</b></label>
+                                <input type="text" name="first_name" class="form-control" required
+                                    placeholder="Enter Customer First Name "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Last Name : <b class="text-danger">*</b></label>
+                                <input type="text" name="last_name" class="form-control" required
+                                    placeholder="Enter Customer Last Name "><span class="text-danger error-label"
                                     id="error-label"></span>
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Email : <b class="text-danger">*</b></label>
                                 <input type="email" name="email" class="form-control" required
                                     placeholder="Enter Customer Email "><span class="text-danger error-label"
                                     id="error-label"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <label>Mobile : <b class="text-danger">*</b></label>
                                 <input type="text" name="mobile" class="form-control" required
                                     placeholder="Enter Customer Mobile Number "><span class="text-danger error-label"
                                     id="error-label"></span>
                             </div>
-                            <div class="col-md-6">
-                                <label>Address: <b class="text-danger">*</b></label>
-                                <input type="text" name="address" class="form-control" required
-                                    placeholder="Enter Customer Address "><span class="text-danger error-label"
+
+                            <div class="col-md-4">
+                                <label class="form-label">Gender<span class="text-danger">*</span></label>
+                                <select class="form-select required-field" name="gender">
+                                    <option value="">Select</option>
+                                    <option value="1">Male</option>
+                                    <option value="2">Female</option>
+                                    <option value="3">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Date of Birth: <b class="text-danger">*</b></label>
+                                <input type="date" name="dob" class="form-control" required><span
+                                    class="text-danger error-label" id="error-label"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Nationality: <b class="text-danger">*</b></label>
+                                {{-- select bnao --}}
+                                <select name="nationality" class="form-control" required>
+                                    <option value="">Select Nationality</option>
+                                    <option value="IN">Indian</option>
+                                    <option value="US">American</option>
+                                    <option value="GB">British</option>
+                                    <option value="CA">Canadian</option>
+                                    <option value="AU">Australian</option>
+                                    <option value="DE">German</option>
+                                    <option value="FR">French</option>
+                                    <option value="JP">Japanese</option>
+                                    <option value="CN">Chinese</option>
+                                    <option value="Other">Other</option>
+                                </select>
+
+                            </div>
+                            <div class="col-md-4">
+                                <label>Address Line 1: <b class="text-danger">*</b></label>
+                                <input type="text" name="address1" class="form-control" required
+                                    placeholder="Enter Customer Address Line 1 "><span class="text-danger error-label"
                                     id="error-label"></span>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <label>Address Line 2: <b class="text-danger">*</b></label>
+                                <input type="text" name="address2" class="form-control" required
+                                    placeholder="Enter Customer Address Line 2 "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Address Line 3: <b class="text-danger">*</b></label>
+                                <input type="text" name="address3" class="form-control" required
+                                    placeholder="Enter Customer Address Line 3 "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Pan Number: <b class="text-danger">*</b></label>
+                                <input type="text" name="pan" class="form-control" required
+                                    placeholder="Enter Customer Pan Number "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Passport Number: <b class="text-danger">*</b></label>
+                                <input type="text" name="passport" class="form-control" required
+                                    placeholder="Enter Customer Passport Number "><span class="text-danger error-label"
+                                    id="error-label"></span>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Passport Expiry Date: <b class="text-danger">*</b></label>
+                                <input type="date" name="passport_expiry" class="form-control" required><span
+                                    class="text-danger error-label" id="error-label"></span>
+                            </div>
+                            <div class="col-md-4">
                                 <label>Status: <b class="text-danger">*</b></label>
                                 <select name="status" id="Status" class="form-control" required>
                                     <option value="active">Active</option>

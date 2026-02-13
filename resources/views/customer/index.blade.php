@@ -24,12 +24,12 @@
                     <table width="100%" class="table border-top mb-5" id="datatable">
                         <thead class="text-center bg-light">
                             <tr>
-                                <th width="25%">ID</th>
-
-                                <th width="30%">Customer Details</th>
-
-                                <th width="25%">Address</th>
-                                <th width="20%">Status</th>
+                                <th width="10%">ID</th>
+                                <th width="20%">Customer Details</th>
+                                <th width="20%">Id Details</th>
+                                <th width="15%">Address</th>
+                                <th width="20%">Other Details</th>
+                                <th width="10%">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,17 +69,35 @@
                     "data": "name",
                     render: function(data, type, full, meta) {
                         return `
-                        <span><b>Name</b>- ${full?.name ?? '-'}</span><br>
-                        <span><b>Email</b>- ${full?.email ?? '-'}</span><br>
+                        <span><b>Name</b>- ${full?.first_name ?? '-'} ${full?.last_name ?? '-'}</span><br>
+                        <span>${full?.email ?? '-'}</span><br>
                         <span><b>Mobile</b>- ${full?.mobile ?? '-'}</span>
                     `;
                     }
                 },
-
+                {
+                    "data": "name",
+                    render: function(data, type, full, meta) {
+                        return `
+                            <span><b>Pan</b>- ${full?.pan_number ?? '-'}</span><br>
+                            <span><b>Passport</b>- ${full?.passport_number ?? '-'}</span><br>
+                            <span><b>Expiry</b>- ${full?.passport_expiry ?? '-'}</span>
+                        `;
+                    }
+                },
                 {
                     "data": "address",
                     render: function(data, type, full, meta) {
-                        return `<span> ${full?.address}</span>`;
+                        return `<span> ${full?.address1 ?? '-'}, ${full?.address2 ?? '-'} ${full?.address3 ?? '-'}</span>`;
+                    }
+                },
+                {
+                    "data": "id",
+                    render: function(data, type, full, meta) {
+                        return `<span><b>Gender</b>- ${full?.gender == '2' ? 'Female' : 'Male'} 
+                            <br/><b>DOB</b>- ${full?.dob ?? '-'}
+                            <br/><b>Nationality</b>- ${full?.nationality ?? '-'}
+                            </span>`;
                     }
                 },
                 {

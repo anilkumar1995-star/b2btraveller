@@ -270,7 +270,8 @@ $(document).on("click", ".btn-book-now", function () {
             localStorage.setItem('selectedFlightDetails', JSON.stringify(flight));
             localStorage.setItem("ResultIndex", flight?.ResultIndex || '');
             localStorage.setItem("isInternational", isInternational || false);
-            window.location.href = "/flight/detail";
+            // window.location.href = "/flight/detail";
+            window.location.href = "/flight/passengers";
         } else {
             notify("Flight details not found!", "error");
         }
