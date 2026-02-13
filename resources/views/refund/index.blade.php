@@ -221,13 +221,13 @@
                             </div>
                             <div class="col-md-4">
                                 <label>Pan Number: <b class="text-danger">*</b></label>
-                                <input type="text" name="pan" class="form-control" required
+                                <input type="text" name="pan_number" class="form-control" required
                                     placeholder="Enter Customer Pan Number "><span class="text-danger error-label"
                                     id="error-label"></span>
                             </div>
                             <div class="col-md-4">
                                 <label>Passport Number: <b class="text-danger">*</b></label>
-                                <input type="text" name="passport" class="form-control" required
+                                <input type="text" name="passport_number" class="form-control" required
                                     placeholder="Enter Customer Passport Number "><span class="text-danger error-label"
                                     id="error-label"></span>
                             </div>

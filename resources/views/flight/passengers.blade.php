@@ -107,8 +107,31 @@
             border: 2px solid #28a745;
             background-color: #f0f8f5;
         }
+
+        /* Select2 custom styling */
+        .select2-container--default .select2-selection--single {
+            border-color: #ced4da;
+            height: 38px;
+            display: flex;
+            align-items: center;
+        }
+
+        .select2-container--default .select2-selection--single:focus {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        .select2-dropdown {
+            border-color: #ced4da;
+        }
+
+        .select2-results__option--highlighted[aria-selected] {
+            background-color: #0d6efd;
+        }
     </style>
-@endpush
+
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
 
 @section('content')
 
@@ -125,6 +148,8 @@
                     <div class="alert alert-warning mt-3" role="alert">
                         <strong>⚠️ Important:</strong> Please enter passenger details exactly as they appear in your
                         passport.
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+
                         <br/>
                         Canada: If Last Name is missing → use “LNU”. If First Name is missing → use “FNU”. Example:
                         LNU/JEREMY MR, SMITH/FNU MR.
@@ -237,6 +262,33 @@
             
             // Initialize Select2 for customer selectors
             initializeSelect2();
+        }
+
+        // Initialize Select2 for customer selectors
+        function initializeSelect2() {
+            $('.customer-selector').select2({
+                placeholder: "Search customer...",
+                width: '100%',
+                allowClear: false,
+                minimumInputLength: 0,
+                matcher: function(params, data) {
+                    // Custom matcher for better search
+                    if ($.trim(params.term) === '') {
+                        return data;
+                    }
+
+                    var term = params.term.toLowerCase();
+                    var matchText = data.text.toLowerCase();
+
+                    if (matchText.indexOf(term) > -1) {
+                        return $.extend({}, data, {
+                            selected: false
+                        });
+                    }
+
+                    return null;
+                }
+            });
         }
 
         // Create passenger form card (same as modal version)
