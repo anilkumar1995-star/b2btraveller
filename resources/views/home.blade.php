@@ -53,7 +53,7 @@
                         <a href="javascript:void(0)" class="text-decoration-none" data-bs-toggle="offcanvas"
                             data-bs-target="#billOffcanvas">
                             <div class="service-card text-center">
-                                <img src="{{ asset('bbps_icon.png') }}" height="100" width="100" alt="BBPS"
+                                <img src="{{ asset('logo/Bharat Connect Primary Logo_PNG.png') }}"  width="100" alt="BBPS"
                                     class="service-img">
                                 <small class="text-dark fs-5 fw-semibold">Bill Pay</small>
                             </div>

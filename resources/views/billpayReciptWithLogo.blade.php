@@ -36,9 +36,9 @@
         </div>
 
         <div>
-            <img src="https://ipayments.in/img/IPAYMNT.png"
+            <img src="{{ asset('logo/Bharat Connect Primary Logo_PNG.png') }}"
                 alt="Logo" class="img-fluid"
-                style="height:30px">
+                style="height:40px">
         </div>
 
     </div>
