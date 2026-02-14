@@ -312,11 +312,11 @@ class SettingController extends Controller
          $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
-            'email' => 'required',
-            'mobile' => 'required',
+            'email' => 'required|unique:customer_list,email',
+            'mobile' => 'required|unique:customer_list,mobile',
             'address1' => 'required',
             'address2' => 'required',
-            'address3' => 'required',
+            'city' => 'required',
             'dob' => 'required',
             'gender' => 'required',
             'nationality' => 'required',
@@ -331,7 +331,7 @@ class SettingController extends Controller
             'mobile' => $request->mobile,
             'address1' => $request->address1,
             'address2' => $request->address2,
-            'address3' => $request->address3,
+            'city' => $request->city,
             'dob' => $request->dob,
             'gender' => $request->gender,
             'nationality' => $request->nationality,
@@ -346,6 +346,12 @@ class SettingController extends Controller
         } else {
             return response()->json(['status' => 'fail', 'message' => 'Customer not Added']);
         }
+    }
+
+    public function fetchcustomer(Request $request)
+    {
+        $customers = Customerlist::where('user_id', auth()->id())->get();
+        return response()->json(['status' => 'success', 'data' => $customers]);
     }
     
     public function refundlist()

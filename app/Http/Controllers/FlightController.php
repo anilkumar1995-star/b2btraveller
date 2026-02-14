@@ -51,7 +51,7 @@ class FlightController extends Controller
             ->where('user_id', auth()->id())
             ->where('status', 'active')
             ->select('id', 'first_name', 'last_name', 'email', 'mobile', 
-                     'dob', 'gender', 'nationality', 'address1', 'address2', 'address3',
+                     'dob', 'gender', 'nationality', 'address1', 'address2', 'city',
                      'pan_number', 'passport_number', 'passport_expiry')
             ->get();
         

@@ -170,7 +170,7 @@ class CommonController extends Controller
 
 			case 'customerlist':
 				$request['table'] = '\App\Models\Customerlist';
-				$request['searchdata'] = ['id', 'first_name', 'last_name', 'email', 'mobile', 'address1', 'address2', 'address3', 'status'];
+				$request['searchdata'] = ['id', 'first_name', 'last_name', 'email', 'mobile', 'address1', 'address2', 'city', 'status'];
 				$request['select'] = 'all';
 				$request['order'] = ['id', 'desc'];
 				if (\Myhelper::hasRole('admin')) {

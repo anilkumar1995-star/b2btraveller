@@ -88,7 +88,7 @@
                 {
                     "data": "address",
                     render: function(data, type, full, meta) {
-                        return `<span> ${full?.address1 ?? '-'}, ${full?.address2 ?? '-'} ${full?.address3 ?? '-'}</span>`;
+                        return `<span> ${full?.address1 ?? '-'}, ${full?.address2 ?? '-'} ${full?.city ?? '-'}</span>`;
                     }
                 },
                 {

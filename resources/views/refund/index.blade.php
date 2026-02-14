@@ -214,9 +214,9 @@
                                     id="error-label"></span>
                             </div>
                             <div class="col-md-4">
-                                <label>Address Line 3: <b class="text-danger">*</b></label>
-                                <input type="text" name="address3" class="form-control" required
-                                    placeholder="Enter Customer Address Line 3 "><span class="text-danger error-label"
+                                <label>City: <b class="text-danger">*</b></label>
+                                <input type="text" name="city" class="form-control" required
+                                    placeholder="Enter Customer City "><span class="text-danger error-label"
                                     id="error-label"></span>
                             </div>
                             <div class="col-md-4">

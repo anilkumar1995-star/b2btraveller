@@ -30,28 +30,20 @@
 
                         <div class="vstack gap-4">
 
-
-                            <div id="baggageInfo">
-                            </div>
-
-
                             <form class="card border">
-                                <div class="card-header border-bottom px-4">
-                                    <h3 class="card-title mb-0">Traveler Details</h3>
+                                <div class="card-header border-bottom px-4 justify-content-between d-flex align-items-center">
+                                    <h4 class="card-title mb-0">Traveler Details</h4>
+
+                                    {{-- <button type="button" class="btn btn-sm">
+                                       <a href="{{ url('flight/passengers') }}"> <i class="ti ti-edit"></i> Edit Details</a>
+                                    </button> --}}
                                 </div>
 
                                 <div class="card-body py-4">
-                                    <div class="bg-light bg-opacity-10 rounded-2 p-3 mb-3">
-                                        <p class="h6 fw-light small mb-0">
-                                            <span class="badge bg-danger me-2">Note</span>
-                                            Please make sure you enter the name as per your passport.
-                                        </p>
-                                        <div class="alert alert-warning mt-3" id="noteSection">
+                                    <div class="alert alert-warning" id="noteSection">
 
-                                        </div>
                                     </div>
-
-                                    <div id="travelerAccordion" class="accordion accordion-icon accordion-bg-light"></div>
+                                    {{-- </div> --}}
 
 
                                     <h5 class="mt-4">Booking details will be sent to</h5>
@@ -68,17 +60,20 @@
                                         <div class="col-md-4">
                                             <label class="form-label">Mobile Number<span
                                                     class="text-danger">*</span></label>
-                                            <input type="text" class="form-control required-contact"
+                                            <input type="text" class="form-control required-contact" value="{{ Auth::user()->mobile }}"
                                                 placeholder="Enter your mobile number" name="mobileNo">
                                         </div>
 
                                         <div class="col-md-5">
                                             <label class="form-label">Email Address<span
                                                     class="text-danger">*</span></label>
-                                            <input type="email" class="form-control required-contact"
+                                            <input type="email" class="form-control required-contact" value="{{ Auth::user()->email }}"
                                                 placeholder="Enter your email address" name="emailId">
                                         </div>
                                     </div>
+
+                                    <div id="travelerAccordion" class="accordion accordion-icon accordion-bg-light mt-3"></div>
+
 
                                     <div class="d-grid mt-4">
                                         <button id="proceedBtn" type="button" class="btn btn-primary mb-0" disabled>
@@ -87,6 +82,10 @@
                                     </div>
                                 </div>
                             </form>
+
+
+                            <div id="baggageInfo">
+                            </div>
 
                         </div>
                     </div>

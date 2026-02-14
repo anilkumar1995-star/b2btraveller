@@ -81,6 +81,8 @@ Route::group(['prefix' => 'payment', 'middleware' => ['auth']], function () {
 
 Route::group(['prefix' => 'customer', 'middleware' => ['auth']], function () {
     Route::get('list', [SettingController::class, 'customerlist'])->name('customerlist');
+    // list data
+    Route::get('list-data', [SettingController::class, 'fetchcustomer'])->name('fetchcustomer');
     Route::post('add', [SettingController::class, 'createcustomer'])->name('addcustomer');
 });
 

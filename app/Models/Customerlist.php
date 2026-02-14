@@ -9,7 +9,7 @@ class Customerlist extends Model
 {
     protected $table = 'customer_list';
 
-    protected $fillable = ['id', 'user_id', 'first_name', 'last_name', 'dob', 'address1', 'address2', 'address3', 'email', 'mobile', 'pan_number', 'passport_number', 'passport_expiry', 'gender', 'nationality',  'status'];
+    protected $fillable = ['id', 'user_id', 'first_name', 'last_name', 'dob', 'address1', 'address2', 'city', 'email', 'mobile', 'pan_number', 'passport_number', 'passport_expiry', 'gender', 'nationality',  'status'];
 
     public $with = ['user'];
 
