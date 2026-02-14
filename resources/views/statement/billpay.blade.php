@@ -74,7 +74,7 @@ $status['data'] = [
                                 <th style="padding: 0px 0px 5px 0px">Receipt - <span class="created_at"></span></th>
                                 <th style="padding: 0px 0px 5px 0px; text-align: right; margin-right:10px">
                                     @if(Auth::user()->company->logo)
-                                    <img src="https://ipayments.in/img/IPAYMNT.png" class="img-responsive" alt="" style="width: 100px;height: 40px;">
+                                    <img src="{{ asset('logo/Bharat Connect Primary Logo_PNG.png') }}" class="img-responsive" alt="" style="width: 100px;height: 40px;">
                                     @else
                                     {{Auth::user()->company->companyname}}
                                     @endif

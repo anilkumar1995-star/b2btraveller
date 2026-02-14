@@ -31,11 +31,20 @@ $table = 'yes';
 <div class="row g-4">
     <div class="col-lg-7 col-12">
         <div class="card shadow-sm border-0 rounded-4">
-            <div class="card-header bg-label-primary text-white rounded-top-4">
+            <div class="card-header bg-label-primary text-white rounded-top-4 
+            d-flex justify-content-between align-items-center">
+  
                 <h5 class="mb-0">
                     <i class="ti ti-receipt me-2"></i> Bill Payment
                 </h5>
+
+                <img src="{{ asset('logo/Bharat Connect Primary Logo_PNG.png') }}" 
+                    alt="Logo" 
+                    style="height:40px;">
+                    
             </div>
+
+            
 
             <div class="card-body p-4">
             <!-- 
