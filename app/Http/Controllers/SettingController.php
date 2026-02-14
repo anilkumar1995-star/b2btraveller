@@ -310,20 +310,35 @@ class SettingController extends Controller
     public function createcustomer(Request $request)
     {
          $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'mobile' => 'required',
-            'address' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
+            'email' => 'required|unique:customer_list,email',
+            'mobile' => 'required|unique:customer_list,mobile',
+            'address1' => 'required',
+            'address2' => 'required',
+            'city' => 'required',
+            'dob' => 'required',
+            'gender' => 'required',
+            'nationality' => 'required',
             'status' => 'required',
         ]);
 
         $data = Customerlist::create([
             'user_id' => $request->user_id,
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
             'mobile' => $request->mobile,
-            'address' => $request->address,
+            'address1' => $request->address1,
+            'address2' => $request->address2,
+            'city' => $request->city,
+            'dob' => $request->dob,
+            'gender' => $request->gender,
+            'nationality' => $request->nationality,
             'status' => $request->status,
+            'pan_number' => $request->pan_number,
+            'passport_number' => $request->passport_number,
+            'passport_expiry' => $request->passport_expiry,
         ]);
 
         if ($data) {
@@ -331,6 +346,12 @@ class SettingController extends Controller
         } else {
             return response()->json(['status' => 'fail', 'message' => 'Customer not Added']);
         }
+    }
+
+    public function fetchcustomer(Request $request)
+    {
+        $customers = Customerlist::where('user_id', auth()->id())->get();
+        return response()->json(['status' => 'success', 'data' => $customers]);
     }
     
     public function refundlist()

@@ -44,6 +44,20 @@ class FlightController extends Controller
     {
         return view('flight.list');
     }
+    
+    public function passengerForm()
+    {
+        $customers = DB::table('customer_list')
+            ->where('user_id', auth()->id())
+            ->where('status', 'active')
+            ->select('id', 'first_name', 'last_name', 'email', 'mobile', 
+                     'dob', 'gender', 'nationality', 'address1', 'address2', 'city',
+                     'pan_number', 'passport_number', 'passport_expiry')
+            ->get();
+        
+        return view('flight.passengers', ['customers' => $customers]);
+    }
+    
     public function flightdetailslist()
     {
         return view('flight.detail');

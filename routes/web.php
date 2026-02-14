@@ -81,6 +81,8 @@ Route::group(['prefix' => 'payment', 'middleware' => ['auth']], function () {
 
 Route::group(['prefix' => 'customer', 'middleware' => ['auth']], function () {
     Route::get('list', [SettingController::class, 'customerlist'])->name('customerlist');
+    // list data
+    Route::get('list-data', [SettingController::class, 'fetchcustomer'])->name('fetchcustomer');
     Route::post('add', [SettingController::class, 'createcustomer'])->name('addcustomer');
 });
 
@@ -154,6 +156,7 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::get('token/refresh', [FlightController::class, 'refreshToken'])->name('flight.token.refresh');
     Route::post('search', [FlightController::class, 'search'])->name('flight.search');
     Route::get('list', [FlightController::class, 'searchlist']);
+    Route::get('passengers', [FlightController::class, 'passengerForm'])->name('flight.passengers');
     Route::get('detail', [FlightController::class, 'flightdetailslist']);
     Route::get('seatlayout', [FlightController::class, 'seatlayList']);
     Route::post('farerule', [FlightController::class, 'fareRule'])->name('flight.farerule');

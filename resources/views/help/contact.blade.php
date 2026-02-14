@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact Us | iPayment Tech Private Limited</title>
+    <title>Contact Us | iPaymnt Tech Private Limited</title>
     
     <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -132,7 +132,7 @@
     <section class="hero-section">
         <div class="container">
             <span class="section-tag">Get In Touch</span>
-            <h1 class="display-4 fw-bold mb-3">Contact iPayment Tech</h1>
+            <h1 class="display-4 fw-bold mb-3">Contact iPaymnt Tech</h1>
             <p class="lead opacity-90 mx-auto col-lg-7">Have questions about our travel or digital services? Our teams across India are here to help you grow your business.</p>
         </div>
     </section>
@@ -150,7 +150,7 @@
                         </div>
                         <h3 class="office-title">Registered Office</h3>
                         <p class="office-address">
-                            iPayment Tech Private Limited<br>
+                            iPaymnt Tech Private Limited<br>
                             E34 Krishana Apartment North SK Puri<br>
                             Patna, Bihar, India - 800013
                         </p>
@@ -165,7 +165,7 @@
                         </div>
                         <h3 class="office-title">Corporate Office (Kolkata)</h3>
                         <p class="office-address">
-                            iPayment Tech Private Limited<br>
+                            iPaymnt Tech Private Limited<br>
                             ANO706 Astra Tower, Action Area 2C<br>
                             New Town, Kolkata, West Bengal, India - 700135
                         </p>

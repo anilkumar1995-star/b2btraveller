@@ -406,116 +406,206 @@ function renderSeatLayout(apiResponse) {
     const fareRules = apiResponse.FareRules;
     const rows = fareRules.SeatLayout.SeatDetails;
 
-    let lowerHTML = '';
-    let upperHTML = '';
+    // Render single seat
+    let renderSeat = (seat) => {
+        let seatClass = 'bus-seat';
+        let typeText = 'Seat';
 
-    rows.forEach((row, index) => {
-        let rowHTML = `<div class="bus-row">`;
+        // Determine seat type
+        if (seat.SeatType === 2) {
+            seatClass += ' sleeper';
+            typeText = 'Sleeper';
+        } else {
+            seatClass += ' regular';
+        }
 
-        row.forEach((seat, idx) => {
+        // Check seat attributes
+        if (seat.IsLadiesSeat) {
+            seatClass += ' ladies';
+        } else if (seat.IsMalesSeat) {
+            seatClass += ' male';
+        } else if (seat.SeatStatus) {
+            seatClass += ' available';
+        }
 
-            let seatClass = '';
-            let icon = '💺';
-            let typeText = 'Seat';
+        // Check if booked
+        if (!seat.SeatStatus) {
+            seatClass += ' booked';
+        }
 
-            if ([2, 3, 4, 5].includes(seat.SeatType)) {
-                seatClass += ' sleeper';
-                icon = '🛏️';
-                typeText = 'Sleeper';
-            }
+        let fare = typeof seat.SeatFare === 'string' ? seat.SeatFare : seat.SeatFare;
 
-            if (seat.SeatType == 4) {
-                seatClass += ' upper';
-                icon = '⬆️🛏️';
-                typeText = 'Upper Berth';
-            }
+        // clearer labeled tooltip
+        let tooltipLines = [];
+        tooltipLines.push(`Seat: ${seat.SeatName}`);
+        tooltipLines.push(`Type: ${typeText}`);
+        if (seat.IsLadiesSeat) tooltipLines.push('Restriction: Ladies Only');
+        else if (seat.IsMalesSeat) tooltipLines.push('Restriction: Men Only');
+        tooltipLines.push(`Deck: ${seat.IsUpper ? 'Upper' : 'Lower'}`);
+        tooltipLines.push(`Status: ${seat.SeatStatus ? 'Available' : 'Booked'}`);
+        tooltipLines.push(`Fare: ₹${fare}`);
 
-            if (seat.SeatType == 5) {
-                seatClass += ' lower';
-                icon = '⬇️🛏️';
-                typeText = 'Lower Berth';
-            }
+        let tooltip = tooltipLines.join('\n');
 
-            if (seat.IsLadiesSeat) seatClass += ' ladies';
-            if (seat.IsMalesSeat) seatClass += ' male';
-            if (!seat.SeatStatus) seatClass += ' booked';
-
-            let tooltip = `Fare: ₹${seat.SeatFare} ${seat?.IsLadiesSeat ? '| Ladies' : ''}  ${seat?.IsMalesSeat ? '| Male' : ''} | ${typeText} `.trim();
-
-            rowHTML += `
-                <div class="seat ${seatClass} mb-2"
-                     data-tooltip="${tooltip}"
-                     data-seat='${JSON.stringify(seat)}'>
-                     <span class="icon">${seat?.SeatName}</span>
+        return `
+            <div class="seat-wrapper">
+                <div class="seat-container ${seatClass}" 
+                     data-seat='${JSON.stringify(seat)}'
+                     title="${tooltip}"
+                     ${!seat.SeatStatus ? 'disabled' : ''}>
+                    <div class="seat-inner">
+                        <div class="seat-name">${seat.SeatName}</div>
+                        <div class="seat-fare">₹${fare}</div>
+                    </div>
                 </div>
-            `;
-        });
+            </div>
+        `;
+    };
 
-        rowHTML += `</div>`;
+    // Separate lower and upper deck rows
+    let lowerDeckRows = [];
+    let upperDeckRows = [];
 
-        index < 4 ? lowerHTML += rowHTML : upperHTML += rowHTML;
+    rows.forEach((rowSeats) => {
+        if (rowSeats.length > 0) {
+            if (rowSeats[0].IsUpper) {
+                upperDeckRows.push(rowSeats);
+            } else {
+                lowerDeckRows.push(rowSeats);
+            }
+        }
     });
 
+    console.log('Lower Deck Rows:', lowerDeckRows, 'Upper Deck Rows:', upperDeckRows);
+    // Render rows layout
+    let renderRowsLayout = (deckRows, showDriver = false) => {
+       
+        if (deckRows.length === 0) {
+            return '<div class="text-center text-muted p-4">No seats available</div>';
+        }
 
-
-    $('#seatlayoutdetails').html(`
-        <div class="card">
-            <div class="card-header border-bottom">
-                🚌 Total ${fareRules.AvailableSeats} Seats Available in which you can select Max ${maxSeatsAllowed} Seat
-            </div>
-            <div class="card-body">
-            
-                <div class="legend-panel">
-                    <div class="legend-item">
-                        <div class="legend-box  sleeper male-seat"></div>
-                        <span>Male Seat/Sleeper</span>
-                   
-                        <div class="legend-box  sleeper ladies-seat"></div>
-                        <span>Ladies Seat/Sleeper</span>
-                                  
-                        <div class="legend-box sleeper available-sleeper"></div>
-                        <span>Available Seat/Sleeper</span>
-                   
-                        <div class="legend-box sleeper selected-sleeper"></div>
-                        <span>Selected Seat/Sleeper</span>
-                 
-                        <div class="legend-box sleeper booked-seat"></div>
-                        <span>Booked Seat/Sleeper</span>
+        let driverHTML = '';
+        if (showDriver) {
+            driverHTML = `
+                <div class="driver-section">
+                    <div class="driver-area">
+                        <div class="steering-wheel">🛞</div>
+                        <span class="driver-label">Driver</span>
                     </div>
                 </div>
-                <div class="row px-2">
-                    <div class="col-md-6">
-                        <div class="card bus-card border h-100 shadow-none">
-                            <div class="card-header pb-1 border-bottom d-flex justify-content-between align-items-center">
-                                <h5>Lower Deck ⬇️</h5>
-                                <h5 class="fs-5">🛞 Driver</h5>
+            `;
+        }
+
+        let layoutHTML = `
+            <div class="bus-wrapper">
+                ${driverHTML}
+                <div class="rows-container">
+        `;
+
+        deckRows.forEach((rowSeats, rowIndex) => {
+            layoutHTML += `<div class="row-column">`;
+
+            // After 2 rows add a gap to visually separate sections
+
+            for (let i = 0; i < rowSeats.length; i++) {
+                layoutHTML += renderSeat(rowSeats[i]);
+            }
+
+            layoutHTML += `</div>`;
+        });
+
+        layoutHTML += `
+                </div>
+            </div>
+        `;
+        return layoutHTML;
+    };
+
+    const lowerHTML = renderRowsLayout(lowerDeckRows, false);
+    const upperHTML = renderRowsLayout(upperDeckRows, false);
+
+    $('#seatlayoutdetails').html(`
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-light border-bottom py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <strong>🔴Select Seats</strong>
+                    </h5>
+                    <h5>Total ${fareRules.AvailableSeats} Available | Max ${maxSeatsAllowed} seats per ticket</h5>
+                </div>
+            </div>
+            <div class="card-body p-4">
+            
+                <!-- Legend -->
+                <div class="seat-legend mb-5 p-3 bg-light rounded-3">
+                    <div class="row text-center g-3">
+                        <div class="col-sm-auto mx-auto">
+                            <div class="legend-item">
+                                <div class="seat-mini available"></div>
+                                <small>Available</small>
                             </div>
-
-
-                            <div class="card-body mt-4">
-                                ${lowerHTML}
+                        </div>
+                        <div class="col-sm-auto mx-auto">
+                            <div class="legend-item">
+                                <div class="seat-mini booked"></div>
+                                <small>Booked</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-auto mx-auto">
+                            <div class="legend-item">
+                                <div class="seat-mini selected"></div>
+                                <small>Selected</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-auto mx-auto">
+                            <div class="legend-item">
+                                <div class="seat-mini ladies"></div>
+                                <small>Ladies</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-auto mx-auto">
+                            <div class="legend-item">
+                                <div class="seat-mini male"></div>
+                                <small>For Men</small>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-md-6">
-                        <div class="card bus-card border h-100 shadow-none">
-                        
-
-                                <div class="card-header pb-1 border-bottom deck-header">
-                                    <h5>Upper Deck ⬆️</h5>
-                                </div>
-
-                                <div class="card-body mt-4">
-                                    ${upperHTML}
-                                </div>
+                <!-- Decks Container -->
+                <div class="row g-4">
+                    <!-- Lower Deck -->
+                    <div class="col-lg-6">
+                        <div class="deck-header-row d-flex justify-content-between align-items-center mb-3">
+                            <div class="deck-label fw-bold text-primary fs-5">Lower Deck ⬇️</div>
+                            <div class="lower-deck-driver">
+                                <div class="steering-wheel">🛞</div>
+                            </div>
+                        </div>
+                        <div class="deck-content border rounded p-3 bg-white">
+                            ${lowerHTML}
                         </div>
                     </div>
 
+                    <!-- Upper Deck -->
+                    <div class="col-lg-6 ">
+                        <div class="deck-header-row d-flex justify-content-between align-items-center mb-3">
+                            <div class="deck-label fw-bold text-info fs-5">Upper Deck ⬆️</div>
+                            <div class="lower-deck-driver ">
+                                <div>💺</div>
+                            </div>
+                        </div>
+                        <div class="deck-content border rounded p-3 bg-white">
+                            ${upperHTML}
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     `);
+
+    // Add inline CSS for seat layout
+    addSeatLayoutStyles();
 
 }
 
@@ -609,7 +699,7 @@ function validateProceedButton() {
     }
 }
 
-$(document).on('click', '.seat:not(.booked)', function () {
+$(document).on('click', '.bus-seat:not(.booked)', function () {
 
     let seatData = JSON.parse($(this).attr('data-seat'));
     let seatIndex = seatData.SeatIndex;
@@ -935,7 +1025,7 @@ function callBookApi(bookingPayload, amt) {
         allowEscapeKey: false,
     });
 
-    
+
     bookingPayload.totalAmount = amt;
 
     $.ajax({
@@ -994,4 +1084,529 @@ function callBookApi(bookingPayload, amt) {
         }
     });
 }
+
+// Function to add inline CSS for seat layout
+function addSeatLayoutStyles() {
+    let styleId = 'bus-seat-layout-styles';
+
+    // Check if styles already exist
+    if (document.getElementById(styleId)) {
+        return;
+    }
+
+    const css = `
+        <style id="${styleId}">
+            /* Bus Wrapper */
+            .bus-wrapper {
+                display: flex;
+                gap: 25px;
+                align-items: flex-start;
+            }
+
+            /* Driver Section */
+            .driver-section {
+                flex-shrink: 0;
+            }
+
+            .driver-area {
+                width: 90px;
+                height: 90px;
+                background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+                border: 3px solid #ddd;
+                border-radius: 12px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+                position: relative;
+                overflow: hidden;
+            }
+
+            /* Small driver icon placed in Lower Deck header */
+            .lower-deck-driver {
+                width: 56px;
+                height: 56px;
+                background: linear-gradient(100deg, #adefb0 0%, #f3f3f3 100%);
+                border: 2px solid #2e7d32;
+                border-radius: 8px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+                flex-shrink: 0;
+            }
+
+            .driver-area::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.3), transparent);
+                pointer-events: none;
+            }
+
+            .steering-wheel {
+                font-size: 36px;
+                animation: spin 4s linear infinite;
+                filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+            }
+
+            @keyframes spin {
+                0% { transform: rotate(0deg); }
+                100% { transform: rotate(360deg); }
+            }
+
+            .driver-label {
+                font-size: 12px;
+                font-weight: bold;
+                color: #555;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            /* Rows Container */
+            .rows-container {
+                display: flex;
+                gap: 15px;
+                overflow-x: auto;
+                padding: 5px 0;
+                align-items: flex-start;
+                flex: 1;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            /* Row Column */
+            .row-column {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                min-width: fit-content;
+                padding: 8px 12px;
+                background: linear-gradient(90deg, rgba(240, 240, 240, 0.5) 0%, transparent 100%);
+                border-left: 3px solid #2196f3;
+                border-radius: 4px 0 0 4px;
+                position: relative;
+                justify-content: flex-end;
+                min-height: auto;
+            }
+
+            .row-column:first-child {
+                border-left: 3px solid #4caf50;
+            }
+
+            .row-column:nth-child(odd) {
+                border-left-color: #2196f3;
+            }
+
+            .row-column:nth-child(even) {
+                border-left-color: #ff9800;
+            }
+
+            .row-column:nth-child(2) {
+                margin-right: 50px;
+            }
+
+            /* Seat Container */
+            .seat-wrapper {
+                margin: 0 0 10px 0;
+            }
+
+            .seat-container {
+                width: 60px;
+                height: 60px;
+                border: 2px solid #ddd;
+                border-radius: 8px;
+                background: #f0f0f0;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.3s ease;
+                position: relative;
+                user-select: none;
+                overflow: hidden;
+                font-weight: bold;
+            }
+
+            .bus-seat.sleeper {
+                width: 60px;
+                height: 85px;
+            }
+
+            .bus-seat.regular {
+                width: 55px;
+                height: 55px;
+            }
+
+            .seat-inner {
+                text-align: center;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 2px;
+                z-index: 2;
+            }
+
+            .seat-name {
+                font-weight: bold;
+                font-size: 11px;
+                word-break: break-word;
+            }
+
+            .seat-fare {
+                font-size: 9px;
+                font-weight: bold;
+            }
+
+            /* Seat States */
+            .bus-seat.available {
+                background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+                border-color: #4caf50;
+                color: #2e7d32;
+                box-shadow: 0 2px 6px rgba(76, 175, 80, 0.2);
+            }
+
+            .bus-seat.available:hover {
+                border-color: #388e3c;
+                box-shadow: 0 0 15px rgba(76, 175, 80, 0.5);
+                transform: translateY(-3px);
+            }
+
+            .bus-seat.booked {
+                background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+                border-color: #f44336;
+                color: #c62828;
+                cursor: not-allowed;
+                opacity: 0.65;
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            .bus-seat.booked::after {
+                content: 'Sold';
+                position: absolute;
+                font-size: 8px;
+                font-weight: bold;
+                color: #f44336;
+                background: rgba(255, 255, 255, 0.95);
+                padding: 3px 5px;
+                border-radius: 3px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                z-index: 3;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+
+            .bus-seat.selected {
+                background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+                border-color: #0d47a1;
+                color: white;
+                box-shadow: 0 0 18px rgba(33, 150, 243, 0.7), inset 0 1px 3px rgba(255, 255, 255, 0.3);
+                transform: scale(1.05);
+            }
+
+            .bus-seat.selected .seat-fare,
+            .bus-seat.selected .seat-name {
+                color: #fff;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            }
+
+            /* Ladies Seats */
+            .bus-seat.ladies {
+                background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+                border-color: #e45886;
+                color: #880e4f;
+                box-shadow: 0 2px 6px rgba(233, 30, 99, 0.2);
+            }
+
+            .bus-seat.ladies:hover:not(.booked) {
+                border-color: #c2185b;
+                box-shadow: 0 0 15px rgba(233, 30, 99, 0.5);
+                transform: translateY(-3px);
+            }
+
+            .bus-seat.ladies.selected {
+                background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
+                border-color: #880e4f;
+                color: white;
+            }
+
+            /* Male Seats */
+            .bus-seat.male {
+                background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                border-color: #2196f3;
+                color: #1565c0;
+                box-shadow: 0 2px 6px rgba(33, 150, 243, 0.2);
+            }
+
+            .bus-seat.male:hover:not(.booked) {
+                border-color: #1565c0;
+                box-shadow: 0 0 15px rgba(33, 150, 243, 0.5);
+                transform: translateY(-3px);
+            }
+
+            .bus-seat.male.selected {
+                background: linear-gradient(135deg, #2196f3 0%, #1565c0 100%);
+                border-color: #0d47a1;
+                color: white;
+            }
+
+            /* Legend */
+            .seat-legend {
+                background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+            }
+
+            .legend-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .seat-mini {
+                width: 35px;
+                height: 35px;
+                border: 2px solid #ddd;
+                border-radius: 5px;
+                background: #f0f0f0;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .seat-mini.available {
+                background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+                border-color: #4caf50;
+            }
+
+            .seat-mini.booked {
+                background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+                border-color: #f44336;
+            }
+
+            .seat-mini.selected {
+                background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+                border-color: #0d47a1;
+            }
+
+            .seat-mini.ladies {
+                background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+                border-color: #e45886;
+            }
+
+            .seat-mini.male {
+                background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                border-color: #2196f3;
+            }
+
+            /* Badge Step */
+            .badge-step {
+                background: linear-gradient(135deg, #ff6b6b 0%, #ff5252 100%);
+                margin-right: 8px;
+                padding: 5px 8px;
+                border-radius: 50%;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 28px;
+                height: 28px;
+                box-shadow: 0 2px 6px rgba(255, 107, 107, 0.3);
+            }
+
+            /* Responsive Design */
+            @media (max-width: 992px) {
+                .bus-wrapper {
+                    gap: 15px;
+                }
+
+                .driver-area {
+                    width: 80px;
+                    height: 80px;
+                }
+
+                .steering-wheel {
+                    font-size: 32px;
+                }
+
+                .seat-container {
+                    width: 52px;
+                    height: 52px;
+                }
+
+                .bus-seat.sleeper {
+                    width: 52px;
+                    height: 75px;
+                }
+
+                .bus-seat.regular {
+                    width: 48px;
+                    height: 48px;
+                }
+
+                .seat-name {
+                    font-size: 10px;
+                .deck-header-row .deck-label {
+                    font-size: 1rem;
+                }
+
+                .upper-deck-placeholder {
+                    width: 56px;
+                    height: 56px;
+                }
+                }
+
+                .seat-fare {
+                    font-size: 8px;
+                }
+
+                .row-column {
+                    gap: 8px;
+                    padding: 6px 10px;
+                }
+            }
+
+            @media (max-width: 768px) {
+                .bus-wrapper {
+                    flex-direction: column;
+                    gap: 15px;
+                }
+
+                .driver-section {
+                    width: 100%;
+                    text-align: center;
+                }
+
+                .driver-area {
+                    width: 100%;
+                    max-width: 120px;
+                    margin: 0 auto;
+                    height: 70px;
+                }
+
+                .steering-wheel {
+                    font-size: 28px;
+                }
+
+                .driver-label {
+                    font-size: 11px;
+                }
+
+                .rows-container {
+                    gap: 10px;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+                    width: 100%;
+                }
+
+                .row-column {
+                    gap: 8px;
+                    padding: 6px 8px;
+                }
+
+                .seat-container {
+                    width: 48px;
+                    height: 48px;
+                }
+
+                .bus-seat.sleeper {
+                    width: 48px;
+                    height: 68px;
+                }
+
+                .bus-seat.regular {
+                    width: 44px;
+                    height: 44px;
+                }
+
+                .seat-name {
+                    font-size: 9px;
+                }
+
+                .seat-fare {
+                    font-size: 7px;
+                }
+            }
+
+            @media (max-width: 480px) {
+                .driver-area {
+                    width: 100%;
+                    height: 60px;
+                }
+
+                .steering-wheel {
+                    font-size: 24px;
+                }
+
+                .seat-container {
+                    width: 42px;
+                    height: 42px;
+                }
+
+                .bus-seat.sleeper {
+                    width: 42px;
+                    height: 60px;
+                }
+
+                .seat-name {
+                    font-size: 8px;
+                }
+
+                .seat-fare {
+                    font-size: 6px;
+                }
+            }
+
+            /* Disabled State */
+            .seat-container:disabled {
+                pointer-events: none;
+            }
+
+            /* Active State */
+            .seat-container:active:not(.booked) {
+                transform: scale(0.95);
+            }
+
+            .deck-content {
+                background: #ffffff !important;
+                // max-height: 450px;
+                overflow-y: auto;
+                border-radius: 8px;
+            }
+
+            /* Scrollbar Styling */
+            .rows-container::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .rows-container::-webkit-scrollbar-track {
+                background: #f1f1f1;
+                border-radius: 4px;
+            }
+
+            .rows-container::-webkit-scrollbar-thumb {
+                background: linear-gradient(180deg, #888 0%, #666 100%);
+                border-radius: 4px;
+            }
+
+            .rows-container::-webkit-scrollbar-thumb:hover {
+                background: linear-gradient(180deg, #555 0%, #333 100%);
+            }
+
+            /* Firefox Scrollbar */
+            .rows-container {
+                scrollbar-width: thin;
+                scrollbar-color: #888 #f1f1f1;
+            }
+        </style>
+    `;
+
+    // Append styles to head
+    $('head').append(css);
+}
+
 

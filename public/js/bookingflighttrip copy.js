@@ -270,8 +270,7 @@ $(document).on("click", ".btn-book-now", function () {
             localStorage.setItem('selectedFlightDetails', JSON.stringify(flight));
             localStorage.setItem("ResultIndex", flight?.ResultIndex || '');
             localStorage.setItem("isInternational", isInternational || false);
-            // window.location.href = "/flight/detail";
-            window.location.href = "/flight/passengers";
+            window.location.href = "/flight/detail";
         } else {
             notify("Flight details not found!", "error");
         }
@@ -637,6 +636,7 @@ function getFareRules(resultIndex, traceId, trip) {
 
             let cardHtml = '';
             fareRules.forEach((rule, index) => {
+                console.log(rule, index);
                 cardHtml += `
                     <div class="card mb-3">
                         <div class="card-header border-bottom">
@@ -1648,8 +1648,6 @@ function calculateGroundTime(prevArr, nextDep) {
 }
 
 function generateTravelerForm(response) {
-    let savedPassengers = JSON.parse(localStorage.getItem('passengersFormData')) || {};
-
     let searchPayload = JSON.parse(localStorage.getItem('payload')) || {};
     let adults = searchPayload.AdultCount || 1;
     let children = searchPayload.ChildCount || 0;
@@ -1697,7 +1695,7 @@ function generateTravelerForm(response) {
                 <div id="collapse-${type}-${index}" class="accordion-collapse collapse"
                     aria-labelledby="heading-${type}-${index}" data-bs-parent="#travelerAccordion">
                     <div class="accordion-body mt-3">
-                        <div class="row g-4 traveler-form" data-type="${type}" data-passenger-index="${index}">
+                        <div class="row g-4 traveler-form" data-type="${type}">
                             <div class="col-md-3">
                                 <label class="form-label">Title<span class="text-danger">*</span></label>
                                 <select class="form-select required-field" name="titleName">
@@ -1763,16 +1761,12 @@ function generateTravelerForm(response) {
     for (let i = 1; i <= children; i++) accordionHTML += createTravelerForm('Child', i);
     for (let i = 1; i <= infants; i++) accordionHTML += createTravelerForm('Infant', i);
 
-
     $('#travelerAccordion').html(accordionHTML);
 
-    setTravelerData(savedPassengers);
-    setTimeout(function () {
-        checkFormComplete();
-    }, 100);
     // $('#noteSection').html(response.FirstNameFormat);
-    $('#noteSection').html(`Need to modify details? Please visit the Passenger page to make changes.
-    `);
+    $('#noteSection').html(`Canada: If Last Name is missing → use “LNU”. If First Name is missing → use “FNU”. Example: LNU/JEREMY MR, SMITH/FNU MR.
+       <br/> UAE: Single-name passports not accepted. If only one full name → Last Name = full name, First Name = “FNU”. Example: MARYAM ALI/FNU MS.
+        <br/>Australia/NZ: If only one name → repeat for both. Example: JONES/JONES MR.`);
 
     function checkFormComplete() {
         let allFilled = true;
@@ -1783,7 +1777,6 @@ function generateTravelerForm(response) {
             }
         });
 
-        console.log("Form complete:", allFilled);
         $('#proceedBtn').prop('disabled', !allFilled);
     }
 
@@ -1832,31 +1825,6 @@ function generateTravelerForm(response) {
         }));
 
         window.location.href = "/flight/seatlayout";
-    });
-}
-
-function setTravelerData(savedData) {
-
-    $('.traveler-form').each(function () {
-
-        let index = $(this).data('passenger-index');
-        let data = savedData[index];
-
-        if (!data) return;
-
-        $(this).find('[name="titleName"]').val(data.title);
-        $(this).find('[name="firstname"]').val(data.firstName);
-        $(this).find('[name="lastname"]').val(data.lastName);
-        $(this).find('[name="dob"]').val(data.dob);
-        $(this).find('[name="gender"]').val(data.gender);
-        $(this).find('[name="nationality"]').val(data.nationality);
-        $(this).find('[name="address1"]').val(data.address1);
-        $(this).find('[name="address2"]').val(data.address2);
-        $(this).find('[name="city"]').val(data.city);
-
-        $(this).find('input, select').prop('readonly', true);
-        $(this).find('select').prop('disabled', true);
-
     });
 }
 

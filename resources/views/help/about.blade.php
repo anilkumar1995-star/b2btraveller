@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us | iPayment Tech Private Limited</title>
+    <title>About Us | iPaymnt Tech Private Limited</title>
     
     <!-- Google Fonts: Outfit -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -156,7 +156,7 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-8">
-                    <span class="travel-tag mb-3 d-inline-block">iPayment Tech Private Limited</span>
+                    <span class="travel-tag mb-3 d-inline-block">iPaymnt Tech Private Limited</span>
                     <h1 class="display-3 fw-bold mb-3">Empowering Rural India</h1>
                     <p class="lead opacity-90 mb-0">Bridging the urban-rural divide through Digital Finance & World-Class Travel Solutions.</p>
                 </div>
@@ -170,9 +170,9 @@
             <div class="card about-card p-4 p-md-5">
                 <div class="row align-items-center g-5">
                     <div class="col-lg-6">
-                        <h2 class="section-title">About iPayment Tech</h2>
+                        <h2 class="section-title">About iPaymnt Tech</h2>
                         <p class="lead-text mb-4">
-                            iPayment Tech Private Limited is at the forefront of driving financial inclusion and digital empowerment in rural India. Our goal is to ensure that everyone, regardless of location, has easy access to essential financial services.
+                            iPaymnt Tech Private Limited is at the forefront of driving financial inclusion and digital empowerment in rural India. Our goal is to ensure that everyone, regardless of location, has easy access to essential financial services.
                         </p>
                         <p class="lead-text">
                             By bridging the urban-rural divide, we aim to transform the way rural communities access banking, financial products, and digital services. With a strong network of <strong>2.5 lakh+ retail touchpoints</strong>, we are committed to providing seamless last-mile delivery.
