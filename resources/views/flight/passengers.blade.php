@@ -190,7 +190,7 @@
             // Global variable to store customers from server
             let allCustomers = @json($customers ?? []);
 
-            $(document).ready(function() { 
+            $(document).ready(function() {
                 // localStorage.removeItem('passengersFormData');
                 let flightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails')) || {};
                 let payload = JSON.parse(localStorage.getItem('payload')) || {};
@@ -354,7 +354,7 @@
                             <label class="form-label">Passport Expiry <span class="text-danger">*</span></label>
                             <input type="date" class="form-control passenger-field required-field" name="passportExpiry" data-passenger-index="${globalIndex}">
                         </div>`;
-                } else{
+                } else {
                     passportFields = `
                         <div class="col-md-4">
                             <label class="form-label">Passport Number (Optional)</label>
@@ -364,7 +364,7 @@
                             <label class="form-label">Passport Expiry (Optional)</label>
                             <input type="date" class="form-control passenger-field" name="passportExpiry" data-passenger-index="${globalIndex}">
                         </div>`;
-                }   
+                }
 
                 let panField = '';
                 if (panRequired) {
@@ -372,8 +372,8 @@
                             <label class="form-label">PAN Number <span class="text-danger">*</span></label>
                             <input type="text" class="form-control passenger-field required-field" name="panNo" data-passenger-index="${globalIndex}" placeholder="PAN number">
                         </div>`;
-                }else{
-                     panField = `<div class="col-md-4">
+                } else {
+                    panField = `<div class="col-md-4">
                             <label class="form-label">PAN Number (Optional)</label>
                             <input type="text" class="form-control passenger-field" name="panNo" data-passenger-index="${globalIndex}" placeholder="PAN number">
                         </div>`;
@@ -483,6 +483,7 @@
                     if (selectedCustomerId) {
                         // Auto-fill passenger data from selected customer
                         let passengerFormCard = $(`.passenger-form-card[data-passenger-index="${passengerIndex}"]`);
+                        let passengerType = passengerFormCard.data('passenger-type');
 
                         passengerFormCard.find('input[name="firstname"]').val(selectedOption.data('firstname'))
                             .change();
@@ -500,10 +501,28 @@
                             'passportexpiry')).change();
                         passengerFormCard.find('input[name="panNo"]').val(selectedOption.data('panno')).change();
 
+                        let titleValue = '';
+                        let gender = selectedOption.data('gender');
+                        if (passengerType.toLowerCase() === 'adult' || passengerType.toLowerCase() === 'child') {
+                            if (gender == 1) {
+                                titleValue = 'Mr';
+                            } else if (gender == 2) {
+                                titleValue = 'Mrs';
+                            }
+                        }
+
+                        if (passengerType.toLowerCase() === 'infant') {
+                            if (gender == 1) {
+                                titleValue = 'Mstr';
+                            } else if (gender == 2) {
+                                titleValue = 'Mrs';
+                            }
+                        }
+                        passengerFormCard.find('select[name="titleName"]').val(titleValue).change();
                         // Disable this customer option in all other passenger forms
                         disableSelectedCustomerInOtherForms(selectedCustomerId, passengerIndex);
 
-                        notify(`Customer details auto-filled for ${selectedOption.text()}`, 'success');
+                        // notify(`Customer details auto-filled for ${selectedOption.text()}`, 'success');
                     }
                 });
 
