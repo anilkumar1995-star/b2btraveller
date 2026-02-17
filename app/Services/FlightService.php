@@ -185,7 +185,7 @@ class FlightService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            
+
             if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Fare Rule get successfully", 'data' => $response['data']];
             } else {
@@ -269,7 +269,7 @@ class FlightService
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 // $response = StaticResponseHelper::flightSSRStaticResponse();
                 // $response = StaticResponseHelper::flightSSROneStaticResponse();
-                
+
                 $response = StaticResponseHelper::flightSSRStaticResponseInt();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "ssr", "");
@@ -308,7 +308,8 @@ class FlightService
                 "TokenId" => $token,
                 "TraceId" => $data['traceId'],
                 "ResultIndex" => $data['resultIndex'],
-                "Passengers" => $data['passengers']
+                "Passengers" => $data['passengers'],
+                "isLlc" => $data['islcc']
             ];
 
 
@@ -357,7 +358,8 @@ class FlightService
                     "TokenId" => $token,
                     "TraceId" => $data['traceId'],
                     "ResultIndex" => $data['resultIndex'],
-                    "Passengers" => $data['passengers']
+                    "Passengers" => $data['passengers'],
+                    "isLlc" => $data['islcc']
                 ];
                 $url = $this->setFullUrl('ticketlcc');
             } else {
@@ -367,6 +369,7 @@ class FlightService
                     "TokenId" => $token,
                     "BookingId" => $data['bookingId'],
                     "PNR" => $data['pnr'],
+                    "isLlc" => $data['islcc']
                 ];
 
                 $passportArr = [];
@@ -393,7 +396,7 @@ class FlightService
                     $payload['Passport'] = $passportArr;
                 }
 
-                 $url = $this->setFullUrl('ticketnonlcc');
+                $url = $this->setFullUrl('ticketnonlcc');
             }
 
             $baseUrl = url('/');
