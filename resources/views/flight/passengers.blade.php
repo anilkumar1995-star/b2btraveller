@@ -475,6 +475,49 @@
             // Attach event handlers for passenger form
             function attachPassengerFormHandlers() {
                 // Handle customer selection for each passenger
+                // Real-time DOB validation
+                $(document).off('change', 'input[name="dob"]').on('change', 'input[name="dob"]', function() {
+
+                    let dob = $(this).val();
+                    let formCard = $(this).closest('.passenger-form-card');
+                    let passengerType = formCard.data('passenger-type');
+                    let passengerIndex = formCard.data('passenger-index');
+
+                    if (!dob) return;
+
+                    let today = new Date();
+                    let birthDate = new Date(dob);
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    let m = today.getMonth() - birthDate.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+
+                    let valid = true;
+                    let message = '';
+
+                    if (passengerType.toLowerCase() === 'infant' && (age < 0 || age > 2)) {
+                        valid = false;
+                        message = `Infant age must be between 0 to 2 years`;
+                    }
+
+                    if (passengerType.toLowerCase() === 'child' && (age < 2 || age > 12)) {
+                        valid = false;
+                        message = `Child age must be between 2 to 12 years`;
+                    }
+
+                    if (passengerType.toLowerCase() === 'adult' && age < 12) {
+                        valid = false;
+                        message = `Adult age must be above 12 years`;
+                    }
+
+                    if (!valid) {
+                        notify(message + ` (Passenger ${passengerIndex})`, 'error');
+                        $(this).val('');
+                    }
+                });
+
+
                 $(document).off('change', '.customer-selector').on('change', '.customer-selector', function() {
                     let selectedOption = $(this).find('option:selected');
                     let passengerIndex = $(this).data('passenger-index');
@@ -662,6 +705,110 @@
                         return false;
                     }
 
+                    // ---------------- DOB VALIDATION ----------------
+                    let dob = formCard.find('input[name="dob"]').val();
+                    let passengerType = formCard.data('passenger-type');
+
+                    if (!dob) {
+                        allValid = false;
+                        notify(`DOB is required for Passenger ${passengerIndex}`, 'error');
+                        return false;
+                    }
+
+                    let today = new Date();
+                    let birthDate = new Date(dob);
+                    let age = today.getFullYear() - birthDate.getFullYear();
+                    let m = today.getMonth() - birthDate.getMonth();
+                    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+                        age--;
+                    }
+
+                    // Infant: 0 - 2 years
+                    if (passengerType.toLowerCase() === 'infant') {
+                        if (age < 0 || age > 2) {
+                            allValid = false;
+                            notify(`Infant age must be between 0 to 2 years (Passenger ${passengerIndex})`, 'error');
+                            return false;
+                        }
+                    }
+
+                    // Child: 2 - 12 years
+                    if (passengerType.toLowerCase() === 'child') {
+                        if (age < 2 || age > 12) {
+                            allValid = false;
+                            notify(`Child age must be between 2 to 12 years (Passenger ${passengerIndex})`, 'error');
+                            return false;
+                        }
+                    }
+
+                    // Adult: 12+ years
+                    if (passengerType.toLowerCase() === 'adult') {
+                        if (age < 12) {
+                            allValid = false;
+                            notify(`Adult age must be above 12 years (Passenger ${passengerIndex})`, 'error');
+                            return false;
+                        }
+                    }
+
+
+                    // ---------------- PASSPORT VALIDATION ----------------
+                    let passportRequired = formCard.data('passport-required');
+                    let passportNo = formCard.find('input[name="passportNo"]').val().trim();
+                    let passportExpiry = formCard.find('input[name="passportExpiry"]').val();
+
+                    // If passport required but empty
+                    if (passportRequired && (!passportNo || !passportExpiry)) {
+                        allValid = false;
+                        notify(`Passport details are required for Passenger ${passengerIndex}`, 'error');
+                        return false;
+                    }
+
+                    // If passport entered → validate format
+                    if (passportNo) {
+                        let passportRegex = /^[A-Z0-9]{6,9}$/i;
+
+                        if (!passportRegex.test(passportNo)) {
+                            allValid = false;
+                            notify(`Invalid Passport Number for Passenger ${passengerIndex}`, 'error');
+                            return false;
+                        }
+
+                        if (!passportExpiry) {
+                            allValid = false;
+                            notify(`Passport Expiry is required for Passenger ${passengerIndex}`, 'error');
+                            return false;
+                        }
+
+                        let expiryDate = new Date(passportExpiry);
+                        if (expiryDate <= today) {
+                            allValid = false;
+                            notify(`Passport Expiry must be future date (Passenger ${passengerIndex})`, 'error');
+                            return false;
+                        }
+                    }
+
+                    let panRequired = formCard.data('pan-required');
+                    let panNo = formCard.find('input[name="panNo"]').val().trim();
+
+                    let panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+
+                    if (panRequired && !panNo) {
+                        allValid = false;
+                        notify(`PAN is required for Passenger ${passengerIndex}`, 'error');
+                        return false;
+                    }
+
+                    if (panNo) {
+                        panNo = panNo.toUpperCase();
+                        formCard.find('input[name="panNo"]').val(panNo);
+
+                        if (!panRegex.test(panNo)) {
+                            allValid = false;
+                            notify(`Invalid PAN format for Passenger ${passengerIndex}`, 'error');
+                            return false;
+                        }
+                    }
+
                     let passengerData = {
                         passengerIndex: passengerIndex,
                         type: formCard.data('passenger-type'),
@@ -676,16 +823,6 @@
                         city: city
                     };
 
-                    // Get passport and pan requirement flags
-                    let passportRequired = formCard.data('passport-required');
-                    let panRequired = formCard.data('pan-required');
-
-                    // Get passport values
-                    let passportNo = formCard.find('input[name="passportNo"]').val().trim();
-                    let passportExpiry = formCard.find('input[name="passportExpiry"]').val();
-
-                    // Get pan value
-                    let panNo = formCard.find('input[name="panNo"]').val().trim();
 
                     // Include passport fields if required or if they have values
                     if (passportRequired || passportNo || passportExpiry) {
