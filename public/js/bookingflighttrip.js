@@ -2278,6 +2278,7 @@ function getSSRDetails(resultIndex, traceId, trip) {
                     });
 
                 } else {
+                    notify(response?.message || 'Failed to fetch fare quote. Please try again', 'error');
                     if (trip == "departure") {
                         $("#baggageContainer").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
                         $("#mealContainer").html(`<div class="alert alert-danger">Meal Not Found</div>`);
