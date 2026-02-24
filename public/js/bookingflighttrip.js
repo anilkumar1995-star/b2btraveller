@@ -2010,11 +2010,83 @@ function getSSRDetails(resultIndex, traceId, trip) {
                     }
 
                     // Meal Details
+                    let selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails')) || {};
+                    let isLCC = selectedFlightDetails?.IsLCC;
                     if (ssrDetails.Meal && ssrDetails.Meal.length > 0) {
                         let mealHtml = '';
 
-                        $.each(ssrDetails.Meal, function (pIndex, passengerMeal) {
-                            if (!passengerMeal || passengerMeal.length === 0) return;
+                        if (isLCC) {
+                            $.each(ssrDetails.Meal, function (pIndex, passengerMeal) {
+                                if (!passengerMeal || passengerMeal.length === 0) return;
+
+                                mealHtml += `
+                                            <div class="table-responsive mt-3">
+                                                <table class="table table-bordered align-middle text-center mb-0">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th>Text</th>
+                                                            <th>Description</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price</th>
+                                                            <th>Select</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                `;
+
+
+                                $.each(passengerMeal, function (index, meal) {
+                                    let desc = '';
+                                    let waytype = '';
+                                    switch (meal.Description) {
+                                        case 1: desc = "The fare includes the Meal"; break;
+                                        case 2: desc = "The Meal charges are added while making the ticket"; break;
+                                        case 3: desc = "Meal charges are added while importing the ticket"; break;
+                                        default: desc = "NotSet"; break;
+                                    }
+
+                                    let priceText = meal.Price == 0 ? "Included" : `${meal?.Currency} ${meal.Price}`;
+
+                                    if (meal?.WayType == 1) {
+                                        waytype = "Segment";
+                                    } else if (meal?.WayType == 2) {
+                                        waytype = "FullJourney ";
+                                    }
+                                    if (index == 0) {
+                                        $('#mealSectionHead').html(`${meal?.Origin} - ${meal?.Destination} [${meal?.AirlineCode} - ${meal?.FlightNumber}]
+                                                <span class="badge bg-info">${waytype}</span>`);
+                                    }
+
+                                    mealHtml += `
+                                            <tr>
+                                                <td>${meal?.AirlineDescription || 'No Meal'}</td>
+                                                <td>${meal?.Code} - ${desc}</td>
+                                                <td>${meal.Quantity || '0'} </td>
+                                                <td>${priceText}</td>
+                                                <td>
+                                                    <input type="checkbox" name="meal-checkbox${trip}" 
+                                                    data-code="${meal?.Code}" 
+                                                    data-price="${priceText}" 
+                                                    data-description="${meal?.Description}"
+                                                    data-mealobjdata='${JSON.stringify(meal)}'>
+                                                </td>
+                                            </tr>
+                                        `;
+                                });
+
+                                mealHtml += `
+                                                        </tbody>
+                                                    </table>
+                                                    <small class="text-muted d-block mt-1 text-end">
+                                                        <span class="meal-count${trip}">0</span> / ${totalPassengers} selected
+                                                    </small>
+                                                </div>
+                                    `;
+
+                            });
+
+                        } else {
+
 
                             mealHtml += `
                                         <div class="table-responsive mt-3">
@@ -2023,62 +2095,35 @@ function getSSRDetails(resultIndex, traceId, trip) {
                                                     <tr>
                                                         <th>Text</th>
                                                         <th>Description</th>
-                                                        <th>Quantity</th>
                                                         <th>Price</th>
-                                                        <th>Select</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                            `;
-
-                            $.each(passengerMeal, function (index, meal) {
-                                let desc = '';
-                                let waytype = '';
-                                switch (meal.Description) {
-                                    case 1: desc = "The fare includes the Meal"; break;
-                                    case 2: desc = "The Meal charges are added while making the ticket"; break;
-                                    case 3: desc = "Meal charges are added while importing the ticket"; break;
-                                    default: desc = "NotSet"; break;
-                                }
-
-                                let priceText = meal.Price == 0 ? "Included" : `${meal?.Currency} ${meal.Price}`;
-
-                                if (meal?.WayType == 1) {
-                                    waytype = "Segment";
-                                } else if (meal?.WayType == 2) {
-                                    waytype = "FullJourney ";
-                                }
-                                if (index == 0) {
-                                    $('#mealSectionHead').html(`${meal?.Origin} - ${meal?.Destination} [${meal?.AirlineCode} - ${meal?.FlightNumber}]
-                                        <span class="badge bg-info">${waytype}</span>`);
-                                }
-
-                                mealHtml += `
-                                    <tr>
-                                        <td>${meal?.AirlineDescription || 'No Meal'}</td>
-                                        <td>${meal?.Code} - ${desc}</td>
-                                        <td>${meal.Quantity || '0'} </td>
-                                        <td>${priceText}</td>
-                                        <td>
-                                            <input type="checkbox" name="meal-checkbox${trip}" 
-                                            data-code="${meal?.Code}" 
-                                            data-price="${priceText}" 
-                                            data-description="${meal?.Description}"
-                                            data-mealobjdata='${JSON.stringify(meal)}'>
-                                        </td>
-                                    </tr>
                                 `;
+                            $.each(ssrDetails.Meal, function (pIndex, passengerMeal) {
+                                if (!passengerMeal || passengerMeal.length === 0) return;
+                                mealHtml += `
+                                        <tr>
+                                            <td>${passengerMeal?.Description || 'No Meal'}</td>
+                                            <td>${passengerMeal?.Code}</td>
+                                            <td>N/A</td>
+                                        </tr>
+                                    `;
                             });
 
                             mealHtml += `
-                                                </tbody>
-                                            </table>
-                                             <small class="text-muted d-block mt-1 text-end">
-                                                <span class="meal-count${trip}">0</span> / ${totalPassengers} selected
-                                            </small>
+                                        </tbody>
+                                    </table>
+                                    <small class="text-muted d-block mt-1 text-end">
+                                        <div class="alert alert-warning text-center">
+                                            Meal preference will be handled offline.
                                         </div>
-                            `;
-                        });
+                                    </small>
+                                </div>
+                                `;
+
+                        }
+
 
                         if (trip == 'departure') {
                             $("#mealContainer").html(mealHtml);
@@ -3549,7 +3594,7 @@ function renderBookingDetails(data) {
             fareRulesHTML += `
                     <div class="card border rounded p-2 mb-2">
                         <b>Rule ${i + 1} [${rule?.Origin} → ${rule?.Destination}]</b><br>
-                        Airline: ${rule.Airline ?? 'N/A'} [${rule?.FareFamilyCode}]<br>
+                        Airline: ${rule.Airline ?? 'N/A'} [${rule?.FareFamilyCode ?? '-'}]<br>
                         Fare Basis: ${rule.FareBasisCode ?? 'N/A'}<br>
                         Rule: <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#fareRuleModal${i + 1}">View Fare rule ${i + 1}</button>
                     </div>
