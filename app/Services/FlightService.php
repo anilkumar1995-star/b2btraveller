@@ -310,7 +310,8 @@ class FlightService
                 "TraceId" => $data['traceId'],
                 "ResultIndex" => $data['resultIndex'],
                 "Passengers" => $data['passengers'],
-                "isLlc" => $data['islcc']
+                "isLlc" => $data['islcc'],
+                "clientRefId" => $data['clientRefId'],
             ];
 
 
