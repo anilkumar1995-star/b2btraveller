@@ -218,12 +218,12 @@
                     </li>
 
 
-                    <li>
+                    {{-- <li>
                         <a class="dropdown-item" href="{{route('wallet')}}">
                             <i class="ti ti-wallet me-2 ti-sm"></i>
                             <span class="align-middle">Wallet Details</span>
                         </a>
-                    </li>
+                    </li> --}}
                     {{-- <li>
                         @if (Myhelper::hasNotRole('admin') && Myhelper::can('view_commission'))
                         <a class="dropdown-item" href="{{route('resource', ['type' => 'commission'])}}">
