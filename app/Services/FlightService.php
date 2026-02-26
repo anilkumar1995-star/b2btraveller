@@ -311,7 +311,8 @@ class FlightService
                 "ResultIndex" => $data['resultIndex'],
                 "Passengers" => $data['passengers'],
                 "isLlc" => $data['islcc'],
-                "clientRefId" => $data['clientRefId'],
+                "clientRefId" => 'FLIGHT263176',
+                "amount" => 0,
             ];
 
 

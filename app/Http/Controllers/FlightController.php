@@ -242,11 +242,7 @@ class FlightController extends Controller
     }
 
     public function bookFlight(Request $request)
-    {
-        do {
-            $request['clientRefId'] = AndroidCommonHelper::makeTxnId("FLIGHT", 14);
-        } while (Report::where('txnid', $request['clientRefId'])->exists());
-        
+    {        
         $service = new FlightService();
         $response = $service->bookingFlight($request->all());
 
