@@ -360,7 +360,9 @@ class FlightService
                     "TraceId" => $data['traceId'],
                     "ResultIndex" => $data['resultIndex'],
                     "Passengers" => $data['passengers'],
-                    "isLlc" => $data['islcc']
+                    "isLlc" => $data['islcc'],
+                    "amount" => $data['debitAmount'],
+                    "clientRefId" => $data['clientRefId'],
                 ];
                 $url = $this->setFullUrl('ticketlcc');
             } else {
@@ -370,7 +372,9 @@ class FlightService
                     "TokenId" => $token,
                     "BookingId" => $data['bookingId'],
                     "PNR" => $data['pnr'],
-                    "isLlc" => $data['islcc']
+                    "isLlc" => $data['islcc'],
+                    "amount" => $data['debitAmount'],
+                    "clientRefId" => $data['clientRefId'],
                 ];
 
                 $passportArr = [];

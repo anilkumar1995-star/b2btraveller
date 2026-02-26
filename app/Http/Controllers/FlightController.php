@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Helpers\AndroidCommonHelper;
 use App\Models\Apilog;
 use App\Services\AuthService;
 use App\Services\FlightService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\User;
+use Carbon\Carbon;
+use App\Models\Provider;
+use App\Models\Report;
 
 class FlightController extends Controller
 {
@@ -44,20 +50,33 @@ class FlightController extends Controller
     {
         return view('flight.list');
     }
-    
+
     public function passengerForm()
     {
         $customers = DB::table('customer_list')
             ->where('user_id', auth()->id())
             ->where('status', 'active')
-            ->select('id', 'first_name', 'last_name', 'email', 'mobile', 
-                     'dob', 'gender', 'nationality', 'address1', 'address2', 'city',
-                     'pan_number', 'passport_number', 'passport_expiry')
+            ->select(
+                'id',
+                'first_name',
+                'last_name',
+                'email',
+                'mobile',
+                'dob',
+                'gender',
+                'nationality',
+                'address1',
+                'address2',
+                'city',
+                'pan_number',
+                'passport_number',
+                'passport_expiry'
+            )
             ->get();
-        
+
         return view('flight.passengers', ['customers' => $customers]);
     }
-    
+
     public function flightdetailslist()
     {
         return view('flight.detail');
@@ -347,173 +366,353 @@ class FlightController extends Controller
         ]);
     }
 
+    private function calculateTotalFromPassengers($passengers)
+    {
+        $totalBaseFare = 0;
+        $totalTax = 0;
+        $totalSeat = 0;
+        $totalBaggage = 0;
+        $totalMeal = 0;
+        $grandTotal = 0;
+
+        foreach ($passengers as $pax) {
+   
+            $baseFare = $pax['Fare']['BaseFare'] ?? 0;
+            $tax = $pax['Fare']['Tax'] ?? 0;
+            $seatPrice = $pax['SeatDynamic']['Price'] ?? 0;
+            $baggagePrice = $pax['Baggage']['Price'] ?? 0;
+            $mealPrice = $pax['MealDynamic']['Price'] ?? 0;
+
+            $totalBaseFare += $baseFare;
+            $totalTax += $tax;
+            $totalSeat += $seatPrice;
+            $totalBaggage += $baggagePrice;
+            $totalMeal += $mealPrice;
+
+            $grandTotal += ($baseFare + $tax + $seatPrice + $baggagePrice + $mealPrice);
+        }
+
+        return [
+            'totalBaseFare' => $totalBaseFare,
+            'totalTax' => $totalTax,
+            'totalSeat' => $totalSeat,
+            'totalBaggage' => $totalBaggage,
+            'totalMeal' => $totalMeal,
+            'grandTotal' => $grandTotal
+        ];
+    }
+
     public function flightTicket(Request $request)
     {
-       $service = new FlightService();
+        $user = \Auth::user();
+
+        if ($user->status !== 'active') {
+            return response()->json(['status' => 'failed', 'message' => 'Your account has been blocked.']);
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $user = User::where('id', $user->id)->lockForUpdate()->first();
+
+            $lockedBalance = AndroidCommonHelper::getLockedBalance();
+            
+            $totals = $this->calculateTotalFromPassengers($request->passengers);
+
+            $totalAmount = $totals['grandTotal'];
+            
+            if ($user->mainwallet < ($totalAmount + $lockedBalance['mainLockedBalance'])){
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'balance_low',
+                    'message' => 'Low Balance, Kindly recharge your wallet.'
+                ]);
+            }
+
+            do {
+                $request['clientRefId'] = AndroidCommonHelper::makeTxnId("FLIGHT", 14);
+            } while (Report::where('txnid', $request['clientRefId'])->exists());
+
+            $provider = Provider::where('recharge1', 'flighttravel')->firstOrFail();
+
+
+
+            $request['profit']       = 0;
+           $request['debitAmount']  = $totalAmount;
+
+            // Debit wallet
+            User::where('id', $user->id)->decrement('mainwallet', $request->debitAmount);
+
+            // Unique txnid
+            do {
+                $request['txnid'] = $this->transcode() . rand(1111111111, 9999999999);
+            } while (Report::where('txnid', $request->txnid)->exists());
+
+            // Create pending report
+            $report = Report::create([
+                'number'      => $request->traceId,
+                'mobile'      => $request->passenger[0]['Phoneno'] ?? $user->mobile,
+                'provider_id' => $provider->id,
+                'api_id'      => $provider->api_id,
+                'amount'      => $totalAmount,
+                'profit'      => $request->profit,
+                'txnid'       => $request->txnid,
+                'payid'       => $request->clientRefId,
+                'status'      => 'pending',
+                'user_id'     => $user->id,
+                'credited_by' => $user->id,
+                'rtype'       => 'main',
+                'via'         => 'portal',
+                'balance'     => $user->mainwallet,
+                'trans_type'  => 'debit',
+                'product'     => 'bustravel',
+                'transtype'   => 'mainwallet',
+            ]);
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            \Log::error('Flight booking pre-api failed', [
+                'user_id' => $user->id,
+                'error'   => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'status'  => 'failed',
+                'message' => 'Transaction failed, please try again.'
+            ]);
+        }
+
+        $service = new FlightService();
         $response = $service->FlightTicketView($request->all());
 
-        if (strtolower($response['status']) != 'success') {
-            $up = [
-                'user_id'         => \Auth::user()->id,
-                'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
-                'tax'             => $request['passengers'][0]['Fare']['Tax'],
-                'total_amount'    => @$request['passengers'][0]['Fare']['PublishedFare'] ?? $request['passengers'][0]['Fare']['BaseFare'],
-                'booking_status'  => $response['status'],
-                'message'         => $response['message'],
-                'raw_response'    => json_encode($response),
-                'created_at'      => now(),
-                'updated_at'      => now(),
-            ];
-            DB::table('failed_bookings_list')->insert($up);
+        try {
+            DB::beginTransaction();
+            if (strtolower($response['status'] ?? '') == 'failed' || strtolower($response['status'] ?? '') == 'failure') {
 
-            return response()->json([
-                'status' => $response['status'] ?? 'failed',
-                'message' => $response['message'] ?? 'Flight booking failed!'
-            ]);
-        }
+                User::where('id', $user->id)->increment('mainwallet', $request->debitAmount);
 
-        $data = $response['data']['Response']['Response'] ?? null;
-
-
-        if (!$data) {
-            return response()->json([
-                'status' => 'failed',
-                'message' => 'Invalid, Something went worng'
-            ]);
-        }
-
-        // Extracting required fields
-        $pnr              = $data['PNR'] ?? null;
-        $bookingId        = $data['BookingId'] ?? null;
-        $islcc        = $data['FlightItinerary']['IsLCC'] ? 'true' : 'false';
-        $isrefund        = $data['FlightItinerary']['NonRefundable'] ? 'true' : 'false';
-        $fare             = $data['FlightItinerary']['Fare'] ?? [];
-
-
-        $seg        = $data['FlightItinerary']['Segments'] ?? null;
-        $segments         = $seg[0] ?? null;
-
-
-        $status = "";
-
-        if ($islcc == "true") {
-            if ($data['Status'] == 0) {
-                $status = "Not Set";
-            } else  if ($data['Status'] == 1) {
-                $status = "Successful";
-            } else  if ($data['Status'] == 2) {
-                $status = "Failed";
-            } else  if ($data['Status'] == 3) {
-                $status = "OtherFare";
-            } else  if ($data['Status'] == 4) {
-                $status = "OtherClass";
-            } else  if ($data['Status'] == 5) {
-                $status = "BookedOther";
-            } else if ($data['Status'] == 6) {
-                $status = "NotConfirmed";
-            }
-        } else {
-            $status = "Successful";
-        }
-
-        $ticketstatus = "";
-        if ($data['TicketStatus'] == 0) {
-            $ticketstatus = "Failed";
-        } else  if ($data['TicketStatus'] == 1) {
-            $ticketstatus = "Successful";
-        } else  if ($data['TicketStatus'] == 2) {
-            $ticketstatus = "NotSaved";
-        } else  if ($data['TicketStatus'] == 3) {
-            $ticketstatus = "NotCreated";
-        } else  if ($data['TicketStatus'] == 4) {
-            $ticketstatus = "NotAllowed";
-        } else  if ($data['TicketStatus'] == 5) {
-            $ticketstatus = "InProgress";
-        } else if ($data['TicketStatus'] == 6) {
-            $ticketstatus = "TicketeAlreadyCreated";
-        } else if ($data['TicketStatus'] == 8) {
-            $ticketstatus = "PriceChanged";
-        } else if ($data['TicketStatus'] == 9) {
-            $ticketstatus = "OtherError";
-        }
-
-        // segment length
-
-        $lastSegment = $seg[count($seg) - 1];
-
-
-        // Flight Details
-        $origin           = $segments['Origin']['Airport']['AirportCode'] ?? null;
-        $originName           = $segments['Origin']['Airport']['AirportName'] ?? null;
-        $destination = $lastSegment['Destination']['Airport']['AirportCode'] ?? null;
-        $destinationName = $lastSegment['Destination']['Airport']['AirportName'] ?? null;
-
-        $airlineCode      = $segments['Airline']['AirlineCode'] ?? null;
-        $airlineName      = $segments['Airline']['AirlineName'] ?? null;
-
-        $flightNumber     = $segments['Airline']['FlightNumber'] ?? null;
-        $journeyDate      = $segments['Origin']['DepTime'] ?? null;
-        $journeyTypee     = $data['FlightItinerary']['JourneyType'] == '2' ? 'roundtrip' : 'oneway';
-
-        // Fare details
-        $baseFare         = $fare['BaseFare'] ?? 0;
-        $tax              = $fare['Tax'] ?? 0;
-        $totalAmount      = ($fare['PublishedFare'] ?? 0);
-
-        // Store in DB
-        $existingBooking = DB::table('bookings')
-            ->where('booking_id_api', $bookingId)
-            ->where('pnr', $pnr)
-            ->first();
-
-        if ($existingBooking) {
-            $up = DB::table('bookings')
-                ->where('booking_id_api', $existingBooking->booking_id_api)
-                ->where('pnr', $existingBooking->pnr)
-                ->update([
-                    'base_fare'       => $baseFare,
-                    'tax'             => $tax,
-                    'total_amount'    => $totalAmount,
-                    'ticket_status'   => $ticketstatus,
-                    'api_type'        => 'ticket',
-                    'raw_response'    => json_encode($response['data']),
+                Report::where('id', $report->id)->update([
+                    'status' => 'failed',
+                    'refno'  => $request->traceId,
+                ]);
+             
+                DB::table('failed_bookings_list')->insert([
+                    'user_id'         => \Auth::user()->id,
+                    'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
+                    'tax'             => $request['passengers'][0]['Fare']['Tax'],
+                    'total_amount'    => @$request['passengers'][0]['Fare']['PublishedFare'] ?? $request['passengers'][0]['Fare']['BaseFare'],
+                    'booking_status'  => $response['status'],
+                    'message'         => $response['message'],
+                    'raw_response'    => json_encode($response),
+                    'created_at'      => now(),
                     'updated_at'      => now(),
                 ]);
-        } else {
-            $booking = [
-                'user_id'         => \Auth::user()->id,
-                'pnr'             => $pnr,
-                'booking_id_api'  => $bookingId,
-                'origin'          => $origin . "-" .  $originName,
-                'destination'     => $destination . "-" .  $destinationName,
-                'airline_code'    => $airlineCode . "-" .  $airlineName,
-                'flight_number'   => $flightNumber,
-                'journey_date'    => $journeyDate,
-                'journey_type'    => $journeyTypee,
-                'base_fare'       => $baseFare,
-                'tax'             => $tax,
-                'total_amount'    => $totalAmount,
-                'is_refundable'    => $isrefund,
-                'is_lcc'    => $islcc,
 
-                'payment_status'  => 'pending',
-                'booking_status'  => $status,
-                'ticket_status' => $ticketstatus,
-                'api_type' => 'ticket',
-                'raw_response'    => json_encode($response['data']),
-                'raw_payload'     => json_encode($request->all()),
-                'created_at'      => now(),
-                'updated_at'      => now(),
-            ];
-            DB::table('bookings')->insert($booking);
+
+
+                DB::table('bookings')
+                    ->where('booking_id_api', $request->traceId)
+                    ->update([
+                        'booking_status' => 'failed',
+                        'payment_status' => 'failed',
+                        'api_type' => 'ticket',
+                        'updated_at'     => now(),
+                    ]);
+
+                DB::commit();
+
+                return response()->json([
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Flight booking failed!'
+                ]);
+
+            }
+
+            /* ---------- SUCCESS ---------- */
+            if (strtolower($response['status'] ?? '') == 'success') {
+
+                $data = $response['data']['Response']['Response'] ?? null;
+              
+                if (!$data) {
+                    throw new Exception('Invalid API response');
+                }
+
+                Report::where('id', $report->id)->update([
+                    'status' => 'success',
+                    'refno'  => $response['data']['TraceId'],
+                ]);
+
+
+                $pnr         = $data['PNR'] ?? null;
+                $bookingId   = $data['BookingId'] ?? null;
+                $islcc       = $data['FlightItinerary']['IsLCC'] ? 'true' : 'false';
+                $isrefund    = $data['FlightItinerary']['NonRefundable'] ? 'true' : 'false';
+                $fare        = $data['FlightItinerary']['Fare'] ?? [];
+                $seg         = $data['FlightItinerary']['Segments'] ?? null;
+                $segments    = $seg[0] ?? null;
+
+
+                $status = "";
+
+                if ($islcc == "true") {
+                    if ($data['Status'] == 0) {
+                        $status = "Not Set";
+                    } else  if ($data['Status'] == 1) {
+                        $status = "Successful";
+                    } else  if ($data['Status'] == 2) {
+                        $status = "Failed";
+                    } else  if ($data['Status'] == 3) {
+                        $status = "OtherFare";
+                    } else  if ($data['Status'] == 4) {
+                        $status = "OtherClass";
+                    } else  if ($data['Status'] == 5) {
+                        $status = "BookedOther";
+                    } else if ($data['Status'] == 6) {
+                        $status = "NotConfirmed";
+                    }
+                } else {
+                    $status = "Successful";
+                }
+
+                $ticketstatus = "";
+                if ($data['TicketStatus'] == 0) {
+                    $ticketstatus = "Failed";
+                } else  if ($data['TicketStatus'] == 1) {
+                    $ticketstatus = "Successful";
+                } else  if ($data['TicketStatus'] == 2) {
+                    $ticketstatus = "NotSaved";
+                } else  if ($data['TicketStatus'] == 3) {
+                    $ticketstatus = "NotCreated";
+                } else  if ($data['TicketStatus'] == 4) {
+                    $ticketstatus = "NotAllowed";
+                } else  if ($data['TicketStatus'] == 5) {
+                    $ticketstatus = "InProgress";
+                } else if ($data['TicketStatus'] == 6) {
+                    $ticketstatus = "TicketeAlreadyCreated";
+                } else if ($data['TicketStatus'] == 8) {
+                    $ticketstatus = "PriceChanged";
+                } else if ($data['TicketStatus'] == 9) {
+                    $ticketstatus = "OtherError";
+                }
+
+                // segment length
+
+                $lastSegment = $seg[count($seg) - 1];
+
+
+                // Flight Details
+                $origin           = $segments['Origin']['Airport']['AirportCode'] ?? null;
+                $originName           = $segments['Origin']['Airport']['AirportName'] ?? null;
+                $destination = $lastSegment['Destination']['Airport']['AirportCode'] ?? null;
+                $destinationName = $lastSegment['Destination']['Airport']['AirportName'] ?? null;
+
+                $airlineCode      = $segments['Airline']['AirlineCode'] ?? null;
+                $airlineName      = $segments['Airline']['AirlineName'] ?? null;
+
+                $flightNumber     = $segments['Airline']['FlightNumber'] ?? null;
+                $journeyDate      = $segments['Origin']['DepTime'] ?? null;
+                $journeyTypee     = $data['FlightItinerary']['JourneyType'] == '2' ? 'roundtrip' : 'oneway';
+
+                // Fare details
+                $baseFare         = $fare['BaseFare'] ?? 0;
+                $tax              = $fare['Tax'] ?? 0;
+                $totalAmount      = ($fare['PublishedFare'] ?? 0);
+
+                // Store in DB
+                $existingBooking = DB::table('bookings')
+                    ->where('booking_id_api', $bookingId)
+                    ->where('pnr', $pnr)
+                    ->first();
+
+                if ($existingBooking) {
+                    $up = DB::table('bookings')
+                        ->where('booking_id_api', $existingBooking->booking_id_api)
+                        ->where('pnr', $existingBooking->pnr)
+                        ->update([
+                            'base_fare'       => $baseFare,
+                            'tax'             => $tax,
+                            'total_amount'    => $totalAmount,
+                            'ticket_status'   => $ticketstatus,
+                            'api_type'        => 'ticket',
+                            'raw_response'    => json_encode($response['data']),
+                            'updated_at'      => now(),
+                        ]);
+                } else {
+                    $booking = [
+                        'user_id'         => \Auth::user()->id,
+                        'pnr'             => $pnr,
+                        'booking_id_api'  => $bookingId,
+                        'origin'          => $origin . "-" .  $originName,
+                        'destination'     => $destination . "-" .  $destinationName,
+                        'airline_code'    => $airlineCode . "-" .  $airlineName,
+                        'flight_number'   => $flightNumber,
+                        'journey_date'    => $journeyDate,
+                        'journey_type'    => $journeyTypee,
+                        'base_fare'       => $baseFare,
+                        'tax'             => $tax,
+                        'total_amount'    => $totalAmount,
+                        'is_refundable'    => $isrefund,
+                        'is_lcc'    => $islcc,
+
+                        'payment_status'  => 'pending',
+                        'booking_status'  => $status,
+                        'ticket_status' => $ticketstatus,
+                        'api_type' => 'ticket',
+                        'raw_response'    => json_encode($response['data']),
+                        'raw_payload'     => json_encode($request->all()),
+                        'created_at'      => now(),
+                        'updated_at'      => now(),
+                    ];
+                    DB::table('bookings')->insert($booking);
+                }
+
+
+                DB::commit();
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Flight Ticket Done Successfully',
+                    'data' => $response['data']
+                ]);
+            }
+
+
+            /* ---------- PENDING ---------- */
+            Report::where('id', $report->id)->update([
+                'status' => 'pending',
+                'refno'  => $request->traceId,
+            ]);
+
+            DB::table('bookings')
+                ->where('booking_id_api', $request->traceId)
+                ->update([
+                    'booking_status' => 'pending',
+                    'payment_status' => 'pending',
+                    'api_type' => 'ticket',
+                    'updated_at'     => now(),
+                ]);
+
+            DB::commit();
+
+            return response()->json([
+                'status'  => 'pending',
+                'message' => $response['message'] ?? 'Bus booking pending'
+            ]);
+        } catch (Exception $e) {
+
+            DB::rollBack();
+
+            \Log::error('Bus booking post-api failed', [
+                'user_id' => $user->id,
+                'error'   => $e->getMessage()
+            ]);
+
+            return response()->json([
+                'status'  => 'failed',
+                'message' => 'Booking processed but final update failed. Please contact support.'
+            ]);
         }
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Flight Ticket Done Successfully',
-            'data' => $response['data']
-        ]);
-        // return response()->json($response);
     }
 
 
