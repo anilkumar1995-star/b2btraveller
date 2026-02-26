@@ -312,7 +312,7 @@ class FlightService
                 "Passengers" => $data['passengers'],
                 "isLlc" => $data['islcc'],
                 "clientRefId" => 'FLIGHT263176',
-                "amount" => 0,
+                "amount" => 64000,
             ];
 
 
