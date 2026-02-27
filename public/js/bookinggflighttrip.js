@@ -1659,7 +1659,7 @@ function generateTravelerForm(response) {
     let passportRequired = response.IsPassportRequiredAtBook || false;
 
 
-    function createTravelerForm(type, index) {
+    function createTravelerForm(type, index, count) {
         // PAN field only for Adult
         let panField = '';
         if (type === 'Adult' && panRequired) {
@@ -1691,7 +1691,7 @@ function generateTravelerForm(response) {
                     <button class="accordion-button fw-bold rounded collapsed" type="button"
                         data-bs-toggle="collapse" data-bs-target="#collapse-${type}-${index}"
                         aria-expanded="false" aria-controls="collapse-${type}-${index}">
-                       ➕ ${type} ${index}
+                       ➕ ${type} ${count}
                     </button>
                 </h6>
                 <div id="collapse-${type}-${index}" class="accordion-collapse collapse"
@@ -1760,9 +1760,9 @@ function generateTravelerForm(response) {
     // Generate accordion forms
     let globalIndex = 1;
     let accordionHTML = '';
-    for (let i = 1; i <= adults; i++) accordionHTML += createTravelerForm('Adult', globalIndex++);
-    for (let i = 1; i <= children; i++) accordionHTML += createTravelerForm('Child', globalIndex++);
-    for (let i = 1; i <= infants; i++) accordionHTML += createTravelerForm('Infant', globalIndex++);
+    for (let i = 1; i <= adults; i++) accordionHTML += createTravelerForm('Adult', globalIndex++, i);
+    for (let i = 1; i <= children; i++) accordionHTML += createTravelerForm('Child', globalIndex++, i);
+    for (let i = 1; i <= infants; i++) accordionHTML += createTravelerForm('Infant', globalIndex++, i);
 
 
     $('#travelerAccordion').html(accordionHTML);
