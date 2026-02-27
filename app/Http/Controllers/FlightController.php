@@ -242,7 +242,11 @@ class FlightController extends Controller
     }
 
     public function bookFlight(Request $request)
-    {        
+    {
+        do {
+            $request['clientRefId'] = AndroidCommonHelper::makeTxnId("FLIGHT", 14);
+        } while (Report::where('txnid', $request['clientRefId'])->exists());
+
         $service = new FlightService();
         $response = $service->bookingFlight($request->all());
 
@@ -334,6 +338,7 @@ class FlightController extends Controller
             'user_id'         => \Auth::user()->id,
             'pnr'             => $pnr,
             'booking_id_api'  => $bookingId,
+            'order_ref_id'    => $request['clientRefId'] ?? $response['clientRefId'] ?? null,
             'origin'          => $origin . "-" .  $originName,
             'destination'     => $destination . "-" .  $destinationName,
             'airline_code'    => $airlineCode . "-" .  $airlineName,
@@ -376,7 +381,7 @@ class FlightController extends Controller
         $grandTotal = 0;
 
         foreach ($passengers as $pax) {
-   
+
             $baseFare = $pax['Fare']['BaseFare'] ?? 0;
             $tax = $pax['Fare']['Tax'] ?? 0;
             $seatPrice = $pax['SeatDynamic']['Price'] ?? 0;
@@ -416,29 +421,34 @@ class FlightController extends Controller
             $user = User::where('id', $user->id)->lockForUpdate()->first();
 
             $lockedBalance = AndroidCommonHelper::getLockedBalance();
-            
+
             $totals = $this->calculateTotalFromPassengers($request->passengers);
 
             $totalAmount = $totals['grandTotal'];
-            
-            if ($user->mainwallet < ($totalAmount + $lockedBalance['mainLockedBalance'])){
+
+            if ($user->mainwallet < ($totalAmount + $lockedBalance['mainLockedBalance'])) {
                 DB::rollBack();
                 return response()->json([
                     'status' => 'balance_low',
                     'message' => 'Low Balance, Kindly recharge your wallet.'
                 ]);
             }
+            // HER CHEKC IF CLEINT REF ID PARTICUALR TRACE ID KE LIYE H TOH WHI JAYE NHI TOH NEW GENRATE HO
 
-            do {
-                $request['clientRefId'] = AndroidCommonHelper::makeTxnId("FLIGHT", 14);
-            } while (Report::where('txnid', $request['clientRefId'])->exists());
+            if (empty($request['clientRefId'])) {
+                do {
+                    $request['clientRefId'] = AndroidCommonHelper::makeTxnId("FLIGHT", 14);
+                } while (Report::where('txnid', $request['clientRefId'])->exists());
+            } else {
+                $request['clientRefId'] = $request['clientRefId'];
+            }
 
             $provider = Provider::where('recharge1', 'flighttravel')->firstOrFail();
 
 
 
             $request['profit']       = 0;
-           $request['debitAmount']  = $totalAmount;
+            $request['debitAmount']  = $totalAmount;
 
             // Debit wallet
             User::where('id', $user->id)->decrement('mainwallet', $request->debitAmount);
@@ -449,6 +459,7 @@ class FlightController extends Controller
             } while (Report::where('txnid', $request->txnid)->exists());
 
             // Create pending report
+
             $report = Report::create([
                 'number'      => $request->traceId,
                 'mobile'      => $request->passenger[0]['Phoneno'] ?? $user->mobile,
@@ -465,7 +476,7 @@ class FlightController extends Controller
                 'via'         => 'portal',
                 'balance'     => $user->mainwallet,
                 'trans_type'  => 'debit',
-                'product'     => 'bustravel',
+                'product'     => 'flighttravel',
                 'transtype'   => 'mainwallet',
             ]);
 
@@ -497,7 +508,7 @@ class FlightController extends Controller
                     'status' => 'failed',
                     'refno'  => $request->traceId,
                 ]);
-             
+
                 DB::table('failed_bookings_list')->insert([
                     'user_id'         => \Auth::user()->id,
                     'base_fare'       => $request['passengers'][0]['Fare']['BaseFare'],
@@ -527,14 +538,13 @@ class FlightController extends Controller
                     'status' => $response['status'] ?? 'failed',
                     'message' => $response['message'] ?? 'Flight booking failed!'
                 ]);
-
             }
 
             /* ---------- SUCCESS ---------- */
             if (strtolower($response['status'] ?? '') == 'success') {
 
                 $data = $response['data']['Response']['Response'] ?? null;
-              
+
                 if (!$data) {
                     throw new Exception('Invalid API response');
                 }
@@ -626,7 +636,7 @@ class FlightController extends Controller
                     ->where('pnr', $pnr)
                     ->first();
 
-                if ($existingBooking) {
+                if (!$existingBooking) {
                     $up = DB::table('bookings')
                         ->where('booking_id_api', $existingBooking->booking_id_api)
                         ->where('pnr', $existingBooking->pnr)
@@ -644,6 +654,7 @@ class FlightController extends Controller
                         'user_id'         => \Auth::user()->id,
                         'pnr'             => $pnr,
                         'booking_id_api'  => $bookingId,
+                        'order_ref_id'  => $request->clientRefId ?? null,
                         'origin'          => $origin . "-" .  $originName,
                         'destination'     => $destination . "-" .  $destinationName,
                         'airline_code'    => $airlineCode . "-" .  $airlineName,
@@ -697,13 +708,13 @@ class FlightController extends Controller
 
             return response()->json([
                 'status'  => 'pending',
-                'message' => $response['message'] ?? 'Bus booking pending'
+                'message' => $response['message'] ?? 'Flight booking pending'
             ]);
         } catch (Exception $e) {
 
             DB::rollBack();
 
-            \Log::error('Bus booking post-api failed', [
+            \Log::error('Flight booking post-api failed', [
                 'user_id' => $user->id,
                 'error'   => $e->getMessage()
             ]);

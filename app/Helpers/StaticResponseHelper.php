@@ -19145,6 +19145,7 @@ class StaticResponseHelper
             "data": {
                 "TokenId": "d28218bd-740a-42d5-bcbb-ab975a6a9890",
                 "TraceId": "5524e38e-7ccc-4c8d-af33-61583502c89a",
+                "clientRefId": "BMFLIGHT437180792647",
                 "Response": {
                 "Error": {
                     "ErrorCode": 0,
@@ -19660,7 +19661,7 @@ class StaticResponseHelper
                     "Status": 1,
                     "IsWebCheckInAllowed": false
                     }
-                }
+                    }
                 }
             }
         }';

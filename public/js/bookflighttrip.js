@@ -3260,6 +3260,7 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
                 bookingResult[trip] = response;
                 payload['bookingId'] = response?.data?.Response?.Response?.BookingId || '';
                 payload['pnr'] = response?.data?.Response?.Response?.PNR || '';
+                payload['clientRefId'] = response?.data?.clientRefId || '';
 
                 // IsPassportRequired
 
