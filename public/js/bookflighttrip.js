@@ -1758,10 +1758,11 @@ function generateTravelerForm(response) {
     }
 
     // Generate accordion forms
+    let globalIndex = 1;
     let accordionHTML = '';
-    for (let i = 1; i <= adults; i++) accordionHTML += createTravelerForm('Adult', i);
-    for (let i = 1; i <= children; i++) accordionHTML += createTravelerForm('Child', i);
-    for (let i = 1; i <= infants; i++) accordionHTML += createTravelerForm('Infant', i);
+    for (let i = 1; i <= adults; i++) accordionHTML += createTravelerForm('Adult', globalIndex++);
+    for (let i = 1; i <= children; i++) accordionHTML += createTravelerForm('Child', globalIndex++);
+    for (let i = 1; i <= infants; i++) accordionHTML += createTravelerForm('Infant', globalIndex++);
 
 
     $('#travelerAccordion').html(accordionHTML);
