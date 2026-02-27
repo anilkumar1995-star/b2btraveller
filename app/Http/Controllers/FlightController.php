@@ -636,7 +636,7 @@ class FlightController extends Controller
                     ->where('pnr', $pnr)
                     ->first();
 
-                if (!$existingBooking) {
+                if ($existingBooking) {
                     $up = DB::table('bookings')
                         ->where('booking_id_api', $existingBooking->booking_id_api)
                         ->where('pnr', $existingBooking->pnr)
