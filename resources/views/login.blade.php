@@ -63,7 +63,7 @@
             margin: 0;
             height: 100vh;
             font-family: 'Poppins', sans-serif;
-            background: url('images/bg.png') no-repeat center center fixed;
+            background: url('public/images/bg.png') no-repeat center center fixed;
             background-size: 100% 100%;
             display: flex;
             align-items: center;
