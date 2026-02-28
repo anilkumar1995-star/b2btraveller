@@ -747,7 +747,6 @@ class FlightController extends Controller
 
     public function submitCancellation(Request $request)
     {
-        dd($request->all());
         $service = new FlightService();
         $response = $service->cancelflight($request->all());
 
