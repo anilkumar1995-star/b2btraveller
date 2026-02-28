@@ -890,7 +890,11 @@
                                                                 <small>Resend OTP</small>
                                                             </a>
                                                         </div>
-                                                        <input type="password" class="form-control my-1" placeholder="Enter Otp" name="otp" required>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                                            <input type="password" class="form-control" placeholder="Enter Otp" name="otp" required>
+                                                        </div>
+                                                        
                                                     </div>
                                                 `);
                                 if (data.status ==
