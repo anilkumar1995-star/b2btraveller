@@ -63,7 +63,7 @@
             margin: 0;
             height: 100vh;
             font-family: 'Poppins', sans-serif;
-            background: url('public/images/bg.png') no-repeat center center fixed;
+            background: url({{ asset('images/bg.png') }}) no-repeat center center fixed;
             background-size: 100% 100%;
             display: flex;
             align-items: center;
@@ -345,13 +345,13 @@
 
             <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="fa fa-user"></i></span>
-                <input type="tel" class="form-control" name="mobile" maxlength="10" minlength="10" required
+                <input type="tel" class="form-control w-75" name="mobile" maxlength="10" minlength="10" required
                     placeholder="Enter User Mobile Number" autocomplete="off">
             </div>
 
             <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                <input type="password" name="password" class="form-control" required placeholder="Enter Password Here">
+                <input type="password" name="password" class="form-control w-75" required placeholder="Enter Password Here">
                 {{-- <span class="input-group-text"><i class="fa fa-eye"></i></span> --}}
             </div>
 
