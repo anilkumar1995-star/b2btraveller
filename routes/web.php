@@ -186,10 +186,10 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
     Route::post('block', [BusController::class, 'busBlock'])->name('bus.block');
     Route::post('book', [BusController::class, 'bookBus'])->name('bus.book');
 
-    Route::get('booking-list', [BusController::class, 'bookingList'])->name('flight.bookingList');
-    Route::get('booking-list-failed', [BusController::class, 'bookingListFailed'])->name('flight.bookingListFailed');
+    Route::get('booking-list', [BusController::class, 'bookingList'])->name('bus.bookingList');
+    Route::get('booking-list-failed', [BusController::class, 'bookingListFailed'])->name('bus.bookingListFailed');
 
-    Route::post('booking-view', [BusController::class, 'viewTicket'])->name('flight.booking.view');
+    Route::post('booking-view', [BusController::class, 'viewTicket'])->name('bus.booking.view');
 
      Route::get('cancel/{id}', [BusController::class, 'cancelPage']);
     Route::post('cancel-submit', [BusController::class, 'submitCancellation']);
