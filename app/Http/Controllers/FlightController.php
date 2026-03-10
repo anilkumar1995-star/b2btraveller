@@ -384,9 +384,10 @@ class FlightController extends Controller
 
             $baseFare = $pax['Fare']['BaseFare'] ?? 0;
             $tax = $pax['Fare']['Tax'] ?? 0;
-            $seatPrice = $pax['SeatDynamic']['Price'] ?? 0;
-            $baggagePrice = $pax['Baggage']['Price'] ?? 0;
-            $mealPrice = $pax['MealDynamic']['Price'] ?? 0;
+
+            $seatPrice = $this->getSSRPrice($pax['SeatDynamic'] ?? []);
+            $baggagePrice = $this->getSSRPrice($pax['Baggage'] ?? []);
+            $mealPrice = $this->getSSRPrice($pax['Meal'] ?? []);
 
             $totalBaseFare += $baseFare;
             $totalTax += $tax;
@@ -405,6 +406,24 @@ class FlightController extends Controller
             'totalMeal' => $totalMeal,
             'grandTotal' => $grandTotal
         ];
+    }
+
+    private function getSSRPrice($data)
+    {
+        $total = 0;
+
+        if (empty($data)) {
+            return 0;
+        }
+        if (isset($data[0])) {
+            foreach ($data as $item) {
+                $total += $item['Price'] ?? 0;
+            }
+        } else {
+            $total += $data['Price'] ?? 0;
+        }
+
+        return $total;
     }
 
     public function flightTicket(Request $request)
@@ -727,7 +746,7 @@ class FlightController extends Controller
     }
 
 
-     public function getCancellationCharges(Request $request)
+    public function getCancellationCharges(Request $request)
     {
         $service = new FlightService();
         $response = $service->getCancelCharge($request->all());

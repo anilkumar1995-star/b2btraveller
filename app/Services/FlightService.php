@@ -549,15 +549,16 @@ class FlightService
 
      public function getCancelCharge($data)
     {
-        dd($data);
         try {
             $token = $this->authService->getToken();
 
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
-                "TraceId" => $data['TraceId'],
+                "RequestType" => "1",
                 "ResultIndex" => $data['ResultIndex'],
+                "BookingId" => $data['BookingId'],
+                "BookingMode" => "5"
             ];
 
 
