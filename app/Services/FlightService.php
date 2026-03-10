@@ -556,7 +556,6 @@ class FlightService
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
                 "RequestType" => "1",
-                "ResultIndex" => $data['ResultIndex'],
                 "BookingId" => $data['BookingId'],
                 "BookingMode" => "5"
             ];
