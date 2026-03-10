@@ -171,6 +171,7 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::post('booking-view', [FlightController::class, 'viewTicket'])->name('flight.booking.view');
     Route::get('cancel/{id}', [FlightController::class, 'cancelPage']);
     Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);
+    Route::post('get-cancellation-charges',[FlightController::class,'getCancellationCharges']);
 });
 
 

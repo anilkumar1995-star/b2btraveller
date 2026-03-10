@@ -19136,6 +19136,11 @@ class StaticResponseHelper
         }';
     }
 
+    static public function getCancelChargeStaticResponse()
+    {
+        return '';
+    }
+    
     static public function flightBookStaticResponse()
     {
         return '{
