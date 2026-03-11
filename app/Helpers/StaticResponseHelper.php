@@ -19138,6 +19138,23 @@ class StaticResponseHelper
 
     static public function getCancelChargeStaticResponse()
     {
+        return '{
+            "code": "0x0200",
+            "message": "success",
+            "status": "SUCCESS",
+            "data": {
+                "TokenId": "a3dfd0a4-260b-463b-b6ed-9b6389da042f",
+                "Response": {
+                    "RefundAmount": 5202,
+                    "CancellationCharge": 3218,
+                    "Remarks": "Infant added later Onwards",
+                    "Currency": "INR"
+                }
+            }
+        }';
+    }
+    static public function getCancelChargeStatusStaticResponse()
+    {
         return '';
     }
     
