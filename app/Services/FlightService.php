@@ -549,7 +549,7 @@ class FlightService
         }
     }
 
-     public function getCancelCharge($data)
+    public function getCancelCharge($data)
     {
         try {
             $token = $this->authService->getToken();
@@ -596,7 +596,7 @@ class FlightService
             return ['status' => 'ERROR', 'message' => $e->getMessage()];
         }
     }
-     public function cancelflightStatus($data)
+    public function cancelflightStatus($data)
     {
         try {
             $token = $this->authService->getToken();
@@ -614,10 +614,11 @@ class FlightService
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 $response = StaticResponseHelper::getCancelChargeStatusStaticResponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "cancel_charge", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "cancel_charge_status", "");
                 $response = $response['response'];
             }
 
+            dd($response);
 
             if (is_string($response)) {
                 $response = json_decode(($response), true);
@@ -629,12 +630,12 @@ class FlightService
 
 
             if (isset($response['status']) && strtolower($response['status']) == 'success') {
-                return ['status' => 'success', 'message' => "Cancellation charges fetched successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Cancellation status fetched successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Failed to fetch cancellation charges'
+                    'message' => $response['message'] ?? 'Failed to fetch cancellation status'
                 ];
             }
         } catch (Exception $e) {
