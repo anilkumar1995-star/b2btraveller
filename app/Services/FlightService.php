@@ -618,7 +618,6 @@ class FlightService
                 $response = $response['response'];
             }
 
-
             if (is_string($response)) {
                 $response = json_decode(($response), true);
             }

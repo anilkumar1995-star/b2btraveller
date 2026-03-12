@@ -151,6 +151,7 @@
                       'OtherFare' => ['label' => 'Other Fare', 'class' => 'badge bg-info'],
                       'OtherClass' => ['label' => 'Other Class', 'class' => 'badge bg-warning'],
                       'CancellationPending' => ['label' => 'Cancellation Pending', 'class' => 'badge bg-warning'],
+                      'CancelRejected' => ['label' => 'Cancellation Rejected', 'class' => 'badge bg-danger'],
                       'BookedOther' => ['label' => 'Booked Other', 'class' => 'badge bg-primary'],
                       'NotConfirmed' => ['label' => 'Not Confirmed', 'class' => 'badge bg-dark'],
                   ];
@@ -163,6 +164,7 @@
                       'NotCreated' => ['label' => 'Not Created', 'class' => 'badge bg-secondary'],
                       'NotAllowed' => ['label' => 'Not Allowed', 'class' => 'badge bg-warning'],
                       'CancellationPending' => ['label' => 'Cancellation Pending', 'class' => 'badge bg-warning'],
+                      'CancelRejected' => ['label' => 'Cancellation Rejected', 'class' => 'badge bg-danger'],
                       'InProgress' => ['label' => 'In Progress', 'class' => 'badge bg-info'],
                       'TicketAlreadyCreated' => ['label' => 'Ticket Already Created', 'class' => 'badge bg-primary'],
                       'PriceChanged' => ['label' => 'Price Changed', 'class' => 'badge bg-warning'],
@@ -1047,7 +1049,6 @@
               });
               return;
           }
-
 
           swal({
               type: 'warning',

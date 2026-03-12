@@ -19155,7 +19155,7 @@ class StaticResponseHelper
     }
     static public function getCancelChargeStatusStaticResponse()
     {
-        return '';
+        return '{"code":"0x0200","message":"success","status":"SUCCESS","data":{"TokenId":"8c4da882-2ada-4047-9203-3a2492d4fac8","Response":{"ChangeRequestId":377077,"RefundedAmount":"","CancellationCharge":"","ServiceTaxOnRAF":"","ChangeRequestStatus":1}}}';
     }
     
     static public function flightBookStaticResponse()
