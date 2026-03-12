@@ -2955,15 +2955,20 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
         const baggage = removeExtraKey(getForPassenger(selectedBaggage, index), 'baggage');
 
 
-        const seatData = seat.length === 1 ? seat[0] : seat;
         return {
             ...passenger,
-            ...(seat.length ? { SeatDynamic: seatData } : {}),
-            ...(meal != null ? { Meal: meal.mealObjData } : {}),
-            ...(baggage != null ? { Baggage: baggage.bagObjData } : {}),
+            ...(seat.length ? { SeatDynamic: seat.map(s => s) } : {}),
+            ...(meal != null ? { Meal: [meal.mealObjData] } : {}),
+            ...(baggage != null ? { Baggage: [baggage.bagObjData] } : {}),
         };
+        // const seatData = seat.length === 1 ? seat[0] : seat;
+        // return {
+        //     ...passenger,
+        //     ...(seat.length ? { SeatDynamic: seatData } : {}),
+        //     ...(meal != null ? { Meal: meal.mealObjData } : {}),
+        //     ...(baggage != null ? { Baggage: baggage.bagObjData } : {}),
+        // };
     });
-
 
     const payload = {
         resultIndex: selectedFlightDetails?.ResultIndex,
