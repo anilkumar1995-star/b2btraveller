@@ -849,7 +849,7 @@
                 window.location.href = "/flight/detail";
             }
 
-            // Load customer list from backend (same function from bokingflighttrip.js)
+            // Load customer list from backend (same function from boookflighttrip.js)
             function loadCustomerList() {
                 return new Promise((resolve, reject) => {
                     $.ajax({

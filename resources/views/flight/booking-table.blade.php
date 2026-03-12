@@ -417,7 +417,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
 
   <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
-  <script src="{{ asset('') }}js/bokingflighttrip.js"></script>
+  <script src="{{ asset('') }}js/boookflighttrip.js"></script>
   <script type="text/javascript">
       $(document).ready(function() {
           localStorage.removeItem('cancelCharge');

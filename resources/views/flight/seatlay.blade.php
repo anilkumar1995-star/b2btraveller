@@ -299,7 +299,7 @@
 
 @push('script')
     {{-- ================== SCRIPT ================== --}}
-    <script src="{{ asset('') }}js/bokingflighttrip.js"></script>
+    <script src="{{ asset('') }}js/boookflighttrip.js"></script>
     <script>
         $(document).ready(function() {
 
