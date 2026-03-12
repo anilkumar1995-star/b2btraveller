@@ -749,7 +749,7 @@
                                     <div class="seat-row">
                                         <span>${s.Origin} → ${s.Destination}</span>
                                         <span class="seat-code">${s.Code}</span>
-                                        <span class="seat-type">${s.Text}</span>
+                                        <span class="seat-type">${s.CraftType} [${s.AirlineCode} ${s.FlightNumber}]</span>
                                         <span>₹${s.Price}</span>
                                     </div>
                                     `).join('') || '<div class="seat-row">No seat selected</div>'
