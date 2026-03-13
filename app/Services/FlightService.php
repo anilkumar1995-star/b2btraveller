@@ -597,7 +597,7 @@ class FlightService
             return ['status' => 'ERROR', 'message' => $e->getMessage()];
         }
     }
-    public function cancelflightStatus($data)
+    public function cancelflightStatus($data, $req)
     {
         try {
             $token = $this->authService->getToken();
@@ -605,7 +605,8 @@ class FlightService
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
-                "ChangeRequestId" => $data['ChangeRequestId']
+                "ChangeRequestId" => $data['ChangeRequestId'],
+                "clientRefId" => $req['payid'],
             ];
 
 

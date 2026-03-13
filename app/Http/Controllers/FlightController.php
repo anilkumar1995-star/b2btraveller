@@ -805,7 +805,7 @@ class FlightController extends Controller
             DB::table('bookings')->where('booking_id_api', $request->payload['BookingId'])->update($up);
 
 
-            $response = $service->cancelflightStatus($responseCancel['data']['Response'][0]);
+            $response = $service->cancelflightStatus($responseCancel['data']['Response'][0], $request);
 
             if (strtolower($response['status']) == 'success') {
                 $refundAmount = (float) $response['data']['Response']['RefundedAmount'] ?? 0.0;
