@@ -3244,6 +3244,362 @@ class StaticResponseHelper
             "message": "success",
             "status": "SUCCESS",
             "data": {
+                "TokenId": "8c4da882-2ada-4047-9203-3a2492d4fac8",
+                "TraceId": "cb5151fc-a17b-4183-9abc-f3aedfbdd106",
+                "FlightDetailChangeInfo": "FlightCabinBaggageChanged",
+                "IsPriceChanged": false,
+                "ItineraryChangeList": [
+                    7
+                ],
+                "Results": {
+                    "FareInclusions": [],
+                    "FirstNameFormat": "For Rest Country : Repeat the same last name\\r\\n<\\\/br> For UAE Sector : If there is a space in the passengers last name, then split it (i.e., put the name before the space in the first name).\\r\\n<\\\/br> If the passenger has a single-word name in the last name so put father name will be the first name as per passport",
+                    "IsBookableIfSeatNotAvailable": true,
+                    "IsExclusiveFare": false,
+                    "IsFreeMealAvailable": false,
+                    "IsHoldAllowedWithSSR": false,
+                    "IsHoldMandatoryWithSSR": false,
+                    "LastNameFormat": "For Rest Country : Repeat the same given name\\r\\n<\\\/br> For UAE Sector : If there is a space in the passengers given name, then split it(i.e., put the name after the space in the last name).\\r\\n<\\\/br> If the passenger has a single-word name in the given name so put father name will be the last name as per passport",
+                    "RequiredFieldValidators": {
+                        "IsMealRequired": true,
+                        "IsSeatRequired": true
+                    },
+                    "ResultIndex": "OB23[TBO]+Gh8f2xGTIpeLjGZRTZJWowQw4jBW5aTIg5n7TUkdzX6nnobLePvoX\\\/kQHK5uOv+0kVhz5CT1Y7fVwjxnWgNc8kLMW289ARyW4wgqScROHMyzHX8i+ELcIFH1cEUEA9L7ZK3i3vnbjiAh2FmM5WKe4t3YX7PBDGtA26ROKc3LyK\\\/X+f9XNawlGCh20ed6Dd0k0MsRpBa45DXm5O0XQ20MZ\\\/6lU2YSP0a32yx3y0u5w+9ZZJab\\\/CltvQn7pgshry4kXAZptr+dQOD6eZCrpaHVWItKMmAzpCV\\\/AEvYc6k6nRBkP4pbx\\\/QIDT0ymur9REzPwhJyZmZ+UU6xNpIG2pOC\\\/b38DV1UIs7k9LL3st72fBEaG2GFcUnFNcESXbXvRGkf2ErYdlpobVd2WZHNgURCA\\\/GxLs+7wiQUkJdCp88C2y8bRLBSVMs5p8Blson9Zy8a+UG6EoYLKAc\\\/IToZki42kvCd635c7kYMXng26T5WHehWwozBNvt2waV9En+FmzPdcX5lZ+v+7YjT8YD0INWs0bJXgFZsBU7z0UkEIWcsIEDHt6txNmSPe9mlAKFCj1yF\\\/eO9LWEb\\\/P5CwuDJLsv4\\\/JuzfcjOxiI7GwWQqThKhKYySSx7\\\/4Z8Om2AwTXoYWck7cGLJGYnQI73YeYKwdtZSfawvzAXqorMjlly98LZ+OilHUk8NQ7eL2uOXIDSVxj+LuTVIl+mj2Y26WVVbr0OA==",
+                    "Source": 3,
+                    "IsLCC": true,
+                    "IsRefundable": true,
+                    "IsPanRequiredAtBook": false,
+                    "IsPanRequiredAtTicket": false,
+                    "IsPassportRequiredAtBook": false,
+                    "IsPassportRequiredAtTicket": false,
+                    "GSTAllowed": true,
+                    "IsCouponAppilcable": true,
+                    "IsGSTMandatory": false,
+                    "IsHoldAllowed": true,
+                    "AirlineRemark": "SpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet MainSpiceJet Main.",
+                    "IsPassportFullDetailRequiredAtBook": false,
+                    "ResultFareType": "RegularFare",
+                    "Fare": {
+                        "CFARAmount": 0,
+                        "DCFARAmount": 0,
+                        "ServiceFeeDisplayType": 0,
+                        "Currency": "INR",
+                        "BaseFare": 7126,
+                        "Tax": 1638,
+                        "TaxBreakup": [
+                            {
+                                "key": "K3",
+                                "value": 392
+                            },
+                            {
+                                "key": "UDF",
+                                "value": 465
+                            },
+                            {
+                                "key": "YR",
+                                "value": 65
+                            },
+                            {
+                                "key": "YQTax",
+                                "value": 600
+                            },
+                            {
+                                "key": "OtherTaxes",
+                                "value": 66
+                            },
+                            {
+                                "key": "RcfTax",
+                                "value": 50
+                            }
+                        ],
+                        "YQTax": 600,
+                        "AdditionalTxnFeeOfrd": 0,
+                        "AdditionalTxnFeePub": 0,
+                        "PGCharge": 0,
+                        "OtherCharges": 1.770000000000000017763568394002504646778106689453125,
+                        "ChargeBU": [
+                            {
+                                "key": "TBOMARKUP",
+                                "value": 0
+                            },
+                            {
+                                "key": "GLOBALPROCUREMENTCHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "CONVENIENCECHARGE",
+                                "value": 0
+                            },
+                            {
+                                "key": "OTHERCHARGE",
+                                "value": 1.770000000000000017763568394002504646778106689453125
+                            }
+                        ],
+                        "Discount": 0,
+                        "PublishedFare": 8765.77000000000043655745685100555419921875,
+                        "CommissionEarned": 0,
+                        "PLBEarned": 0,
+                        "IncentiveEarned": 0,
+                        "OfferedFare": 8765.77000000000043655745685100555419921875,
+                        "TdsOnCommission": 0,
+                        "TdsOnPLB": 0,
+                        "TdsOnIncentive": 0,
+                        "ServiceFee": 0,
+                        "TotalBaggageCharges": 0,
+                        "TotalMealCharges": 0,
+                        "TotalSeatCharges": 0,
+                        "TotalSpecialServiceCharges": 0
+                    },
+                    "FareBreakdown": [
+                        {
+                            "CFARAmount": 0,
+                            "DCFARAmount": 0,
+                            "SegmentDetails": [
+                                {
+                                    "CabinBaggage": {
+                                        "FreeText": "7 Kg",
+                                        "NoOfPiece": "1",
+                                        "Unit": "Kg",
+                                        "Value": "7"
+                                    },
+                                    "CheckedInBaggage": {
+                                        "FreeText": "15 Kg",
+                                        "Unit": "Kg",
+                                        "Value": "15"
+                                    },
+                                    "FlightInfoIndex": "1"
+                                },
+                                {
+                                    "CabinBaggage": {
+                                        "FreeText": "7 Kg",
+                                        "NoOfPiece": "1",
+                                        "Unit": "Kg",
+                                        "Value": "7"
+                                    },
+                                    "CheckedInBaggage": {
+                                        "FreeText": "15 Kg",
+                                        "Unit": "Kg",
+                                        "Value": "15"
+                                    },
+                                    "FlightInfoIndex": "2"
+                                }
+                            ],
+                            "Currency": "INR",
+                            "PassengerType": 1,
+                            "PassengerCount": 1,
+                            "BaseFare": 7126,
+                            "Tax": 1638,
+                            "TransactionFee": 0,
+                            "YQTax": 600,
+                            "TaxBreakUp": [
+                                {
+                                    "key": "UDF",
+                                    "value": 465
+                                },
+                                {
+                                    "key": "YR",
+                                    "value": 65
+                                },
+                                {
+                                    "key": "YQTax",
+                                    "value": 600
+                                },
+                                {
+                                    "key": "SGST",
+                                    "value": 196
+                                },
+                                {
+                                    "key": "CGST",
+                                    "value": 196
+                                },
+                                {
+                                    "key": "OtherTaxes",
+                                    "value": 66
+                                },
+                                {
+                                    "key": "RcfTax",
+                                    "value": 50
+                                }
+                            ],
+                            "AdditionalTxnFeePub": 0,
+                            "PGCharge": 0,
+                            "AdditionalTxnFeeOfrd": 0,
+                            "SupplierReissueCharges": 0
+                        }
+                    ],
+                    "Segments": [
+                        [
+                            {
+                                "Baggage": "15 KG",
+                                "CabinBaggage": "7 KG",
+                                "CabinClass": 2,
+                                "SupplierFareClass": "SpiceMax",
+                                "TripIndicator": 1,
+                                "SegmentIndicator": 1,
+                                "Airline": {
+                                    "AirlineCode": "SG",
+                                    "AirlineName": "SpiceJet",
+                                    "FlightNumber": "651",
+                                    "FareClass": "SC",
+                                    "OperatingCarrier": ""
+                                },
+                                "Origin": {
+                                    "Airport": {
+                                        "AirportCode": "JAI",
+                                        "AirportName": "Sanganeer",
+                                        "Terminal": "2",
+                                        "CityCode": "JAI",
+                                        "CityName": "Jaipur",
+                                        "CountryCode": "IN",
+                                        "CountryName": "India"
+                                    },
+                                    "DepTime": "2026-03-22T18:15:00"
+                                },
+                                "Destination": {
+                                    "Airport": {
+                                        "AirportCode": "BOM",
+                                        "AirportName": "Chhatrapati Shivaji International Airport",
+                                        "Terminal": "1",
+                                        "CityCode": "BOM",
+                                        "CityName": "Mumbai",
+                                        "CountryCode": "IN",
+                                        "CountryName": "India"
+                                    },
+                                    "ArrTime": "2026-03-22T20:10:00"
+                                },
+                                "Duration": 115,
+                                "GroundTime": 0,
+                                "Mile": 0,
+                                "StopOver": false,
+                                "FlightInfoIndex": "1",
+                                "StopPoint": "",
+                                "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                "Craft": "7M8",
+                                "Remark": null,
+                                "IsETicketEligible": true,
+                                "FlightStatus": "Confirmed",
+                                "Status": "",
+                                "FareClassification": {
+                                    "Color": "rgb(182,215,228)",
+                                    "Type": "SpiceMax"
+                                }
+                            },
+                            {
+                                "Baggage": "15 KG",
+                                "CabinBaggage": "7 KG",
+                                "CabinClass": 2,
+                                "SupplierFareClass": "SpiceMax",
+                                "TripIndicator": 1,
+                                "SegmentIndicator": 2,
+                                "Airline": {
+                                    "AirlineCode": "SG",
+                                    "AirlineName": "SpiceJet",
+                                    "FlightNumber": "8152",
+                                    "FareClass": "SC",
+                                    "OperatingCarrier": ""
+                                },
+                                "Origin": {
+                                    "Airport": {
+                                        "AirportCode": "BOM",
+                                        "AirportName": "Chhatrapati Shivaji International Airport",
+                                        "Terminal": "1",
+                                        "CityCode": "BOM",
+                                        "CityName": "Mumbai",
+                                        "CountryCode": "IN",
+                                        "CountryName": "India"
+                                    },
+                                    "DepTime": "2026-03-23T05:50:00"
+                                },
+                                "Destination": {
+                                    "Airport": {
+                                        "AirportCode": "DEL",
+                                        "AirportName": "Indira Gandhi Airport",
+                                        "Terminal": "3",
+                                        "CityCode": "DEL",
+                                        "CityName": "Delhi",
+                                        "CountryCode": "IN",
+                                        "CountryName": "India"
+                                    },
+                                    "ArrTime": "2026-03-23T08:00:00"
+                                },
+                                "AccumulatedDuration": 825,
+                                "Duration": 130,
+                                "GroundTime": 580,
+                                "Mile": 0,
+                                "StopOver": false,
+                                "FlightInfoIndex": "2",
+                                "StopPoint": "",
+                                "StopPointArrivalTime": "0001-01-01T00:00:00",
+                                "StopPointDepartureTime": "0001-01-01T00:00:00",
+                                "Craft": "7M8",
+                                "Remark": null,
+                                "IsETicketEligible": true,
+                                "FlightStatus": "Confirmed",
+                                "Status": "",
+                                "FareClassification": {
+                                    "Color": "rgb(182,215,228)",
+                                    "Type": "SpiceMax"
+                                }
+                            }
+                        ]
+                    ],
+                    "LastTicketDate": "0001-01-01T00:00:00",
+                    "TicketAdvisory": null,
+                    "FareRules": [
+                        {
+                            "Origin": "JAI",
+                            "Destination": "BOM",
+                            "Airline": "SG",
+                            "FareBasisCode": "LSMX",
+                            "FareRuleDetail": "",
+                            "FareRestriction": "",
+                            "FareFamilyCode": "",
+                            "FareRuleIndex": ""
+                        },
+                        {
+                            "Origin": "BOM",
+                            "Destination": "DEL",
+                            "Airline": "SG",
+                            "FareBasisCode": "LSMX",
+                            "FareRuleDetail": "",
+                            "FareRestriction": "",
+                            "FareFamilyCode": "",
+                            "FareRuleIndex": ""
+                        }
+                    ],
+                    "AirlineCode": "SG",
+                    "MiniFareRules": [
+                        [
+                            {
+                                "CFARExcludedDetails": null,
+                                "JourneyPoints": "",
+                                "Type": "",
+                                "From": "",
+                                "To": "",
+                                "Unit": "",
+                                "Details": "",
+                                "OnlineReissueAllowed": false,
+                                "OnlineRefundAllowed": false
+                            }
+                        ]
+                    ],
+                    "ValidatingAirline": "SG",
+                    "FareClassification": {
+                        "Color": "rgb(182,215,228)",
+                        "Type": "SpiceMax"
+                    }
+                }
+            }
+        }';
+    }
+    static public function fareQuoteStaticResponseOld()
+    {
+        return '{
+            "code": "0x0200",
+            "message": "success",
+            "status": "SUCCESS",
+            "data": {
                 "TokenId": "0b677715-fe53-4ca1-ab70-51cd70b42770",
                 "TraceId": "1dc9b6ba-9146-42e2-9c51-4164f5e6d6a1",
                 "FlightDetailChangeInfo": null,

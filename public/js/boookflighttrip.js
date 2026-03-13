@@ -684,6 +684,11 @@ function getFareQuote(resultIndex, traceId, trip) {
                     let resultData = flightDetails?.Results || {};
 
                     localStorage.setItem(`fareFlightDetails${trip}`, JSON.stringify(resultData?.FareBreakdown));
+
+                    if (resultData?.RequiredFieldValidators) {
+                        localStorage.setItem(`requiredSSR${trip}`, JSON.stringify(resultData?.RequiredFieldValidators));
+                    }
+
                     let segmnt = resultData.Segments[0];
                     const fmt = (num) => Number(num || 0).toLocaleString('en-IN');
 
@@ -1892,6 +1897,23 @@ function getSSRDetails(resultIndex, traceId, trip) {
                         $('#returnTabLi').removeClass('d-none');
                     }
 
+                    let ssrRequire = JSON.parse(localStorage.getItem(`requiredSSR${trip}`)) || {};
+                    let requiredServices = [];
+
+                    if (ssrRequire?.IsSeatRequired) requiredServices.push("Seat");
+                    if (ssrRequire?.IsMealRequired) requiredServices.push("Meal");
+                    if (ssrRequire?.IsBaggageRequired) requiredServices.push("Baggage");
+
+                    let noteText = "";
+
+                    if (requiredServices.length > 0) {
+                        noteText = `📢 Note: <b class="text-danger">You may proceed with the booking, Please select ${requiredServices.join(", ")} before booking.</b>`;
+                    } else {
+                        noteText = `📢 Note: <b class="text-warning">You may proceed with the booking without selecting any optional SSR (Seat, Baggage, Meal) services.</b>`;
+                    }
+
+                    $('#ssrNote').html(noteText);
+
                     let searchPayload = JSON.parse(localStorage.getItem('payload')) || {};
                     let adults = parseInt(searchPayload.AdultCount) || 1;
                     let children = parseInt(searchPayload.ChildCount) || 0;
@@ -2834,6 +2856,47 @@ function updateSummaryUI(trip) {
 
 
 $('#proceedBookingBtn').on('click', function () {
+   
+    let ssrDeparture = JSON.parse(localStorage.getItem('requiredSSRdeparture')) || {};
+    let ssrReturn = JSON.parse(localStorage.getItem('requiredSSRreturn')) || {};
+
+    let missing = [];
+
+    // Departure checks
+    if (ssrDeparture?.IsSeatRequired && Object.keys(selectedSeats[0] || {}).length === 0) {
+        missing.push("Departure Seat");
+    }
+
+    if (ssrDeparture?.IsMealRequired && (selectedMeals || []).length === 0) {
+        missing.push("Departure Meal");
+    }
+
+    if (ssrDeparture?.IsBaggageRequired && (selectedBaggage || []).length === 0) {
+        missing.push("Departure Baggage");
+    }
+
+    // Return checks
+    if (ssrReturn?.IsSeatRequired && Object.keys(selectedSeatsRet || {}).length === 0) {
+        missing.push("Return Seat");
+    }
+
+    if (ssrReturn?.IsMealRequired && (selectedMealsRet || []).length === 0) {
+        missing.push("Return Meal");
+    }
+
+    if (ssrReturn?.IsBaggageRequired && (selectedBaggageRet || []).length === 0) {
+        missing.push("Return Baggage");
+    }
+
+    if (missing.length > 0) {
+        swal({
+            title: "Required Selection Missing",
+            text: `Please select ${missing.join(", ")} before proceeding with booking.`,
+            type: "error",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
 
     swal({
         title: "Are you sure?",

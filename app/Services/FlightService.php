@@ -222,8 +222,9 @@ class FlightService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = StaticResponseHelper::fareQuoteStaticResponse();
-                $response = StaticResponseHelper::fareQuoteStaticResponseInt();
+                // $response = StaticResponseHelper::fareQuoteStaticResponseOld();
+                $response = StaticResponseHelper::fareQuoteStaticResponse();
+                // $response = StaticResponseHelper::fareQuoteStaticResponseInt();
             } else {
 
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "fare_quote", "");
