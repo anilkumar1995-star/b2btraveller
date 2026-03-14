@@ -605,10 +605,9 @@ class FlightService
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
-                "ChangeRequestId" => $data['ChangeRequestId'],
+                "ChangeRequestId" => $data['ChangeRequestId'] ?? $req['changeReqId'],
                 "clientRefId" => $req['payid'],
             ];
-
 
             $url = $this->setFullUrl('cancelChargeStatus');
 

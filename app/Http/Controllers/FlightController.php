@@ -810,7 +810,7 @@ class FlightController extends Controller
             if (strtolower($response['status']) == 'success') {
                 $refundAmount = (float) $response['data']['Response']['RefundedAmount'] ?? 0.0;
                 $cancellationCharge = (float) $response['data']['Response']['CancellationCharge'] ?? 0.0;
-                
+
                 $old = User::select('mainwallet')->where('id', $reportTable->user_id)->first();
                 $oldBalance = $old->mainwallet;
 
@@ -877,6 +877,92 @@ class FlightController extends Controller
         return response()->json($responseCancel);
     }
 
+
+    public function checkCancelStatus(Request $request)
+    {
+        $bokTable = DB::table('bookings')->where('booking_id_api', $request['bookingId'])->first();
+
+        $responses = json_decode($bokTable->raw_response, true);
+        $reportTable = Report::where('number', $responses['TraceId'])->first();
+
+        if (!$reportTable) {
+            return response()->json(['status' => 'failed', 'message' => 'Report not found for this booking.']);
+        }
+        if ($reportTable->status != 'success') {
+            return response()->json(['status' => 'failed', 'message' => 'Only successful bookings can be checked for cancellation status.']);
+        }
+        $request['payid'] = $reportTable->payid;
+
+        $service = new FlightService();
+
+        $response = $service->cancelflightStatus(null, $request);
+
+        if (strtolower($response['status']) == 'success') {
+            $refundAmount = (float) $response['data']['Response']['RefundedAmount'] ?? 0.0;
+            $cancellationCharge = (float) $response['data']['Response']['CancellationCharge'] ?? 0.0;
+
+            $old = User::select('mainwallet')->where('id', $reportTable->user_id)->first();
+            $oldBalance = $old->mainwallet;
+
+            $bookingStatus = 'CancellationPending';
+            $stausChng = $response['data']['Response']['ChangeRequestStatus'] ?? 0;
+            if ($stausChng == 4 || $stausChng == 6) {
+                $bookingStatus = 'Cancelled';
+            } elseif ($stausChng == 5) {
+                $bookingStatus = 'CancelRejected';
+            }
+            if ($refundAmount > 0 &&  $stausChng == 4) {
+                User::where('id', $reportTable->user_id)
+                    ->where('status', 'active')
+                    ->increment('mainwallet', $refundAmount);
+
+
+                $reportTable->update([
+                    'status' => 'reversed',
+                    'remark' => 'Booking cancelled, refund initiated.',
+                    'refno'  => $bokTable->booking_id_api
+                ]);
+
+                Report::create([
+                    'number'      => $reportTable->number,
+                    'mobile'      => $reportTable->mobile,
+                    'provider_id' => $reportTable->provider_id,
+                    'api_id'      => $reportTable->api_id,
+                    'amount'      => $refundAmount > 0 ? $refundAmount : 0,
+                    "charge" => 0.0,
+                    "profit" => 0.0,
+                    "gst" => 0.0,
+                    "tds" => 0.0,
+                    'remark'      => 'Refund for cancelled booking',
+                    'txnid'       => $reportTable->id,
+                    'payid'       => $reportTable->payid,
+                    'status'      => 'refunded',
+                    'user_id'     => $reportTable->user_id,
+                    'credited_by' => $reportTable->user_id,
+                    'rtype'       => 'main',
+                    'via'         => 'portal',
+                    'balance'     =>  $oldBalance,
+                    "closing_balance" => $oldBalance + $refundAmount,
+                    'trans_type'  => 'credit',
+                    'product'     => 'flight',
+                    'transtype'   => 'mainwallet',
+                    "apitxnid" => null,
+                    "refno" => $reportTable->number,
+                ]);
+            }
+
+            $up = [
+                'booking_status' => $bookingStatus,
+                'ticket_status' => $bookingStatus,
+                'refunded_amount' => $refundAmount,
+                'cancel_res' => $response,
+                'cancellation_charge' => $cancellationCharge ?? 0.0,
+                'cancelled_at' => now(),
+            ];
+            DB::table('bookings')->where('booking_id_api', $request->payload['BookingId'])->update($up);
+        }
+        return response()->json($response);
+    }
 
     // public function submitCancellation(Request $request)
     // {
