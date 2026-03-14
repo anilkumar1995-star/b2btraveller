@@ -959,7 +959,7 @@ class FlightController extends Controller
                 'cancellation_charge' => $cancellationCharge ?? 0.0,
                 'cancelled_at' => now(),
             ];
-            DB::table('bookings')->where('booking_id_api', $request->payload['BookingId'])->update($up);
+            DB::table('bookings')->where('booking_id_api', $request['bookingId'])->update($up);
         }
         return response()->json($response);
     }
