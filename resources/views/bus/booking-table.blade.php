@@ -708,7 +708,7 @@
 
                                 <br />
                                 <div>
-                                    ${booking.IsDomestic ? '<span class="text-success">DOMESTIC</span>' : '<span class="text-danger">INTERNATIONAL</span>'} |
+                                    ${booking.IsDomestic ? '<span class="text-success">DOMESTIC</span>' : '<span class="text-danger">Outstation/Intercity</span>'} |
                                     <span class="text-success">Journey Date: ${booking?.DateOfJourney}</span> |
                                     <span class="text-success">${booking.NoOfSeats} No. Seat</span> |
                                     
