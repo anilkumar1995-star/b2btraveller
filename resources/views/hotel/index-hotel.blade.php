@@ -1,173 +1,208 @@
 @extends('layouts.app')
-@section('title', 'Bus Booking Search')
-@section('pagetitle', 'Bus Booking Search')
+@section('title', 'Hotel Booking Search')
+@section('pagetitle', 'Hotel Booking Search')
 
 
 @section('content')
+
     <style>
-        .nav-tabs .nav-link.active {
-            background-color: rgb(103, 103, 233) !important;
-            color: white !important;
-        }
-
-        .btn-flip-icon {
+        .fare-breakdown-container-hotel {
+            width: 20%;
             position: absolute;
-            left: 100%;
-            top: 50%;
-            transform: translate(-50%, -50%);
+            top: 100;
+            right: 0;
+            z-index: 10;
+            display: none;
         }
 
-        @media (max-width: 767.98px) {
-            .btn-flip-icon {
-                position: absolute;
-                left: 50%;
-                top: 100%;
-                transform: translate(-50%, -50%);
-                margin-top: 0.5rem;
-            }
-
-            .btn-flip-icon i {
-                transform: rotate(270deg);
-            }
+        .tooltip-inner ul {
+            list-style-type: disc !important;
+            padding-left: 20px !important;
+            margin: 10px 0 0 0 !important;
         }
 
-
-        .select2-container--default {
-            width: 100% !important;
+        .tooltip-inner li {
+            text-align: left !important;
         }
 
-        .select2-container--default .select2-selection--single {
-            border: 1px solid #dbdade !important;
-            height: 38px !important;
-            border-radius: 0.375rem !important;
-            line-height: 1.5 !important;
-            border-radius: 0.375rem !important;
-            font-size: 0.9375rem !important;
-            padding: 0.422rem 0.375rem !important;
-            width: 100% !important;
+        .tooltip-inner {
+            background: #ffffff;
+            color: #b2b2b2;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
         }
 
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            color: #807c8c !important;
-            line-height: 25px !important;
-        }
-
-        .select2-container--default .select2-results>.select2-results__options {
-            cursor: pointer !important;
+        .bs-tooltip-bottom .tooltip-arrow::before {
+            border-bottom-color: #ffffff !important;
         }
     </style>
+
+
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 2px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: #888;
+            border-radius: 10px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+
+        .custom-scrollbar {
+            scrollbar-width: thin;
+            scrollbar-color: #c0c1c3 transparent;
+        }
+    </style>
+
     <section class="py-0">
         <div class="card border-1">
             <div class="card-header bg-label-primary">
                 <h5 class="card-title mb-0">🏨 Find the top Hotels nearby.</h5>
             </div>
 
-            <form {{-- style="background-image: url('{{ asset('images/1.png') }}'); background-position: center center; background-repeat: no-repeat; background-size: cover;" --}} id="hotelSearchForm"
-                class="bg-mode bg-white position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
+            <form method="post" class="bg-mode bg-white position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
                 @csrf
 
 
                 <div class="row g-4 position-relative">
 
                     <div class="col-lg-4">
+
                         <div class="form-control-border form-control-transparent form-fs-md d-flex">
                             <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
                             <div class="flex-grow-1">
                                 <label>Location</label>
-                                <select class="form-select  select" data-search-enabled="true" name="Destination"
-                                    id="Destination">
+                                <select class="form-select  select" data-search-enabled="true" name="cityName"
+                                    id="cityName">
                                     <option value="">Select location</option>
+                                    <option value="130443" selected>Testing City / Hotel</option>
 
                                 </select>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-lg-4">
-                        <label>Check in - out</label>
-                        <div class="input-daterange input-group rounded">
-                            <input type="text" class="form-control flatpickr" id="fromDate">
-                            <span class="input-group-text position-relative">
-                                <i class="fa-solid fa-right-left"></i>
-                            </span>
-                            <input type="text" class="form-control flatpickr" id="toDate">
-                        </div>
 
+                    <!-- Checkin Checkout -->
+                    <div class="col-lg-4">
+
+
+                        <label>Check-In / Check-Out</label>
+                        <div class="input-group">
+                            <input id="checkin" name="chkInDate" type="text" class="form-control" required=""
+                                placeholder="Check In Date">
+                            <span class="input-group-text">
+                                <i class="far fa-calendar-alt"></i>
+                            </span>
+                            <input id="checkout" value="" name="chkOutDate" type="text" class="form-control"
+                                required="" placeholder="Check Out Date">
+                        </div>
                     </div>
 
-
+                    <!-- Guest & Rooms -->
                     <div class="col-lg-4">
-                        <div class="form-control-border form-control-transparent form-fs-md d-flex">
-                            <i class="ti ti-person fs-3 me-2 mt-2"></i>
-                            <div class="w-100">
-                                <label>Guests & rooms</label>
-                                <div class="dropdown guest-selector me-2">
-                                    <input type="text" class="form-guest-selector form-control selection-result"
-                                        value="2 Guests 1 Room" data-bs-auto-close="outside" data-bs-toggle="dropdown">
+                        <label class="form-label fw-semibold">Guests & Rooms</label>
 
-                                    <ul class="dropdown-menu guest-selector-dropdown p-2">
-                                        <li class="d-flex justify-content-between">
-                                            <div>
-                                                <h6 class="mb-0">Adults</h6>
-                                                <small>Ages 13 or above</small>
-                                            </div>
+                        <div class="dropdown travellers-class" onclick="totalRoomsAndGuest()">
+                            <input type="text" id="guestAndRooms"
+                                class="form-control selection-result travellers-class-input" data-bs-auto-close="outside"
+                                data-bs-toggle="dropdown" name="flight-travellers-class" placeholder="Room, Guests"
+                                readonly="" required="" value="1 Rooms / 1 Guests" onkeypress="return false;">
 
-                                            <div class="hstack gap-1 align-items-center">
-                                                <button type="button" class="btn btn-link adult-remove p-1 mb-0"><i
-                                                        class="ti ti-minus  fs-5 fa-fw"></i></button>
-                                                <h6 class="guest-selector-count mb-0 adults">2</h6>
-                                                <button type="button" class="btn btn-link adult-add p-1 mb-0"><i
-                                                        class="ti ti-plus fs-5 fa-fw"></i></button>
-                                            </div>
-                                        </li>
+                            <ul class="dropdown-menu p-3 w-100 travellers-dropdown" style="height: 265px;overflow-y: auto;">
 
-                                        <li class="dropdown-divider"></li>
+                                <!-- Rooms -->
+                                <li class="d-flex justify-content-between">
+                                    <div>
+                                        <strong>Rooms</strong><br>
+                                        <small>(Max 6 rooms)</small>
+                                    </div>
 
-                                        <li class="d-flex justify-content-between">
-                                            <div>
-                                                <h6 class="mb-0">Child</h6>
-                                                <small>Ages 13 below</small>
-                                            </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button type="button" class="btn btn-sm btn-light"
+                                            onClick="decrement3()">-</button>
+                                        <span id="room" name="room">1</span>
+                                        <button type="button" class="btn btn-sm btn-light"
+                                            onClick="increment3()">+</button>
+                                    </div>
+                                </li>
 
-                                            <div class="hstack gap-1 align-items-center">
-                                                <button type="button" class="btn btn-link child-remove p-1 mb-0"><i
-                                                        class="ti ti-minus  fs-5 fa-fw"></i></button>
-                                                <h6 class="guest-selector-count mb-0 child">0</h6>
-                                                <button type="button" class="btn btn-link child-add p-1 mb-0"><i
-                                                        class="ti ti-plus fs-5 fa-fw"></i></button>
-                                            </div>
-                                        </li>
+                                <!-- Adults -->
+                                <li class="d-flex justify-content-between mb-2">
+                                    <div>
+                                        <strong>Adults</strong><br>
+                                        <small>(13+ years)</small>
+                                    </div>
 
-                                        <li class="dropdown-divider"></li>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button type="button" class="btn btn-sm btn-light"
+                                            onClick="decrement1()">-</button>
+                                        <span id="adult" name="adultCount">2</span>
+                                        <button type="button" class="btn btn-sm btn-light"
+                                            onClick="increment1()">+</button>
+                                    </div>
+                                </li>
 
-                                        <li class="d-flex justify-content-between">
-                                            <div>
-                                                <h6 class="mb-0">Rooms</h6>
-                                                <small>Max room 8</small>
-                                            </div>
+                                <!-- Child -->
+                                <li class="d-flex justify-content-between mb-2">
+                                    <div>
+                                        <strong>Children</strong><br>
+                                        <small>(Below 13)</small>
+                                    </div>
 
-                                            <div class="hstack gap-1 align-items-center">
-                                                <button type="button" class="btn btn-link room-remove p-1 mb-0"><i
-                                                        class="ti ti-minus  fs-5 fa-fw"></i></button>
-                                                <h6 class="guest-selector-count mb-0 rooms">1</h6>
-                                                <button type="button" class="btn btn-link room-add p-1 mb-0"><i
-                                                        class="ti ti-plus fs-5 fa-fw"></i></button>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button type="button" class="btn btn-sm btn-light"
+                                            onClick="decrement2()">-</button>
+                                        <span class="child" id="children" name="childCount">0</span>
+                                        <button type="button" class="btn btn-sm btn-light"
+                                            onClick="increment2()">+</button>
+                                    </div>
+                                </li>
+
+                                <div class="row align-items-center">
+                                    <div class="col-sm-12">
+                                        <div id="child-age-container">
+                                        </div>
+                                    </div>
+
                                 </div>
-                            </div>
+
+                                <div class="d-grid">
+                                    <button class="btn btn-primary submit-done" type="button">Done</button>
+                                </div>
+
+                            </ul>
                         </div>
                     </div>
 
                     <div class="text-end mb-3">
-                        <button type="submit" class="btn btn-primary">
-                            Search Hotels
-                        </button>
+                        <button class="btn btn-primary" type="button" id="searchhotel"
+                            onclick="searchHotel()">Search</button>
                     </div>
             </form>
+
+
         </div>
     </section>
+
+    <div class="wrapper">
+        <div class="row mt-3" style="position: relative;">
+            {{-- <div class="col-3">
+                <div class="preview-card-side" style="position: sticky;top: 
+                0px;">
+
+                </div>
+            </div> --}}
+            <div class="col-12">
+                <div class="preview-card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="back-top"></div>
 
@@ -182,34 +217,39 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.4/nouislider.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/noUiSlider/14.6.4/nouislider.min.js"></script>
 
-
+    <script src="{{ asset('') }}js/hotel.js"></script>
+    <script src="{{ asset('') }}js/inputFormValidation.js"></script>
     <script>
         $(document).ready(function() {
-            swal({
-                type: 'info',
-                title: 'Coming Soon',
-                text: 'Hotel booking feature will be available soon!',
-                confirmButtonText: 'Okay'
-            });
             localStorage.clear();
-            $('.select').select2();
 
-            $('.flatpickr').datepicker({
-                'autoclose': true,
-                'clearBtn': true,
-                'todayHighlight': true,
-                'format': 'yyyy-mm-dd',
-                'startDate': new Date()
-            });
-        });
-        $(document).on('submit', '#hotelSearchForm', function(e) {
-            e.preventDefault();
-
-            swal({
-                type: 'info',
-                title: 'Coming Soon',
-                text: 'Hotel booking feature will be available soon!',
-                confirmButtonText: 'Okay'
+            $('#cityName').select2({
+                placeholder: 'Type at least 3 characters',
+                minimumInputLength: 3,
+                ajax: {
+                    url: "/hotel/search-city",
+                    dataType: 'json',
+                    delay: 300,
+                    data: function(params) {
+                        return {
+                            query: params.term
+                        };
+                    },
+                    processResults: function(data) {
+                        return {
+                            results: $.map(data, function(item) {
+                                return {
+                                    id: item.airport_code,
+                                    text: item.airport_name + ' - ' + item.airport_code + ' (' +
+                                        item.city + ')',
+                                    country_code: item.country_code,
+                                    country_name: item.country_name
+                                };
+                            })
+                        };
+                    },
+                    cache: true
+                }
             });
         });
     </script>
