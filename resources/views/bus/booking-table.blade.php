@@ -712,7 +712,7 @@
                                     <span class="text-success">Journey Date: ${booking?.DateOfJourney}</span> |
                                     <span class="text-success">${booking.NoOfSeats} No. Seat</span> |
                                     
-                                    <span class="text-danger">Block to Book Time : ${booking.BlockDuration}</span>
+                                    <span class="text-danger">Block to Book Time : ${booking.BlockDuration ?? 'N/A'}</span>
                                     <br />
                                     Bus Toll Free: ${booking.BoardingPointdetails?.CityPointContactNumber
                                     ? `<a href="tel:${booking.BoardingPointdetails?.CityPointContactNumber}" class="text-primary fw-semibold">
