@@ -586,7 +586,7 @@ class FlightController extends Controller
                     'transtype'   => 'pg',
                 ]);
                 return response()->json([
-                    'status' => 'success',
+                    'status' => 'SUCCESS',
                     'url'    => $responseStatus->data->url,
                     'message' => 'Order created successful.',
                     'data'   => $responseStatus->data
