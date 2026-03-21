@@ -1008,7 +1008,7 @@ function callBookApi(bookingPayload, amt) {
     swal({
         type: 'warning',
         title: 'Confirming Booking...',
-        text: 'Amount will be deducted from wallet',
+        text: 'Amount will be deducted from Payment Gateway',
         onOpen: () => {
             swal.showLoading()
         },
