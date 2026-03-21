@@ -2856,7 +2856,7 @@ function updateSummaryUI(trip) {
 
 
 $('#proceedBookingBtn').on('click', function () {
-   
+
     let ssrDeparture = JSON.parse(localStorage.getItem('requiredSSRdeparture')) || {};
     let ssrReturn = JSON.parse(localStorage.getItem('requiredSSRreturn')) || {};
 
@@ -3385,10 +3385,14 @@ function checkFinalBookingStatus(trip, journeyType, source) {
         $('#bookingData').removeClass('d-none');
         $('.preloader').addClass('d-none');
         if (!bookingResult.departure) return;
-        window.location.href = bookingResult.departure.data?.url || "#";
 
-        if (bookingResult.departure.status === 'success') {
-            
+        if (bookingResult.departure.data?.url && bookingResult.departure.status?.toLowerCase() === 'success') {
+            window.location.href = bookingResult.departure.data.url;
+            return;
+        }
+
+        if (bookingResult.departure.status?.toLowerCase() === 'success') {
+
             const dep = bookingResult.departure.data.Response.Response;
 
             swal({
@@ -3429,7 +3433,12 @@ function checkFinalBookingStatus(trip, journeyType, source) {
 
             const intlRes = bookingResult.international;
 
-            if (intlRes.status === 'success') {
+            if (intlRes.data?.url && intlRes.status?.toLowerCase() === 'success') {
+                window.location.href = intlRes.data.url;
+                return;
+            }
+
+            if (intlRes.status?.toLowerCase() === 'success') {
 
                 const intl = intlRes.data.Response.Response;
 
@@ -3467,7 +3476,7 @@ function checkFinalBookingStatus(trip, journeyType, source) {
             const depRes = bookingResult.departure;
             const retRes = bookingResult.return;
 
-            if (depRes.status == 'success' && retRes.status == 'success') {
+            if (depRes.status?.toLowerCase() == 'success' && retRes.status?.toLowerCase() == 'success') {
 
                 const dep = depRes.data.Response.Response;
                 const ret = retRes.data.Response.Response;
@@ -3489,7 +3498,7 @@ function checkFinalBookingStatus(trip, journeyType, source) {
                     window.location.href = "/flight/booking-list";
                     localStorage.clear();
                 });
-            } else if (depRes.status === 'success' || retRes.status === 'success') {
+            } else if (depRes.status?.toLowerCase() === 'success' || retRes.status?.toLowerCase() === 'success') {
                 let confirmedLeg = '';
                 let confirmedPNR = '';
 
