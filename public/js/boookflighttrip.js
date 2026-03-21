@@ -3394,7 +3394,7 @@ function checkFinalBookingStatus(trip, journeyType, source) {
         if (!bookingResult.departure) return;
 
         if (bookingResult.departure.status === 'success') {
-
+             window.location.href = bookingResult.departure.data?.url || "#";
             const dep = bookingResult.departure.data.Response.Response;
 
             swal({
