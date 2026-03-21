@@ -53,7 +53,7 @@ class UserController extends Controller
         Storage::disk('local')->put('public/safexPaylink.txt', 'decryptedResponse:' . json_encode($request));
         // Optionally, you can return a response indicating success
         return response()->json(['status' => 'SUCCESS', 'message' => 'Delete Account Request Submitted Successfully'], 200);
-        // return ResponseHelper::success('Delete Account Request Submitted Successfully');
+    // return ResponseHelper::success('Delete Account Request Submitted Successfully');
 
     }
 
@@ -101,7 +101,7 @@ class UserController extends Controller
         $url = $_SERVER['HTTP_REFERER'];
         $QueryUrl = parse_url($url);
 
-        $urlObject = (object) $QueryUrl;
+        $urlObject = (object)$QueryUrl;
         $getAdmin = trim($urlObject->path, "/");
         $checkAdmin = substr($getAdmin, 0, strpos($getAdmin, '/'));
 
@@ -149,12 +149,14 @@ class UserController extends Controller
 
                     // $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Login OTP"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Login Otp");
                     if ($send['status'] == true) {
-                        User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678"), 'otpresend' => $user->otpresend, 'otp_resend_date'  => now()->format('Y-m-d')]);
+                        User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678"), 'otpresend' => $user->otpresend, 'otp_resend_date' => now()->format('Y-m-d')]);
                         return response()->json(['status' => 'otpsent'], 200);
-                    } else {
+                    }
+                    else {
                         return response()->json(['status' => 'Please contact your service provider provider'], 400);
                     }
-                } else {
+                }
+                else {
                     return response()->json(['status' => 'OTP resend limit exceeded. Please try again tomorrow.'], 400);
                 }
             }
@@ -172,10 +174,12 @@ class UserController extends Controller
                 if ($send['status'] == true) {
                     User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678")]);
                     return response()->json(['status' => 'otpsent'], 200);
-                } else {
+                }
+                else {
                     return response()->json(['status' => $send['message'] ?? 'Please contact your service provider provider'], 400);
                 }
-            } else {
+            }
+            else {
                 if (!$post->has('otp')) {
                     return response()->json(['status' => 'preotp'], 200);
                 }
@@ -183,13 +187,16 @@ class UserController extends Controller
 
             if (\Auth::attempt(['mobile' => $post->mobile, 'password' => $post->password, 'otpverify' => \Myhelper::encrypt($post->otp, "sdsada7657hgfh$$&7678"), 'status' => "active"])) {
                 return response()->json(['status' => 'Login'], 200);
-            } else {
+            }
+            else {
                 return response()->json(['status' => 'Please provide correct otp'], 400);
             }
-        } else {
+        }
+        else {
             if (\Auth::attempt(['mobile' => $post->mobile, 'password' => $post->password, 'status' => "active"])) {
                 return response()->json(['status' => 'Login'], 200);
-            } else {
+            }
+            else {
                 return response()->json(['status' => 'Something went wrong, please contact administrator'], 400);
             }
         }
@@ -228,32 +235,38 @@ class UserController extends Controller
                 $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
                 try {
                     $mail = \Myhelper::mail('mail.password', ["token" => $otp, "name" => $user->name, "subhead" => "Reset Password"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Reset Password");
-                } catch (\Exception $e) {
+                }
+                catch (\Exception $e) {
                     $mail = "fail";
 
 
-                    // return response()->json(['status' => 'ERR', 'message' => "Something went wrong1"], 400);
+                // return response()->json(['status' => 'ERR', 'message' => "Something went wrong1"], 400);
                 }
                 //dd($sms);
                 if ($sms['status'] || $mail) {
                     User::where('mobile', $post->mobile)->update(['remember_token' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678")]);
                     return response()->json(['status' => 'TXN', 'message' => "Password reset token sent successfully"], 200);
-                } else {
+                }
+                else {
                     return response()->json(['status' => 'ERR', 'message' => "Something went wrong2"], 400);
                 }
-            } else {
+            }
+            else {
                 return response()->json(['status' => 'ERR', 'message' => "You aren't registered with us"], 400);
             }
-        } else {
+        }
+        else {
             $user = User::where('mobile', $post->mobile)->where('remember_token', \Myhelper::encrypt($post->token, "sdsada7657hgfh$$&7678"))->get();
             if ($user->count() == 1) {
                 $update = User::where('mobile', $post->mobile)->update(['password' => bcrypt($post->password), 'passwordold' => bcrypt($post->password)]);
                 if ($update) {
                     return response()->json(['status' => "TXN", 'message' => "Password reset successfully"], 200);
-                } else {
+                }
+                else {
                     return response()->json(['status' => 'ERR', 'message' => "Something went wrong"], 400);
                 }
-            } else {
+            }
+            else {
                 return response()->json(['status' => 'ERR', 'message' => "Please enter valid token"], 400);
             }
         }
@@ -279,7 +292,8 @@ class UserController extends Controller
             $sms = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
             try {
                 $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Reset TPIN"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Reset TPIN");
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e) {
                 // dd($e) ;
                 $mail = "fail";
             }
@@ -291,10 +305,12 @@ class UserController extends Controller
                 ]);
 
                 return response()->json(['status' => 'TXN', 'message' => "Pin generate token sent successfully"], 200);
-            } else {
+            }
+            else {
                 return response()->json(['status' => 'ERR', 'message' => "Something went wrong"], 400);
             }
-        } else {
+        }
+        else {
             return response()->json(['status' => 'ERR', 'message' => "You aren't registered with us"], 400);
         }
     }
@@ -321,17 +337,20 @@ class UserController extends Controller
                     'pin' => \Myhelper::encrypt($post->pin, "sdsada7657hgfh$$&7678"),
                     'user_id' => $post->id
                 ]);
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e) {
                 return response()->json(['status' => 'ERR', 'message' => 'Try Again']);
             }
 
             if ($apptoken) {
                 \DB::table('password_resets')->where('mobile', $post->mobile)->where('token', \Myhelper::encrypt($post->otp, "sdsada7657hgfh$$&7678"))->delete();
                 return response()->json(['status' => "success"], 200);
-            } else {
+            }
+            else {
                 return response()->json(['status' => "Something went wrong"], 400);
             }
-        } else {
+        }
+        else {
             return response()->json(['status' => "Please enter valid otp"], 400);
         }
     }
@@ -386,7 +405,8 @@ class UserController extends Controller
                         'pan_number' => $response->data->pan_number,
                         'message' => 'Verified successfully'
                     ]);
-                } else {
+                }
+                else {
                     return response()->json(['status' => 'ERR', 'message' => isset($response->message) ? $response->message : 'Something went wrong']);
                 }
 
@@ -425,7 +445,8 @@ class UserController extends Controller
                 $response = json_decode($result['response']);
                 if (isset($response->status) && $response->status == true) {
                     return response()->json(['status' => 'TXNOTP', "refid" => $post->txnid, 'message' => 'OTP send successfully']);
-                } else {
+                }
+                else {
                     return response()->json(['status' => 'ERR', 'message' => isset($response->message) ? $response->message : 'Something went wrong']);
                 }
                 break;
@@ -480,7 +501,8 @@ class UserController extends Controller
                         'aadhaar_number' => $response->data->aadhaar_number,
                         'message' => 'Verified successfully'
                     ]);
-                } else {
+                }
+                else {
                     return response()->json(['status' => 'ERR', 'message' => isset($response->message) ? $response->message : 'Something went wrong']);
                 }
                 break;
@@ -556,13 +578,13 @@ class UserController extends Controller
                 }
                 \DB::table('user_permissions')->insert($inserts);
             }
-            $otpmailid   = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
+            $otpmailid = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
             $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
 
             $mailData = [
-                'name'     => $response->name,
+                'name' => $response->name,
                 'username' => $response->mobile,
-                'mydata'   => [
+                'mydata' => [
                     'company' => $response->company,
                     'supportnumber' => $response->company->supportnumber ?? ''
                 ]
@@ -578,20 +600,22 @@ class UserController extends Controller
                     $otpmailname->value,
                     'Account Created Successfully'
                 );
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e) {
                 $mail = "fail";
             }
 
             $arr = [
                 "mobile" => $post->mobile,
-                "var2"   => $post->mobile,
-                "var3"   => $post->mobile
+                "var2" => $post->mobile,
+                "var3" => $post->mobile
             ];
             $arr = ["mobile" => $post->mobile, "var2" => $post->mobile, "var3" => $post->mobile];
             $sms = AndroidCommonHelper::sendEmailAndOtp("activateAccount", $arr);
 
             return response()->json(['status' => "TXN", 'message' => "Success"], 200);
-        } else {
+        }
+        else {
             return response()->json(['status' => 'ERR', 'message' => "Something went wrong, please try again"], 400);
         }
     }
@@ -603,7 +627,8 @@ class UserController extends Controller
         $response = LoanEnquiry::create($post->all());
         if ($response) {
             return response()->json(['status' => "TXN", 'message' => "Success"], 200);
-        } else {
+        }
+        else {
             return response()->json(['status' => 'ERR', 'message' => "Something went wrong, please try again"], 400);
         }
     }
@@ -611,7 +636,7 @@ class UserController extends Controller
     public function sendmail()
     {
 
-        $otpmailid   = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
+        $otpmailid = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
         $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
         $mail = \Myhelper::mail('mail.member', ["username" => "9918881312", "name" => "Raj"], "rajjems15@gmail.com", "raj kumar", $otpmailid->value, $otpmailname->value, "Member Registration");
 

@@ -113,6 +113,54 @@ class FundCallBackController extends Controller
                             return response()->json($response);
                         }
                     }
+                    break;
+
+                case 'cl':
+                    $isSuccess = false;
+                    $clientRefId = $data['clientRefId'] ?? $data['payid'] ?? null;
+                    $status = $data['status'] ?? null;
+
+                    if ($status == 'success' || (isset($data['code']) && $data['code'] == "0x0200")) {
+                        $isSuccess = true;
+                    }
+
+                    if ($clientRefId) {
+                        $report = Report::where('payid', $clientRefId)->first();
+                        if ($report) {
+                            $utr = $data['utr'] ?? $data['txnid'] ?? null;
+                            if ($isSuccess) {
+                                if ($report->status != 'success') {
+                                    $report->update(['status' => 'success', 'refno' => $utr]);
+
+                                    $booking = DB::table('bus_bookings')->where('order_ref_id', $clientRefId)->first();
+                                    if ($booking && strtolower($booking->payment_status) != 'success') {
+                                        DB::table('bus_bookings')->where('order_ref_id', $clientRefId)->update(['payment_status' => 'success']);
+
+                                        try {
+                                            $payload = json_decode($booking->raw_payload, true);
+                                            $payload['clientRefId'] = $clientRefId;
+                                            $service = new \App\Services\BusService();
+                                            $serviceRes = $service->bookBuss($payload);
+                                            
+                                            $upStatus = (isset($serviceRes['status']) && strtolower($serviceRes['status']) == 'success') ? "Confirmed" : "Failed";
+                                            DB::table('bus_bookings')->where('order_ref_id', $clientRefId)->update([
+                                                'booking_status' => $upStatus,
+                                                'raw_response' => json_encode($serviceRes)
+                                            ]);
+                                        } catch (\Exception $e) {}
+                                    }
+                                }
+                            } else {
+                                $report->update(['status' => 'failed']);
+                                DB::table('bus_bookings')->where('order_ref_id', $clientRefId)->update(['payment_status' => 'failed', 'booking_status' => 'Failed']);
+                            }
+                        }
+                    }
+
+                    $response = ['status' => 'SUCCESS', 'message' => 'Processed', 'time' => now()->format('Y-m-d H:i:s')];
+                    Apilog::create(['url' => $url, 'modal' => $modal, 'txnid' => $clientRefId, 'header' => json_encode($post->headers->all()), 'response' => json_encode($post->all())]);
+                    return response()->json($response);
+                    break;
             }
         } catch (\Exception $e) {
 

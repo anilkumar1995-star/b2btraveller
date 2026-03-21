@@ -194,6 +194,10 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
 
     Route::get('cancel/{id}', [BusController::class, 'cancelPage']);
     Route::post('cancel-submit', [BusController::class, 'submitCancellation']);
+    Route::get('generate-url', [BusController::class, 'generateTravellerUrl'])->name('bus.generate.url');
+    Route::get('payment/success', [BusController::class, 'paymentSuccess'])->name('bus.payment.success');
+    Route::get('payment/failed', [BusController::class, 'paymentFailed'])->name('bus.payment.failed');
+    Route::post('check-status', [BusController::class, 'checkStatus'])->name('bus.checkStatus');
 });
 
 Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
