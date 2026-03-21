@@ -585,7 +585,7 @@ class FlightController extends Controller
                     'product'     => 'flighttravel',
                     'transtype'   => 'pg',
                 ]);
-                return redirect()->to($responseStatus->data->url);
+                return redirect()->away($responseStatus->data->url);
                 return response()->json([
                     'status' => 'SUCCESS',
                     'url'    => $responseStatus->data->url,
