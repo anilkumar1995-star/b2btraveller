@@ -438,7 +438,7 @@ class BusController extends Controller
             "mobile"       => $user->mobile,
             "successUrl"  => route('bus.payment.success'),
             "failedUrl"   => route('bus.payment.failed'),
-            "amount"       => 1
+            "amount"       => $request->totalAmount
         ];
 
         $result = \Myhelper::curl($url, "POST", json_encode($reqData), $header, "yes");
@@ -464,7 +464,7 @@ class BusController extends Controller
                     'mobile'      => $user->mobile,
                     'provider_id' => 0,
                     'api_id'      => 0,
-                    'amount'      => 1,
+                    'amount'      => $request->totalAmount,
                     'profit'      => 0,
                     'txnid'       => $clientRefId,
                     'payid'       => $clientRefId,
