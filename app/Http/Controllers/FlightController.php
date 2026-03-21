@@ -434,6 +434,7 @@ class FlightController extends Controller
             return response()->json(['status' => 'failed', 'message' => 'Your account has been blocked.']);
         }
 
+        /*
         try {
             DB::beginTransaction();
 
@@ -516,7 +517,121 @@ class FlightController extends Controller
 
         $service = new FlightService();
         $response = $service->FlightTicketView($request->all());
+        */
 
+        $api = \App\Models\Api::where('code', 'rrpayment')->first();
+        if (!$api) {
+            return response()->json(['status' => 'failed', 'message' => "PG service is down"]);
+        }
+
+        $agent = \App\Models\Agents::where('user_id', \Auth::id())->first();
+        if (!$agent) {
+             $agent = \App\Models\Agents::where('user_id', 1)->first(); 
+        }
+
+        $clientRefId = AndroidCommonHelper::makeTxnId("FLIGHT", 10);
+        $url = $api->url . "v1/service/pgcollect/order";
+        
+        $header = [
+            "Content-Type: application/json",
+            "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
+        ];
+
+        $totals = $this->calculateTotalFromPassengers($request->all()['passengers'] ?? []);
+        $totalAmount = $totals['grandTotal'];
+
+        $reqData = [
+            "email"        => $user->email,
+            "name"         => $user->name,
+            "merchantCode" => $agent->bc_id ?? "MID7332321140",
+            "clientRefId"  => $clientRefId,
+            "mobile"       => $user->mobile,
+            "successUrl"  => route('flight.payment.success'),
+            "failedUrl"   => route('flight.payment.failed'),
+            "amount"       => $totalAmount
+        ];
+
+        $result = \Myhelper::curl($url, "POST", json_encode($reqData), $header, "yes");
+       
+        if ($result['response'] != '') {
+            $responseStatus = json_decode($result['response']);
+           
+            if (isset($responseStatus->code) && $responseStatus->code == "0x0200") {
+                $tid = $request->input('traceId', $request->input('TraceId'));
+                
+                $affected = DB::table('bookings')
+                    ->where('booking_id_api', $tid)
+                    ->update([
+                        'order_ref_id' => $clientRefId,
+                        'raw_payload'  => json_encode($request->all())
+                    ]);
+
+                Report::create([
+                    'number'      => $tid,
+                    'mobile'      => $user->mobile,
+                    'provider_id' => 0,
+                    'api_id'      => 0,
+                    'amount'      => $totalAmount,
+                    'profit'      => 0,
+                    'txnid'       => $clientRefId,
+                    'payid'       => $clientRefId,
+                    'status'      => 'pending',
+                    'user_id'     => $user->id,
+                    'credited_by' => $user->id,
+                    'rtype'       => 'main',
+                    'via'         => 'portal',
+                    'balance'     => $user->mainwallet,
+                    'trans_type'  => 'debit',
+                    'product'     => 'flighttravel',
+                    'transtype'   => 'pg',
+                ]);
+                return redirect()->to($responseStatus->data->url);
+                return response()->json([
+                    'status' => 'SUCCESS',
+                    'url'    => $responseStatus->data->url,
+                    'message' => 'Order created successful.',
+                    'data'   => $responseStatus->data
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $responseStatus->message ?? "PG Initiation failed"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => "PG service no response"
+            ]);
+        }
+    }
+
+    public function paymentSuccess(Request $request)
+    {
+        $id = $request->clientRefId ?? $request->txnid;
+        return view('flight.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id]);
+    }
+
+    public function paymentFailed(Request $request)
+    {
+        $id = $request->clientRefId ?? $request->txnid;
+        return view('flight.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
+    }
+
+    public function checkStatus(Request $request)
+    {
+        $booking = DB::table('bookings')->where('order_ref_id', $request->id)->first();
+        if ($booking) {
+            return response()->json([
+                'status' => 'success',
+                'booking_status' => $booking->payment_status == 'success' ? 'Confirmed' : $booking->payment_status,
+                'data' => $booking
+            ]);
+        }
+        return response()->json(['status' => 'failed', 'message' => 'Booking not found']);
+    }
+
+        /*
         try {
             DB::beginTransaction();
             if (strtolower($response['status'] ?? '') == 'failed' || strtolower($response['status'] ?? '') == 'failure') {
@@ -559,7 +674,7 @@ class FlightController extends Controller
                 ]);
             }
 
-            /* ---------- SUCCESS ---------- */
+            // ---------- SUCCESS ----------
             if (strtolower($response['status'] ?? '') == 'success') {
 
                 $data = $response['data']['Response']['Response'] ?? null;
@@ -708,7 +823,7 @@ class FlightController extends Controller
             }
 
 
-            /* ---------- PENDING ---------- */
+            // ---------- PENDING ----------
             Report::where('id', $report->id)->update([
                 'status' => 'pending',
                 'refno'  => $request->traceId,
@@ -729,21 +844,9 @@ class FlightController extends Controller
                 'status'  => 'pending',
                 'message' => $response['message'] ?? 'Flight booking pending'
             ]);
-        } catch (Exception $e) {
-
-            DB::rollBack();
-
-            \Log::error('Flight booking post-api failed', [
-                'user_id' => $user->id,
-                'error'   => $e->getMessage()
-            ]);
-
-            return response()->json([
-                'status'  => 'failed',
-                'message' => 'Booking processed but final update failed. Please contact support.'
-            ]);
         }
     }
+*/
 
 
     public function getCancellationCharges(Request $request)
