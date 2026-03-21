@@ -684,6 +684,11 @@ function getFareQuote(resultIndex, traceId, trip) {
                     let resultData = flightDetails?.Results || {};
 
                     localStorage.setItem(`fareFlightDetails${trip}`, JSON.stringify(resultData?.FareBreakdown));
+
+                    if (resultData?.RequiredFieldValidators) {
+                        localStorage.setItem(`requiredSSR${trip}`, JSON.stringify(resultData?.RequiredFieldValidators));
+                    }
+
                     let segmnt = resultData.Segments[0];
                     const fmt = (num) => Number(num || 0).toLocaleString('en-IN');
 
@@ -1659,7 +1664,7 @@ function generateTravelerForm(response) {
     let passportRequired = response.IsPassportRequiredAtBook || false;
 
 
-    function createTravelerForm(type, index) {
+    function createTravelerForm(type, index, count) {
         // PAN field only for Adult
         let panField = '';
         if (type === 'Adult' && panRequired) {
@@ -1691,7 +1696,7 @@ function generateTravelerForm(response) {
                     <button class="accordion-button fw-bold rounded collapsed" type="button"
                         data-bs-toggle="collapse" data-bs-target="#collapse-${type}-${index}"
                         aria-expanded="false" aria-controls="collapse-${type}-${index}">
-                       ➕ ${type} ${index}
+                       ➕ ${type} ${count}
                     </button>
                 </h6>
                 <div id="collapse-${type}-${index}" class="accordion-collapse collapse"
@@ -1758,10 +1763,11 @@ function generateTravelerForm(response) {
     }
 
     // Generate accordion forms
+    let globalIndex = 1;
     let accordionHTML = '';
-    for (let i = 1; i <= adults; i++) accordionHTML += createTravelerForm('Adult', i);
-    for (let i = 1; i <= children; i++) accordionHTML += createTravelerForm('Child', i);
-    for (let i = 1; i <= infants; i++) accordionHTML += createTravelerForm('Infant', i);
+    for (let i = 1; i <= adults; i++) accordionHTML += createTravelerForm('Adult', globalIndex++, i);
+    for (let i = 1; i <= children; i++) accordionHTML += createTravelerForm('Child', globalIndex++, i);
+    for (let i = 1; i <= infants; i++) accordionHTML += createTravelerForm('Infant', globalIndex++, i);
 
 
     $('#travelerAccordion').html(accordionHTML);
@@ -1891,6 +1897,23 @@ function getSSRDetails(resultIndex, traceId, trip) {
                         $('#returnTabLi').removeClass('d-none');
                     }
 
+                    let ssrRequire = JSON.parse(localStorage.getItem(`requiredSSR${trip}`)) || {};
+                    let requiredServices = [];
+
+                    if (ssrRequire?.IsSeatRequired) requiredServices.push("Seat");
+                    if (ssrRequire?.IsMealRequired) requiredServices.push("Meal");
+                    if (ssrRequire?.IsBaggageRequired) requiredServices.push("Baggage");
+
+                    let noteText = "";
+
+                    if (requiredServices.length > 0) {
+                        noteText = `📢 Note: <b class="text-danger">You may proceed with the booking, Please select ${requiredServices.join(", ")} before booking.</b>`;
+                    } else {
+                        noteText = `📢 Note: <b class="text-warning">You may proceed with the booking without selecting any optional SSR (Seat, Baggage, Meal) services.</b>`;
+                    }
+
+                    $('#ssrNote').html(noteText);
+
                     let searchPayload = JSON.parse(localStorage.getItem('payload')) || {};
                     let adults = parseInt(searchPayload.AdultCount) || 1;
                     let children = parseInt(searchPayload.ChildCount) || 0;
@@ -2010,11 +2033,83 @@ function getSSRDetails(resultIndex, traceId, trip) {
                     }
 
                     // Meal Details
+                    let selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails')) || {};
+                    let isLCC = selectedFlightDetails?.IsLCC;
                     if (ssrDetails.Meal && ssrDetails.Meal.length > 0) {
                         let mealHtml = '';
 
-                        $.each(ssrDetails.Meal, function (pIndex, passengerMeal) {
-                            if (!passengerMeal || passengerMeal.length === 0) return;
+                        if (isLCC) {
+                            $.each(ssrDetails.Meal, function (pIndex, passengerMeal) {
+                                if (!passengerMeal || passengerMeal.length === 0) return;
+
+                                mealHtml += `
+                                            <div class="table-responsive mt-3">
+                                                <table class="table table-bordered align-middle text-center mb-0">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th>Text</th>
+                                                            <th>Description</th>
+                                                            <th>Quantity</th>
+                                                            <th>Price</th>
+                                                            <th>Select</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                `;
+
+
+                                $.each(passengerMeal, function (index, meal) {
+                                    let desc = '';
+                                    let waytype = '';
+                                    switch (meal.Description) {
+                                        case 1: desc = "The fare includes the Meal"; break;
+                                        case 2: desc = "The Meal charges are added while making the ticket"; break;
+                                        case 3: desc = "Meal charges are added while importing the ticket"; break;
+                                        default: desc = "NotSet"; break;
+                                    }
+
+                                    let priceText = meal.Price == 0 ? "Included" : `${meal?.Currency} ${meal.Price}`;
+
+                                    if (meal?.WayType == 1) {
+                                        waytype = "Segment";
+                                    } else if (meal?.WayType == 2) {
+                                        waytype = "FullJourney ";
+                                    }
+                                    if (index == 0) {
+                                        $('#mealSectionHead').html(`${meal?.Origin} - ${meal?.Destination} [${meal?.AirlineCode} - ${meal?.FlightNumber}]
+                                                <span class="badge bg-info">${waytype}</span>`);
+                                    }
+
+                                    mealHtml += `
+                                            <tr>
+                                                <td>${meal?.AirlineDescription || 'No Meal'}</td>
+                                                <td>${meal?.Code} - ${desc}</td>
+                                                <td>${meal.Quantity || '0'} </td>
+                                                <td>${priceText}</td>
+                                                <td>
+                                                    <input type="checkbox" name="meal-checkbox${trip}" 
+                                                    data-code="${meal?.Code}" 
+                                                    data-price="${priceText}" 
+                                                    data-description="${meal?.Description}"
+                                                    data-mealobjdata='${JSON.stringify(meal)}'>
+                                                </td>
+                                            </tr>
+                                        `;
+                                });
+
+                                mealHtml += `
+                                                        </tbody>
+                                                    </table>
+                                                    <small class="text-muted d-block mt-1 text-end">
+                                                        <span class="meal-count${trip}">0</span> / ${totalPassengers} selected
+                                                    </small>
+                                                </div>
+                                    `;
+
+                            });
+
+                        } else {
+
 
                             mealHtml += `
                                         <div class="table-responsive mt-3">
@@ -2023,62 +2118,35 @@ function getSSRDetails(resultIndex, traceId, trip) {
                                                     <tr>
                                                         <th>Text</th>
                                                         <th>Description</th>
-                                                        <th>Quantity</th>
                                                         <th>Price</th>
-                                                        <th>Select</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                            `;
-
-                            $.each(passengerMeal, function (index, meal) {
-                                let desc = '';
-                                let waytype = '';
-                                switch (meal.Description) {
-                                    case 1: desc = "The fare includes the Meal"; break;
-                                    case 2: desc = "The Meal charges are added while making the ticket"; break;
-                                    case 3: desc = "Meal charges are added while importing the ticket"; break;
-                                    default: desc = "NotSet"; break;
-                                }
-
-                                let priceText = meal.Price == 0 ? "Included" : `${meal?.Currency} ${meal.Price}`;
-
-                                if (meal?.WayType == 1) {
-                                    waytype = "Segment";
-                                } else if (meal?.WayType == 2) {
-                                    waytype = "FullJourney ";
-                                }
-                                if (index == 0) {
-                                    $('#mealSectionHead').html(`${meal?.Origin} - ${meal?.Destination} [${meal?.AirlineCode} - ${meal?.FlightNumber}]
-                                        <span class="badge bg-info">${waytype}</span>`);
-                                }
-
-                                mealHtml += `
-                                    <tr>
-                                        <td>${meal?.AirlineDescription || 'No Meal'}</td>
-                                        <td>${meal?.Code} - ${desc}</td>
-                                        <td>${meal.Quantity || '0'} </td>
-                                        <td>${priceText}</td>
-                                        <td>
-                                            <input type="checkbox" name="meal-checkbox${trip}" 
-                                            data-code="${meal?.Code}" 
-                                            data-price="${priceText}" 
-                                            data-description="${meal?.Description}"
-                                            data-mealobjdata='${JSON.stringify(meal)}'>
-                                        </td>
-                                    </tr>
                                 `;
+                            $.each(ssrDetails.Meal, function (pIndex, passengerMeal) {
+                                if (!passengerMeal || passengerMeal.length === 0) return;
+                                mealHtml += `
+                                        <tr>
+                                            <td>${passengerMeal?.Description || 'No Meal'}</td>
+                                            <td>${passengerMeal?.Code}</td>
+                                            <td>N/A</td>
+                                        </tr>
+                                    `;
                             });
 
                             mealHtml += `
-                                                </tbody>
-                                            </table>
-                                             <small class="text-muted d-block mt-1 text-end">
-                                                <span class="meal-count${trip}">0</span> / ${totalPassengers} selected
-                                            </small>
+                                        </tbody>
+                                    </table>
+                                    <small class="text-muted d-block mt-1 text-end">
+                                        <div class="alert alert-warning text-center">
+                                            Meal preference will be handled offline.
                                         </div>
-                            `;
-                        });
+                                    </small>
+                                </div>
+                                `;
+
+                        }
+
 
                         if (trip == 'departure') {
                             $("#mealContainer").html(mealHtml);
@@ -2233,6 +2301,7 @@ function getSSRDetails(resultIndex, traceId, trip) {
                     });
 
                 } else {
+                    notify(response?.message || 'Failed to fetch SSR Details, Please try again', 'error');
                     if (trip == "departure") {
                         $("#baggageContainer").html(`<div class="alert alert-danger">Baggage Not Found</div>`);
                         $("#mealContainer").html(`<div class="alert alert-danger">Meal Not Found</div>`);
@@ -2787,6 +2856,47 @@ function updateSummaryUI(trip) {
 
 
 $('#proceedBookingBtn').on('click', function () {
+   
+    let ssrDeparture = JSON.parse(localStorage.getItem('requiredSSRdeparture')) || {};
+    let ssrReturn = JSON.parse(localStorage.getItem('requiredSSRreturn')) || {};
+
+    let missing = [];
+
+    // Departure checks
+    if (ssrDeparture?.IsSeatRequired && Object.keys(selectedSeats[0] || {}).length === 0) {
+        missing.push("Departure Seat");
+    }
+
+    if (ssrDeparture?.IsMealRequired && (selectedMeals || []).length === 0) {
+        missing.push("Departure Meal");
+    }
+
+    if (ssrDeparture?.IsBaggageRequired && (selectedBaggage || []).length === 0) {
+        missing.push("Departure Baggage");
+    }
+
+    // Return checks
+    if (ssrReturn?.IsSeatRequired && Object.keys(selectedSeatsRet || {}).length === 0) {
+        missing.push("Return Seat");
+    }
+
+    if (ssrReturn?.IsMealRequired && (selectedMealsRet || []).length === 0) {
+        missing.push("Return Meal");
+    }
+
+    if (ssrReturn?.IsBaggageRequired && (selectedBaggageRet || []).length === 0) {
+        missing.push("Return Baggage");
+    }
+
+    if (missing.length > 0) {
+        swal({
+            title: "Required Selection Missing",
+            text: `Please select ${missing.join(", ")} before proceeding with booking.`,
+            type: "error",
+            confirmButtonText: "OK"
+        });
+        return;
+    }
 
     swal({
         title: "Are you sure?",
@@ -2908,15 +3018,20 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
         const baggage = removeExtraKey(getForPassenger(selectedBaggage, index), 'baggage');
 
 
-        const seatData = seat.length === 1 ? seat[0] : seat;
         return {
             ...passenger,
-            ...(seat.length ? { SeatDynamic: seatData } : {}),
-            ...(meal != null ? { Meal: meal.mealObjData } : {}),
-            ...(baggage != null ? { Baggage: baggage.bagObjData } : {}),
+            ...(seat.length ? { SeatDynamic: seat.map(s => s) } : {}),
+            ...(meal != null ? { Meal: [meal.mealObjData] } : {}),
+            ...(baggage != null ? { Baggage: [baggage.bagObjData] } : {}),
         };
+        // const seatData = seat.length === 1 ? seat[0] : seat;
+        // return {
+        //     ...passenger,
+        //     ...(seat.length ? { SeatDynamic: seatData } : {}),
+        //     ...(meal != null ? { Meal: meal.mealObjData } : {}),
+        //     ...(baggage != null ? { Baggage: baggage.bagObjData } : {}),
+        // };
     });
-
 
     const payload = {
         resultIndex: selectedFlightDetails?.ResultIndex,
@@ -3214,6 +3329,7 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
                 bookingResult[trip] = response;
                 payload['bookingId'] = response?.data?.Response?.Response?.BookingId || '';
                 payload['pnr'] = response?.data?.Response?.Response?.PNR || '';
+                payload['clientRefId'] = response?.data?.clientRefId || '';
 
                 // IsPassportRequired
 
@@ -3549,7 +3665,7 @@ function renderBookingDetails(data) {
             fareRulesHTML += `
                     <div class="card border rounded p-2 mb-2">
                         <b>Rule ${i + 1} [${rule?.Origin} → ${rule?.Destination}]</b><br>
-                        Airline: ${rule.Airline ?? 'N/A'} [${rule?.FareFamilyCode}]<br>
+                        Airline: ${rule.Airline ?? 'N/A'} [${rule?.FareFamilyCode ?? '-'}]<br>
                         Fare Basis: ${rule.FareBasisCode ?? 'N/A'}<br>
                         Rule: <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#fareRuleModal${i + 1}">View Fare rule ${i + 1}</button>
                     </div>

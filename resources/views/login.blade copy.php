@@ -1,29 +1,24 @@
 <!DOCTYPE html>
 
-<html lang="en" class="light-style customizer-hide" dir="ltr" data-theme="theme-default"
-    data-assets-path="{{ asset('theme_1/assets/') }}" data-template="vertical-menu-template">
+<html lang="en" class="light-style customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="{{ asset('theme_1/assets/') }}" data-template="vertical-menu-template">
 
 <head>
 
     <meta charset="utf-8" />
-    <meta name="viewport"
-        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
     <title>Login - {{ @$company->companyname }}</title>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="https://ipayments.in/assets/images/ilogo.png"
-        class=" img-fluid rounded" />
+    <link rel="icon" type="image/x-icon" href="https://ipayments.in/assets/images/ilogo.png" class=" img-fluid rounded" />
 
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
 
     <!-- Icons -->
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/fontawesome.css') }}" />
@@ -31,10 +26,8 @@
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/flag-icons.css') }}" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/rtl/core.css') }}"
-        class="template-customizer-core-css" />
-    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/rtl/theme-default.css') }}"
-        class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/rtl/core.css') }}" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/rtl/theme-default.css') }}" class="template-customizer-theme-css" />
     <link rel="stylesheet" href="{{ asset('theme_1/assets/css/demo.css') }}" />
 
     <!-- Vendors CSS -->
@@ -42,8 +35,7 @@
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/node-waves/node-waves.css') }}" />
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/typeahead-js/typeahead.css') }}" />
     <!-- Vendor -->
-    <link rel="stylesheet"
-        href="{{ asset('theme_1/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
+    <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/libs/formvalidation/dist/css/formValidation.min.css') }}" />
 
     <!-- CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify@0.5.5/dist/simple-notify.min.css" />
@@ -55,174 +47,8 @@
     <!-- Page -->
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/pages/page-auth.css') }}" />
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            background: url({{ asset('images/bg.png') }}) no-repeat center center fixed;
-            background-size: 100% 100%;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            position: relative;
-        }
-
-        body::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgb(0 0 0 / 0%)
-        }
-
-        .login-panel {
-            position: relative;
-            width: 100%;
-            max-width: 480px;
-            padding: 45px;
-            margin-right: 70px;
-            border-radius: 25px;
-            background: rgb(10 25 40 / 90%);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
-            color: #fff;
-            z-index: 2;
-            transform: scale(0.80);
-            transform-origin: right center;
-        }
-
-        .login-panel h5 {
-            font-weight: 600;
-            opacity: 0.9;
-        }
-
-        .login-panel h3 {
-            font-weight: 700;
-            margin-bottom: 25px;
-        }
-
-        .form-control {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            height: 50px;
-            border-radius: 12px;
-        }
-
-        .form-control::placeholder {
-            color: #ddd;
-        }
-
-        .form-control:focus {
-            background: transparent;
-            color: #fff;
-            box-shadow: none;
-            border-color: #00e5ff;
-        }
-
-        .input-group-text {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: #fff;
-            border-radius: 12px 0 0 12px;
-        }
-
-        .login-btn {
-            height: 50px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(90deg, #ff9800, #ff3d00);
-            font-size: 18px;
-            font-weight: 600;
-            color: #fff;
-            box-shadow: 0 0 15px rgba(255, 140, 0, 0.7);
-        }
-
-        .login-btn:hover {
-            opacity: 0.9;
-        }
-
-        .divider {
-            text-align: center;
-            margin: 20px 0;
-            position: relative;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: "";
-            position: absolute;
-            top: 50%;
-            width: 40%;
-            height: 1px;
-            background: #777;
-        }
-
-        .divider::before {
-            left: 0;
-        }
-
-        .divider::after {
-            right: 0;
-        }
-
-        .social-btn {
-            height: 45px;
-            border-radius: 10px;
-            font-weight: 500;
-        }
-
-        .social-btn:hover {
-            border: 1px solid #00e5ff;
-            color: #00e5ff;
-            box-shadow: 0 0 10px rgba(0, 229, 255, 0.7);
-
-        }
-
-        .google {
-            background: #fff;
-        }
-
-        .otp {
-            background: #1de9b6;
-            color: #000;
-        }
-
-        .secure-badge {
-            margin-top: 25px;
-            padding: 10px;
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            text-align: center;
-            font-size: 14px;
-            opacity: 0.9;
-        }
-
-        @media(max-width:768px) {
-            body {
-                justify-content: center;
-            }
-
-            .login-panel {
-                margin: 20px;
-            }
-        }
-
-        .modal select {
-            background-color: #2c3e50 !important;
-            color: #fff !important;
-        }
-
-        .modal select option {
-            background-color: #2c3e50;
-            color: #fff;
-        }
-    </style>
-    <style>
-        /* .form-group p {
+        .form-group p {
             color: red;
         }
 
@@ -236,236 +62,84 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-        } */
+        }
 
         .carousel-caption {
             background: rgba(0, 0, 0, 0.45);
             padding: 15px 20px;
             border-radius: 10px;
         }
-
-        /* Modal Background Blur */
-        .modal-content {
-            background: rgba(10, 25, 40, 0.85);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
-            color: #fff;
-        }
-
-        .modal-header {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-title {
-            font-weight: 600;
-        }
-
-        .btn-close {
-            filter: invert(1);
-        }
-
-        /* Section Headings */
-        .modal-body h5 {
-            color: #00e5ff;
-            font-weight: 600;
-            margin-top: 15px;
-        }
-
-        /* Inputs */
-        .modal .form-control,
-        .modal select,
-        .modal textarea {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border-radius: 10px;
-        }
-
-        .modal .form-control::placeholder,
-        .modal textarea::placeholder {
-            color: #ccc;
-        }
-
-        .modal .form-control:focus,
-        .modal select:focus,
-        .modal textarea:focus {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: #00e5ff;
-            box-shadow: none;
-            color: #fff;
-        }
-
-        /* Labels */
-        .modal label {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        /* Submit Button */
-        .modal .btn-primary {
-            background: linear-gradient(90deg, #ff9800, #ff3d00);
-            border: none;
-            padding: 10px 30px;
-            border-radius: 10px;
-            font-weight: 600;
-            box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
-        }
-
-        .modal .btn-primary:hover {
-            opacity: 0.9;
-        }
-
-        /* Error message styling */
-        .alert-message {
-            font-size: 12px;
-            color: #ff5252;
-        }
     </style>
 </head>
 
 <body>
     <!-- Content -->
-    @if (env('MAINTENANCE_MODE', false))
-        {{ Artisan::call('down') }}
+    @if(env('MAINTENANCE_MODE',false))
+    {{ Artisan::call('down') }}
     @endif
 
-    <div class="login-panel">
-
-        <div class="text-center mb-3">
-            <h6>Welcome Back!</h6>
-            <h4>Merchant Login Panel</h4>
-        </div>
-
-        <form action="{{ route('authCheck') }}" method="POST" class="login-form">
-            @csrf
-            <b class="errorText text-danger d-block mb-2"></b>
-            <b class="successText text-success d-block mb-2"></b>
-
-            <div class="mb-3 input-group">
-                <span class="input-group-text"><i class="fa fa-user"></i></span>
-                <input type="tel" class="form-control w-75" name="mobile" maxlength="10" minlength="10" required
-                    placeholder="Enter User Mobile Number" autocomplete="off">
-            </div>
-
-            <div class="mb-3 input-group">
-                <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                <input type="password" name="password" class="form-control w-75" required placeholder="Enter Password Here">
-                {{-- <span class="input-group-text"><i class="fa fa-eye"></i></span> --}}
-            </div>
-
-            <div class="d-flex justify-content-between mb-3 small">
-                <div>
-                    <input type="checkbox"> Remember Me
-                </div>
-                <a href="javascript:void(0)" onclick="forgetPassword()" class="text-warning text-decoration-none">Forgot
-                    Password?</a>
-            </div>
-
-            <div class="formdata">
-
-            </div>
-
-            <button class="btn login-btn w-100" id="login-btn"><i class="fa fa-user"></i> &nbsp;Login</button>
-
-            <div class="divider my-4">
-                <div class="divider-text">or</div>
-            </div>
-
-
-            <p class="text-center">
-                <span>New on our platform?</span>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal"
-                    class="text-warning text-decoration-none">
-                    <span>Create an account</span>
-                </a>
-            </p>
-        </form>
-
-        <div class="bottom-links text-center">
-            <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
-            <span>|</span>
-            <a href="{{ route('refund-policy') }}">Refund Policy</a>
-
-            <div class="text-center">
-                <a href="{{ route('term-of-use') }}">Terms & Conditions</a>
-                <span>|</span>
-                <a href="{{ route('about') }}">About Us</a>
-                <span>|</span>
-                <a href="{{ route('contact') }}">Contact Us</a>
-            </div>
-
-        </div>
-
-        {{-- <div class="d-flex gap-2">
-                <button type="button" class="btn social-btn google w-50">
-                    <i class="fab fa-chrome"></i> &nbsp;Google
-                </button>
-                <button type="button" class="btn social-btn otp w-50">
-                    <i class="fa fa-globe"></i> &nbsp;OTP Login
-                </button>
-            </div> --}}
-
-
-        <div class="secure-badge">
-            🔒 Secure & Encrypted
-        </div>
-
-        </form>
-
-    </div>
-    {{-- <div class="authentication-wrapper authentication-cover authentication-bg vh-100">
+    <div class="authentication-wrapper authentication-cover authentication-bg vh-100">
         <div class="authentication-inner row m-0 vh-100">
 
 
             <div class="d-none d-lg-flex col-lg-7 p-5 h-100">
                 <div class="w-100 h-100">
 
-                    <div id="flightSlider" class="carousel slide carousel-fade h-100 w-100" data-bs-ride="carousel"
+                    <div id="flightSlider"
+                        class="carousel slide carousel-fade h-100 w-100"
+                        data-bs-ride="carousel"
                         data-bs-interval="4000">
 
-                        <div class="carousel-inner h-100 rounded">
+                    <div class="carousel-inner h-100 rounded">
 
 
-                            <div class="carousel-item active h-100">
-                                <img src="{{ asset('images/slider1.jpeg') }}" class="d-block w-100 h-100"
-                                    alt="Flight">
-
-                            </div>
-                            <div class="carousel-item h-100">
-                                <img src="{{ asset('images/Air-India.jpg') }}" class="d-block w-100 h-100"
-                                    alt="Flight">
-
-                            </div>
-
-                            <div class="carousel-item h-100">
-                                <img src="{{ asset('images/02.jpg') }}" class="d-block w-100 h-100" alt="Flight">
-
+                        <div class="carousel-item active h-100">
+                            <img src="{{ asset('images/slider1.jpeg') }}"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                            
+                        </div>
+                        <div class="carousel-item h-100">
+                            <img src="{{ asset('images/Air-India.jpg') }}"
+                                 class="d-block w-100 h-100"
+                                 alt="Flight">
+                           
                             </div>
 
                             <div class="carousel-item h-100">
-                                <img src="{{ asset('images/bus01.jpeg') }}" class="d-block w-100 h-100"
-                                    alt="Flight">
-
-                            </div>
-
-                            <div class="carousel-item h-100">
-                                <img src="{{ asset('images/hotel.jpeg') }}" class="d-block w-100 h-100"
+                                <img src="{{ asset('images/02.jpg') }}"
+                                    class="d-block w-100 h-100"
                                     alt="Flight">
                                
+                            </div>
+
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/bus01.jpeg') }}"
+                                    class="d-block w-100 h-100"
+                                    alt="Flight">
+                             
+                            </div>
+
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/hotel.jpeg') }}"
+                                    class="d-block w-100 h-100"
+                                    alt="Flight">
+                                <!-- <div class="carousel-caption d-none d-md-block">
+                                <h3>Travel Smarter</h3>
+                                <p>Your journey starts here</p>
+                            </div> -->
                             </div>
 
                         </div>
 
 
-                        <button class="carousel-control-prev" type="button" data-bs-target="#flightSlider"
-                            data-bs-slide="prev">
+                        <button class="carousel-control-prev" type="button"
+                            data-bs-target="#flightSlider" data-bs-slide="prev">
                             <span class="carousel-control-prev-icon"></span>
                         </button>
 
-                        <button class="carousel-control-next" type="button" data-bs-target="#flightSlider"
-                            data-bs-slide="next">
+                        <button class="carousel-control-next" type="button"
+                            data-bs-target="#flightSlider" data-bs-slide="next">
                             <span class="carousel-control-next-icon"></span>
                         </button>
 
@@ -483,22 +157,27 @@
                         <a href="{{ route('home') }}" class="app-brand-link gap-2"></a>
                     </div>
 
-                    <h3 class="mb-1 fw-bold">
-                        Welcome to iPaymnt Tech
-                    </h3>
-                    <p class="mb-4">
-                        Sign in to your account and begin your journey
-                    </p>
-
-                    <form action="{{ route('authCheck') }}" method="POST" class="login-form">
-                        @csrf
-                        <b class="errorText text-danger d-block mb-2"></b>
-                        <b class="successText text-success d-block mb-2"></b>
-                        <div class="mb-3">
-                            <label class="form-label">Mobile No.</label>
-                            <input type="tel" class="form-control" name="mobile" maxlength="10" minlength="10"
-                                required>
-                        </div>
+                <h3 class="mb-1 fw-bold">
+                    Welcome to iPaymnt Tech 
+                    {{-- Welcome to <img src="{{ asset('images/logo.png') }}" width="150" height="50" class="ms-2">  --}}
+                </h3>
+                <p class="mb-4">
+                Sign in to your account and begin your journey               
+                </p>
+                
+                <form action="{{ route('authCheck') }}" method="POST" class="login-form">
+                    @csrf
+                <b class="errorText text-danger d-block mb-2"></b>
+                <b class="successText text-success d-block mb-2"></b>
+                    <div class="mb-3">
+                        <label class="form-label">Mobile No.</label>
+                        <input type="tel"
+                               class="form-control"
+                               name="mobile"
+                               maxlength="10"
+                               minlength="10"
+                               required>
+                    </div>
 
                         <div class="mb-3">
                             <div class="d-flex justify-content-between">
@@ -507,7 +186,10 @@
                                     <small>Forgot Password?</small>
                                 </a>
                             </div>
-                            <input type="password" name="password" class="form-control" required>
+                            <input type="password"
+                                name="password"
+                                class="form-control"
+                                required>
                         </div>
 
 
@@ -549,7 +231,7 @@
 
 
         </div>
-    </div> --}}
+    </div>
 
 
     <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-hidden="true">
@@ -570,13 +252,10 @@
                         {{ csrf_field() }}
                         <div class="form-group my-1">
                             <label>Mobile</label>
-                            <input type="text" name="mobile" class="form-control my-1"
-                                placeholder="Enter Mobile Number" required="">
+                            <input type="text" name="mobile" class="form-control my-1" placeholder="Enter Mobile Number" required="">
                         </div>
                         <div class="form-group my-1">
-                            <button class="btn btn-primary btn-block text-uppercase waves-effect waves-light"
-                                type="submit"
-                                data-loading-text="<i class='fa fa-spin fa-spinner'></i> Resetting">Reset
+                            <button class="btn btn-primary btn-block text-uppercase waves-effect waves-light" type="submit" data-loading-text="<i class='fa fa-spin fa-spinner'></i> Resetting">Reset
                                 Request</button>
                         </div>
                     </form>
@@ -608,18 +287,14 @@
                         {{ csrf_field() }}
                         <div class="form-group my-1">
                             <label>Reset Token</label>
-                            <input type="text" name="token" class="form-control my-1" placeholder="Enter OTP"
-                                required="">
+                            <input type="text" name="token" class="form-control my-1" placeholder="Enter OTP" required="">
                         </div>
                         <div class="form-group my-1">
                             <label>New Password</label>
-                            <input type="password" name="password" class="form-control my-1"
-                                placeholder="Enter New Password" required="">
+                            <input type="password" name="password" class="form-control my-1" placeholder="Enter New Password" required="">
                         </div>
                         <div class="form-group mt-3">
-                            <button class="btn btn-primary btn-block text-uppercase waves-effect waves-light"
-                                type="submit"
-                                data-loading-text="<i class='fa fa-spin fa-spinner'></i> Resetting">Reset
+                            <button class="btn btn-primary btn-block text-uppercase waves-effect waves-light" type="submit" data-loading-text="<i class='fa fa-spin fa-spinner'></i> Resetting">Reset
                                 Password</button>
                         </div>
                     </form>
@@ -629,8 +304,7 @@
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="registerModal" tabindex="-1" aria-hidden="true"
-        data-bs-backdrop="static">
+    <div class="modal fade bd-example-modal-lg" id="registerModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
@@ -648,7 +322,7 @@
                                 <select name="slug" class="form-control my-1 select" required>
                                     <option value="">Select Member Type</option>
                                     @foreach ($roles as $role)
-                                        <option value="{{ $role->slug }}">{{ $role->name }}</option>
+                                    <option value="{{ $role->slug }}">{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -658,20 +332,17 @@
                         <div class="row">
                             <div class="form-group my-1 col-md-4">
                                 <label for="exampleInputEmail1">Name</label>
-                                <input type="text" name="name" class="form-control my-1"
-                                    placeholder="Enter your name" required>
+                                <input type="text" name="name" class="form-control my-1" placeholder="Enter your name" required>
                             </div>
                             <div class="form-group my-1 col-md-4">
                                 <label for="exampleInputPassword1">Email</label>
-                                <input type="text" name="email" class="form-control my-1"
-                                    placeholder="Enter your email id" required>
+                                <input type="text" name="email" class="form-control my-1" placeholder="Enter your email id" required>
                                 <div class="alert-message" id="emailError"></div>
                             </div>
                             <div class="form-group my-1 col-md-4">
                                 <label for="exampleInputPassword1">Mobile</label>
 
-                                <input type="tel" maxlength="10" name="mobile" class="form-control my-1"
-                                    placeholder="Enter your mobile" required>
+                                <input type="tel" maxlength="10" name="mobile" class="form-control my-1" placeholder="Enter your mobile" required>
 
                                 <div class="alert-message" id="mobileError"></div>
                             </div>
@@ -682,40 +353,33 @@
                                 <select name="state" class="form-control my-1 state" required>
                                     <option value="">Select State</option>
                                     @foreach ($state as $state)
-                                        <option value="{{ $state->state }}">{{ $state->state }}</option>
+                                    <option value="{{ $state->state }}">{{ $state->state }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group my-1 col-md-4">
                                 <label>City</label>
-                                <input type="text" name="city" class="form-control my-1" value=""
-                                    required="" placeholder="Enter Value">
+                                <input type="text" name="city" class="form-control my-1" value="" required="" placeholder="Enter Value">
                             </div>
                             <div class="form-group my-1 col-md-4">
                                 <label>Pincode</label>
 
-                                <input type="tel" name="pincode" class="form-control my-1" value=""
-                                    required="" maxlength="6" minlength="6" placeholder="Enter Value"
-                                    pattern="[0-9]*">
+                                <input type="tel" name="pincode" class="form-control my-1" value="" required="" maxlength="6" minlength="6" placeholder="Enter Value" pattern="[0-9]*">
 
                             </div>
                             <div class="form-group my-1 col-md-4">
                                 <label>Shop Name</label>
-                                <input type="text" name="shopname" class="form-control my-1" value=""
-                                    required="" placeholder="Enter Value">
+                                <input type="text" name="shopname" class="form-control my-1" value="" required="" placeholder="Enter Value">
                                 <div class="alert-message" id="shopnameError"></div>
                             </div>
                             <div class="form-group my-1 col-md-4">
                                 <label>Pancard</label>
-                                <input type="text" name="pancard" class="form-control my-1" value=""
-                                    id="pancard" required="" placeholder="Enter Value">
+                                <input type="text" name="pancard" class="form-control my-1" value="" id="pancard" required="" placeholder="Enter Value">
                                 <div class="alert-message" id="pancardError"></div>
                             </div>
                             <div class="form-group my-1 col-md-4">
                                 <label>Aadhar</label>
-                                <input type="text" name="aadharcard" required="" class="form-control my-1"
-                                    id="aadharcard" placeholder="Enter Value" pattern="[0-9]*" maxlength="12"
-                                    minlength="12">
+                                <input type="text" name="aadharcard" required="" class="form-control my-1" id="aadharcard" placeholder="Enter Value" pattern="[0-9]*" maxlength="12" minlength="12">
                                 <div class="alert-message" id="aadharcardError"></div>
                             </div>
                         </div>
@@ -725,7 +389,31 @@
                                 <textarea name="address" class="form-control my-1" rows="3" required="" placeholder="Enter Value"></textarea>
                             </div>
                         </div>
+                        {{-- <h5 class="my-2">Upload Your Documents</h5>
+                        <div class="row">
+                            <div class="form-group col-md-6 my-1">
+                                <label>Passport size photo <span class="text-danger fw-bold">*</span></label>
 
+                                <input type="file" class="form-control my-1" autocomplete="off" name="profiles" placeholder="Enter Demat account" required">
+                            </div>
+                            <div class="form-group col-md-6 my-1">
+                                <label>Pancard Photo <span class="text-danger fw-bold">*</span></label>
+                                <input type="file" class="form-control my-1" autocomplete="off"
+                                    name="pancardpics" placeholder="Enter Business saving account" required>
+                            </div>
+                            <div class="form-group col-md-6 my-1">
+                                <label>Aadharcard Front Photo <span class="text-danger fw-bold">*</span></label>
+                                <input type="file" class="form-control my-1" autocomplete="off"
+                                    name="aadharcardpics" placeholder="Enter Digital saving account" value=""
+                                    required>
+                            </div>
+                            <div class="form-group col-md-6 my-1">
+                                <label>Aadharcard Back Photo <span class="text-danger fw-bold">*</span></label>
+                                <input type="file" class="form-control my-1" autocomplete="off"
+                                    name="aadharcardpicsback" placeholder="Enter Digital saving account"
+                                    value="" required>
+                            </div>
+                        </div> --}}
                         <div class="text-center form-group">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
@@ -863,8 +551,7 @@
                         success: function(data) {
                             swal.close();
                             if (data.status == "Login") {
-                                $('#login-btn').attr("disabled", false).removeClass(
-                                    'btn-secondary').text('Sign In');
+                                $('#login-btn').attr("disabled", false).removeClass('btn-secondary').text('Sign In');
                                 swal({
                                     type: 'success',
                                     title: 'Success',
@@ -880,8 +567,7 @@
                             } else if (data.status ==
                                 "otpsent" || data.status ==
                                 "preotp") {
-                                $('#login-btn').attr("disabled", false).removeClass(
-                                    'btn-secondary').text('Verify OTP');
+                                $('#login-btn').attr("disabled", false).removeClass('btn-secondary').text('Verify OTP');
                                 $('div.formdata').append(`
                                                     <div class="form-group my-3">
                                                         <div class="d-flex justify-content-between">
@@ -890,11 +576,7 @@
                                                                 <small>Resend OTP</small>
                                                             </a>
                                                         </div>
-                                                        <div class="input-group">
-                                                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                                                            <input type="password" class="form-control" placeholder="Enter Otp" name="otp" required>
-                                                        </div>
-                                                        
+                                                        <input type="password" class="form-control my-1" placeholder="Enter Otp" name="otp" required>
                                                     </div>
                                                 `);
                                 if (data.status ==
@@ -1043,8 +725,7 @@
                     form.ajaxSubmit({
                         dataType: 'json',
                         beforeSubmit: function() {
-                            form.find('button:submit').html('Please wait...').attr(
-                                "disabled",
+                            form.find('button:submit').html('Please wait...').attr("disabled",
                                 true).addClass('btn-secondary');
                         },
                         complete: function() {
@@ -1115,12 +796,10 @@
                     form.ajaxSubmit({
                         dataType: 'json',
                         beforeSubmit: function() {
-                            form.find('button[type="submit"]').html('Please wait...').attr(
-                                'disabled', true).addClass('btn-secondary');
+                            form.find('button[type="submit"]').html('Please wait...').attr('disabled', true).addClass('btn-secondary');
                         },
                         complete: function() {
-                            form.find('button[type="submit"]').html('Reset Password').attr(
-                                'disabled', false).removeClass('btn-secondary');
+                            form.find('button[type="submit"]').html('Reset Password').attr('disabled', false).removeClass('btn-secondary');
                         },
                         success: function(data) {
                             if (data.status == "TXN") {
@@ -1138,10 +817,8 @@
                         error: function(errors) {
                             if (errors.status == '400') {
                                 notify(errors.responseJSON.message, 'error');
-                            } else if (errors.status == '422' || errors.responseJSON
-                                .statuscode == 'ERR') {
-                                notify(errors.responseJSON[0] || errors.responseJSON
-                                    .message, 'error');
+                            } else if (errors.status == '422' || errors.responseJSON.statuscode == 'ERR') {
+                                notify(errors.responseJSON[0] || errors.responseJSON.message, 'error');
                                 // $.each(errors.responseJSON.errors, function(index, value) {
                                 //     form.find('[name="' + index + '"]').closest(
                                 //         'div.form-group').append(
@@ -1299,12 +976,10 @@
                         "mobile": mobile
                     },
                     beforeSubmit: function() {
-                        form.find('button[type="submit"]').html('Please wait...').attr('disabled', true)
-                            .addClass('btn-secondary');
+                        form.find('button[type="submit"]').html('Please wait...').attr('disabled', true).addClass('btn-secondary');
                     },
                     complete: function() {
-                        form.find('button[type="submit"]').html('Reset Password').attr('disabled', false)
-                            .removeClass('btn-secondary');
+                        form.find('button[type="submit"]').html('Reset Password').attr('disabled', false).removeClass('btn-secondary');
                     },
                     success: function(data) {
                         swal.close();
@@ -1321,8 +996,7 @@
                         }
                     },
                     error: function(errors) {
-                        form.find('button[type="submit"]').html('Reset Password').attr('disabled', false)
-                            .removeClass('btn-secondary');
+                        form.find('button[type="submit"]').html('Reset Password').attr('disabled', false).removeClass('btn-secondary');
 
                         if (errors.status == '400') {
                             $('b.errorText').text(errors.responseJSON.message);
@@ -1351,7 +1025,7 @@
             var password = $('input[name="password"]').val();
             if (mobile.length > 0) {
                 $.ajax({
-                        url: '{{ route('authCheck') }}',
+                        url: '{{ route("authCheck")}}',
                         type: 'post',
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

@@ -18,6 +18,9 @@ class AndroidCommonHelper
             case 'travelsbus':
                 $checkAPIS = ServiceCredential::where('code', 'bus')->first();
                 break;
+            case 'travelshotel':
+                $checkAPIS = ServiceCredential::where('code', 'hotel')->first();
+                break;
             case 'iydaaeps':
                 $checkAPIS = Api::where('code', 'iydaAEPS')->first();
                 break;

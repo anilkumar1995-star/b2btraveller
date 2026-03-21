@@ -57,6 +57,10 @@ class FlightService
             return $this->baseUrl . '/v1/service/traveller/flight/booking/details';
         } else if ($method == 'cancelFlight') {
             return $this->baseUrl . '/v1/service/traveller/flight/booking/cancel';
+        } else if ($method == 'cancelCharge') {
+            return $this->baseUrl . '/v1/service/traveller/flight/cancellation/charges';
+        } else if ($method == 'cancelChargeStatus') {
+            return $this->baseUrl . '/v1/service/traveller/flight/change/request';
         }
         return "";
     }
@@ -185,7 +189,7 @@ class FlightService
                 $response['data'] = json_decode($response['data'], true);
             }
 
-            
+
             if (isset($response['status']) && strtolower($response['status']) == 'success') {
                 return ['status' => 'success', 'message' => "Fare Rule get successfully", 'data' => $response['data']];
             } else {
@@ -218,8 +222,9 @@ class FlightService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = StaticResponseHelper::fareQuoteStaticResponse();
-                $response = StaticResponseHelper::fareQuoteStaticResponseInt();
+                // $response = StaticResponseHelper::fareQuoteStaticResponseOld();
+                $response = StaticResponseHelper::fareQuoteStaticResponse();
+                // $response = StaticResponseHelper::fareQuoteStaticResponseInt();
             } else {
 
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "fare_quote", "");
@@ -269,8 +274,9 @@ class FlightService
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 // $response = StaticResponseHelper::flightSSRStaticResponse();
                 // $response = StaticResponseHelper::flightSSROneStaticResponse();
-                
-                $response = StaticResponseHelper::flightSSRStaticResponseInt();
+                $response = StaticResponseHelper::flightSSROneStaticResponseOld();
+
+                // $response = StaticResponseHelper::flightSSRStaticResponseInt();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "ssr", "");
                 $response = $response['response'];
@@ -308,7 +314,9 @@ class FlightService
                 "TokenId" => $token,
                 "TraceId" => $data['traceId'],
                 "ResultIndex" => $data['resultIndex'],
-                "Passengers" => $data['passengers']
+                "Passengers" => $data['passengers'],
+                "isLlc" => $data['islcc'],
+                "clientRefId" => $data['clientRefId'],
             ];
 
 
@@ -357,7 +365,10 @@ class FlightService
                     "TokenId" => $token,
                     "TraceId" => $data['traceId'],
                     "ResultIndex" => $data['resultIndex'],
-                    "Passengers" => $data['passengers']
+                    "Passengers" => $data['passengers'],
+                    "isLlc" => $data['islcc'],
+                    "amount" => $data['debitAmount'],
+                    "clientRefId" => $data['clientRefId'],
                 ];
                 $url = $this->setFullUrl('ticketlcc');
             } else {
@@ -367,6 +378,9 @@ class FlightService
                     "TokenId" => $token,
                     "BookingId" => $data['bookingId'],
                     "PNR" => $data['pnr'],
+                    "isLlc" => $data['islcc'],
+                    "amount" => $data['debitAmount'],
+                    "clientRefId" => $data['clientRefId'],
                 ];
 
                 $passportArr = [];
@@ -393,7 +407,7 @@ class FlightService
                     $payload['Passport'] = $passportArr;
                 }
 
-                 $url = $this->setFullUrl('ticketnonlcc');
+                $url = $this->setFullUrl('ticketnonlcc');
             }
 
             $baseUrl = url('/');
@@ -492,6 +506,7 @@ class FlightService
                 "RequestType" => $data['payload']['RequestType'],
                 "CancellationType" => $data['payload']['CancellationType'],
                 "Remarks" => $data['payload']['Remarks'],
+                "clientRefId" => $data['payid'],
             ];
 
             if ($data['payload']['RequestType'] == 2) {
@@ -528,6 +543,98 @@ class FlightService
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
                     'message' => $response['message'] ?? 'Flight Cancellation failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
+    }
+
+    public function getCancelCharge($data)
+    {
+        try {
+            $token = $this->authService->getToken();
+
+            $payload = [
+                "EndUserIp" => $this->ip,
+                "TokenId" => $token,
+                "RequestType" => "1",
+                "BookingId" => $data['booking_id'],
+                "BookingMode" => "5"
+            ];
+
+
+            $url = $this->setFullUrl('cancelCharge');
+
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = StaticResponseHelper::getCancelChargeStaticResponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "cancel_charge", "");
+                $response = $response['response'];
+            }
+
+
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
+
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
+
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Cancellation charges fetched successfully", 'data' => $response['data']];
+            } else {
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Failed to fetch cancellation charges'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
+    }
+    public function cancelflightStatus($data, $req)
+    {
+        try {
+            $token = $this->authService->getToken();
+
+            $payload = [
+                "EndUserIp" => $this->ip,
+                "TokenId" => $token,
+                "ChangeRequestId" => $data['ChangeRequestId'] ?? $req['changeReqId'],
+                "clientRefId" => $req['payid'],
+            ];
+
+            $url = $this->setFullUrl('cancelChargeStatus');
+
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = StaticResponseHelper::getCancelChargeStatusStaticResponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "cancel_charge_status", "");
+                $response = $response['response'];
+            }
+
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
+
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
+
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Cancellation status fetched successfully", 'data' => $response['data']];
+            } else {
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Failed to fetch cancellation status'
                 ];
             }
         } catch (Exception $e) {

@@ -9,6 +9,7 @@ use App\Models\Provider;
 use App\Models\Report;
 use App\Repo\BillPaymentRepo;
 use App\Services\AuthService;
+use App\Services\BusAuthService;
 use App\Services\BusService;
 use App\User;
 use Carbon\Carbon;
@@ -18,21 +19,11 @@ use Illuminate\Support\Facades\DB;
 
 class BusController extends Controller
 {
-    protected $tektravels, $billpayrepo;
+    protected $tektravels;
 
-    //  protected $checkServiceStatus, $api, $table, $billpayrepo, $callIydaBillpay;
-    // public function __construct()
-    // {
-    //     $this->checkServiceStatus = AndroidCommonHelper::CheckServiceStatus('iydabillpayment');
-    //     $this->billpayrepo = new BillPaymentRepo;
-    //     $this->callIydaBillpay = new IYDABillPayController;
-    //     $this->api = Api::where('code', 'paysprintbill')->first();
-    //     $this->table = DB::table('billpay_providers');
-    // }
-    public function __construct(AuthService $tektravels)
+    public function __construct(BusAuthService $tektravels)
     {
         $this->tektravels = $tektravels;
-        $this->billpayrepo = new BillPaymentRepo;
     }
 
     public function root()

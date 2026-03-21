@@ -25,46 +25,68 @@
     </div>
 
     <!-- Hero Banner -->
-    <div class="row g-3">
-        <div class="col-lg-10 mb-2 col-12">
-            <div class="banner p-4 rounded-3 text-white h-100"
-                style="background: linear-gradient(135deg, #6366f1, #3b82f6);
+    @if (Auth::id() != 13)
+        <div class="row g-3">
+            <div class="col-lg-10 mb-2 col-12">
+                <div class="banner p-4 rounded-3 text-white h-100"
+                    style="background: linear-gradient(135deg, #6366f1, #3b82f6);
                    box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
-                <div class="d-flex justify-content-between align-items-center h-100">
-                    <div>
-                        <h2 class="fw-bold text-white mb-1">
-                            Welcome Back, {{ Auth::user()->name }} 🏆
-                        </h2>
-                        <p class="mb-0">
-                            Effortlessly plan, track, and manage your travel bookings with complete control.
-                        </p>
-                    </div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" width="80">
-                </div>
-            </div>
-        </div>
-
-        <!-- RIGHT : SERVICES CARD (lg-2) -->
-        <div class="col-lg-2 mb-2 col-12">
-            <div class="card shadow-sm border-0 rounded-4 h-100">
-                <div class="card-body">
-                    <div class="services-scroll-wrapper d-flex flex-column gap-2">
-
-                        <a href="javascript:void(0)" class="text-decoration-none" data-bs-toggle="offcanvas"
-                            data-bs-target="#billOffcanvas">
-                            <div class="service-card text-center">
-                                <img src="{{ asset('logo/Bharat Connect Primary Logo_PNG.png') }}"  width="100" alt="BBPS"
-                                    class="service-img">
-                                <small class="text-dark fs-5 fw-semibold">Bill Pay</small>
-                            </div>
-                        </a>
-
+                    <div class="d-flex justify-content-between align-items-center h-100">
+                        <div>
+                            <h2 class="fw-bold text-white mb-1">
+                                Welcome Back, {{ Auth::user()->name }} 🏆
+                            </h2>
+                            <p class="mb-0">
+                                Effortlessly plan, track, and manage your travel bookings with complete control.
+                            </p>
+                        </div>
+                        <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" width="80">
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div>
+            <!-- RIGHT : SERVICES CARD (lg-2) -->
+            <div class="col-lg-2 mb-2 col-12">
+                <div class="card shadow-sm border-0 rounded-4 h-100">
+                    <div class="card-body">
+                        <div class="services-scroll-wrapper d-flex flex-column gap-2">
+
+                            <a href="javascript:void(0)" class="text-decoration-none" data-bs-toggle="offcanvas"
+                                data-bs-target="#billOffcanvas">
+                                <div class="service-card text-center">
+                                    <img src="{{ asset('logo/Bharat Connect Primary Logo_PNG.png') }}" width="100"
+                                        alt="BBPS" class="service-img">
+                                    <small class="text-dark fs-5 fw-semibold">Bill Pay</small>
+                                </div>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    @else
+        <div class="row g-3">
+            <div class="col-lg-12 mb-2 col-12">
+                <div class="banner p-4 rounded-3 text-white h-100"
+                    style="background: linear-gradient(135deg, #6366f1, #3b82f6);
+                   box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
+                    <div class="d-flex justify-content-between align-items-center h-100">
+                        <div>
+                            <h2 class="fw-bold text-white mb-1">
+                                Welcome Back, {{ Auth::user()->name }} 🏆
+                            </h2>
+                            <p class="mb-0">
+                                Effortlessly plan, track, and manage your travel bookings with complete control.
+                            </p>
+                        </div>
+                        <img src="https://cdn-icons-png.flaticon.com/512/201/201623.png" width="80">
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
 
     <div class="row mt-2 mb-2">
         <div class="col-lg-12">
@@ -295,8 +317,7 @@
             <!-- Right Section -->
             <div class="col-lg-5">
 
-                <div class="card shadow-sm border-0 rounded-4 p-3 mb-4" 
-                >
+                <div class="card shadow-sm border-0 rounded-4 p-3 mb-4">
                     <h5 class="fw-bold mb-4">All Recent Bookings</h5>
 
                     <div class="list-group" style="height: 270px;overflow-y: scroll;">
@@ -310,7 +331,7 @@
                                         @if ($booking->type == 'flight')
                                             ✈️
                                         @elseif($booking->type == 'bus')
-                                        🚍
+                                            🚍
                                         @else
                                             📑
                                         @endif
@@ -761,14 +782,16 @@
     <div class="floating-booking">
 
         <!-- FLIGHT -->
-        <div class="booking-item">
-            <div class="booking-icon"><i class="ti ti-plane"></i></div>
-            <div class="booking-slide">
-                <h6>Flight Booking</h6>
-                <p>Book domestic & international flights at best fares.</p>
-                <a class="btn" href="{{ route('flight.view') }}">New Flight Booking</a>
+        @if (Auth::id() != 13)
+            <div class="booking-item">
+                <div class="booking-icon"><i class="ti ti-plane"></i></div>
+                <div class="booking-slide">
+                    <h6>Flight Booking</h6>
+                    <p>Book domestic & international flights at best fares.</p>
+                    <a class="btn" href="{{ route('flight.view') }}">New Flight Booking</a>
+                </div>
             </div>
-        </div>
+        @endif
 
         <!-- BUS -->
         <div class="booking-item">
@@ -780,16 +803,17 @@
             </div>
         </div>
 
-        <!-- HOTEL -->
-        <div class="booking-item">
-            <div class="booking-icon"><i class="ti ti-building"></i></div>
-            <div class="booking-slide">
-                <h6>Hotel Booking</h6>
-                <p>Find hotels with best deals and instant confirmation.</p>
-                <a class="btn" href="{{ route('hotel.view') }}">New Hotel Booking</a>
+        @if (Auth::id() != 13)
+            <!-- HOTEL -->
+            <div class="booking-item">
+                <div class="booking-icon"><i class="ti ti-building"></i></div>
+                <div class="booking-slide">
+                    <h6>Hotel Booking</h6>
+                    <p>Find hotels with best deals and instant confirmation.</p>
+                    <a class="btn" href="{{ route('hotel.view') }}">New Hotel Booking</a>
+                </div>
             </div>
-        </div>
-
+        @endif
     </div>
 @endsection
 
@@ -963,13 +987,14 @@
                             }));
                         $('#booking_count').html(resp.bookingCount);
                         // bus                        
-                        $('#total_booking_amount_bus').html('₹' + parseFloat(resp.bookingSuccessAmountBus)
+                        $('#total_booking_amount_bus').html('₹' + parseFloat(resp
+                                .bookingSuccessAmountBus)
                             .toLocaleString('en-IN', {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2
                             }));
                         $('#booking_count_bus').html(resp.bookingCountBus);
-                       
+
                         // $('#revenueDateRange').html(resp.fromDate + '<b> to </b>' + resp.toDate);
                         updateRevenueChart(resp.revenueLabels, resp.revenueValues);
 

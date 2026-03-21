@@ -2,17 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Apilog;
-use App\Services\AuthService;
-use App\Services\FlightService;
+use App\Services\HotelAuthService;
+use App\Services\HotelService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class HotelController extends Controller
 {
     protected $tektravels;
 
-    public function __construct(AuthService $tektravels)
+    public function __construct(HotelAuthService $tektravels)
     {
         $this->tektravels = $tektravels;
     }
@@ -21,5 +19,55 @@ class HotelController extends Controller
     {
        return view('hotel.index-hotel');
     }
+
+     public function refreshToken()
+    {
+        try {
+            $token = $this->tektravels->getToken();
+            return response()->json([
+                'success' => true,
+                'token' => $token,
+                'message' => 'Token refreshed successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function searchCity(Request $request)
+    {
+        $service = new HotelService();
+        $response = $service->searchCity($request->all());
+
+        return response()->json($response);
+    }
+
+
+    public function searchHotel(Request $request)
+    {
+        $service = new HotelService();
+        $response = $service->searchHotel($request->all());
+
+        return response()->json($response);
+    }
+
+    public function boardingdetails(Request $request)
+    {
+        $service = new HotelService();
+        $response = $service->boardingdetail($request->all());
+
+        return response()->json($response);
+    }
+    public function seatdetails(Request $request)
+    {
+        $service = new HotelService();
+        $response = $service->seatdetail($request->all());
+
+        return response()->json($response);
+    }
+
     
 }

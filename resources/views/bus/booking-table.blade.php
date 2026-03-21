@@ -84,61 +84,107 @@
 
       @media print {
 
-          /* Reset */
+          @page {
+              margin: 0.5cm !important; /* Small margin for paper edge */
+              size: auto;
+          }
+
+          /* General Reset */
           html,
           body {
               margin: 0 !important;
               padding: 0 !important;
+              background: #fff !important;
               height: auto !important;
-              overflow: hidden !important;
+              overflow: visible !important;
           }
 
-          /* Hide everything */
-          body * {
-              visibility: hidden !important;
+          /* Hide everything except the modal when it's at the body root */
+          body > *:not(#viewTicketModal) {
+              display: none !important;
           }
 
-          /* Show only ticket */
-          #ticketContent,
-          #ticketContent * {
+          /* Reset all potential offsets for the modal and its content */
+          #viewTicketModal {
+              display: block !important;
+              position: static !important;
+              width: 100% !important;
+              height: auto !important;
+              margin: 0 !important;
+              padding: 0 !important;
               visibility: visible !important;
+              opacity: 1 !important;
           }
 
+          .modal-dialog,
+          .modal-content,
+          .modal-body,
           #ticketContent {
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              padding: 10px !important;
+              display: block !important;
+              position: static !important;
+              width: 100% !important;
+              max-width: 100% !important; /* Ensure it doesn't overflow horizontally */
+              height: auto !important;
               margin: 0 !important;
-          }
-
-          /* Remove bootstrap spacing */
-          .container,
-          .card,
-          .ticket-card {
-              margin: 0 !important;
-              padding: 10px !important;
+              padding: 0 !important;
+              border: none !important;
               box-shadow: none !important;
+              overflow: visible !important;
+              visibility: visible !important;
+              box-sizing: border-box !important;
           }
 
-          /* Prevent page break */
-          .ticket-card,
-          .passenger-card,
-          .barcode-card {
-              page-break-inside: avoid !important;
-              break-inside: avoid !important;
+          /* Handle long text wrapping (e.g. operator name) */
+          #ticketContent * {
+              max-width: 100% !important;
+              word-wrap: break-word !important;
+              overflow-wrap: break-word !important;
+              white-space: normal !important;
+              box-sizing: border-box !important;
           }
 
-          /* Hide UI */
+          /* Force compact layout inside ticketContent */
+          #ticketContent,
+          #ticketContent .row,
+          #ticketContent div[class^="col-"],
+          #ticketContent .card,
+          #ticketContent .card-body,
+          #ticketContent .ticket-route,
+          #ticketContent .passenger-section,
+          #ticketContent [class*="p-"],
+          #ticketContent [class*="m-"] {
+              margin: 0 !important;
+              padding: 4px !important;
+              box-sizing: border-box !important;
+              height: auto !important;
+              min-height: auto !important;
+          }
+
+          /* Handle text wrapping */
+          #ticketContent span,
+          #ticketContent div,
+          #ticketContent b,
+          #ticketContent h4,
+          #ticketContent h5 {
+              word-wrap: break-word !important;
+              overflow-wrap: break-word !important;
+              white-space: normal !important;
+          }
+
+          /* Hide UI elements inside the ticket */
           .modal-header,
           .modal-footer,
+          .btn-close,
           .btn,
-          .dropdown,
-          .pagination,
-          .card-datatable,
-          table {
+          .no-print {
               display: none !important;
+          }
+
+          /* Prevent page break inside SMALL cards but allow it for large ones like passenger-card */
+          .ticket-route,
+          .barcode {
+              page-break-inside: avoid !important;
+              break-inside: avoid !important;
           }
       }
 
@@ -347,9 +393,9 @@
       }
 
       .city-code {
-          font-size: 26px;
+          font-size: 20px;
           font-weight: 700;
-          letter-spacing: 2px;
+          letter-spacing: 1px;
       }
 
       .city-name {
@@ -652,7 +698,7 @@
                         <div class="row ticket-route">
 
 
-                            <div class="col-sm-6 p-3 text-center ticket-route">
+                            <div class="col-md-6 p-3 text-center ticket-route">
                                 <div class="mt-2 border rounded p-1  bg-label-warning">
                                     <span> PNR :
                                         <b>${booking.TravelOperatorPNR || '-'}</b></span>
@@ -662,11 +708,11 @@
 
                                 <br />
                                 <div>
-                                    ${booking.IsDomestic ? '<span class="text-success">DOMESTIC</span>' : '<span class="text-danger">INTERNATIONAL</span>'} |
+                                    ${booking.IsDomestic ? '<span class="text-success">DOMESTIC</span>' : '<span class="text-danger">Outstation/Intercity</span>'} |
                                     <span class="text-success">Journey Date: ${booking?.DateOfJourney}</span> |
                                     <span class="text-success">${booking.NoOfSeats} No. Seat</span> |
                                     
-                                    <span class="text-danger">Block to Book Time : ${booking.BlockDuration}</span>
+                                    <span class="text-danger">Block to Book Time : ${booking.BlockDuration ?? 'N/A'}</span>
                                     <br />
                                     Bus Toll Free: ${booking.BoardingPointdetails?.CityPointContactNumber
                                     ? `<a href="tel:${booking.BoardingPointdetails?.CityPointContactNumber}" class="text-primary fw-semibold">
@@ -677,7 +723,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-sm-6 p-3 ticket-route">
+                            <div class="col-md-6 p-3 ticket-route">
 
                                 <div class="d-flex justify-content-between align-items-center">
 
@@ -993,7 +1039,16 @@
 
       function printTicket() {
 
+          const modal = document.getElementById('viewTicketModal');
+          const originalParent = modal.parentElement;
+
+          // Move modal to body root to avoid parent offsets/visibility issues
+          document.body.appendChild(modal);
+
           window.print();
+
+          // Move it back after print dialog closes
+          originalParent.appendChild(modal);
 
       }
 

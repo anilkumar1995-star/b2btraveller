@@ -4,12 +4,18 @@
 @section('content')
     <div class="card" style="border:1px solid rgb(244, 90, 90);">
         <div class="card-header pb-0 bg-label-danger">
-            <h5> ✈️ Flight Cancellation</h5>
+            <h5> ✈️ Flight Cancellation </h5>
         </div>
 
         <div class="card-body mt-3">
             <div class="ticket-route w-100 p-3 mb-4">
 
+                <div class="row mb-4 alert alert-success">
+                    <div class="col-md-3"><b>Cancellation Charge:</b> ₹<span id="cancelCharge"></span></div>
+                    <div class="col-md-3 text-center border-start border-primary"><b>Refund Amount:</b> ₹<span
+                            id="refundAmount"></span></div>
+                    <div class="col-md-6 border-start border-primary"><b>Remarks:</b> <span id="cancelRemarks"></span></div>
+                </div>
                 <!-- Booking Info -->
                 <div class="row mb-4 alert alert-warning">
                     <div class="col-md-3"><b>Booking ID:</b> {{ $booking->booking_id_api }}</div>
@@ -98,6 +104,11 @@
 
 @push('script')
     <script>
+        $(document).ready(function() {
+            $('#cancelCharge').text(localStorage.getItem('cancelCharge') || 'N/A');
+            $('#refundAmount').text(localStorage.getItem('refundAmount') || 'N/A');
+            $('#cancelRemarks').text(localStorage.getItem('cancelRemarks') || 'N/A');
+        });
         $('#cancelNow').on('click', function() {
 
             let valid = true;
@@ -143,6 +154,16 @@
                 $('#cancellationType').removeClass('is-invalid');
             }
 
+
+
+            const cancelCharge = localStorage.getItem('cancelCharge');
+            const refundAmount = localStorage.getItem('refundAmount');
+
+            if (!cancelCharge || !refundAmount) {
+                valid = false;
+                errors.push('Cancellation charges not available. Please try again.');
+            }
+
             if (!valid) {
                 notify(errors[0] || 'Incomplete Details', 'warning');
                 return;
@@ -154,6 +175,8 @@
                 CancellationType: Number(cancellationType),
                 TicketId: tickets,
                 Remarks: remarks,
+                CancellationCharge: cancelCharge,
+                RefundAmount: refundAmount,
                 Sectors: [{
                     Origin: "{{ $finalDet['Origin'] }}",
                     Destination: "{{ $finalDet['Destination'] }}"

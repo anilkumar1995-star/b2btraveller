@@ -14,10 +14,8 @@
         <!-- Tabs Header -->
         <div class="card shadow-sm mb-3">
             <div class="card-body d-flex justify-content-between align-items-center">
-                <p class="mb-0 text-secondary" style="font-size: 15px;">
-                    📢 Note: <b class="text-warning">You may proceed with the booking without selecting any optional
-                        SSR
-                        (Seat, Baggage, Meal) services.</b>
+                <p class="mb-0 text-secondary" style="font-size: 15px;" id="ssrNote">
+                    
                 </p>
 
                 <button class="btn btn-primary" id="proceedBookingBtn">
@@ -299,7 +297,7 @@
 
 @push('script')
     {{-- ================== SCRIPT ================== --}}
-    <script src="{{ asset('') }}js/bookingflighttrip.js"></script>
+    <script src="{{ asset('') }}js/boookflighttrip.js"></script>
     <script>
         $(document).ready(function() {
 

@@ -339,7 +339,7 @@
 
 
 @push('script')
-    <script src="{{ asset('') }}js/bookingflighttrip.js"></script>
+    <script src="{{ asset('') }}js/boookflighttrip.js"></script>
 
 
     <script>
@@ -370,6 +370,7 @@
 
                 if (storedFlight) {
                     const flightDetails = JSON.parse(storedFlight);
+                    localStorage.removeItem(`requiredSSRdeparture`);
 
                     displayFlightDetails(flightDetails, 'departure');
                     getFareRules(resultIndex, traceId, 'departure');
@@ -400,6 +401,8 @@
 
                         const depresultIndex = localStorage.getItem('DepartureResultIndex');
                         const rettresultIndex = localStorage.getItem('ReturnResultIndex');
+                         localStorage.removeItem(`requiredSSRdeparture`);
+                         localStorage.removeItem(`requiredSSRreturn`);
 
                         displayFlightDetails(flightDetails?.departure, 'departure');
                         getFareRules(depresultIndex, traceId, 'departure');

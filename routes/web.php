@@ -76,7 +76,6 @@ Route::group(['prefix' => 'payment', 'middleware' => ['auth']], function () {
     // Route::post('vancreate', [EasebuzzVanController::class, 'generateVan'])->name('generateVan');
     // Route::post('updatevan', [EasebuzzVanController::class, 'updateVanInfo'])->name('updatevan');
     Route::post('vandelete/{account_id}', [EasebuzzVanController::class, 'updateVanStatus']);
-
 });
 
 Route::group(['prefix' => 'customer', 'middleware' => ['auth']], function () {
@@ -171,6 +170,8 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::post('booking-view', [FlightController::class, 'viewTicket'])->name('flight.booking.view');
     Route::get('cancel/{id}', [FlightController::class, 'cancelPage']);
     Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);
+    Route::post('get-cancellation-charges', [FlightController::class, 'getCancellationCharges']);
+    Route::post('cancel-status', [FlightController::class, 'checkCancelStatus'])->name('cancelStatus');
 });
 
 
@@ -186,21 +187,34 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
     Route::post('block', [BusController::class, 'busBlock'])->name('bus.block');
     Route::post('book', [BusController::class, 'bookBus'])->name('bus.book');
 
-    Route::get('booking-list', [BusController::class, 'bookingList'])->name('flight.bookingList');
-    Route::get('booking-list-failed', [BusController::class, 'bookingListFailed'])->name('flight.bookingListFailed');
+    Route::get('booking-list', [BusController::class, 'bookingList'])->name('bus.bookingList');
+    Route::get('booking-list-failed', [BusController::class, 'bookingListFailed'])->name('bus.bookingListFailed');
 
-    Route::post('booking-view', [BusController::class, 'viewTicket'])->name('flight.booking.view');
+    Route::post('booking-view', [BusController::class, 'viewTicket'])->name('bus.booking.view');
 
-     Route::get('cancel/{id}', [BusController::class, 'cancelPage']);
+    Route::get('cancel/{id}', [BusController::class, 'cancelPage']);
     Route::post('cancel-submit', [BusController::class, 'submitCancellation']);
 });
 
 Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     Route::get('view', [HotelController::class, 'root'])->name('hotel.view');
-    // Route::post('search', [HotelController::class, 'search'])->name('hotel.search');
-    // Route::post('book', [HotelController::class, 'bookHotel'])->name('hotel.book');
-    // Route::post('ticket', [HotelController::class, 'hotelTicket'])->name('hotel.ticket');
-    // Route::get('booking', [HotelController::class, 'hotelBooking'])->name('hotel.booking');
+     Route::get('search-city', [HotelController::class, 'searchCity'])->name('hotel.city');
+    Route::post('search', [HotelController::class, "searchHotel"]);
+
+    Route::get('booking', [HotelController::class, 'book_HOTELS'])->name('hotel-search');
+    Route::get('booking/detail', [HotelController::class, "view_HOTELS"]);
+    Route::get('guest/detail', [HotelController::class, "gust_Deatils"]);
+
+    Route::post('search/filter', [HotelController::class, "searchFilter_HOTEL"]);
+
+    Route::post('details', [HotelController::class, "details_HOTEL"]);
+    Route::post('temp-book', [HotelController::class, "tempBooking_HOTEL"]);
+    Route::post('payments', [HotelController::class, "ticketAddPayments_HOTEL"]);
+    Route::post('confirm-book', [HotelController::class, "book_HOTEL"]);
+    Route::post('policy', [HotelController::class, "cancellationPolicy"]);
+    Route::post('cancel', [HotelController::class, "cancel_HOTEL"]);
+
+    Route::get('calcellation/{txnId?}', [ViewsController::class, 'travelCancel_HOTEL'])->name('travelCancel-HOTEL');
 });
 
 Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActivityLog']], function () {
