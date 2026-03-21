@@ -60,12 +60,7 @@ class AndroidCommonHelper
 
      public static function transcode()
     {
-        $code = \DB::table('portal_settings')->where('code', 'transactioncode')->first(['value']);
-        if ($code) {
-            return $code->value;
-        } else {
-            return "TXN";
-        }
+        return "TXN";
     }
 
 
@@ -89,7 +84,11 @@ class AndroidCommonHelper
 
     public static function makeTxnId($prefix, int $len)
     {
-        $txnidWithLength35 = strtoupper(substr(self::transcode() . $prefix . str_shuffle(str_replace("-", "", hrtime(true))), 0, $len));
+        $baseCode = self::transcode();
+        if ($baseCode == "BM") {
+            $baseCode = "TXN";
+        }
+        $txnidWithLength35 = strtoupper(substr($baseCode . $prefix . str_shuffle(str_replace("-", "", hrtime(true))), 0, $len));
 
         return $txnidWithLength35 . rand(111111, 999999);
     }

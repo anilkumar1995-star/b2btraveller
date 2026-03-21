@@ -27,7 +27,7 @@ class IYDACallbackContoller extends Controller
    protected $api,$checkServiceStatus,$recodemaker,$payoutService;
     public function __construct()
     {
-        $this->api = Api::where('code', 'ccpayment')->first();
+        $this->api = Api::where('code', 'rrpayment')->first();
         $this->checkServiceStatus = AndroidCommonHelper::CheckServiceStatus('iydapayout');
         $this->recodemaker = new PayoutRepo;
         $this->payoutService = new IYDAPayoutService;
@@ -786,8 +786,20 @@ class IYDACallbackContoller extends Controller
     
 //   }
 
-function updateccpayment($resp){
-        
+    public function updateccpayment($resp)
+    {
+        $clientRefId = $resp->data['clientRefId'] ?? '';
+
+        if (substr($clientRefId, 0, 3) == 'BUS') {
+            return $this->updateBusPayment($resp);
+        }
+        if (substr($clientRefId, 0, 6) == 'FLIGHT') {
+            return $this->updateFlightPayment($resp);
+        }
+        if (substr($clientRefId, 0, 5) == 'HOTEL') {
+            return $this->updateHotelPayment($resp);
+        }
+
         $status = "failed";
         if ($resp->code == "0x0200") {
             $status = "success";
@@ -1087,5 +1099,82 @@ public function  clearpending(){
            }
     }
   
+    public function updateBusPayment($resp)
+    {
+        $status = ($resp->code == "0x0200") ? "success" : "failed";
+        $clientRefId = $resp->data['clientRefId'];
+
+        $booking = DB::table('bus_bookings')->where('order_ref_id', $clientRefId)->first();
+        if (!$booking) return response()->json(['status' => 'failed', 'message' => 'Booking not found']);
+
+        Report::where('payid', $clientRefId)->update([
+            'status' => ($status == "success") ? "success" : "failed",
+            'refno'  => $resp->data['utr'] ?? null
+        ]);
+
+        if ($status == 'success' && strtolower($booking->payment_status) != 'success') {
+            DB::table('bus_bookings')->where('order_ref_id', $clientRefId)->update(['payment_status' => 'success']);
+            
+            // Call API to book bus
+            $payload = json_decode($booking->raw_payload, true);
+            $service = new \App\Services\BusService();
+            $serviceResponse = $service->bookBuss($payload);
+            
+            // Handle API Response (simplified)
+            if (isset($serviceResponse['status']) && strtolower($serviceResponse['status']) == 'success') {
+                DB::table('bus_bookings')->where('order_ref_id', $clientRefId)->update([
+                    'booking_status' => 'Confirmed',
+                    'raw_response'   => json_encode($serviceResponse)
+                ]);
+            }
+        }
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function updateFlightPayment($resp)
+    {
+        $status = ($resp->code == "0x0200") ? "success" : "failed";
+        $clientRefId = $resp->data['clientRefId'];
+
+        $booking = DB::table('bookings')->where('order_ref_id', $clientRefId)->first();
+        if (!$booking) return;
+
+        Report::where('payid', $clientRefId)->update([
+            'status' => ($status == "success") ? "success" : "failed",
+            'refno'  => $resp->data['utr'] ?? null
+        ]);
+
+        if ($status == 'success' && $booking->payment_status != 'success') {
+            DB::table('bookings')->where('order_ref_id', $clientRefId)->update(['payment_status' => 'success']);
+            
+            // Finalize flight ticket
+            $payload = json_decode($booking->raw_payload, true);
+            $service = new \App\Services\FlightService();
+            $service->flightTicket($payload);
+        }
+    }
+
+    public function updateHotelPayment($resp)
+    {
+        $status = ($resp->code == "0x0200") ? "success" : "failed";
+        $clientRefId = $resp->data['clientRefId'];
+
+        $booking = DB::table('hotel_bookings')->where('order_ref_id', $clientRefId)->first();
+        if (!$booking) return;
+
+        Report::where('payid', $clientRefId)->update([
+            'status' => ($status == "success") ? "success" : "failed",
+            'refno'  => $resp->data['utr'] ?? null
+        ]);
+
+        if ($status == 'success' && $booking->payment_status != 'success') {
+            DB::table('hotel_bookings')->where('order_ref_id', $clientRefId)->update(['payment_status' => 'success']);
+            
+            // Finalize hotel booking
+            $payload = json_decode($booking->raw_payload, true);
+            $service = new \App\Services\HotelService();
+            $service->hotelBook($payload);
+        }
+    }
 }
 

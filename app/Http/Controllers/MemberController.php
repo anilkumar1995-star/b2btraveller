@@ -33,7 +33,8 @@ class MemberController extends Controller
 
         if ($action == "view" && !\Myhelper::can('view_' . $type)) {
             abort(401);
-        } elseif ($action == "create" && !\Myhelper::can('create_' . $type) && !in_array($type, ['kycpending', 'kycsubmitted', 'kycrejected'])) {
+        }
+        elseif ($action == "create" && !\Myhelper::can('create_' . $type) && !in_array($type, ['kycpending', 'kycsubmitted', 'kycrejected'])) {
             abort(401);
         }
 
@@ -63,7 +64,8 @@ class MemberController extends Controller
         $data['state'] = Circle::all();
         if ($this->schememanager() != "all") {
             $data['scheme'] = Scheme::where('user_id', \Auth::id())->get();
-        } else {
+        }
+        else {
             $data['scheme'] = Package::where('user_id', \Auth::id())->get();
         }
 
@@ -96,7 +98,8 @@ class MemberController extends Controller
 
         if ($action == "view") {
             return view('member.index')->with($data);
-        } else {
+        }
+        else {
             return view('member.create')->with($data);
         }
     }
@@ -149,11 +152,12 @@ class MemberController extends Controller
         $post['password'] = bcrypt($post->mobile);
         $post['agentcode'] = date('ymdhis');
 
-       
+
         if ($role->slug == "whitelable") {
             $company = Company::create($post->all());
             $post['company_id'] = $company->id;
-        } else {
+        }
+        else {
             $post['company_id'] = \Auth::user()->company_id;
         }
 
@@ -205,7 +209,8 @@ class MemberController extends Controller
             $sms = AndroidCommonHelper::sendEmailAndOtp("activateAccount", $arr);
 
             return response()->json(['status' => 'success'], 200);
-        } else {
+        }
+        else {
             return response()->json(['status' => 'fail'], 400);
         }
     }
@@ -266,13 +271,14 @@ class MemberController extends Controller
         $arr = ResourceController::getBillpaymentProvidersSlugs();
         foreach (@$product as $key) {
             $getData = Commission::where('scheme_id', $post->scheme_id);
-            $key = (array) $key;
-            if (!in_array((string) $key['service_slug'], $arr)) {
+            $key = (array)$key;
+            if (!in_array((string)$key['service_slug'], $arr)) {
                 $data['commission'][$key['service_slug']]['label'] = $key['service_name'];
                 $data['commission'][$key['service_slug']]['details'] = $getData->whereHas('provider', function ($q) use ($key) {
                     $q->where('type', $key['service_slug'])->where('status', '1');
                 })->get();
-            } else {
+            }
+            else {
                 $allBillData = [];
                 $billCommData = $getData->where('slab', $key['service_slug'])->first();
                 if (!empty($billCommData)) {
@@ -311,14 +317,15 @@ class MemberController extends Controller
         $arr = ResourceController::getBillpaymentProvidersSlugs();
         foreach (@$product as $key) {
             $getData = Packagecommission::where('scheme_id', $post->scheme_id);
-            $key = (array) $key;
-            if (!in_array((string) $key['service_slug'], $arr)) {
+            $key = (array)$key;
+            if (!in_array((string)$key['service_slug'], $arr)) {
                 $data['commission'][$key['service_slug']]['label'] = $key['service_name'];
 
                 $data['commission'][$key['service_slug']]['details'] = $getData->whereHas('provider', function ($q) use ($key) {
                     $q->where('type', $key['service_slug'])->where('status', '1');
                 })->get();
-            } else {
+            }
+            else {
                 $allBillData = [];
                 $billCommData = $getData->where('slab', $key['service_slug'])->first();
                 if (!empty($billCommData)) {
@@ -333,18 +340,21 @@ class MemberController extends Controller
         $data['commission']['billpayments']['details'] = @$allBillData;
         return response()->json(view('member.packagecommission')->with($data)->render());
     }
-    
-    public function getmember(Request $post){
-        if($post->mobile){
-                $user = \DB::table('users')->where('mobile', $post->mobile)->first('name');
-                if($user){
-                  	return response()->json(['status'=>'success','data'=>$user], 200);  
-                }else{
-                    	return response()->json(['status'=>'fail'], 200);
-                }
-            
-        }else{
-            	return response()->json(['status'=>'fail'], 200);
+
+    public function getmember(Request $post)
+    {
+        if ($post->mobile) {
+            $user = \DB::table('users')->where('mobile', $post->mobile)->first('name');
+            if ($user) {
+                return response()->json(['status' => 'success', 'data' => $user], 200);
+            }
+            else {
+                return response()->json(['status' => 'fail'], 200);
+            }
+
+        }
+        else {
+            return response()->json(['status' => 'fail'], 200);
         }
     }
 
