@@ -3251,10 +3251,6 @@ function ViewTicketAjaxInternational(payload, apiUrl, trip, journeyType, callTic
         },
 
         success: function (response) {
-            if (response?.url) {
-                window.location.href = response.url;
-                return;
-            }
 
             if (callTicketAfterBook && response?.status === 'success') {
 
@@ -3328,10 +3324,7 @@ function ViewTicketAjax(payload, apiUrl, trip, journeyType, $val = 'func', callT
             $('.preloader').removeClass('d-none');
         },
         success: function (response) {
-            if (response?.url) {
-                window.location.href = response.url;
-                return;
-            }
+
             if (callTicketAfterBook && response?.status == 'success') {
 
                 bookingResult[trip] = response;
@@ -3392,9 +3385,10 @@ function checkFinalBookingStatus(trip, journeyType, source) {
         $('#bookingData').removeClass('d-none');
         $('.preloader').addClass('d-none');
         if (!bookingResult.departure) return;
+        window.location.href = bookingResult.departure.data?.url || "#";
 
         if (bookingResult.departure.status === 'success') {
-             window.location.href = bookingResult.departure.data?.url || "#";
+            
             const dep = bookingResult.departure.data.Response.Response;
 
             swal({
