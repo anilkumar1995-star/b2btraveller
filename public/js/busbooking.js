@@ -479,7 +479,7 @@ function renderSeatLayout(apiResponse) {
     console.log('Lower Deck Rows:', lowerDeckRows, 'Upper Deck Rows:', upperDeckRows);
     // Render rows layout
     let renderRowsLayout = (deckRows, showDriver = false) => {
-       
+
         if (deckRows.length === 0) {
             return '<div class="text-center text-muted p-4">No seats available</div>';
         }
@@ -972,16 +972,7 @@ function callBlockApi(bookingPayload) {
                     });
                     return;
                 }
-                swal({
-                    type: 'success',
-                    title: 'Seats Blocked',
-                    html: `Seats blocked successfully.<br/> <b class="text-success">Proceed to payment with Amount : ${res.totalAmount}</b>`,
-                    confirmButtonText: 'Proceed',
-                    allowOutsideClick: false,
-                    allowEscapeKey: false
-                }).then(() => {
-                    callBookApi(bookingPayload, res.totalAmount);
-                });
+                callBookApi(bookingPayload, res.totalAmount);
             } else {
                 swal({
                     type: 'error',
@@ -1017,7 +1008,7 @@ function callBookApi(bookingPayload, amt) {
     swal({
         type: 'warning',
         title: 'Confirming Booking...',
-        text: 'Amount will be deducted from wallet',
+        text: 'Amount will be deducted from Payment Gateway',
         onOpen: () => {
             swal.showLoading()
         },
@@ -1035,11 +1026,9 @@ function callBookApi(bookingPayload, amt) {
         data: JSON.stringify(bookingPayload),
 
         success: function (res) {
-
             swal.close();
 
             if (res.status == 'success') {
-
                 swal({
                     type: 'success',
                     title: 'Booking Confirmed 🎉',
@@ -1054,8 +1043,18 @@ function callBookApi(bookingPayload, amt) {
                 }).then(() => {
                     window.location.href = `/bus/booking-list`;
                 });
+            } else if (res.status == 'SUCCESS' || res.status == 'txn_initiated') {
+                let redirectUrl = res.url || (res.data && res.data.url);
+                if (redirectUrl) {
+                    window.location.href = redirectUrl;
+                } else {
+                    swal({
+                        title: 'Error',
+                        text: 'Payment URL not found',
+                        type: 'error'
+                    });
+                }
             } else {
-
                 swal({
                     title: 'Booking Failed',
                     text: res.message || res.Error?.ErrorMessage || 'Unable to confirm booking',
@@ -1065,10 +1064,7 @@ function callBookApi(bookingPayload, amt) {
                 }).then(() => {
                     window.location.href = '/bus/booking-list-failed';
                 });
-                return;
             }
-
-
         },
         error: function () {
             swal.close();

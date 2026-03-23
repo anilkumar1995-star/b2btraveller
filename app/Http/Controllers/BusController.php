@@ -7,15 +7,22 @@ use App\Models\Apilog;
 use App\Models\Bus;
 use App\Models\Provider;
 use App\Models\Report;
+use App\Models\Api;
+use App\Models\Agents;
+use App\Models\Ccreport;
 use App\Repo\BillPaymentRepo;
 use App\Services\AuthService;
 use App\Services\BusAuthService;
 use App\Services\BusService;
+use App\Services\Traveller\BusTravelService;
 use App\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Myhelper;
 
 class BusController extends Controller
 {
@@ -213,6 +220,7 @@ class BusController extends Controller
             return response()->json(['status' => 'failed', 'message' => 'Your account has been blocked.']);
         }
 
+        /* 
         try {
             DB::beginTransaction();
 
@@ -327,7 +335,7 @@ class BusController extends Controller
                 ]);
             }
 
-            /* ---------- SUCCESS ---------- */
+            // SUCCESS 
             if (strtolower($response['status'] ?? '') == 'success') {
 
                 $data = $response['data'] ?? null;
@@ -366,7 +374,7 @@ class BusController extends Controller
             }
 
 
-            /* ---------- PENDING ---------- */
+            // PENDING 
             Report::where('id', $report->id)->update([
                 'status' => 'pending',
                 'refno'  => $request->traceId,
@@ -400,6 +408,106 @@ class BusController extends Controller
                 'status'  => 'failed',
                 'message' => 'Booking processed but final update failed. Please contact support.'
             ]);
+        }
+        */
+
+
+        $api = Api::where('code', 'rrpayment')->first();
+        if (!$api) {
+            return response()->json(['status' => 'failed', 'message' => "PG service is down"]);
+        }
+
+        $agent = Agents::where('user_id', \Auth::id())->first();
+        if (!$agent) {
+             $agent = Agents::where('user_id', 1)->first(); 
+        }
+
+        $clientRefId = AndroidCommonHelper::makeTxnId("", 10);
+        $url = $api->url . "v1/service/pgcollect/order";
+        
+        $header = [
+            "Content-Type: application/json",
+            "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
+        ];
+
+        $reqData = [
+            "email"        => $user->email,
+            "name"         => $user->name,
+            "merchantCode" => $agent->bc_id ?? "MID7332321140",
+            "clientRefId"  => $clientRefId,
+            "mobile"       => $user->mobile,
+            "successUrl"  => route('bus.payment.success'),
+            "failedUrl"   => route('bus.payment.failed'),
+            "amount"       => $request->totalAmount
+        ];
+
+        $result = \Myhelper::curl($url, "POST", json_encode($reqData), $header, "yes");
+       
+        if ($result['response'] != '') {
+            $responseStatus = json_decode($result['response']);
+           
+            if (isset($responseStatus->code) && $responseStatus->code == "0x0200") {
+                $tid = $request->input('traceId', $request->input('TraceId'));
+                
+                $affected = DB::table('bus_bookings')
+                    ->where('booking_id_api', $tid)
+                    ->update([
+                        'order_ref_id' => $clientRefId,
+                        'raw_payload'  => json_encode($request->all())
+                    ]);
+
+                // Debug logging to confirm update
+                \Log::info("Bus Update Attempt: tid=$tid, clientRefId=$clientRefId, affected=$affected");
+
+                Report::create([
+                    'number'      => $tid,
+                    'mobile'      => $user->mobile,
+                    'provider_id' => 0,
+                    'api_id'      => 0,
+                    'amount'      => $request->totalAmount,
+                    'profit'      => 0,
+                    'txnid'       => $clientRefId,
+                    'payid'       => $clientRefId,
+                    'status'      => 'pending',
+                    'user_id'     => $user->id,
+                    'credited_by' => $user->id,
+                    'rtype'       => 'main',
+                    'via'         => 'portal',
+                    'balance'     => $user->mainwallet,
+                    'trans_type'  => 'debit',
+                    'product'     => 'bustravel',
+                    'transtype'   => 'pg',
+                ]);
+
+                return response()->json([
+                    'status' => 'SUCCESS',
+                    'url'    => $responseStatus->data->url,
+                    'message' => 'Order created successful.',
+                    'data'   => $responseStatus->data
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $responseStatus->message ?? "PG Initiation failed"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => "PG service no response"
+            ]);
+        }
+
+    }
+
+    public function generateTravellerUrl()
+    {
+        try {
+            $service = new BusTravelService();
+            $response = $service->generateUrl();
+            return response()->json($response);
+        } catch (\Exception $e) {
+            return response()->json(['status' => false, 'message' => $e->getMessage()], 500);
         }
     }
 
@@ -494,6 +602,48 @@ class BusController extends Controller
         $response = $service->getDetailsBus($booking);
 
         return response()->json($response);
+    }
+
+    public function checkStatus(Request $request)
+    {
+        $id = $request->id;
+        if (!$id) {
+            return response()->json(['status' => 'failed', 'message' => 'ID missing']);
+        }
+
+        $booking = DB::table('bus_bookings')->where('order_ref_id', $id)->first();
+
+        if ($booking && $booking->booking_status === 'Confirmed') {
+            return response()->json([
+                'status' => 'success',
+                'booking_status' => 'Confirmed',
+                'data' => $booking
+            ]);
+        }
+
+        $api = Api::where('code', 'rrpayment')->first();
+        if ($api) {
+            $url = $api->url . 'v1/service/paycc/order/' . $id;
+            $header = [
+                "Content-Type: application/json",
+                "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
+            ];
+
+            $result = \Myhelper::curl($url, "GET", [], $header, "yes");
+            if ($result['response'] != '') {
+                $responseStatus = json_decode($result['response']);
+                if (isset($responseStatus->status) && $responseStatus->status == "SUCCESS") {
+                    // Re-fetch booking after API hit as webhook might have updated it
+                    $booking = DB::table('bus_bookings')->where('order_ref_id', $id)->first();
+                }
+            }
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'booking_status' => $booking->booking_status ?? 'pending',
+            'data' => $booking
+        ]);
     }
 
     public function cancelPage($id)
@@ -591,5 +741,17 @@ class BusController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    public function paymentSuccess(Request $request)
+    {
+        $id = $request->clientRefId ?? $request->txnid;
+        return view('bus.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id]);
+    }
+
+    public function paymentFailed(Request $request)
+    {
+        $id = $request->clientRefId ?? $request->txnid;
+        return view('bus.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
     }
 }
