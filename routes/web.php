@@ -200,14 +200,18 @@ Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     Route::get('view', [HotelController::class, 'root'])->name('hotel.view');
      Route::get('search-city', [HotelController::class, 'searchCity'])->name('hotel.city');
     Route::post('search', [HotelController::class, "searchHotel"]);
+    
+    Route::get('booking/detail', [HotelController::class, "viewHotelDetails"]);
+    Route::post('details', [HotelController::class, "detailsHotel"]);
+    Route::post('room', [HotelController::class, "detailsRoom"]);
 
-    Route::get('booking', [HotelController::class, 'book_HOTELS'])->name('hotel-search');
-    Route::get('booking/detail', [HotelController::class, "view_HOTELS"]);
+
     Route::get('guest/detail', [HotelController::class, "gust_Deatils"]);
 
     Route::post('search/filter', [HotelController::class, "searchFilter_HOTEL"]);
 
-    Route::post('details', [HotelController::class, "details_HOTEL"]);
+    Route::get('booking', [HotelController::class, 'book_HOTELS'])->name('hotel-search');
+    
     Route::post('temp-book', [HotelController::class, "tempBooking_HOTEL"]);
     Route::post('payments', [HotelController::class, "ticketAddPayments_HOTEL"]);
     Route::post('confirm-book', [HotelController::class, "book_HOTEL"]);
