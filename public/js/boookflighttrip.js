@@ -4445,6 +4445,8 @@ function renderRoundSummary(depFlight, retFlight) {
     $("#summaryDetails").html(html);
 }
 
+
+
 $(document).on("click", ".btn-book-now-rtrip", function () {
     const encoded = $(this).attr('data-bookingflightdetails');
 
@@ -4454,7 +4456,8 @@ $(document).on("click", ".btn-book-now-rtrip", function () {
             localStorage.setItem('selectedFlightDetails', JSON.stringify(flight));
             localStorage.setItem("DepartureResultIndex", flight?.departure.ResultIndex || '');
             localStorage.setItem("ReturnResultIndex", flight?.return.ResultIndex || '');
-            window.location.href = "/flight/detail";
+            // window.location.href = "/flight/detail";
+            window.location.href = "/flight/passengers";
         } else {
             notify("Flight details not found!", "error");
         }
