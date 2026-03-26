@@ -727,12 +727,14 @@ $(document).on('click', '.bus-seat:not(.booked)', function () {
 $(document).on('change', 'input[name="boarding_point"]', function () {
     let bp = JSON.parse(this.value);
     selectedBoardingId = bp.CityPointIndex;
+    localStorage.setItem('selectedBoardingPoint', JSON.stringify(selectedBoardingId));
     validateProceedButton();
 });
 
 $(document).on('change', 'input[name="dropping_point"]', function () {
     let dp = JSON.parse(this.value);
     selectedDroppingId = dp.CityPointIndex;
+    localStorage.setItem('selectedDroppingPoint', JSON.stringify(selectedDroppingId));
     validateProceedButton();
 });
 
@@ -946,6 +948,9 @@ $(document).on('click', '#confirmPassengers', function () {
     let trcid = localStorage.getItem('TraceId');
     let bsrstindx = localStorage.getItem("BusResultIndex");
 
+    let selectedBoardingId = JSON.parse(localStorage.getItem('selectedBoardingPoint'));
+    let selectedDroppingId = JSON.parse(localStorage.getItem('selectedDroppingPoint'));
+
     let bookingPayload = {
         resultIndex: bsrstindx,
         traceId: trcid,
@@ -955,6 +960,9 @@ $(document).on('click', '#confirmPassengers', function () {
         _token: $('meta[name="csrf-token"]').attr('content')
     };
 
+    
+    console.log(bookingPayload);
+    return;
     swal({
         title: 'Confirm Seat Blocking?',
         text: 'Selected seats will be blocked for limited time.',
