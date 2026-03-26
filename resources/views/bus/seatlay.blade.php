@@ -280,7 +280,7 @@
 @endsection
 
 @push('script')
-    <script src="{{ asset('') }}js/busbooking.js"></script>
+    <script src="{{ asset('') }}js/bustrippbooking.js"></script>
     <script>
         $(document).ready(function() {
 
