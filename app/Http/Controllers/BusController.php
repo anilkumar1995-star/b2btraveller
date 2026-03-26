@@ -754,4 +754,8 @@ class BusController extends Controller
         $id = $request->clientRefId ?? $request->txnid;
         return view('bus.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
     }
+
+    public function reviewBooking(){
+        return view('bus.review_booking');
+    }
 }

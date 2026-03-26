@@ -203,6 +203,8 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
     Route::get('payment/success', [BusController::class, 'paymentSuccess'])->name('bus.payment.success');
     Route::get('payment/failed', [BusController::class, 'paymentFailed'])->name('bus.payment.failed');
     Route::post('check-status', [BusController::class, 'checkStatus'])->name('bus.checkStatus');
+
+    Route::get('review-booking', [BusController::class, 'reviewBooking'])->name('bus.reviewBooking');
 });
 
 Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {

@@ -889,6 +889,45 @@ function validatePassengerForm(liveCheck = false) {
     return allValid;
 }
 
+$(document).on('click', '#reviewBtn', function () {
+
+
+    let isValid = validatePassengerForm(false);
+
+    if (!isValid) {
+
+        notify('Please fill all required fields before proceeding.', 'error');
+
+        $('#confirmPassengers').prop('disabled', true);
+        return;
+    }
+
+    let passengers = buildPassengerPayload();
+    localStorage.setItem('passengerDetails', JSON.stringify(passengers));
+
+    swal({
+        title: "Are you sure?",
+        text: "Do you want to proceed with booking review?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Proceed",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            swal({
+                title: "Redirecting...",
+                text: "Taking you to the review booking page.",
+                type: "success",
+                timer: 1200,
+                showConfirmButton: false
+            });
+
+            window.location.href = "/bus/review-booking";
+        }
+
+    });
+});
+
 $(document).on('click', '#confirmPassengers', function () {
 
 

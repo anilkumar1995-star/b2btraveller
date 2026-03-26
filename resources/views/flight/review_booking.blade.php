@@ -261,50 +261,6 @@
                 return `${h}h ${m}m`;
             }
 
-            function calculateFareSummary(fareData, ssrDataList) {
-
-                let baseFare = 0,
-                    tax = 0;
-                let seatTotal = 0,
-                    mealTotal = 0,
-                    baggageTotal = 0;
-
-                // Flight Fare
-                $.each(fareData, function(i, f) {
-                    baseFare += f.BaseFare || 0;
-                    tax += f.Tax || 0;
-                });
-
-                // SSR Calculation
-                $.each(ssrDataList, function(i, ssr) {
-
-                    if (ssr?.seatDataFull) {
-                        seatTotal += ssr.seatDataFull.Price || 0;
-                    }
-
-                    if (ssr?.baggage?.bagObjData) {
-                        baggageTotal += ssr.baggage.bagObjData.Price || 0;
-                    }
-
-                    if (ssr?.mealObjData) {
-                        mealTotal += ssr.mealObjData.Price || 0;
-                    }
-                });
-
-                let ssrTotal = seatTotal + mealTotal + baggageTotal;
-                let grandTotal = baseFare + tax + ssrTotal;
-
-                return {
-                    baseFare,
-                    tax,
-                    seatTotal,
-                    mealTotal,
-                    baggageTotal,
-                    ssrTotal,
-                    grandTotal
-                };
-            }
-
 
             let fareDataFromAPI = fareFlightDetailsdeparture[0] || [];
             renderFareSummary(fareDataFromAPI, travelerDetails);
@@ -366,20 +322,18 @@
                                         <tr>
                                             <td class="text-muted">Discount</td>
                                             <td class="text-end text-success">₹0</td>
+                                       </tr>
+                                        <tr>
+                                            <td class="text-muted">Seat</td>
+                                            <td class="text-end text-success">₹${seatTotal}</td>
                                         </tr>
-
-                                            <tr>
-                                                <td class="text-muted">Seat</td>
-                                                <td class="text-end text-success">₹${seatTotal}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-muted">Meal</td>
-                                                <td class="text-end text-success">₹${mealTotal}</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="text-muted">Baggage</td>
-                                                <td class="text-end text-success">₹${baggageTotal}</td>
-                                            </tr>
+                                        <tr>
+                                            <td class="text-muted">Meal</td>
+                                            <td class="text-end text-success">₹${mealTotal}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-muted">Baggage</td>
+                                            <td class="text-end text-success">₹${baggageTotal}</td>
                                         </tr>
 
                                     </tbody>
