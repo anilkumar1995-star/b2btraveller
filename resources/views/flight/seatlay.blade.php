@@ -15,11 +15,11 @@
         <div class="card shadow-sm mb-3">
             <div class="card-body d-flex justify-content-between align-items-center">
                 <p class="mb-0 text-secondary" style="font-size: 15px;" id="ssrNote">
-                    
+
                 </p>
 
-                <button class="btn btn-primary" id="proceedBookingBtn">
-                    Proceed to Booking
+                <button id="reviewBtn" type="button" class="btn btn-primary mt-2">
+                    Review Booking
                 </button>
             </div>
         </div>
@@ -345,7 +345,7 @@
                         const resultIndex = localStorage.getItem('ResultIndex');
                         const traceId = localStorage.getItem('TraceId');
                         if (resultIndex && traceId) {
-                           getSSRDetailsInternationalRT(resultIndex, traceId);
+                            getSSRDetailsInternationalRT(resultIndex, traceId);
                         } else {
                             notify('No SSR details found in localStorage.', 'error');
                         }

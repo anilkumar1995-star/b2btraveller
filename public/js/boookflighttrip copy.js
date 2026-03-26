@@ -623,8 +623,6 @@ function getFareRules(resultIndex, traceId, trip) {
 
             let fareRules = flightDetails?.FareRules || [];
 
-            // set in localstorage
-            localStorage.setItem(`fareRules${trip}`, JSON.stringify(fareRules));
 
             if (fareRules.length === 0) {
 
@@ -2857,7 +2855,7 @@ function updateSummaryUI(trip) {
 }
 
 
-$('#reviewBtn').on('click', function () {
+$('#proceedBookingBtn').on('click', function () {
 
     let ssrDeparture = JSON.parse(localStorage.getItem('requiredSSRdeparture')) || {};
     let ssrReturn = JSON.parse(localStorage.getItem('requiredSSRreturn')) || {};
@@ -2902,33 +2900,6 @@ $('#reviewBtn').on('click', function () {
 
     swal({
         title: "Are you sure?",
-        text: "Do you want to proceed with booking review?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, Proceed",
-        cancelButtonText: "Cancel"
-    }).then((result) => {
-
-
-        if (result.value) {
-
-            swal({
-                title: "Redirecting...",
-                text: "Taking you to the review booking page.",
-                type: "success",
-                timer: 1200,
-                showConfirmButton: false
-            });
-
-            window.location.href = "/flight/review-booking";
-        }
-
-    });
-
-});
-$('#proceedBookingBtn').on('click', function () {
-    swal({
-        title: "Are you sure?",
         text: "Do you want to proceed with booking?",
         type: "warning",
         showCancelButton: true,
@@ -2960,6 +2931,8 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
     const contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
     const formatDate = (date) => date ? `${date}T00:00:00` : null;
 
+
+    /* ================= FARE LOGIC START ================= */
 
     const fareBreakdown = JSON.parse(localStorage.getItem(`fareFlightDetails${trip}`)) || [];
 
@@ -4461,4 +4434,9 @@ $(document).on("click", ".btn-book-now-rtrip", function () {
     } catch (error) {
         notify("Error reading flight details!", "error");
     }
+});
+
+
+$(document).on('click', '#reviewBtn', function () {
+    window.location.href = "/flight/review-booking";
 });
