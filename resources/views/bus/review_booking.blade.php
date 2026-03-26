@@ -316,7 +316,7 @@
                                 </div>
                                 <div class="col-md-3">
                                     <small class="text-muted">Gender</small>
-                                    <p class="mb-0">${passenger?.Gender === '1' ? '👨 Male' : passenger?.Gender === '2' ? '👩 Female' : 'Other'}</p>
+                                    <p class="mb-0">${passenger?.Gender == 1 ? '👨 Male' : passenger?.Gender === 2 ? '👩 Female' : 'Other'}</p>
                                 </div>
                                 <div class="col-md-3">
                                     <small class="text-muted">Address</small>
