@@ -960,9 +960,7 @@ $(document).on('click', '#confirmPassengers', function () {
         _token: $('meta[name="csrf-token"]').attr('content')
     };
 
-    
-    console.log(bookingPayload);
-    return;
+
     swal({
         title: 'Confirm Seat Blocking?',
         text: 'Selected seats will be blocked for limited time.',
