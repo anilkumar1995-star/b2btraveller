@@ -236,13 +236,13 @@
 
                 $.each(travelerDetails, function(i) {
                     if (travelerDetails[i]) {
-                        seatTotal += travelerDetails[i]?.Seat?.Price?.BasePrice || 0;
+                        seatTotal += parseFloat(travelerDetails[i]?.Seat?.Price?.BasePrice) || 0;
                     }
                 });
 
                 let grandTotal = parseFloat(baseFare) + parseFloat(tax) + parseFloat(seatTotal);
 
-                let total = fare?.PublishedPrice || (parseFloat(baseFare) + parseFloat(tax) + parseFloat(other) - parseFloat(discount));
+                let total = parseFloat(fare?.PublishedPrice) || (parseFloat(baseFare) + parseFloat(tax) + parseFloat(other) - parseFloat(discount));
 
                 let html = `
                     <div class="card shadow-sm">
