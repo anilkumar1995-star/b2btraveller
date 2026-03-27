@@ -905,6 +905,8 @@ $(document).on('click', '#reviewBtn', function () {
     }
 
     let passengers = buildPassengerPayload();
+
+
     localStorage.setItem('passengerDetails', JSON.stringify(passengers));
 
     swal({
@@ -943,11 +945,10 @@ $(document).on('click', '#confirmPassengers', function () {
         return;
     }
 
-    let passengers = buildPassengerPayload();
-
     let trcid = localStorage.getItem('TraceId');
     let bsrstindx = localStorage.getItem("BusResultIndex");
 
+    let passengers = JSON.parse(localStorage.getItem('passengerDetails'));
     let selectedBoardingId = JSON.parse(localStorage.getItem('selectedBoardingPoint'));
     let selectedDroppingId = JSON.parse(localStorage.getItem('selectedDroppingPoint'));
 
