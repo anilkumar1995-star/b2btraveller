@@ -109,7 +109,7 @@
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf417-js/2.1.7/pdf417.min.js"></script> --}}
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="{{ asset('') }}js/bustrippbooking.js"></script>
+    <script src="{{ asset('') }}js/busbbooking.js"></script>
     <script>
         $(document).ready(function() {
             const payload = JSON.parse(localStorage.getItem('payload'));
