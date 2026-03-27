@@ -307,7 +307,9 @@
 
             if (resultIndex) {
                 getboradingDetails(resultIndex, traceId);
-                getSeatDetails(resultIndex, traceId);
+                setTimeout(() => {
+                    getSeatDetails(resultIndex, traceId);
+                }, 5000);
             } else {
                 window.location.href = "/bus/view";
             }
