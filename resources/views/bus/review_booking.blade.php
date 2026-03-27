@@ -240,9 +240,9 @@
                     }
                 });
 
-                let grandTotal = baseFare + tax + seatTotal;
+                let grandTotal = parseFloat(baseFare) + parseFloat(tax) + parseFloat(seatTotal);
 
-                let total = fare?.PublishedPrice || (baseFare + tax + other - discount);
+                let total = fare?.PublishedPrice || (parseFloat(baseFare) + parseFloat(tax) + parseFloat(other) - parseFloat(discount));
 
                 let html = `
                     <div class="card shadow-sm">
