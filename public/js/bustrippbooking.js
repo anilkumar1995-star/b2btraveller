@@ -699,8 +699,8 @@ function validateProceedButton() {
     }
 }
 
-$(document).on('click', '.bus-seat:not(.booked)', function () {
-
+$(document).on('click', '.bus-seat:not(.booked)', function (event) {
+    event.stopPropagation();
     let seatData = JSON.parse($(this).attr('data-seat'));
     let seatIndex = seatData.SeatIndex;
 
