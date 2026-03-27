@@ -433,7 +433,7 @@ class BusController extends Controller
         $reqData = [
             "email"        => $user->email,
             "name"         => $user->name,
-            "merchantCode" => $agent->bc_id ?? "MID7332321140",
+            "merchantCode" => $agent->bc_id ?? "MID73323213401",
             "clientRefId"  => $clientRefId,
             "mobile"       => $user->mobile,
             "successUrl"  => route('bus.payment.success'),
