@@ -464,7 +464,6 @@
             $('#importantInfoSectionDeparture').html(cardHtml);
 
             displayPassengerDetails();
-            displayContactInfo();
 
             function displayFlightDetails(flightDetails, trip) {
 
