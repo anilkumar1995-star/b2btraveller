@@ -218,7 +218,7 @@
                                         <div id="baggageInfo">
                                         </div>
 
-                                        <div class="card-body mt-2">
+                                        <div class="card-body mt-2 border shadow-sm rounded">
                                             <div>
                                                 <h6 class="mb-3"><i
                                                         class="bi bi-person-circle me-2"></i><strong>Traveler
