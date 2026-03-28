@@ -3,86 +3,141 @@
 @section('pagetitle', 'Booking Page')
 
 @section('content')
-    <main>
-        <section>
 
-            <div id="bookingData">
+    <div class="modal fade" id="cancellation" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
 
-                <div class="row g-4 g-xl-5">
-                    <!-- Left Content START -->
-                    <div class="col-xl-8">
-                        <div class="card border" id="bookingSummaryCard">
-                            <div class="card-header d-flex justify-content-between align-items-center border-bottom">
-                                <h5 class="mb-0 card-title">Your Booking Details🔖</h5>
+                <div class="modal-header border-bottom pb-3">
+                    <h5 class="modal-title" id="cancellationlabel">Cancellation, Date Change Charges & Mini Fare Rule</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
 
 
-                                <button class="btn btn-primary" id="proceedBookingBtn">
-                                    Proceed to Booking
+                <div class="modal-body p-3">
+
+                    <div class="accordion" id="cancellationAccordion">
+
+                        <!-- Departure -->
+                        <div class="accordion-item border" id="departureAccordion">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#departureCollapse">
+                                    ✈️ Departure – Cancellation & Fare Rules
                                 </button>
-                            </div>
+                            </h2>
+                            <div id="departureCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <ul class="nav nav-pills nav-justified nav-responsive border bg-opacity-10 rounded p-2 mb-3"
+                                        id="tour-pills-tab" role="tablist">
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-start active mb-0" id="tour-pills-tab-1"
+                                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab1" type="button"
+                                                role="tab" aria-controls="tour-pills-tab1" aria-selected="true">Mini
+                                                Fare Charge</button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-end mb-0" id="tour-pills-tab-2"
+                                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab2" type="button"
+                                                role="tab" aria-controls="tour-pills-tab2" aria-selected="false">Date
+                                                Change Charge</button>
+                                        </li>
+                                    </ul>
 
 
-                            <!-- Card body -->
-                            <div class="card-body mt-2">
-                                <!-- Flight Details Section -->
-                                <div class="mb-4" id="flightDetailsSection"></div>
+                                    <div class="tab-content mb-0" id="tour-pills-tabContent">
 
-                                <!-- Journey Details -->
-                                <div id="segmentList"></div>
 
-                                <!-- Traveler Detail Section -->
-                                <div class="mt-4">
-                                    <h6 class="mb-3"><i class="bi bi-person-circle me-2"></i><strong>Traveler
-                                            Details</strong></h6>
-                                    <div id="travelerList"></div>
-                                </div>
+                                        <div class="tab-pane fade show active" id="tour-pills-tab1" role="tabpanel"
+                                            aria-labelledby="tour-pills-tab-1">
 
-                                <!-- Important Notes -->
-                                <div class="alert alert-info mt-4" role="alert">
-                                    <small>
-                                        <i class="bi bi-info-circle me-2"></i>
-                                        Please ensure all passenger details are correct before proceeding with the booking.
-                                    </small>
-                                </div>
-                            </div>
+                                            {{-- <div id="miniFareRules"> --}}
+                                            <div id="departureMiniFare">
 
-                            <!-- Card footer -->
+                                            </div>
+                                        </div>
 
-                        </div>
 
-                    </div>
-                    <!-- Left Content END -->
 
-                    <!-- Right content START -->
-                    <aside class="col-xl-4">
-                        <div class=" sticky-top">
-                            <div class="row g-4">
-                                <!-- Fare summary START -->
-                                <div class="col-md-6 col-xl-12">
-                                    <div class="card border rounded-3" id="farebreakdowntotal">
+                                        <div class="tab-pane fade" id="tour-pills-tab2" role="tabpanel"
+                                            aria-labelledby="tour-pills-tab-2">
+                                            {{-- <div id="datatchargeDet"> --}}
+                                            <div id="departureDateCharge">
+
+                                            </div>
+                                        </div>
+
 
                                     </div>
                                 </div>
-                                <!-- Fare summary END -->
                             </div>
-                            <div class="card card-body border p-2 mt-3 cursor-pointer text-center" data-bs-toggle="modal"
-                                data-bs-target="#ruleFaredeparture">
-                                <div class="card-title pt-2">
-                                    <h5 class="mb-0"><i class="ti ti-eye"></i> Fare Rules</h5>
+                        </div>
+
+                        <!-- Return -->
+                        <div class="accordion-item border mt-3" id="returnAccordion">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#returnCollapse">
+                                    🔁 Return – Cancellation & Fare Rules
+                                </button>
+                            </h2>
+                            <div id="returnCollapse" class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <ul class="nav nav-pills nav-justified nav-responsive border bg-opacity-10 rounded p-2 mb-3"
+                                        id="tour-pills-tab-return" role="tablist">
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-start active mb-0" id="tour-pills-tab-11"
+                                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab11" type="button"
+                                                role="tab" aria-controls="tour-pills-tab11" aria-selected="true">Mini
+                                                Fare Charge</button>
+                                        </li>
+
+                                        <li class="nav-item" role="presentation">
+                                            <button class="nav-link rounded-end mb-0" id="tour-pills-tab-22"
+                                                data-bs-toggle="pill" data-bs-target="#tour-pills-tab22" type="button"
+                                                role="tab" aria-controls="tour-pills-tab22" aria-selected="false">Date
+                                                Change Charge</button>
+                                        </li>
+                                    </ul>
+
+
+                                    <div class="tab-content mb-0" id="tour-pills-tabContentReturn">
+
+
+                                        <div class="tab-pane fade show active" id="tour-pills-tab11" role="tabpanel"
+                                            aria-labelledby="tour-pills-tab-11">
+
+                                            <div id="returnMiniFare">
+
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="tab-pane fade" id="tour-pills-tab22" role="tabpanel"
+                                            aria-labelledby="tour-pills-tab-22">
+                                            <div id="returnDateCharge">
+
+                                            </div>
+                                        </div>
+
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </aside>
 
+                    </div>
 
 
                 </div>
             </div>
-        </section>
+        </div>
+    </div>
 
-        <div id="fareRuleListModal"></div>
-
-    </main>
 
     <div class="modal fade" id="ruleFaredeparture" aria-hidden="true" data-bs-backdrop="static">
         <div class="modal-dialog modal-xl">
@@ -118,14 +173,235 @@
             </div>
         </div>
     </div>
+    <main>
+        <section>
+
+            <div id="bookingData">
+
+                <div class="row g-4 g-xl-5">
+                    <!-- Left Content START -->
+                    <div class="col-xl-12">
+                        <div class="card border" id="bookingSummaryCard">
+                            <div class="card-header d-flex justify-content-between align-items-center border-bottom">
+                                <h5 class="mb-0 card-title">Your Booking Details🔖</h5>
+
+
+                                <button class="btn btn-primary" id="proceedBookingBtn">
+                                    Proceed to Booking
+                                </button>
+                            </div>
+
+
+                            <div class="position-relative m-3" data-sticky-container>
+                                <div class="row g-4">
+
+                                    <div class="col-xl-8">
+                                        <div class="accordion" id="accordionExample">
+
+
+                                            <div class="accordion-item mb-3 border">
+                                                <h2 class="accordion-header" id="headingTwo">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                        data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                                        aria-expanded="false" aria-controls="collapseTwo">
+                                                        <div class="d-flex align-items-center" id="titleSection">
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseTwo" class="border-top accordion-collapse collapse"
+                                                    aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body mt-3" id="getSelectFlightDetails">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="baggageInfo">
+                                        </div>
+                                    </div>
+
+
+
+                                    <aside class="col-xl-4">
+
+                                        <div class="row g-4 sticky-top">
+
+                                            <div class="col-md-6 col-xl-12">
+                                                <div class="card rounded-2">
+                                                    <!-- Tabs Header -->
+                                                    <ul class="nav nav-tabs ms-0 w-100" id="fareTabs" role="tablist">
+                                                        <li class="nav-item w-50" role="presentation">
+                                                            <button class="nav-link active" id="departure-tab-fare"
+                                                                data-bs-toggle="tab"
+                                                                data-bs-target="#departurefareChargeDetails"
+                                                                type="button" role="tab"
+                                                                aria-controls="departurefareChargeDetails"
+                                                                aria-selected="true">
+                                                                Departure
+                                                            </button>
+                                                        </li>
+                                                        <li class="nav-item w-50 d-none" role="presentation"
+                                                            id="returntabfare">
+                                                            <button class="nav-link" id="return-tab-fare"
+                                                                data-bs-toggle="tab"
+                                                                data-bs-target="#returnfareChargeDetails" type="button"
+                                                                role="tab" aria-controls="returnfareChargeDetails"
+                                                                aria-selected="false">
+                                                                Return
+                                                            </button>
+                                                        </li>
+                                                    </ul>
+
+                                                    <!-- Tabs Content -->
+                                                    <div class="tab-content p-3" id="fareTabsContent">
+                                                        <div class="tab-pane fade show active bg-light rounded"
+                                                            id="departurefareChargeDetails" role="tabpanel"
+                                                            aria-labelledby="departure-tab-fare">
+
+                                                        </div>
+                                                        <div class="tab-pane fade bg-light rounded"
+                                                            id="returnfareChargeDetails" role="tabpanel"
+                                                            aria-labelledby="return-tab-fare">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-xl-12">
+                                                <div class="card card-body border p-4">
+                                                    <div class="cardt-title mb-3">
+                                                        <h5 class="mb-0">Cancellation, Date Change Charges & Mini
+                                                            Fare Rules</h5>
+                                                    </div>
+
+                                                    <p class="mb-2">The Cancellation penalty on this booking will
+                                                        depend on how close
+                                                        to the departure date you cancel your ticket. View fare rules to
+                                                        know more</p>
+                                                    <div><a href="#" class="btn p-0 mb-0 " data-bs-toggle="modal"
+                                                            data-bs-target="#cancellation">
+                                                            <i class="ti ti-eye"></i> <u
+                                                                class="text-decoration-underline">View Detail</u>
+                                                        </a></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                    </aside>
+
+
+                                </div>
+                            </div>
+
+                            <!-- Card body -->
+                            <div class="card-body mt-2">
+                                <div>
+                                    <h6 class="mb-3"><i class="bi bi-person-circle me-2"></i><strong>Traveler
+                                            Details</strong></h6>
+                                    <div id="travelerList"></div>
+                                </div>
+
+                            </div>
+
+                            <!-- Card footer -->
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
 @endsection
 
+
+@push('script')
+    <script src="{{ asset('') }}js/boookflighttriping.js"></script>
+
+
+    <script>
+        $(document).ready(function() {
+
+            const payload = JSON.parse(localStorage.getItem('payload'));
+
+            let isInternational = localStorage.getItem("isInternational") || false;
+
+            if (!payload) {
+                swal({
+                    title: "Session Expired",
+                    html: "Your booking session has expired.<br/>Please search flights again to continue.",
+                    type: "warning",
+                    confirmButtonText: "Search Flights",
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                }).then(() => {
+                    window.location.href = "/flight/view";
+                });
+                return;
+            }
+
+            if (payload.JourneyType == 1) {
+                const storedFlight = localStorage.getItem('selectedFlightDetails');
+                const resultIndex = localStorage.getItem('ResultIndex');
+                const traceId = localStorage.getItem('TraceId');
+
+                if (storedFlight) {
+                    const flightDetails = JSON.parse(storedFlight);
+                    localStorage.removeItem(`requiredSSRdeparture`);
+
+                    displayFlightDetails(flightDetails, 'departure');
+                    getFareRules(resultIndex, traceId, 'departure');
+                    getFareQuote(resultIndex, traceId, 'departure');
+
+                } else {
+                    notify('No flight details found in localStorage.', 'error');
+                }
+            } else if (payload.JourneyType == 2) {
+
+                const storedFlight = localStorage.getItem('selectedFlightDetails');
+                const traceId = localStorage.getItem('TraceId');
+
+                // $('#return-tab').show();
+                if (storedFlight) {
+                    const flightDetails = JSON.parse(storedFlight);
+
+                    if (isInternational) {
+
+                        const resultIndex = flightDetails.ResultIndex;
+
+                        displayInternationalRTFlightDetails(flightDetails, 'departure', 0);
+                        displayInternationalRTFlightDetails(flightDetails, 'return', 1);
+
+                        getFareRulesInternationalRoundtrip(resultIndex, traceId);
+                        getInternationalRoundTripFareQuote(resultIndex, traceId);
+                    } else {
+
+                        const depresultIndex = localStorage.getItem('DepartureResultIndex');
+                        const rettresultIndex = localStorage.getItem('ReturnResultIndex');
+                        localStorage.removeItem(`requiredSSRdeparture`);
+                        localStorage.removeItem(`requiredSSRreturn`);
+
+                        displayFlightDetails(flightDetails?.departure, 'departure');
+                        getFareRules(depresultIndex, traceId, 'departure');
+                        getFareQuote(depresultIndex, traceId, 'departure');
+
+                        displayFlightDetails(flightDetails?.return, 'return');
+                        getFareRules(rettresultIndex, traceId, 'return');
+                        getFareQuote(rettresultIndex, traceId, 'return');
+                    }
+                } else {
+                    notify('No flight details found in localStorage.', 'error');
+                }
+            }
+        });
+    </script>
+@endpush
 
 @push('script')
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf417-js/2.1.7/pdf417.min.js"></script> --}}
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
 
-    <script src="{{ asset('') }}js/boookflighttriping.js"></script>
+    {{-- <script src="{{ asset('') }}js/boookflighttriping.js"></script> --}}
     <script>
         $(document).ready(function() {
             const payload = JSON.parse(localStorage.getItem('payload'));
@@ -141,6 +417,30 @@
             let fareRules = JSON.parse(localStorage.getItem('fareRulesdeparture')) || [];
 
             let isInternational = localStorage.getItem("isInternational") || false;
+
+            if (payload.JourneyType == 1) {
+
+                if (selectedFlightDetails) {
+                    displayFlightDetails(selectedFlightDetails, 'departure');
+                } else {
+                    notify('No flight details found in localStorage.', 'error');
+                }
+            } else if (payload.JourneyType == 2) {
+
+                if (selectedFlightDetails) {
+
+                    if (isInternational) {
+                        displayInternationalRTFlightDetails(flightDetails, 'departure', 0);
+                        displayInternationalRTFlightDetails(flightDetails, 'return', 1);
+
+                    } else {
+                        displayFlightDetails(selectedFlightDetails?.departure, 'departure');
+                        displayFlightDetails(selectedFlightDetails?.return, 'return');
+                    }
+                } else {
+                    notify('No flight details found in localStorage.', 'error');
+                }
+            }
 
             let cardHtml = '';
             fareRules.forEach((rule, index) => {
@@ -164,87 +464,120 @@
 
             $('#importantInfoSectionDeparture').html(cardHtml);
 
-            displayFlightDetails();
             displayPassengerDetails();
             displayContactInfo();
 
-            function displayFlightDetails() {
-                let html = '';
+            function displayFlightDetails(flightDetails, trip) {
 
-                // Get first segment for departure and last segment for arrival info
-                if (selectedFlightDetails && selectedFlightDetails.Segments && selectedFlightDetails.Segments[0]) {
-                    const segments = selectedFlightDetails.Segments[0];
-                    const firstSeg = segments[0];
-                    const lastSeg = segments[segments.length - 1];
+                let segs = flightDetails?.Segments[0] || [];
 
-                    const fmtTime = (t) => new Date(t).toLocaleTimeString([], {
-                        hour: '2-digit',
-                        minute: '2-digit'
-                    });
-                    const fmtDate = (t) => new Date(t).toLocaleDateString('en-IN', {
-                        day: '2-digit',
-                        month: 'short',
-                        year: 'numeric'
-                    });
+                let firstSeg = segs[0] || null;
+                let lastSeg = segs.length ? segs[segs.length - 1] : null;
 
-                    html += `
-                        <div class="card border-0 mb-3">
-                            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="mb-0">${firstSeg?.Origin?.Airport?.CityName} (${firstSeg?.Origin?.Airport?.AirportCode}) → ${lastSeg?.Destination?.Airport?.CityName} (${lastSeg?.Destination?.Airport?.AirportCode})</h5>
-                                    <small class="text-muted">${fmtDate(segments[0]?.Origin?.DepTime)} | ${segments.length - 1 != 0 ? segments.length - 1 + ' Stop' : 'Non Stop'}</small>
+                let detailsHtml = '';
+                let titledetailsHtml = '';
+
+                const fmtTime = (t) => new Date(t).toLocaleTimeString([], {
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+                const fmtDate = (t) => new Date(t).toLocaleDateString('en-IN', {
+                    day: '2-digit',
+                    month: 'short',
+                    year: 'numeric'
+                });
+
+                titledetailsHtml = `<h1 class="display-4 mb-0"><i class="fa-solid fa-plane rtl-flip fs-1"></i></h1>
+                    <div class="ms-3">
+                        <ul class="list-inline mb-2">
+                            <li class="list-inline-item me-2">
+                                <h4 class="mb-0">${firstSeg.Origin?.Airport?.CityName}(${firstSeg.Origin?.Airport?.AirportCode || firstSeg.Origin?.Airport?.CityCode})</h4>
+                            </li>
+                            <li class="list-inline-item me-2">
+                                <h4 class="mb-0"><i class="ti ti-arrow-right"></i></h4>
+                            </li>
+                            <li class="list-inline-item me-0">
+                                <h4 class="mb-0">${lastSeg.Destination?.Airport?.CityName}(${lastSeg.Destination?.Airport?.AirportCode || lastSeg.Destination?.Airport?.CityCode})</h4>
+                            </li>
+                        </ul>
+
+                        <ul class="nav nav-divider h6 fw-normal text-body mb-0">
+                            <li class="nav-item">${fmtDate(segs[0].Origin?.DepTime)}</li>
+                            <li class="nav-item">&nbsp;| &nbsp;${segs.length - 1 != 0 ? segs.length - 1 : 'Non'} Stop &nbsp;| &nbsp;</li>
+                            <li class="nav-item badge bg-label-warning">${trip}</li>
+                        </ul>
+                    </div>`;
+
+                // -------- MULTIPLE SEGMENTS LOOP --------
+
+                let modalId = trip == 'departure' ? 'ruleFaredeparture' : 'ruleFarereturn';
+                detailsHtml += `<div class="card-header d-flex justify-content-between pb-0">
+                        <h6 class="fw-normal mb-0"><span class="text-body">Travel Class:</span> ${segs[0].CabinClass}</h6>
+                        <a href="javascript:void(0)" 
+                            class="btn p-0 mb-0"
+                            data-bs-toggle="modal"
+                            data-bs-target="#${modalId}">
+                            <i class="ti ti-eye me-1"></i>
+                            <u class="text-decoration-underline">Fare Rules (${trip})</u>
+                        </a>
+                    </div>  
+                <div class="card-body p-4">`;
+
+                for (let i = 0; i < segs.length; i++) {
+                    let s = segs[i];
+                    detailsHtml += `
+                    <div class="row g-4 ">
+                        <div class="col-md-3 pt-5">
+                            ✈️
+                            <h6 class="fw-normal mb-0">${s.Airline.AirlineName}</h6>
+                            <h6 class="fw-normal mb-0">(${s.Airline.AirlineCode} - ${s.Airline.FlightNumber})</h6>
+                        </div>
+                        <div class="col-sm-4 col-md-3">
+                            <h4>${s.Origin.Airport.AirportCode}</h4>
+                            <h6>${fmtTime(s.Origin.DepTime)}</h6>
+                            <p>${fmtDate(s.Origin.DepTime)}</p>
+                            <p>${s.Origin.Airport.AirportName} ${s.Origin.Airport.CityName}</p>
+                            <p>Terminal: ${s.Origin.Airport.Terminal || 'N/A'}</p>
+                        </div>
+                        <div class="col-sm-4 col-md-3 text-center my-sm-auto">
+                            <h5>${formatDuration(s.Duration)}</h5>
+                            <div class="position-relative my-4">
+                                <hr class="bg-primary opacity-5 position-relative">
+                                <div class="icon-md bg-primary text-white rounded-circle position-absolute top-50 start-50 translate-middle p-2">
+                                    <i class="fa-solid fa-plane"></i>
                                 </div>
-                                <span class="badge bg-warning text-white">departure</span>
                             </div>
-                            <div class="card-body p-3">
-                                <div class="mb-2"><strong>Travel Class:</strong> ${segments[0]?.CabinClass == 2 ? 'Economy' : segments[0]?.CabinClass == 3 ? 'Premium Economy' : 'Business'}</div>
-                    `;
+                        </div>
+                        <div class="col-sm-4 col-md-3 text-end">
+                            <h4>${s.Destination.Airport.AirportCode}</h4>
+                            <h6>${fmtTime(s.Destination.ArrTime)}</h6>
+                            <p>${fmtDate(s.Destination.ArrTime)}</p>
+                            <p>${s.Destination.Airport.AirportName} ${s.Destination.Airport.CityName}</p>
+                            <p>Terminal: ${s.Destination.Airport.Terminal || 'N/A'}</p>
+                        </div>
+                    </div>`;
 
-                    for (let i = 0; i < segments.length; i++) {
-                        let s = segments[i];
-                        html += `
-                            <div class="row g-4 align-items-center py-2">
-                                <div class="col-md-4">
-                                    <h5 class="mb-0">${s?.Origin?.Airport?.AirportCode}</h5>
-                                    <p class="mb-1 fw-bold">${fmtTime(s?.Origin?.DepTime)}</p>
-                                    <p class="mb-1 small text-muted">${fmtDate(s?.Origin?.DepTime)}</p>
-                                    <p class="mb-1">${s?.Origin?.Airport?.CityName}</p>
-                                    <p class="mb-0 small text-muted">Terminal: ${s?.Origin?.Airport?.Terminal || 'N/A'}</p>
-                                </div>
-                                <div class="col-md-4 text-center">
-                                    <p class="mb-1">${s?.Airline?.AirlineName} (${s?.Airline?.AirlineCode}-${s?.Airline?.FlightNumber})</p>
-                                    <h5 class="mb-1">${formatDuration(s?.Duration)}</h5>
-                                    <div class="position-relative mt-3">
-                                        <hr class="mt-2 mb-2" />
-                                        <div class="badge bg-light rounded-pill text-white position-absolute top-50 start-50 translate-middle p-2"><i class="fa-solid fa-plane"></i></div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 text-end">
-                                    <h5 class="mb-0">${s?.Destination?.Airport?.AirportCode}</h5>
-                                    <p class="mb-1 fw-bold">${fmtTime(s?.Destination?.ArrTime)}</p>
-                                    <p class="mb-1 small text-muted">${fmtDate(s?.Destination?.ArrTime)}</p>
-                                    <p class="mb-1">${s?.Destination?.Airport?.CityName}</p>
-                                    <p class="mb-0 small text-muted">Terminal: ${s?.Destination?.Airport?.Terminal || 'N/A'}</p>
-                                </div>
-                            </div>
-                        `;
+                    if (i < segs.length - 1) {
+                        let groundTime = calculateGroundTime(
+                            s.Destination.ArrTime,
+                            segs[i + 1].Origin.DepTime
+                        );
 
-                        if (i < segments.length - 1) {
-                            let groundTime = calculateGroundTime(
-                                s?.Destination?.ArrTime,
-                                segments[i + 1]?.Origin?.DepTime
-                            );
-
-                            html += `
-                                <div class="bg-light text-center text-danger py-2 mt-2 mb-2 rounded">Ground Time at ${s?.Destination?.Airport?.CityName}: ${groundTime}</div>
-                            `;
-                        }
+                        detailsHtml += `<div class="bg-light rounded-2 text-center text-danger p-2 mb-4">
+                            Ground Time at ${s.Destination.Airport.CityName}: ${groundTime}
+                        </div>`;
                     }
-
-                    html += `</div></div>`;
                 }
 
-                document.getElementById('flightDetailsSection').innerHTML = html;
+                detailsHtml += `</div>`;
+
+                if (trip === 'return') {
+                    $('#titleSectionReturn').html(titledetailsHtml);
+                    $('#getSelectFlightDetailsReturn').html(detailsHtml);
+                } else {
+                    $('#titleSection').html(titledetailsHtml);
+                    $('#getSelectFlightDetails').html(detailsHtml);
+                }
             }
 
             function formatDuration(minutes) {
@@ -440,42 +773,31 @@
                                                 <table class="table table-sm table-bordered mb-0">
                                                     <tbody>
 
-                                                        <!-- COMMON DETAILS (ONLY ONCE) -->
                                                         <tr>
                                                             <th style="width:180px;">Airline</th>
-                                                            <td>${seat.AirlineCode || bag.AirlineCode || '-'}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Flight</th>
-                                                            <td>${seat.FlightNumber || bag.FlightNumber || '-'}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <th>Route</th>
-                                                            <td>${seat.Origin || bag.Origin || '-'} → ${seat.Destination || bag.Destination || '-'}</td>
+                                                            <td>${seat.AirlineCode || bag.AirlineCode || '-'} / ${seat.FlightNumber || bag.FlightNumber || '-'}
+                                                                ( ${seat.Origin || bag.Origin || '-'} → ${seat.Destination || bag.Destination || '-'} )</td>
                                                         </tr>
 
-                                                        <!-- SEAT -->
                                                         ${passengerSSR.seatDataFull ? `
-                                                                                                                                <tr>
-                                                                                                                                    <th>Seat</th>
-                                                                                                                                    <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
-                                                                                                                                </tr>` : ''}
+                                                                <tr>
+                                                                    <th>Seat</th>
+                                                                    <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
+                                                                </tr>` : ''}
 
-                                                        <!-- MEAL -->
                                                         ${passengerSSR.meal ? `
-                                                                                                                                <tr>
-                                                                                                                                    <th>Meal</th>
-                                                                                                                                    <td>${passengerSSR.meal}</td>
-                                                                                                                                </tr>` : ''}
+                                                                <tr>
+                                                                    <th>Meal</th>
+                                                                    <td>${passengerSSR.meal}</td>
+                                                                </tr>` : ''}
 
-                                                        <!-- BAGGAGE -->
                                                         ${passengerSSR.baggage ? `
-                                                                                                                                <tr>
-                                                                                                                                    <th>Baggage</th>
-                                                                                                                                    <td>
-                                                                                                                                        ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
-                                                                                                                                    </td>
-                                                                                                                                </tr>` : ''}
+                                                                <tr>
+                                                                    <th>Baggage</th>
+                                                                    <td>
+                                                                        ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
+                                                                    </td>
+                                                                </tr>` : ''}
 
                                                     </tbody>
                                                 </table>
