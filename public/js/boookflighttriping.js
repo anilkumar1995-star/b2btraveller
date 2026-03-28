@@ -1791,7 +1791,6 @@ function generateTravelerForm(response) {
             }
         });
 
-        // console.log("Form complete:", allFilled);
         $('#proceedBtn').prop('disabled', !allFilled);
     }
 
