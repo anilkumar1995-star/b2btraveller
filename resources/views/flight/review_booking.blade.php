@@ -217,6 +217,17 @@
 
                                         <div id="baggageInfo">
                                         </div>
+
+                                        <div class="card-body mt-2">
+                                            <div>
+                                                <h6 class="mb-3"><i
+                                                        class="bi bi-person-circle me-2"></i><strong>Traveler
+                                                        Details</strong></h6>
+                                                <div id="travelerList"></div>
+                                            </div>
+
+                                        </div>
+
                                     </div>
 
 
@@ -291,18 +302,6 @@
 
                                 </div>
                             </div>
-
-                            <!-- Card body -->
-                            <div class="card-body mt-2">
-                                <div>
-                                    <h6 class="mb-3"><i class="bi bi-person-circle me-2"></i><strong>Traveler
-                                            Details</strong></h6>
-                                    <div id="travelerList"></div>
-                                </div>
-
-                            </div>
-
-                            <!-- Card footer -->
 
                         </div>
 
@@ -780,24 +779,24 @@
                                                         </tr>
 
                                                         ${passengerSSR.seatDataFull ? `
-                                                                <tr>
-                                                                    <th>Seat</th>
-                                                                    <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
-                                                                </tr>` : ''}
+                                                                    <tr>
+                                                                        <th>Seat</th>
+                                                                        <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
+                                                                    </tr>` : ''}
 
                                                         ${passengerSSR.meal ? `
-                                                                <tr>
-                                                                    <th>Meal</th>
-                                                                    <td>${passengerSSR.meal}</td>
-                                                                </tr>` : ''}
+                                                                    <tr>
+                                                                        <th>Meal</th>
+                                                                        <td>${passengerSSR.meal}</td>
+                                                                    </tr>` : ''}
 
                                                         ${passengerSSR.baggage ? `
-                                                                <tr>
-                                                                    <th>Baggage</th>
-                                                                    <td>
-                                                                        ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
-                                                                    </td>
-                                                                </tr>` : ''}
+                                                                    <tr>
+                                                                        <th>Baggage</th>
+                                                                        <td>
+                                                                            ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
+                                                                        </td>
+                                                                    </tr>` : ''}
 
                                                     </tbody>
                                                 </table>
@@ -863,11 +862,6 @@
                 }
 
                 return ssr;
-            }
-
-            function displayContactInfo() {
-                // Contact details are now shown in the first passenger's card
-                // This function is kept for compatibility but doesn't display separate contact info
             }
         });
     </script>
