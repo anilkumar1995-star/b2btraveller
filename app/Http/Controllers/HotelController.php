@@ -54,17 +54,21 @@ class HotelController extends Controller
         return response()->json($response);
     }
 
-    public function boardingdetails(Request $request)
+    public function viewHotelDetails(){
+         return view('hotel.detail');
+    }
+
+    public function detailsHotel(Request $request)
     {
         $service = new HotelService();
-        $response = $service->boardingdetail($request->all());
+        $response = $service->hotelDetails($request->all());
 
         return response()->json($response);
     }
-    public function seatdetails(Request $request)
+    public function detailsRoom(Request $request)
     {
         $service = new HotelService();
-        $response = $service->seatdetail($request->all());
+        $response = $service->hotelRoom($request->all());
 
         return response()->json($response);
     }

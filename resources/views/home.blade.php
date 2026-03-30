@@ -56,6 +56,7 @@
                                 <div class="service-card text-center">
                                     <img src="{{ asset('logo/Bharat Connect Primary Logo_PNG.png') }}" width="100"
                                         alt="BBPS" class="service-img">
+                                        <br/>
                                     <small class="text-dark fs-5 fw-semibold">Bill Pay</small>
                                 </div>
                             </a>

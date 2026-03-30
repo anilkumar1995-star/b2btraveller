@@ -121,8 +121,8 @@ class FlightService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = StaticResponseHelper::searchStaticResponse();
-                // $response = StaticResponseHelper::flightroudtripsearchresponse();
+                // $response = StaticResponseHelper::searchStaticResponse();
+                $response = StaticResponseHelper::flightroudtripsearchresponse();
                 // $response = StaticResponseHelper::flightroudtripsearchresponseInt();
                 // $response = StaticResponseHelper::flightfailedsearchresponse();
             } else {

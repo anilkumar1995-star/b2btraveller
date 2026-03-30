@@ -81,8 +81,8 @@
 
                 </div>
                 <div class="offcanas-footer px-4 pb-2 d-grid">
-                    <button id="confirmPassengers" type="button" disabled="true" class="btn btn-primary mb-0">
-                        Proceed To Bus Block
+                    <button id="reviewBtn" type="button" class="btn btn-primary mt-2">
+                        Review Booking
                     </button>
                 </div>
             </form>
@@ -280,7 +280,7 @@
 @endsection
 
 @push('script')
-    <script src="{{ asset('') }}js/busbooking.js"></script>
+    <script src="{{ asset('') }}js/busbbooking.js"></script>
     <script>
         $(document).ready(function() {
 
@@ -307,7 +307,9 @@
 
             if (resultIndex) {
                 getboradingDetails(resultIndex, traceId);
-                getSeatDetails(resultIndex, traceId);
+                setTimeout(() => {
+                    getSeatDetails(resultIndex, traceId);
+                }, 5000);
             } else {
                 window.location.href = "/bus/view";
             }

@@ -48,6 +48,46 @@
             width: 35px;
             height: 17px;
         }
+
+        .card-title.skeleton {
+            min-height: 28px;
+            border-radius: 4px;
+        }
+
+        .card-intro {
+            margin-top: 0.75rem;
+            line-height: 1.5;
+        }
+
+        .card-intro.skeleton {
+            min-height: 72px;
+            border-radius: 4px;
+        }
+
+        .skeleton {
+            background-color: #e2e5e7;
+            background-image: linear-gradient(90deg,
+                    rgba(255, 255, 255, 0),
+                    rgba(255, 255, 255, 0.5),
+                    rgba(255, 255, 255, 0));
+            background-size: 40px 100%;
+            background-repeat: no-repeat;
+            background-position: left -40px top 0;
+            -webkit-animation: shine 1s ease infinite;
+            animation: shine 1s ease infinite;
+        }
+
+        @-webkit-keyframes shine {
+            to {
+                background-position: right -40px top 0;
+            }
+        }
+
+        @keyframes shine {
+            to {
+                background-position: right -40px top 0;
+            }
+        }
     </style>
 
     @stack('style')
@@ -828,7 +868,8 @@
                                     <script>
                                         document.write(new Date().getFullYear());
                                     </script>
-                                    , made with ❤️ by <a href="#" target="_blank" class="fw-semibold">iPaymnt Tech</a>
+                                    , made with ❤️ by <a href="#" target="_blank" class="fw-semibold">iPaymnt
+                                        Tech</a>
                                 </div>
                                 <div>
                                     {{-- <a href="https://themeforest.net/licenses/standard" class="footer-link me-4" target="_blank">License</a> --}}

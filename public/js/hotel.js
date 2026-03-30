@@ -199,7 +199,7 @@ function searchHotel() {
             if (data.status == "success" && data.data?.HotelResults?.length > 0) {
 
                 localStorage.setItem("traceId", data?.data?.TraceId);
-                localStorage.setItem("sentReqest", btoa(JSON.stringify([sentR])));
+                localStorage.setItem("sentReqest", JSON.stringify([sentR]));
                 renderHotelList(data);
                 // searchFilter(data);
                 return false;
@@ -224,8 +224,8 @@ function fliterHotelSearch_filter(Datas) {
         },
         data: Datas,
         beforeSend: function () {
-            Swal.fire({
-                icon: 'info',
+            swal({
+                type: 'info',
                 text: 'We are fetching details.',
                 allowOutsideClick: false,
                 backdrop: true,
@@ -531,32 +531,32 @@ function hotelSklt(z, indexx) {
                       
                       <p class="hotels-amenities align-items-center mb-2 text-4" id="facilityContainer${indexx}">`;
 
-                let policies = z?.HotelPolicy
-                    ? z.HotelPolicy.split('|').map(item => item.trim()).filter(item => item !== '')
-                    : [];
-                policies.forEach((policy, index) => {
-                    if (index < maxVisiblePolicies) {
-                        dt += `<span class="cf border rounded badge text-1 text-nowrap px-2 m-1 text-muted">${policy}</span>`;
-                    } else {
-                        hiddenPolicies.push(policy);
-                    }
-                });
+    let policies = z?.HotelPolicy
+        ? z.HotelPolicy.split('|').map(item => item.trim()).filter(item => item !== '')
+        : [];
+    policies.forEach((policy, index) => {
+        if (index < maxVisiblePolicies) {
+            dt += `<span class="cf border rounded badge text-1 text-nowrap px-2 m-1 text-muted">${policy}</span>`;
+        } else {
+            hiddenPolicies.push(policy);
+        }
+    });
 
-                if (hiddenPolicies.length > 0) {
-                    const tooltipContent = `
+    if (hiddenPolicies.length > 0) {
+        const tooltipContent = `
                         <strong>Policies:</strong><br><ul style='list-style-type: circle; padding-left: 20px; text-align: left;'>
                         ${hiddenPolicies.map(policy => `<li>${policy}</li>`).join('')}</ul>
                     `;
-                    dt += `<span class="text-nowrap px-2 m-0 more-btn" 
+        dt += `<span class="text-nowrap px-2 m-0 more-btn" 
                             data-bs-toggle="tooltip" 
                             data-bs-placement="bottom" 
                             data-bs-html="true" 
                             title="${tooltipContent}">
                         <small style="font-size:small">..more</small>
                         </span>`;
-                }
+    }
 
-            dt += `
+    dt += `
                        </p>
                         <p class="reviews mb-2"> 
                             ${z?.Price?.breakfast
@@ -575,33 +575,37 @@ function hotelSklt(z, indexx) {
 
                       <div class="fare-container" data-index="${indexx}">
                         <div class="text-6 fw-bold mb-0 mb-sm-2 m-2 me-sm-0 order-0 price-display fw-bold" style="color:#d63b05;">₹${z?.Price?.PublishedPriceRoundedOff || z?.Price?.PublishedPrice}</div>
-                        <div class="fare-breakdown-container-hotel card p-3" style="display:none;">
-                            
-                            <div class="fare-breakdown-row base-fare">
+                        <div class="fare-breakdown-container-hotel card p-3" style="display:none; background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); min-width: 220px;border:1px solid silver">
+                            <div class="fare-breakdown-row base-fare d-flex justify-content-between align-items-center mb-2">
                                 <span class="fw-bold text-start">Room Price</span>
                                 <span class="fs-6">₹${z?.Price?.RoomPrice}</span>
                             </div>
-                            <div class="fare-breakdown-row tax">
+                            <hr class="my-2"/>
+                            <div class="fare-breakdown-row tax d-flex justify-content-between align-items-center mb-2">
                                 <span class="fw-bold">Tax</span>
                                 <span class="fs-6">₹${z?.Price?.Tax}</span>
                             </div>
-                            <div class="fare-breakdown-row othercharges">
+                            
+                            <hr class="my-2"/>
+                            <div class="fare-breakdown-row othercharges d-flex justify-content-between align-items-center mb-2">
                                 <span class="fw-bold">Other</span>
                                 <span class="fs-6">₹${z?.Price?.OtherCharges}</span>
                             </div>
-                            <div class="fare-breakdown-row commission">
+                            
+                            <hr class="my-2"/>
+                            <div class="fare-breakdown-row commission d-flex justify-content-between align-items-center mb-2">
                                 <span class="fw-bold">Commission</span>
                                 <span class="fs-6">₹${z?.Price?.AgentCommission}</span>
                             </div>
-                            <hr/>
-                            <div class="fare-breakdown-row total">
-                                <span class="fs-6">TOTAL</span>
-                                <span class="fs-6" style="color:#d63b05;">₹${z?.Price?.PublishedPriceRoundedOff || z?.Price?.PublishedPrice}</span>
+                            <hr class="my-2"/>
+                            <div class="fare-breakdown-row total d-flex justify-content-between align-items-center mt-2">
+                                <span class="fs-6 fw-bold">TOTAL</span>
+                                <span class="fs-5 fw-bold" style="color:#d63b05;">₹${z?.Price?.PublishedPriceRoundedOff || z?.Price?.PublishedPrice}</span>
                             </div>
                         </div>
                         </div>
                         <div class="text-black-50 mb-0 mb-sm-2 order-3 d-none d-sm-block mt-3">1 Room/Night</div>
-                      <button onclick="viewNowHotel('${JSON.stringify(z)}')" class="btn btn-sm btn-primary order-4 ms-auto">Book Room</button> </div>
+                      <button onclick=viewNowHotel('${encodeURIComponent(JSON.stringify(z))}') class="btn btn-sm btn-primary order-4 ms-auto">Book Room</button> </div>
                   </div>
                 </div>
               </div>
@@ -631,14 +635,11 @@ function updateCountdown() {
             sessionStorage.removeItem("hotelExpireTime");
             localStorage.removeItem("hotelExpireTime");
 
-            Swal.fire({
+            swal({
                 html: `Your hotel booking session has expired. Please search again.`,
-                icon: "warning",
+                type: "warning",
                 confirmButtonText: `Ok`,
                 showCancelButton: false,
-                customClass: {
-                    confirmButton: "btn btn-primary me-1",
-                },
                 backdrop: true,
                 allowOutsideClick: false,
             }).then((result) => {
@@ -662,11 +663,11 @@ function updateCountdown() {
 
 function viewNowHotel(selectData) {
 
-    let val = JSON.parse(atob(selectData));
+    let val = JSON.parse(decodeURIComponent(selectData));
 
     sessionStorage.setItem("hotelExpireTime", Date.now() + 10 * 60 * 1000);
 
-    sessionStorage.setItem("allHotelData", btoa(JSON.stringify(val)));
+    sessionStorage.setItem("allHotelData", JSON.stringify(val));
     window.open("/hotel/booking/detail", "_blank");
 }
 
@@ -714,7 +715,7 @@ $(document).ready(function () {
     });
 });
 
-function hotelDeatilsUrlAjaxHit(hotelkey) {
+function hotelDeatilsUrlAjaxHit(datas, traceId) {
 
     $.ajax({
         url: "/hotel/details",
@@ -723,8 +724,9 @@ function hotelDeatilsUrlAjaxHit(hotelkey) {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         data: {
-            hotelKey: hotelkey,
-            requestId: sessionStorage.getItem("rId")
+            HotelCode: datas?.HotelCode,
+            TraceId: traceId,
+            ResultIndex: datas?.ResultIndex,
         },
         success: function (data) {
             showHotelTabContent(data?.data);
@@ -735,9 +737,33 @@ function hotelDeatilsUrlAjaxHit(hotelkey) {
     });
 }
 
+function hotelRoomRateDetailsAjaxHit(datas, traceId) {
+
+    $.ajax({
+        url: "/hotel/room",
+        type: "POST",
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+        },
+        data: {
+            HotelCode: datas?.HotelCode,
+            TraceId: traceId,
+            ResultIndex: datas?.ResultIndex,
+        },
+        success: function (data) {
+            let html = viewAllHotelRoom(data?.data?.HotelRoomsDetails);
+
+            $('#chooseroom').html(html);
+        },
+        error: function () {
+            notify('Something went wrong', 'error');
+        },
+    });
+}
+
 function showHotelTabContent(viewdet) {
 
-    storedAllHotelData = JSON.parse(atob(sessionStorage.getItem('allHotelData')));
+    storedAllHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
 
     let detailstabhtml = '';
     let galleryimg = '';
@@ -745,18 +771,18 @@ function showHotelTabContent(viewdet) {
     detailstabhtml = `<div class="tab-pane fade show active" id="knownfor" role="tabpanel"
                         aria-labelledby="knowwnfor-tab">
                         
-                        ${viewdet?.aboutHotel}
+                        ${viewdet?.HotelDetails?.Description ? `<p class="mb-2">${viewdet?.HotelDetails.Description}</p>` : '<p class="mb-2">No description available.</p>'}
                     </div>
                     <div class="tab-pane fade" id="chooseroom" role="tabpanel" aria-labelledby="chooseroom-tab">
-                        ${viewAllHotelRoom(viewdet)}
+                       
                     </div>
                     <div class="tab-pane fade" id="amenities" role="tabpanel"
                         aria-labelledby="amenities-tab">
                       <div class="row ps-3">
-                        ${viewdet?.amenities
+                        ${viewdet?.HotelDetails?.HotelPolicy
             ?.trim()
             .replace(/,+$/, '')
-            .split(',')
+            .split('|')
             .reduce((acc, curr, index, array) => {
                 const itemsPerColumn = Math.ceil(array.length / 3);
                 const columnIndex = Math.floor(index / itemsPerColumn);
@@ -770,30 +796,31 @@ function showHotelTabContent(viewdet) {
                     </div>`;
 
     $('#hotel_name_det').html(`<section class="rounded bg-white p-3 mb-2 d-flex justify-content-between ">
-                            <span><span class="fs-4 fw-bold">${viewdet?.hotelName}</span>
+                            <span><span class="fs-4 fw-bold">${viewdet?.HotelDetails?.HotelName}</span>
                             <p class="opacity-8 mb-0"><i class="fas fa-map-marker-alt"></i>
-                                ${viewdet?.address}, ${viewdet?.city} ${viewdet?.country}</p>  </span>
-                                <a target="_blank" href="https://www.google.com/maps/search/${storedAllHotelData?.hotelName.replace(/\s+/g, '+')}/@${storedAllHotelData?.latitude},${storedAllHotelData?.longitude}"><img src="/travel-flight/48_48/map.png" 
-                                title="Goto Map" height="100%" width="100%" style="height:45px;"/></a>
+                                ${viewdet?.HotelDetails?.Address}, ${viewdet?.HotelDetails?.CountryName} ${viewdet?.HotelDetails?.PinCode}</p>  </span>
+                                <a target="_blank" href="https://www.google.com/maps/search/${viewdet?.HotelDetails?.HotelName}/@${viewdet?.HotelDetails?.Latitude},${viewdet?.HotelDetails?.Longitude}">
+                                <img src="/images/map.png" title="Goto Map" height="100%" width="100%" style="height:45px;"/></a>
                         </section>`);
 
-    $('#hotel_image').html(`<img src="${viewdet?.hotelImage}" width="100%" class="rounded"
+    $('#hotel_image').html(`<img src="${viewdet?.HotelDetails?.Images[0]}" width="100%" class="rounded"
         style="height: 320px; object-fit: cover;width: 100%; border-radius: 8px;"/>`);
 
 
 
     $('#viewdetHotelContent').html(detailstabhtml);
 
-    galleryimg = viewdet.hotelGallery.map((valH, index) => {
+    galleryimg = viewdet?.HotelDetails.Images.map((valH, index) => {
+
         if (index < 3) {
             return `<div class="col-6 mb-2">
-                        <img src="${valH?.imageURL}" alt="${valH?.imageDesc}" class="img-fluid rounded" width="100%" 
+                        <img src="${valH}" alt="HotelImages${index}" class="img-fluid rounded" width="100%" 
                         style="height: 153px; object-fit: cover;width: 100%;">
                     </div>`;
         } else if (index === 3) {
             return `<div class="col-6">
             <div class="position-relative">
-                <img src="${valH?.imageURL}" alt="${valH?.imageDesc}" class="img-fluid rounded" width="100%"
+                <img src="${valH}" alt="HotelImages${index}" class="img-fluid rounded" width="100%"
                 style="height: 153px; object-fit: cover;width: 100%;">
                 <div style="height:95%" class="hover-overlay rounded position-absolute top-0 start-0 w-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-25">
                     <button class="btn btn-secondary btn-sm" id="viewAllImages">view all</button>
@@ -805,9 +832,9 @@ function showHotelTabContent(viewdet) {
 
 
     $('#galleryImgSwiperHotel').html(galleryimg);
-    let allImages = viewdet.hotelGallery.map((valH, ind) => {
+    let allImages = viewdet?.HotelDetails?.Images.map((valH, ind) => {
         return ` <div class="carousel-item ${ind == 0 ? 'active' : ''}">
-                    <img class="d-block w-100 rounded" src="${valH?.imageURL}" alt=""${valH?.imageDesc}" style="height:550px; object-fit:cover"/>
+                    <img class="d-block w-100 rounded" src="${valH}" alt="Hotel Images" style="height:550px; object-fit:cover"/>
                 </div>`;
     }).join('');
 
@@ -829,7 +856,8 @@ function showHotelTabContent(viewdet) {
 
 function viewAllHotelRoom(roomDet) {
 
-    let roomdet = roomDet?.ratePlanRecommendations;
+    console.log(roomDet);
+    let roomdet = roomDet?.Price;
     let roomdetHtml = '';
 
     const maxVisibleInclusion = 4;
@@ -837,6 +865,7 @@ function viewAllHotelRoom(roomDet) {
 
     let galleryimg = '';
     let allGalleryImages = '';
+
     if (roomdet && Array.isArray(roomdet) && roomdet.length > 0) {
         roomdetHtml += roomdet?.map((roomd, index) => {
             let fac = '';
@@ -857,7 +886,7 @@ function viewAllHotelRoom(roomDet) {
                             <img class="img-fluid rounded align-top" src="${valH?.imageURL}" alt="${valH?.imageDesc}" style="height: 225px;width: 100%;"> 
                            
                             <div style="height: 225px;object-fit: cover;" class="hover-overlay rounded position-absolute top-0 start-0 w-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-25">
-                                <button class="btn btn-secondary btn-sm" onclick="viewAllGalleryImages(${indexxx}, '${btoa(allGalleryImages)}')">view all</button>
+                                <button class="btn btn-secondary btn-sm" onclick="viewAllGalleryImages(${indexxx}, '${allGalleryImages}')">view all</button>
                             </div>
                         </div>`;
                     }
@@ -910,22 +939,19 @@ function viewAllHotelRoom(roomDet) {
                             <div class="d-flex align-items-center mt-3"> 
                             <a href="javascript:void(0)" onclick="cancelPolicy('${encodeURIComponent(roomd?.ratePlanDetails[0]?.cancellationPolicy)}',
                                     '${roomd?.ratePlanDetails[0]?.childrenPolicy ? encodeURIComponent(JSON.stringify(roomd?.ratePlanDetails[0]?.childrenPolicy)) : ''}',
-                                    '${btoa(JSON.stringify(roomd?.ratePlanDetails[0]?.essentialInformation))}')">Cancellation Policy</a> 
-                          <button onclick="bookNowHotel(this,'${btoa(JSON.stringify(roomd))}', '${roomDet?.hotelKey}', ${roomd?.totalAmount})" 
+                                    '${JSON.stringify(roomd?.ratePlanDetails[0]?.essentialInformation)}')">Cancellation Policy</a> 
+                          <button onclick="bookNowHotel(this,'${JSON.stringify(roomd)}', '${roomDet?.hotelKey}', ${roomd?.totalAmount})" 
                           class="btn btn-sm btn-outline-primary shadow-none ms-auto select-room-btn">Select Room</button> </div>
                         </div>
                         </div>
                      <hr class="my-5"/>`;
         }).join('');
     } else {
-        Swal.fire({
+        swal({
             html: `No rate plans available at the moment. Please check back later or try adjusting your search criteria.`,
-            icon: "warning",
+            type: "warning",
             confirmButtonText: `Ok,I Understand!`,
             showCancelButton: false,
-            customClass: {
-                confirmButton: "btn btn-primary me-1",
-            },
             backdrop: true,
             allowOutsideClick: false,
         }).then((result) => {
@@ -951,7 +977,7 @@ function bookNowHotel(buton, roomd, hkey, amt) {
 
 function selectedroom(roomd, hkey) {
     sessionStorage.setItem("recomdet", roomd);
-    sessionStorage.setItem("hkey", btoa(hkey));
+    sessionStorage.setItem("hkey", hkey);
     window.open("/hotel/guest/detail", "_blank");
 }
 
@@ -991,7 +1017,7 @@ function cancelPolicyAjaxHit(recomId, ratePlanId, hotelKy, reqid) {
 
 function viewAllGalleryImages(id, allGalleryImages) {
 
-    $('#morehotelimgGallery').html(atob(allGalleryImages));
+    $('#morehotelimgGallery').html(allGalleryImages);
     $('#showmoreHotelImageGalleryModal').modal('show');
 }
 
@@ -1012,31 +1038,12 @@ function cancelPolicy(cancelpol, childpol, essenpol) {
     }
 
     htmlofModalBody += `<h5 class="mt-2"><u>Esssential Information</u></h5>`;
-    htmlofModalBody += JSON.parse(atob(essenpol)).map((val) => {
+    htmlofModalBody += JSON.parse(essenpol).map((val) => {
         return `➤ <b>${val?.type}</b> : ${val?.text} <br/>`;
     }).join('');
 
     $('#showCancelPolicyModal .modal-body').html(htmlofModalBody);
     $('#showCancelPolicyModal').modal('show');
-}
-
-function notify(text, status) {
-    new Notify({
-        status: status,
-        title: null,
-        text: text,
-        effect: "fade",
-        customClass: null,
-        customIcon: null,
-        showIcon: true,
-        showCloseButton: true,
-        autoclose: true,
-        autotimeout: 2000,
-        gap: 20,
-        distance: 15,
-        type: 1,
-        position: "right top",
-    });
 }
 
 function beforeSendSket() {
@@ -1080,7 +1087,7 @@ $(document).ready(function () {
 
     let storedFareDetails;
     try {
-        storedFareDetails = JSON.parse(atob(localStorage.getItem("sentReqest")));
+        storedFareDetails = JSON.parse(localStorage.getItem("sentReqest"));
     } catch {
         storedFareDetails = {};
     }
@@ -1204,14 +1211,14 @@ function submitGuestDetails() {
     } else {
         let storedFareDetails;
         try {
-            storedFareDetails = JSON.parse(atob(localStorage.getItem("sentReqest")));
+            storedFareDetails = JSON.parse(localStorage.getItem("sentReqest"));
         } catch {
             storedFareDetails = {};
         }
         // var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount) + parseInt(storedFareDetails[0]?.childCount);
         var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount);
-        let hotelKy = atob(sessionStorage.getItem('hkey'));
-        let recomdet = JSON.parse(atob(sessionStorage.getItem('recomdet')));
+        let hotelKy = sessionStorage.getItem('hkey');
+        let recomdet = JSON.parse(sessionStorage.getItem('recomdet'));
         const passengers = [];
         for (var index = 0; totalPassengerCount > index; index++) {
             const title = $(`#title-${index + 1}`).val();
@@ -1252,23 +1259,20 @@ function submitGuestDetails() {
             recommendationId: recomdet?.recommendationId
         };
 
-        localStorage.setItem('psgr', btoa(JSON.stringify(passengers)));
+        localStorage.setItem('psgr', JSON.stringify(passengers));
 
-        Swal.fire({
-            icon: "question",
+        swal({
+            type: "question",
             text: `Want to book this Hotel ?`,
             showCancelButton: true,
             confirmButtonText: 'Yes, I Want',
             cancelButtonText: 'No, Cancel',
             showLoaderOnConfirm: true,
-            customClass: {
-                confirmButton: 'btn btn-primary'
-            },
             backdrop: true,
             allowOutsideClick: false,
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire({
+                swal({
                     title: "Processing...",
                     text: "Please wait, we are fetching details",
                     allowOutsideClick: false,
@@ -1356,23 +1360,20 @@ function formatDate(dateStr) {
 function confirmPaymetHit(datas) {
     // console.log(datas);
     var txtMsg = `Are you sure you want to proceed with the payment? </br>Amount: ₹ ${datas?.amount}`;
-    Swal.fire({
+
+    swal({
         title: "Confirm Payment",
         html: txtMsg,
-        icon: "warning",
+        type: "warning",
         confirmButtonText: `Pay & Confirm`,
         cancelButtonText: "Cancel",
         showCancelButton: true,
         showLoaderOnConfirm: true,
-        customClass: {
-            confirmButton: "btn btn-primary me-1",
-            cancelButton: "btn btn-label-danger",
-        },
         backdrop: true,
         allowOutsideClick: false,
     }).then((result) => {
         if (result.isConfirmed) {
-            Swal.fire({
+            swal({
                 title: "Processing...",
                 text: "Please wait while your booking is being confirmed.",
                 allowOutsideClick: false,
@@ -1396,10 +1397,10 @@ function confirmPaymetHit(datas) {
                 contentType: "application/json",
                 success: function (response) {
                     swal.close();
-                    let recomdet = JSON.parse(atob(sessionStorage.getItem('recomdet')));
-                    let alHotelData = JSON.parse(atob(sessionStorage.getItem('allHotelData')));
-                    let sentReqest = JSON.parse(atob(localStorage.getItem('sentReqest')));
-                    let psngr = JSON.parse(atob(localStorage.getItem('psgr')));
+                    let recomdet = JSON.parse(sessionStorage.getItem('recomdet'));
+                    let alHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
+                    let sentReqest = JSON.parse(localStorage.getItem('sentReqest'));
+                    let psngr = JSON.parse(localStorage.getItem('psgr'));
 
                     let essentialInfo = recomdet?.ratePlanDetails[0]?.essentialInformation;
 
@@ -1411,8 +1412,8 @@ function confirmPaymetHit(datas) {
 
 
                     if (response.status == "success") {
-                        Swal.fire({
-                            icon: "success",
+                        swal({
+                            type: "success",
                             html: `<p><span class="badge bg-success">Booking Confirmed</span></p>
                                 <div class="alert alert-light border rounded p-4">
                                     <ul class="list-unstyled">
@@ -1428,9 +1429,6 @@ function confirmPaymetHit(datas) {
                                 </div>`,
                             confirmButtonText: 'OK, Got it🙂',
                             showConfirmButton: true,
-                            customClass: {
-                                confirmButton: 'btn btn-primary'
-                            },
                             backdrop: true,
                             allowOutsideClick: false,
                         }).then((result) => {

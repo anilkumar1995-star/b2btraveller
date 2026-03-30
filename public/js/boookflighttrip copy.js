@@ -4435,3 +4435,8 @@ $(document).on("click", ".btn-book-now-rtrip", function () {
         notify("Error reading flight details!", "error");
     }
 });
+
+
+$(document).on('click', '#reviewBtn', function () {
+    window.location.href = "/flight/review-booking";
+});

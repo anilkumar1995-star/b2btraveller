@@ -44,7 +44,7 @@ class HotelService
             return $this->baseUrl . '/v1/service/traveller/hotel/city/list';
         } else if ($method == 'search') {
             return $this->baseUrl . '/v1/service/traveller/hotel/search';
-        } else if ($method == 'seatlayout') {
+        } else if ($method == 'hoteldetails') {
             return $this->baseUrl . '/v1/service/traveller/hotel/info';
         } else if ($method == 'hotelroom') {
             return $this->baseUrl . '/v1/service/traveller/hotel/room';
@@ -192,26 +192,26 @@ class HotelService
         }
     }
 
-    public function boardingdetail($data)
+    public function hotelDetails($data)
     {
         try {
             $token = $this->authService->getToken();
 
             $payload = [
-                "EndUserIp" => $this->ip,
+                "HotelCode" => $data['HotelCode'],
                 "TokenId" => $token,
                 "TraceId" => $data['TraceId'],
                 "ResultIndex" => $data['ResultIndex'],
             ];
 
 
-            $url = $this->setFullUrl('boardingpass');
+            $url = $this->setFullUrl('hoteldetails');
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::busboardingpassresponse();
+                $response = HotelStaticResponseHelper::hoteldetailsresponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "boardingpass", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "hotel_details", "");
                 $response = $response['response'];
             }
 
@@ -225,12 +225,12 @@ class HotelService
             }
 
             if (isset($response['status']) && strtolower($response['status']) == 'success') {
-                return ['status' => 'success', 'message' => "Boarding Details get successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Hotel Details get successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Boarding Details get failed'
+                    'message' => $response['message'] ?? 'Hotel Details get failed'
                 ];
             }
         } catch (Exception $e) {
@@ -238,27 +238,25 @@ class HotelService
         }
     }
 
-
-
-    public function seatdetail($data)
+    public function hotelRoom($data)
     {
         try {
             $token = $this->authService->getToken();
 
             $payload = [
-                "EndUserIp" => $this->ip,
+                "HotelCode" => $data['HotelCode'],
                 "TokenId" => $token,
                 "TraceId" => $data['TraceId'],
                 "ResultIndex" => $data['ResultIndex'],
             ];
 
-            $url = $this->setFullUrl('seatlayout');
+            $url = $this->setFullUrl('hotelroom');
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::busseatlayoutresponse();
+                $response = HotelStaticResponseHelper::hotelroomresponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "seatlayout", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "hotel_room", "");
                 $response = $response['response'];
             }
 
@@ -271,12 +269,12 @@ class HotelService
             }
 
             if (isset($response['status']) && strtolower($response['status']) == 'success') {
-                return ['status' => 'success', 'message' => "Seat Layout get successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Hotel Room get successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Seat Layout get failed'
+                    'message' => $response['message'] ?? 'Hotel Room get failed'
                 ];
             }
         } catch (Exception $e) {

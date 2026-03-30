@@ -699,8 +699,8 @@ function validateProceedButton() {
     }
 }
 
-$(document).on('click', '.bus-seat:not(.booked)', function () {
-
+$(document).on('click', '.bus-seat:not(.booked)', function (event) {
+    event.stopPropagation();
     let seatData = JSON.parse($(this).attr('data-seat'));
     let seatIndex = seatData.SeatIndex;
 
@@ -727,12 +727,17 @@ $(document).on('click', '.bus-seat:not(.booked)', function () {
 $(document).on('change', 'input[name="boarding_point"]', function () {
     let bp = JSON.parse(this.value);
     selectedBoardingId = bp.CityPointIndex;
+    localStorage.setItem('selectedBoardingPoint', JSON.stringify(selectedBoardingId));
+    localStorage.setItem('selectedBoardingPointDet', JSON.stringify(bp));
     validateProceedButton();
 });
 
 $(document).on('change', 'input[name="dropping_point"]', function () {
     let dp = JSON.parse(this.value);
+    
     selectedDroppingId = dp.CityPointIndex;
+    localStorage.setItem('selectedDroppingPoint', JSON.stringify(selectedDroppingId));
+    localStorage.setItem('selectedDroppingPointDet', JSON.stringify(dp));
     validateProceedButton();
 });
 
@@ -889,7 +894,7 @@ function validatePassengerForm(liveCheck = false) {
     return allValid;
 }
 
-$(document).on('click', '#confirmPassengers', function () {
+$(document).on('click', '#reviewBtn', function () {
 
 
     let isValid = validatePassengerForm(false);
@@ -904,8 +909,51 @@ $(document).on('click', '#confirmPassengers', function () {
 
     let passengers = buildPassengerPayload();
 
+
+    localStorage.setItem('passengerDetails', JSON.stringify(passengers));
+
+    swal({
+        title: "Are you sure?",
+        text: "Do you want to proceed with booking review?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, Proceed",
+        cancelButtonText: "Cancel"
+    }).then((result) => {
+        if (result.value) {
+            swal({
+                title: "Redirecting...",
+                text: "Taking you to the review booking page.",
+                type: "success",
+                timer: 1200,
+                showConfirmButton: false
+            });
+
+            window.location.href = "/bus/review-booking";
+        }
+
+    });
+});
+
+$(document).on('click', '#confirmPassengers', function () {
+
+
+    let isValid = validatePassengerForm(false);
+
+    if (!isValid) {
+
+        notify('Please fill all required fields before proceeding.', 'error');
+
+        $('#confirmPassengers').prop('disabled', true);
+        return;
+    }
+
     let trcid = localStorage.getItem('TraceId');
     let bsrstindx = localStorage.getItem("BusResultIndex");
+
+    let passengers = JSON.parse(localStorage.getItem('passengerDetails'));
+    let selectedBoardingId = JSON.parse(localStorage.getItem('selectedBoardingPoint'));
+    let selectedDroppingId = JSON.parse(localStorage.getItem('selectedDroppingPoint'));
 
     let bookingPayload = {
         resultIndex: bsrstindx,
@@ -915,6 +963,7 @@ $(document).on('click', '#confirmPassengers', function () {
         passenger: passengers,
         _token: $('meta[name="csrf-token"]').attr('content')
     };
+
 
     swal({
         title: 'Confirm Seat Blocking?',

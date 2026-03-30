@@ -175,6 +175,8 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);
     Route::post('get-cancellation-charges', [FlightController::class, 'getCancellationCharges']);
     Route::post('cancel-status', [FlightController::class, 'checkCancelStatus'])->name('cancelStatus');
+    
+    Route::get('review-booking', [FlightController::class, 'reviewBooking'])->name('flight.reviewBooking');
 });
 
 
@@ -201,20 +203,26 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
     Route::get('payment/success', [BusController::class, 'paymentSuccess'])->name('bus.payment.success');
     Route::get('payment/failed', [BusController::class, 'paymentFailed'])->name('bus.payment.failed');
     Route::post('check-status', [BusController::class, 'checkStatus'])->name('bus.checkStatus');
+
+    Route::get('review-booking', [BusController::class, 'reviewBooking'])->name('bus.reviewBooking');
 });
 
 Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     Route::get('view', [HotelController::class, 'root'])->name('hotel.view');
      Route::get('search-city', [HotelController::class, 'searchCity'])->name('hotel.city');
     Route::post('search', [HotelController::class, "searchHotel"]);
+    
+    Route::get('booking/detail', [HotelController::class, "viewHotelDetails"]);
+    Route::post('details', [HotelController::class, "detailsHotel"]);
+    Route::post('room', [HotelController::class, "detailsRoom"]);
 
-    Route::get('booking', [HotelController::class, 'book_HOTELS'])->name('hotel-search');
-    Route::get('booking/detail', [HotelController::class, "view_HOTELS"]);
+
     Route::get('guest/detail', [HotelController::class, "gust_Deatils"]);
 
     Route::post('search/filter', [HotelController::class, "searchFilter_HOTEL"]);
 
-    Route::post('details', [HotelController::class, "details_HOTEL"]);
+    Route::get('booking', [HotelController::class, 'book_HOTELS'])->name('hotel-search');
+    
     Route::post('temp-book', [HotelController::class, "tempBooking_HOTEL"]);
     Route::post('payments', [HotelController::class, "ticketAddPayments_HOTEL"]);
     Route::post('confirm-book', [HotelController::class, "book_HOTEL"]);
