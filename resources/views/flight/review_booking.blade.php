@@ -406,14 +406,19 @@
         $(document).ready(function() {
             const payload = JSON.parse(localStorage.getItem('payload'));
             const traceId = localStorage.getItem('TraceId') || '';
+
+
+            const passengerSSRRet = '';
+            let selectedSeatsRet = [];
+            let selectedMealsRet = [];
+            let selectedBaggageRet = [];
+
             let selectedFlightDetails = JSON.parse(localStorage.getItem('selectedFlightDetails'));
             let selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
             let selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
             let selectedBaggage = JSON.parse(localStorage.getItem('selectedBaggage')) || [];
 
-            let selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
-            let selectedMealsRet = JSON.parse(localStorage.getItem('selectedmealReturn')) || [];
-            let selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
+
 
             let travelerDetails = JSON.parse(localStorage.getItem('travelerDetails')) || [];
             let contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
@@ -432,6 +437,9 @@
                 }
             } else if (payload.JourneyType == 2) {
 
+                selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
+                selectedMealsRet = JSON.parse(localStorage.getItem('selectedmealReturn')) || [];
+                selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
                 if (selectedFlightDetails) {
 
                     if (isInternational) {
@@ -762,7 +770,10 @@
 
                     // Add SSR details for each passenger
                     const passengerSSR = getPassengerSSR(index);
-                    const passengerSSRRet = getPassengerSSRReturn(index);
+
+                    if (payload.JourneyType == 2) {
+                         passengerSSRRet = getPassengerSSRReturn(index);
+                    }
                     if (passengerSSR && Object.keys(passengerSSR).length > 0) {
                         const seat = passengerSSR.seatDataFull || {};
                         const bag = passengerSSR.baggage?.bagObjData || {};
@@ -784,24 +795,24 @@
                                             </tr>
 
                                             ${passengerSSR.seatDataFull ? `
-                                                        <tr>
-                                                            <th>Seat</th>
-                                                            <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
-                                                        </tr>` : ''}
+                                                                        <tr>
+                                                                            <th>Seat</th>
+                                                                            <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
+                                                                        </tr>` : ''}
 
                                             ${passengerSSR.meal ? `
-                                                        <tr>
-                                                            <th>Meal</th>
-                                                            <td>${passengerSSR.meal}</td>
-                                                        </tr>` : ''}
+                                                                        <tr>
+                                                                            <th>Meal</th>
+                                                                            <td>${passengerSSR.meal}</td>
+                                                                        </tr>` : ''}
 
                                             ${passengerSSR.baggage ? `
-                                                        <tr>
-                                                            <th>Baggage</th>
-                                                            <td>
-                                                                ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
-                                                            </td>
-                                                        </tr>` : ''}
+                                                                        <tr>
+                                                                            <th>Baggage</th>
+                                                                            <td>
+                                                                                ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
+                                                                            </td>
+                                                                        </tr>` : ''}
 
                                         </tbody>
                                     </table>
@@ -809,7 +820,7 @@
                             </div>`;
                     }
 
-                     if (passengerSSRRet && Object.keys(passengerSSRRet).length > 0) {
+                    if (passengerSSRRet && Object.keys(passengerSSRRet).length > 0) {
                         const seat = passengerSSRRet.seatDataFull || {};
                         const bag = passengerSSRRet.baggage?.bagObjData || {};
                         const meal = passengerSSRRet.mealObjData || {};
@@ -830,31 +841,31 @@
                                             </tr>
 
                                             ${passengerSSRRet.seatDataFull ? `
-                                                        <tr>
-                                                            <th>Seat</th>
-                                                            <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
-                                                        </tr>` : ''}
+                                                                        <tr>
+                                                                            <th>Seat</th>
+                                                                            <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
+                                                                        </tr>` : ''}
 
                                             ${passengerSSRRet.meal ? `
-                                                        <tr>
-                                                            <th>Meal</th>
-                                                            <td>${passengerSSRRet.meal}</td>
-                                                        </tr>` : ''}
+                                                                        <tr>
+                                                                            <th>Meal</th>
+                                                                            <td>${passengerSSRRet.meal}</td>
+                                                                        </tr>` : ''}
 
                                             ${passengerSSRRet.baggage ? `
-                                                        <tr>
-                                                            <th>Baggage</th>
-                                                            <td>
-                                                                ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
-                                                            </td>
-                                                        </tr>` : ''}
+                                                                        <tr>
+                                                                            <th>Baggage</th>
+                                                                            <td>
+                                                                                ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
+                                                                            </td>
+                                                                        </tr>` : ''}
 
                                         </tbody>
                                     </table>
                                 </div>
                             </div>`;
                     }
-                   
+
 
                     html += '</div></div></div>';
                 });
@@ -915,6 +926,7 @@
 
                 return ssr;
             }
+
             function getPassengerSSRReturn(passengerIndex) {
                 const ssrRet = {};
 
