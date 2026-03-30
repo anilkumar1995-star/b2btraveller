@@ -408,7 +408,7 @@
             const traceId = localStorage.getItem('TraceId') || '';
 
 
-            const passengerSSRRet = '';
+            let passengerSSRRet = '';
             let selectedSeatsRet = [];
             let selectedMealsRet = [];
             let selectedBaggageRet = [];
