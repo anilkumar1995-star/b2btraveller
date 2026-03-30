@@ -224,6 +224,7 @@
                                                         class="bi bi-person-circle me-2"></i><strong>Traveler
                                                         Details</strong></h6>
                                                 <div id="travelerList"></div>
+                                                <div id="travelerListReturn"></div>
                                             </div>
 
                                         </div>
@@ -409,6 +410,11 @@
             let selectedSeats = JSON.parse(localStorage.getItem('selectedSeat')) || [];
             let selectedMeals = JSON.parse(localStorage.getItem('selectedmeal')) || [];
             let selectedBaggage = JSON.parse(localStorage.getItem('selectedBaggage')) || [];
+
+            let selectedSeatsRet = JSON.parse(localStorage.getItem('selectedSeatReturn')) || [];
+            let selectedMealsRet = JSON.parse(localStorage.getItem('selectedmealReturn')) || [];
+            let selectedBaggageRet = JSON.parse(localStorage.getItem('selectedBaggageReturn')) || [];
+
             let travelerDetails = JSON.parse(localStorage.getItem('travelerDetails')) || [];
             let contactDetails = JSON.parse(localStorage.getItem('contactDetails'));
             let fareFlightDetailsdeparture = JSON.parse(localStorage.getItem('fareFlightDetailsdeparture')) || [];
@@ -694,7 +700,6 @@
 
             function displayPassengerDetails() {
                 if (!travelerDetails || travelerDetails.length === 0) return;
-
                 let html = '<div class="row g-3">';
 
                 travelerDetails.forEach((passenger, index) => {
@@ -757,51 +762,99 @@
 
                     // Add SSR details for each passenger
                     const passengerSSR = getPassengerSSR(index);
+                    const passengerSSRRet = getPassengerSSRReturn(index);
                     if (passengerSSR && Object.keys(passengerSSR).length > 0) {
                         const seat = passengerSSR.seatDataFull || {};
                         const bag = passengerSSR.baggage?.bagObjData || {};
                         const meal = passengerSSR.mealObjData || {};
                         html += `
-                                        <div class="">
-                                            <small class="text-muted">
-                                                <i class="bi bi-gear me-1"></i>Special Services
-                                            </small>
+                            <div class="">
+                                <small class="text-muted">
+                                    <i class="bi bi-gear me-1"></i>Special Services
+                                </small>
 
-                                            <div class="mt-2">
-                                                <table class="table table-sm table-bordered mb-0">
-                                                    <tbody>
+                                <div class="mt-2">
+                                    <table class="table table-sm table-bordered mb-0">
+                                        <tbody>
 
+                                            <tr>
+                                                <th style="width:180px;">Airline</th>
+                                                <td>${seat.AirlineCode || bag.AirlineCode || '-'} / ${seat.FlightNumber || bag.FlightNumber || '-'}
+                                                    ( ${seat.Origin || bag.Origin || '-'} → ${seat.Destination || bag.Destination || '-'} )</td>
+                                            </tr>
+
+                                            ${passengerSSR.seatDataFull ? `
                                                         <tr>
-                                                            <th style="width:180px;">Airline</th>
-                                                            <td>${seat.AirlineCode || bag.AirlineCode || '-'} / ${seat.FlightNumber || bag.FlightNumber || '-'}
-                                                                ( ${seat.Origin || bag.Origin || '-'} → ${seat.Destination || bag.Destination || '-'} )</td>
-                                                        </tr>
+                                                            <th>Seat</th>
+                                                            <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
+                                                        </tr>` : ''}
 
-                                                        ${passengerSSR.seatDataFull ? `
-                                                                    <tr>
-                                                                        <th>Seat</th>
-                                                                        <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
-                                                                    </tr>` : ''}
+                                            ${passengerSSR.meal ? `
+                                                        <tr>
+                                                            <th>Meal</th>
+                                                            <td>${passengerSSR.meal}</td>
+                                                        </tr>` : ''}
 
-                                                        ${passengerSSR.meal ? `
-                                                                    <tr>
-                                                                        <th>Meal</th>
-                                                                        <td>${passengerSSR.meal}</td>
-                                                                    </tr>` : ''}
+                                            ${passengerSSR.baggage ? `
+                                                        <tr>
+                                                            <th>Baggage</th>
+                                                            <td>
+                                                                ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
+                                                            </td>
+                                                        </tr>` : ''}
 
-                                                        ${passengerSSR.baggage ? `
-                                                                    <tr>
-                                                                        <th>Baggage</th>
-                                                                        <td>
-                                                                            ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
-                                                                        </td>
-                                                                    </tr>` : ''}
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>`;
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>`;
                     }
+
+                     if (passengerSSRRet && Object.keys(passengerSSRRet).length > 0) {
+                        const seat = passengerSSRRet.seatDataFull || {};
+                        const bag = passengerSSRRet.baggage?.bagObjData || {};
+                        const meal = passengerSSRRet.mealObjData || {};
+                        html += `
+                            <div class="">
+                                <small class="text-muted">
+                                    <i class="bi bi-gear me-1"></i>Special Services
+                                </small>
+
+                                <div class="mt-2">
+                                    <table class="table table-sm table-bordered mb-0">
+                                        <tbody>
+
+                                            <tr>
+                                                <th style="width:180px;">Airline</th>
+                                                <td>${seat.AirlineCode || bag.AirlineCode || '-'} / ${seat.FlightNumber || bag.FlightNumber || '-'}
+                                                    ( ${seat.Origin || bag.Origin || '-'} → ${seat.Destination || bag.Destination || '-'} )</td>
+                                            </tr>
+
+                                            ${passengerSSRRet.seatDataFull ? `
+                                                        <tr>
+                                                            <th>Seat</th>
+                                                            <td>${seat.RowNo}${seat.SeatNo} (${getSeatType(seat.SeatType)}) - ₹${seat.Price}</td>
+                                                        </tr>` : ''}
+
+                                            ${passengerSSRRet.meal ? `
+                                                        <tr>
+                                                            <th>Meal</th>
+                                                            <td>${passengerSSRRet.meal}</td>
+                                                        </tr>` : ''}
+
+                                            ${passengerSSRRet.baggage ? `
+                                                        <tr>
+                                                            <th>Baggage</th>
+                                                            <td>
+                                                                ${bag.Text || ''} (${bag.Weight}KG) - ₹${bag.Price}
+                                                            </td>
+                                                        </tr>` : ''}
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>`;
+                    }
+                   
 
                     html += '</div></div></div>';
                 });
@@ -861,6 +914,32 @@
                 }
 
                 return ssr;
+            }
+            function getPassengerSSRReturn(passengerIndex) {
+                const ssrRet = {};
+
+                // Check for selected seat
+                if (selectedSeatsRet && selectedSeatsRet[0].length > passengerIndex) {
+                    const seat = selectedSeatsRet[0][passengerIndex];
+
+                    if (seat && seat.SeatObjData) {
+                        ssrRet.seatDataFull = seat.SeatObjData;
+                    }
+                }
+
+                // Check for selected meal
+                if (selectedMeals && selectedMeals.length > passengerIndex) {
+                    const meal = selectedMeals[passengerIndex];
+                    if (meal) ssrRet.meal = meal
+                }
+
+                // Check for selected baggage
+                if (selectedBaggage && selectedBaggage.length > passengerIndex) {
+                    const baggage = selectedBaggage[passengerIndex];
+                    if (baggage) ssrRet.baggage = baggage
+                }
+
+                return ssrRet;
             }
         });
     </script>

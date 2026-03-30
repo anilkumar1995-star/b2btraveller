@@ -115,6 +115,8 @@
             const payload = JSON.parse(localStorage.getItem('payload'));
             const traceId = localStorage.getItem('TraceId') || '';
             let selectedBusDetails = JSON.parse(localStorage.getItem('selectedBusDetails'));
+            let selectedBoardingPointDetails = JSON.parse(localStorage.getItem('selectedBoardingPointDet'));
+            let selectedDroppingPointDetails = JSON.parse(localStorage.getItem('selectedDroppingPointDet'));
             let travelerDetails = JSON.parse(localStorage.getItem('passengerDetails'));
 
             displayBusDetails();
@@ -144,9 +146,9 @@
                             <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center">
                                 <div>
                                     <h5 class="mb-0">
-                                        🚌 ${selectedBusDetails?.BoardingPointsDetails?.[0]?.CityPointLocation || 'Boarding'} 
+                                        🚌 ${selectedBoardingPointDetails?.CityPointLocation || 'Boarding'} 
                                         → 
-                                        ${selectedBusDetails?.DroppingPointsDetails?.[0]?.CityPointLocation || 'Dropping'}
+                                        ${selectedDroppingPointDetails?.CityPointLocation || 'Dropping'}
                                     </h5>
 
                                     <small class="text-muted">
@@ -164,9 +166,9 @@
 
                                     <div class="col-md-4">
                                         <h5 class="mb-0">Departure</h5>
-                                        <p class="mb-1 fw-bold">${fmtTime(selectedBusDetails?.DepartureTime)}</p>
-                                        <p class="mb-1 small text-muted">${fmtDate(selectedBusDetails?.DepartureTime)}</p>
-                                        <p class="mb-0">${selectedBusDetails?.BoardingPointsDetails?.[0]?.CityPointLocation}</p>
+                                        <p class="mb-1 fw-bold">${fmtTime(selectedBoardingPointDetails?.CityPointTime)}</p>
+                                        <p class="mb-1 small text-muted">${fmtDate(selectedBoardingPointDetails?.CityPointTime)}</p>
+                                        <p class="mb-0">${selectedBoardingPointDetails?.CityPointLocation}</p>
                                     </div>
 
                                     <div class="col-md-4 text-center">
@@ -187,9 +189,9 @@
 
                                     <div class="col-md-4 text-end">
                                         <h5 class="mb-0">Arrival</h5>
-                                        <p class="mb-1 fw-bold">${fmtTime(selectedBusDetails?.ArrivalTime)}</p>
-                                        <p class="mb-1 small text-muted">${fmtDate(selectedBusDetails?.ArrivalTime)}</p>
-                                        <p class="mb-0">${selectedBusDetails?.DroppingPointsDetails?.[0]?.CityPointLocation}</p>
+                                        <p class="mb-1 fw-bold">${fmtTime(selectedDroppingPointDetails?.CityPointTime)}</p>
+                                        <p class="mb-1 small text-muted">${fmtDate(selectedDroppingPointDetails?.CityPointTime)}</p>
+                                        <p class="mb-0">${selectedDroppingPointDetails?.CityPointLocation}</p>
                                     </div>
 
                                 </div>
@@ -247,7 +249,7 @@
                 let html = `
                     <div class="card shadow-sm">
 
-                        <div class="card-header bg-white">
+                        <div class="card-header bg-light">
                             <h5 class="mb-0">Fare Summary</h5>
                         </div>
 
@@ -271,7 +273,7 @@
                                     <td class="text-end text-success">₹${discount}</td>
                                 </tr>
                                 <tr>
-                                    <td class="text-muted">Seat</td>
+                                    <td class="text-muted fw-bold">Seat Price</td>
                                     <td class="text-end text-success">₹${seatTotal}</td>
                                 </tr>
                             </table>

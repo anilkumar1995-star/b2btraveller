@@ -728,13 +728,16 @@ $(document).on('change', 'input[name="boarding_point"]', function () {
     let bp = JSON.parse(this.value);
     selectedBoardingId = bp.CityPointIndex;
     localStorage.setItem('selectedBoardingPoint', JSON.stringify(selectedBoardingId));
+    localStorage.setItem('selectedBoardingPointDet', JSON.stringify(bp));
     validateProceedButton();
 });
 
 $(document).on('change', 'input[name="dropping_point"]', function () {
     let dp = JSON.parse(this.value);
+    
     selectedDroppingId = dp.CityPointIndex;
     localStorage.setItem('selectedDroppingPoint', JSON.stringify(selectedDroppingId));
+    localStorage.setItem('selectedDroppingPointDet', JSON.stringify(dp));
     validateProceedButton();
 });
 
