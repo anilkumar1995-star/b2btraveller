@@ -3419,7 +3419,7 @@ function checkFinalBookingStatus(trip, journeyType, source) {
 
         if (bookingResult.departure.status?.toLowerCase() === 'success') {
 
-            const dep = bookingResult.departure.data.Response.Response;
+            const dep = bookingResult.departure?.data?.Response?.Response;
 
             swal({
                 title: "Booking Successful!",
@@ -3466,7 +3466,7 @@ function checkFinalBookingStatus(trip, journeyType, source) {
 
             if (intlRes.status?.toLowerCase() === 'success') {
 
-                const intl = intlRes.data.Response.Response;
+                const intl = intlRes?.data?.Response?.Response;
 
                 swal({
                     title: "International Booking Successful! 🌍",
@@ -3503,9 +3503,12 @@ function checkFinalBookingStatus(trip, journeyType, source) {
             const retRes = bookingResult.return;
 
             if (depRes.status?.toLowerCase() == 'success' && retRes.status?.toLowerCase() == 'success') {
-
-                const dep = depRes.data.Response.Response;
-                const ret = retRes.data.Response.Response;
+                if (depRes.data?.url || retRes.data?.url) {
+                    window.location.href = depRes.data?.url || retRes.data?.url;
+                    return;
+                }
+                const dep = depRes.data?.Response?.Response;
+                const ret = retRes.data?.Response?.Response;
 
 
                 swal({
