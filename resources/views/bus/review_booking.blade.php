@@ -282,7 +282,7 @@
 
                         <div class="card-footer d-flex justify-content-between">
                             <strong>Grand Total</strong>
-                            <strong class="text-success">₹${grandTotal}</strong>
+                            <strong class="text-success">₹${seatTotal}</strong>
                         </div>
 
                     </div>
