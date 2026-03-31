@@ -627,7 +627,7 @@ class BusController extends Controller
             ]);
         }
 
-        $api = Api::where('code', 'rrpayment')->first();
+        $api = Api::where('code', 'orpayment')->first();
         if (!$api) {
             return response()->json(['status' => 'failed', 'message' => 'API not found']);
         }
