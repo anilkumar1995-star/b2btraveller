@@ -681,7 +681,7 @@ class BusController extends Controller
                     }
                 }
 
-                if (isset($responseStatus->status) && ($responseStatus->status == "PENDING" || $responseStatus->status == "FAILURE")) {
+                if (isset($responseStatus->status) && (strtolower($responseStatus->status) == "pending" || strtolower($responseStatus->status) == "failure")) {
                     return response()->json([
                         'status' => strtolower($responseStatus->status),
                         'message' => $responseStatus->message ?? "Transaction " . strtolower($responseStatus->status),
@@ -694,6 +694,7 @@ class BusController extends Controller
         return response()->json([
             'status' => 'success',
             'booking_status' => $booking->booking_status ?? 'pending',
+            'message' => (isset($responseStatus) && isset($responseStatus->message)) ? $responseStatus->message : null,
             'data' => $booking
         ]);
     }

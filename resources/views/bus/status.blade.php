@@ -123,11 +123,19 @@
                             clearInterval(timerInterval);
                             clearInterval(pollingInterval);
                             handleSuccess(response.data);
-                        } else if (response.booking_status === 'failed') {
+                        } else if (response.status === 'pending') {
+                            // Update message if it's still pending
+                            if(response.message) {
+                                $('#statusContent p.lead').text(response.message);
+                            }
+                        } else if (response.status === 'failure' || response.status === 'failed' || response.booking_status === 'failed') {
                             clearInterval(timerInterval);
                             clearInterval(pollingInterval);
                             handleFailure(response.message || 'Ticket booking failed.');
                         }
+                    },
+                    error: function() {
+                        // Silent fail or retry
                     }
                 });
             }
