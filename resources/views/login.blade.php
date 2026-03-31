@@ -59,6 +59,17 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #d0d2d6 !important;
+            /* light text */
+            -webkit-box-shadow: 0 0 0px 1000px #2f3349 inset !important;
+            /* dark bg */
+            caret-color: #fff !important;
+            border-radius: inherit;
+        }
+
         body {
             margin: 0;
             height: 100vh;
@@ -351,7 +362,8 @@
 
             <div class="mb-3 input-group">
                 <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                <input type="password" name="password" class="form-control w-75" required placeholder="Enter Password Here">
+                <input type="password" name="password" class="form-control w-75" required
+                    placeholder="Enter Password Here">
                 {{-- <span class="input-group-text"><i class="fa fa-eye"></i></span> --}}
             </div>
 
