@@ -630,7 +630,7 @@ class BusController extends Controller
                 "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
             ];
 
-            $result = \Myhelper::curl($url, "GET", [], $header, "yes");
+            $result = \Myhelper::curl($url, "POST", [], $header, "yes");
             if ($result['response'] != '') {
                 $responseStatus = json_decode($result['response']);
                 if (isset($responseStatus->status) && $responseStatus->status == "SUCCESS") {
