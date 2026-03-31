@@ -1,523 +1,527 @@
-  <style>
-      .custom-pagination .page-item .page-link {
-          border-radius: 8px !important;
-          padding: 6px 14px;
-          border: 1px solid #dcdcdc;
-          color: #333;
-          font-weight: 500;
-          background: #fff;
-          transition: 0.2s;
-      }
+<style>
+    .custom-pagination .page-item .page-link {
+        border-radius: 8px !important;
+        padding: 6px 14px;
+        border: 1px solid #dcdcdc;
+        color: #333;
+        font-weight: 500;
+        background: #fff;
+        transition: 0.2s;
+    }
 
-      .custom-pagination .page-item .page-link:hover {
-          background: #eef4ff;
-          border-color: #9bb0ff;
-          color: #3154ff;
-      }
+    .custom-pagination .page-item .page-link:hover {
+        background: #eef4ff;
+        border-color: #9bb0ff;
+        color: #3154ff;
+    }
 
-      .custom-pagination .page-item.active .page-link {
-          background: #3154ff !important;
-          border-color: #3154ff !important;
-          color: #fff !important;
-          box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
-      }
+    .custom-pagination .page-item.active .page-link {
+        background: #3154ff !important;
+        border-color: #3154ff !important;
+        color: #fff !important;
+        box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
+    }
 
-      .custom-pagination .page-item .page-link {
-          border-radius: 8px !important;
-          padding: 6px 14px;
-          border: 1px solid #dcdcdc;
-          color: #333;
-          font-weight: 500;
-          background: #fff;
-          transition: 0.2s;
-      }
+    .custom-pagination .page-item .page-link {
+        border-radius: 8px !important;
+        padding: 6px 14px;
+        border: 1px solid #dcdcdc;
+        color: #333;
+        font-weight: 500;
+        background: #fff;
+        transition: 0.2s;
+    }
 
-      .custom-pagination .page-item .page-link:hover {
-          background: #eef4ff;
-          border-color: #9bb0ff;
-          color: #3154ff;
-      }
+    .custom-pagination .page-item .page-link:hover {
+        background: #eef4ff;
+        border-color: #9bb0ff;
+        color: #3154ff;
+    }
 
-      .custom-pagination .page-item.active .page-link {
-          background: #3154ff !important;
-          border-color: #3154ff !important;
-          color: #fff !important;
-          box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
-      }
+    .custom-pagination .page-item.active .page-link {
+        background: #3154ff !important;
+        border-color: #3154ff !important;
+        color: #fff !important;
+        box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
+    }
 
-      .custom-pagination .page-item.disabled .page-link {
-          background: #f3f3f3;
-          color: #999;
-          border-color: #e1e1e1;
-      }
+    .custom-pagination .page-item.disabled .page-link {
+        background: #f3f3f3;
+        color: #999;
+        border-color: #e1e1e1;
+    }
 
-      .pagination {
-          margin-left: 5px !important;
-      }
+    .pagination {
+        margin-left: 5px !important;
+    }
 
-      .barcode-card {
-          border: 1px solid #fdfdfdff;
-          border-radius: 14px !important;
-      }
+    .barcode-card {
+        border: 1px solid #fdfdfdff;
+        border-radius: 14px !important;
+    }
 
-      .barcode-img {
-          max-height: 60px;
-          object-fit: contain;
-      }
-
-
-      .ticket-card {
-          border: 1px solid #e5e7eb;
-      }
-
-      .ticket-card .row div {
-          font-size: 15px;
-      }
-
-      .shadow-sm {
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
-      }
-
-      .rounded-4 {
-          border-radius: 14px !important;
-      }
-
-      @media print {
-
-          @page {
-              margin: 0.5cm !important; /* Small margin for paper edge */
-              size: auto;
-          }
-
-          /* General Reset */
-          html,
-          body {
-              margin: 0 !important;
-              padding: 0 !important;
-              background: #fff !important;
-              height: auto !important;
-              overflow: visible !important;
-          }
-
-          /* Hide everything except the modal when it's at the body root */
-          body > *:not(#viewTicketModal) {
-              display: none !important;
-          }
-
-          /* Reset all potential offsets for the modal and its content */
-          #viewTicketModal {
-              display: block !important;
-              position: static !important;
-              width: 100% !important;
-              height: auto !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              visibility: visible !important;
-              opacity: 1 !important;
-          }
-
-          .modal-dialog,
-          .modal-content,
-          .modal-body,
-          #ticketContent {
-              display: block !important;
-              position: static !important;
-              width: 100% !important;
-              max-width: 100% !important; /* Ensure it doesn't overflow horizontally */
-              height: auto !important;
-              margin: 0 !important;
-              padding: 0 !important;
-              border: none !important;
-              box-shadow: none !important;
-              overflow: visible !important;
-              visibility: visible !important;
-              box-sizing: border-box !important;
-          }
-
-          /* Handle long text wrapping (e.g. operator name) */
-          #ticketContent * {
-              max-width: 100% !important;
-              word-wrap: break-word !important;
-              overflow-wrap: break-word !important;
-              white-space: normal !important;
-              box-sizing: border-box !important;
-          }
-
-          /* Force compact layout inside ticketContent */
-          #ticketContent,
-          #ticketContent .row,
-          #ticketContent div[class^="col-"],
-          #ticketContent .card,
-          #ticketContent .card-body,
-          #ticketContent .ticket-route,
-          #ticketContent .passenger-section,
-          #ticketContent [class*="p-"],
-          #ticketContent [class*="m-"] {
-              margin: 0 !important;
-              padding: 4px !important;
-              box-sizing: border-box !important;
-              height: auto !important;
-              min-height: auto !important;
-          }
-
-          /* Handle text wrapping */
-          #ticketContent span,
-          #ticketContent div,
-          #ticketContent b,
-          #ticketContent h4,
-          #ticketContent h5 {
-              word-wrap: break-word !important;
-              overflow-wrap: break-word !important;
-              white-space: normal !important;
-          }
-
-          /* Hide UI elements inside the ticket */
-          .modal-header,
-          .modal-footer,
-          .btn-close,
-          .btn,
-          .no-print {
-              display: none !important;
-          }
-
-          /* Prevent page break inside SMALL cards but allow it for large ones like passenger-card */
-          .ticket-route,
-          .barcode {
-              page-break-inside: avoid !important;
-              break-inside: avoid !important;
-          }
-      }
+    .barcode-img {
+        max-height: 60px;
+        object-fit: contain;
+    }
 
 
-      action-btn {
-          background-color: rgba(49, 84, 255, 0.1);
-      }
-  </style>
+    .ticket-card {
+        border: 1px solid #e5e7eb;
+    }
 
-  <div class="card-datatable table-responsive p-2">
-      <table class="table table-striped" id="bookingTable">
-          <thead class="bg-light">
-              <tr>
-                  <th width="10%">ID</th>
-                  <th width="10%">User</th>
-                  <th width="15%">Booking Details</th>
-                  <th width="15%">Bus Details</th>
-                  <th width="10%">Amount</th>
-                  <th width="10%">Type</th>
-                  <th class="text-center" width="10%">Action</th>
-              </tr>
-          </thead>
+    .ticket-card .row div {
+        font-size: 15px;
+    }
 
-          <tbody>
-              @php
-                  $statusMap = [
-                      1 => ['label' => 'Tentative', 'class' => 'badge bg-warning text-dark'],
-                      2 => ['label' => 'Confirmed', 'class' => 'badge bg-success'],
-                      3 => ['label' => 'Cancelled', 'class' => 'badge bg-secondary'],
-                      4 => ['label' => 'Failed', 'class' => 'badge bg-danger'],
-                      5 => ['label' => 'Pending', 'class' => 'badge bg-info'],
+    .shadow-sm {
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
+    }
 
-                      'Tentative' => ['label' => 'Tentative', 'class' => 'badge bg-warning text-dark'],
-                      'Confirmed' => ['label' => 'Confirmed', 'class' => 'badge bg-success'],
-                      'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
-                      'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
-                      'failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
-                      'FAILURE' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
-                      'pending' => ['label' => 'Pending', 'class' => 'badge bg-warning'],
-                      'blocked' => ['label' => 'Blocked', 'class' => 'badge bg-info'],
-                  ];
+    .rounded-4 {
+        border-radius: 14px !important;
+    }
+
+    @media print {
+
+        @page {
+            margin: 0.5cm !important;
+            /* Small margin for paper edge */
+            size: auto;
+        }
+
+        /* General Reset */
+        html,
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+            height: auto !important;
+            overflow: visible !important;
+        }
+
+        /* Hide everything except the modal when it's at the body root */
+        body>*:not(#viewTicketModal) {
+            display: none !important;
+        }
+
+        /* Reset all potential offsets for the modal and its content */
+        #viewTicketModal {
+            display: block !important;
+            position: static !important;
+            width: 100% !important;
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+
+        .modal-dialog,
+        .modal-content,
+        .modal-body,
+        #ticketContent {
+            display: block !important;
+            position: static !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            /* Ensure it doesn't overflow horizontally */
+            height: auto !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+            box-shadow: none !important;
+            overflow: visible !important;
+            visibility: visible !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Handle long text wrapping (e.g. operator name) */
+        #ticketContent * {
+            max-width: 100% !important;
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Force compact layout inside ticketContent */
+        #ticketContent,
+        #ticketContent .row,
+        #ticketContent div[class^="col-"],
+        #ticketContent .card,
+        #ticketContent .card-body,
+        #ticketContent .ticket-route,
+        #ticketContent .passenger-section,
+        #ticketContent [class*="p-"],
+        #ticketContent [class*="m-"] {
+            margin: 0 !important;
+            padding: 4px !important;
+            box-sizing: border-box !important;
+            height: auto !important;
+            min-height: auto !important;
+        }
+
+        /* Handle text wrapping */
+        #ticketContent span,
+        #ticketContent div,
+        #ticketContent b,
+        #ticketContent h4,
+        #ticketContent h5 {
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+            white-space: normal !important;
+        }
+
+        /* Hide UI elements inside the ticket */
+        .modal-header,
+        .modal-footer,
+        .btn-close,
+        .btn,
+        .no-print {
+            display: none !important;
+        }
+
+        /* Prevent page break inside SMALL cards but allow it for large ones like passenger-card */
+        .ticket-route,
+        .barcode {
+            page-break-inside: avoid !important;
+            break-inside: avoid !important;
+        }
+    }
+
+
+    action-btn {
+        background-color: rgba(49, 84, 255, 0.1);
+    }
+</style>
+
+<div class="card-datatable table-responsive p-2">
+    <table class="table table-striped" id="bookingTable">
+        <thead class="bg-light">
+            <tr>
+                <th width="10%">ID</th>
+                <th width="10%">User</th>
+                <th width="15%">Booking Details</th>
+                <th width="15%">Bus Details</th>
+                <th width="10%">Amount</th>
+                <th width="10%">Type</th>
+                <th class="text-center" width="10%">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @php
+                $statusMap = [
+                    1 => ['label' => 'Tentative', 'class' => 'badge bg-warning text-dark'],
+                    2 => ['label' => 'Confirmed', 'class' => 'badge bg-success'],
+                    3 => ['label' => 'Cancelled', 'class' => 'badge bg-secondary'],
+                    4 => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                    5 => ['label' => 'Pending', 'class' => 'badge bg-info'],
+
+                    'Tentative' => ['label' => 'Tentative', 'class' => 'badge bg-warning text-dark'],
+                    'Confirmed' => ['label' => 'Confirmed', 'class' => 'badge bg-success'],
+                    'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
+                    'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                    'failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                    'FAILURE' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                    'pending' => ['label' => 'Pending', 'class' => 'badge bg-warning'],
+                    'blocked' => ['label' => 'Blocked', 'class' => 'badge bg-info'],
+                ];
 
               @endphp
 
-              @if (!empty($bookings) && $bookings->count() > 0)
-                  @foreach ($bookings as $b)
-                      @php
-                          $status = $statusMap[$b->booking_status] ?? [
-                              'label' => 'N/A',
-                              'class' => 'badge bg-secondary',
-                          ];
+            @if (!empty($bookings) && $bookings->count() > 0)
+                @foreach ($bookings as $b)
+                    @php
+                        $status = $statusMap[$b->booking_status] ?? [
+                            'label' => 'N/A',
+                            'class' => 'badge bg-secondary',
+                        ];
                       @endphp
-                      <tr>
-                          <td>##{{ $b->id }} <br />{{ $b->created_at }}</td>
-                          <td>
-                              {{ $b->user_name ?? '' }}<br />
-                              {{ $b->user_email ?? '' }}<br />
-                              {{ $b->user_mobile ?? '' }}
-                          </td>
-                          <td>Bus Id:
-                              <b>{{ $b->bus_id ?? 'N/A' }}</b>
-                              <br />
-                              PNR: <b>{{ $b->pnr ?? 'N/A' }}</b><br />
-                              Route: {{ $b->origin ?? 'N/A' }} → {{ $b->destination ?? 'N/A' }}
-                          </td>
+                    <tr>
+                        <td>##{{ $b->id }} <br />{{ $b->created_at }}</td>
+                        <td>
+                            {{ $b->user_name ?? '' }}<br />
+                            {{ $b->user_email ?? '' }}<br />
+                            {{ $b->user_mobile ?? '' }}
+                        </td>
+                        <td>Bus Id:
+                            <b>{{ $b->bus_id ?? 'N/A' }}</b>
+                            <br />
+                            PNR: <b>{{ $b->pnr ?? 'N/A' }}</b><br />
+                            Route: {{ $b->origin ?? 'N/A' }} → {{ $b->destination ?? 'N/A' }}
+                        </td>
 
-                          <td>{{ $b->travel_name }} - [{{ $b->bus_type }}] <br />
-                              Journey : <b>{{ \Carbon\Carbon::parse($b->departure_time)->format('d M Y, h:i A') }}</b>
-                              →
-                              <b> {{ \Carbon\Carbon::parse($b->arrival_time)->format('d M Y, h:i A') }}</b>
-                          </td>
+                        <td>{{ $b->travel_name }} - [{{ $b->bus_type }}] <br />
+                            Journey : <b>{{ \Carbon\Carbon::parse($b->departure_time)->format('d M Y, h:i A') }}</b>
+                            →
+                            <b> {{ \Carbon\Carbon::parse($b->arrival_time)->format('d M Y, h:i A') }}</b>
+                        </td>
 
-                          <td>₹{{ $b->total_amount ?? 0 }}</td>
+                        <td>₹{{ $b->total_amount ?? 0 }}</td>
 
-                          <td>
-                              {!! $b->is_pricechange == 'true'
-                                  ? '<span class="text-success">Price Change</span>'
-                                  : '<span class="text-danger">Price Not Change</span>' !!}
-                              <br />
-                              Total Seat: <span class="badge bg-info">{{ $b->total_seats }}</span>
-                          </td>
+                        <td>
+                            {!! $b->is_pricechange == 'true'
+                    ? '<span class="text-success">Price Change</span>'
+                    : '<span class="text-danger">Price Not Change</span>' !!}
+                            <br />
+                            Total Seat: <span class="badge bg-info">{{ $b->total_seats }}</span>
+                        </td>
 
-                          <td>
-                              <span class="{{ $status['class'] }}">
-                                  {{ $status['label'] }}
-                              </span>
-                              <br />
-                              <div class="dropdown mt-1">
-                                  <button class="btn btn-sm btn-light border dropdown-toggle" type="button"
-                                      id="dropdownMenuButton{{ $b->id }}" data-bs-toggle="dropdown"
-                                      aria-expanded="false">
-                                      👁️ View
-                                  </button>
+                        <td>
+                            <span class="{{ $status['class'] }}">
+                                {{ $status['label'] }}
+                            </span>
+                            <br />
+                            <div class="dropdown mt-1">
+                                <button class="btn btn-sm btn-light border dropdown-toggle" type="button"
+                                    id="dropdownMenuButton{{ $b->id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                    👁️ View
+                                </button>
 
-                                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
-
-
-                                      <li>
-                                          <a class="dropdown-item" href="javascript:void(0)"
-                                              onclick="openBookingDetails({{ $b->bus_id }})">
-                                              📄 Booking Details
-                                          </a>
-                                      </li>
-                                      <li>
-                                          <a class="dropdown-item cancel-bus" href="javascript:void(0)"
-                                              data-bookingidcancel="{{ $b->booking_id_api }}"
-                                              data-departuretime="{{ $b->departure_time }}"
-                                              data-changereqid="{{ $b->change_request_id }}"
-                                              data-creditnoteno="{{ $b->credit_note_no }}"
-                                              data-refundamt="{{ $b->refunded_amount }}"
-                                              data-ticketstatus="{{ $b->booking_status }}">
-                                              🚌 Cancel Bus
-                                          </a>
-                                      </li>
-                                      {{-- @if(strtolower($b->booking_status) == 'cancelled')
-                                      <li>
-                                          <a class="dropdown-item refund-btn" href="javascript:void(0)"
-                                              data-bookingid="{{ $b->booking_id_api }}"
-                                              data-refundamt="{{ $b->refunded_amount }}">
-                                              💰 Refund to Customer
-                                          </a>
-                                      </li>
-                                      @endif --}}
-                                  </ul>
-                              </div>
-                          </td>
-                      </tr>
-                  @endforeach
-              @else
-                  <tr>
-                      <td colspan="7" class="text-center text-danger">No Bookings Details found.</td>
-                  </tr>
-              @endif
-          </tbody>
-      </table>
-  </div>
-
-  <div class="d-flex justify-content-center custom-pagination mt-2 mb-3">
-      {!! $bookings->links('pagination::bootstrap-5') !!}
-  </div>
-
-  <!-- Refund Modal -->
-  {{-- <div class="modal fade" id="refundModal" tabindex="-1">
-      <div class="modal-dialog">
-          <div class="modal-content">
-              <div class="modal-header">
-                  <h5 class="modal-title">Refund to Customer</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body">
-
-                  <input type="hidden" id="refund_booking_id">
-                  <input type="hidden" id="refund_amount">
-
-                  <div class="mb-3">
-                      <label>Select Customer</label>
-                      <select class="form-control" id="customer_select">
-                          <option value="">-- Select Customer --</option>
-                          @foreach ($customers as $c)
-                              <option value="{{ $c->id }}">
-                                  {{ $c->name }} | {{ $c->ifsc_code }} | {{ $c->account_number }}
-                              </option>
-                          @endforeach
-                      </select>
-                  </div>
-
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" id="confirmRefund">
-                      Refund
-                  </button>
-              </div>
-          </div>
-      </div>
-  </div> --}}
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
 
 
-  <div class="modal fade" id="viewTicketModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-          <div class="modal-content">
+                                    <li>
+                                        <a class="dropdown-item check-status" href="javascript:void(0)"
+                                            data-id="{{ $b->order_ref_id }}">
+                                            🔍 Check Status
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="javascript:void(0)"
+                                            onclick="openBookingDetails({{ $b->bus_id }})">
+                                            📄 Booking Details
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item cancel-bus" href="javascript:void(0)"
+                                            data-bookingidcancel="{{ $b->booking_id_api }}"
+                                            data-departuretime="{{ $b->departure_time }}"
+                                            data-changereqid="{{ $b->change_request_id }}"
+                                            data-creditnoteno="{{ $b->credit_note_no }}"
+                                            data-refundamt="{{ $b->refunded_amount }}"
+                                            data-ticketstatus="{{ $b->booking_status }}">
+                                            🚌 Cancel Bus
+                                        </a>
+                                    </li>
+                                    {{-- @if(strtolower($b->booking_status) == 'cancelled')
+                                    <li>
+                                        <a class="dropdown-item refund-btn" href="javascript:void(0)"
+                                            data-bookingid="{{ $b->booking_id_api }}"
+                                            data-refundamt="{{ $b->refunded_amount }}">
+                                            💰 Refund to Customer
+                                        </a>
+                                    </li>
+                                    @endif --}}
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+                    <tr>
+                <td colspan="7" class="text-center text-danger">No Bookings Details found.</td>
+                </tr>
+            @endif
+            </tbody> </table>
+</div>
 
-              <div class="modal-header border-0">
-                  <h4 class="modal-title fw-semibold">Bus Ticket</h4>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
+<div class="d-flex justify-content-center custom-pagination mt-2 mb-3">
+    {!! $bookings->links('pagination::bootstrap-5') !!}
+    </div> <!-- Refund Modal -->
+    {{-- <div class="modal fade" id="refundModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Refund to Customer</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
 
-              <div class="modal-body bg-light" id="ticketContent">
+                    <input type="hidden" id="refund_booking_id">
+                    <input type="hidden" id="refund_amount">
 
-              </div>
+                    <div class="mb-3">
+                        <label>Select Customer</label>
+                        <select class="form-control" id="customer_select">
+                            <option value="">-- Select Customer --</option>
+                            @foreach ($customers as $c)
+                            <option value="{{ $c->id }}">
+                                {{ $c->name }} | {{ $c->ifsc_code }} | {{ $c->account_number }}
+                            </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-              <div class="text-center">
-                  <button class="btn btn-success m-3" onclick="printTicket()">
-                      Print
-                  </button>
-              </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="confirmRefund">
+                        Refund
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div> --}}
 
-          </div>
-      </div>
-  </div>
 
-  <style>
-      .ticket-route {
-          background: #f8fafc;
-          border-radius: 10px;
-          border: 1px dashed #c7d2fe;
-      }
+    <div class="modal fade" id="viewTicketModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
 
-      .city-code {
-          font-size: 20px;
-          font-weight: 700;
-          letter-spacing: 1px;
-      }
+                <div class="modal-header border-0">
+                    <h4 class="modal-title fw-semibold">Bus Ticket</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-      .city-name {
-          font-size: 12px;
-          color: #6b7280;
-      }
+                <div class="modal-body bg-light" id="ticketContent">
 
-      .route-line {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          color: #2563eb;
-          font-size: 18px;
-      }
+                </div>
 
-      .route-line span {
-          width: 50px;
-          height: 1px;
-          background: #94a3b8;
-      }
-  </style>
-  <style>
-      .passenger-section {
-          background: #fff;
-          border-radius: 12px;
-      }
+                <div class="text-center">
+                    <button class="btn btn-success m-3" onclick="printTicket()">
+                        Print
+                    </button>
+                </div>
 
-      .passenger-head {
-          font-weight: 700;
-          padding: 10px;
-          border-bottom: 2px solid #2563eb;
-          margin-bottom: 12px;
-      }
+            </div>
+        </div>
+    </div>
 
-      .passenger-card {
-          border: 1px dashed #c7d2fe;
-          border-radius: 12px;
-          padding: 14px;
-          margin-bottom: 16px;
-          background: #f8fafc;
-      }
+    <style>
+        .ticket-route {
+            background: #f8fafc;
+            border-radius: 10px;
+            border: 1px dashed #c7d2fe;
+        }
 
-      .passenger-name {
-          font-size: 16px;
-          font-weight: 700;
-      }
+        .city-code {
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
 
-      .lead-pax {
-          background: #2563eb;
-          color: #fff;
-          font-size: 15px;
-          padding: 2px 6px;
-          border-radius: 6px;
-          margin-left: 6px;
-      }
+        .city-name {
+            font-size: 12px;
+            color: #6b7280;
+        }
 
-      .passenger-pnr {
-          font-weight: 700;
-          letter-spacing: 1px;
-      }
+        .route-line {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #2563eb;
+            font-size: 18px;
+        }
 
-      .seat-box {
-          background: #fff;
-          padding: 10px;
-          border-radius: 8px;
-          margin-top: 10px;
-      }
+        .route-line span {
+            width: 50px;
+            height: 1px;
+            background: #94a3b8;
+        }
+    </style>
+    <style>
+        .passenger-section {
+            background: #fff;
+            border-radius: 12px;
+        }
 
-      .seat-title {
-          font-weight: 600;
-          margin-bottom: 6px;
-      }
+        .passenger-head {
+            font-weight: 700;
+            padding: 10px;
+            border-bottom: 2px solid #2563eb;
+            margin-bottom: 12px;
+        }
 
-      .seat-row {
-          display: grid;
-          grid-template-columns: 1fr auto 2fr auto;
-          gap: 8px;
-          font-size: 16px;
-          border-bottom: 1px dashed #e5e7eb;
-          padding: 6px 0;
-      }
+        .passenger-card {
+            border: 1px dashed #c7d2fe;
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            background: #f8fafc;
+        }
 
-      .seat-row:last-child {
-          border-bottom: none;
-      }
+        .passenger-name {
+            font-size: 16px;
+            font-weight: 700;
+        }
 
-      .seat-code {
-          font-weight: 700;
-          color: #2563eb;
-      }
+        .lead-pax {
+            background: #2563eb;
+            color: #fff;
+            font-size: 15px;
+            padding: 2px 6px;
+            border-radius: 6px;
+            margin-left: 6px;
+        }
 
-      .fare-box {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 10px;
-          font-size: 17px;
-      }
+        .passenger-pnr {
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
 
-      .fare-total {
-          font-weight: 800;
-      }
+        .seat-box {
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
 
-      .contact-box {
-          margin-top: 10px;
-          border-top: 1px dashed #e5e7eb;
-          padding-top: 8px;
-      }
+        .seat-title {
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
 
-      .ssr-box {
-          background: #f8f9ff;
-          border: 1px dashed #cfd5ff;
-          padding: 12px;
-          border-radius: 8px;
-          font-size: 15px;
-      }
-  </style>
+        .seat-row {
+            display: grid;
+            grid-template-columns: 1fr auto 2fr auto;
+            gap: 8px;
+            font-size: 16px;
+            border-bottom: 1px dashed #e5e7eb;
+            padding: 6px 0;
+        }
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
+        .seat-row:last-child {
+            border-bottom: none;
+        }
 
-  <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
-  <script src="{{ asset('') }}js/busbbooking.js"></script>
-  <script type="text/javascript">
+        .seat-code {
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .fare-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+            font-size: 17px;
+        }
+
+        .fare-total {
+            font-weight: 800;
+        }
+
+        .contact-box {
+            margin-top: 10px;
+            border-top: 1px dashed #e5e7eb;
+            padding-top: 8px;
+        }
+
+        .ssr-box {
+            background: #f8f9ff;
+            border: 1px dashed #cfd5ff;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
+
+    <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
+    <script src="{{ asset('') }}js/busbbooking.js"></script>
+    <script type="text/javascript">
     //   $(document).on('click', '.refund-btn', function() {
 
     //       let bookingId = $(this).data('bookingid');
@@ -557,125 +561,125 @@
     //   });
 
 
-      function openBookingDetails(busId) {
+    function openBookingDetails(busId) {
 
-          $('#ticketContent').html(`
+        $('#ticketContent').html(`
                 <div class="text-center py-5">
                     <div class="spinner-border text-primary"></div>
                     <p class="mt-2">Fetching booking details...</p>
                 </div>
             `);
 
-          $('#viewTicketModal').modal('show');
+        $('#viewTicketModal').modal('show');
 
-          $.ajax({
-              url: "/bus/booking-view",
-              type: "POST",
-              data: {
-                  busId: busId,
-                  _token: "{{ csrf_token() }}"
-              },
-              success: function(res) {
+        $.ajax({
+            url: "/bus/booking-view",
+            type: "POST",
+            data: {
+                busId: busId,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function (res) {
 
-                  if (res.status !== 'success') {
-                      $('#ticketContent').html(`<div class="alert alert-danger">${res.message}</div>`);
-                      return;
-                  }
+                if (res.status !== 'success') {
+                    $('#ticketContent').html(`<div class="alert alert-danger">${res.message}</div>`);
+                    return;
+                }
 
-                  const booking = res?.data?.Response;
+                const booking = res?.data?.Response;
 
-                  if (!booking) {
-                      $('#ticketContent').html(`<div class="alert alert-danger">Invalid booking data</div>`);
-                      return;
-                  }
+                if (!booking) {
+                    $('#ticketContent').html(`<div class="alert alert-danger">Invalid booking data</div>`);
+                    return;
+                }
 
-                  getDetails(booking);
-              },
-              error: function() {
-                  $('#ticketContent').html(`
+                getDetails(booking);
+            },
+            error: function () {
+                $('#ticketContent').html(`
                     <div class="alert alert-danger text-center">
                         Unable to fetch booking details.
                     </div>
                 `);
-              }
-          });
-      }
+            }
+        });
+    }
 
-      //   function getSsrIcon(code) {
-      //       switch (code) {
-      //           case 'SEAT':
-      //               return '💺';
-      //           case 'MEAL':
-      //               return '🍱';
-      //           case 'BAGGAGE':
-      //               return '🧳';
-      //           case 'WCHR':
-      //               return '♿';
-      //           case 'PETC':
-      //               return '🐶';
-      //           default:
-      //               return '📝';
-      //       }
-      //   }
-
-
-      function getTicketStatus(status) {
-
-          // STRING STATUS (current case)
-          if (typeof status === 'string') {
-              if (status === 'OK') {
-                  return {
-                      text: 'Confirmed',
-                      badge: 'bg-success'
-                  };
-              }
-              return {
-                  text: status,
-                  badge: 'bg-danger'
-              };
-          }
-
-          // NUMBER STATUS (future / other APIs)
-          const statusMap = {
-              4: {
-                  text: 'Failed',
-                  badge: 'bg-danger'
-              },
-              2: {
-                  text: 'Confirmed',
-                  badge: 'bg-success'
-              },
-              3: {
-                  text: 'Cancelled',
-                  badge: 'bg-warning'
-              },
-              5: {
-                  text: 'Pending',
-                  badge: 'bg-warning'
-              },
-              1: {
-                  text: 'Tentative',
-                  badge: 'bg-secondary'
-              }
-          };
-
-          return statusMap[status] || {
-              text: 'Unknown',
-              badge: 'bg-dark'
-          };
-      }
+    //   function getSsrIcon(code) {
+    //       switch (code) {
+    //           case 'SEAT':
+    //               return '💺';
+    //           case 'MEAL':
+    //               return '🍱';
+    //           case 'BAGGAGE':
+    //               return '🧳';
+    //           case 'WCHR':
+    //               return '♿';
+    //           case 'PETC':
+    //               return '🐶';
+    //           default:
+    //               return '📝';
+    //       }
+    //   }
 
 
-      function getDetails(booking) {
-          const passengers = booking?.Passenger || [];
+    function getTicketStatus(status) {
 
-          const boardingDet = booking?.BoardingPointdetails || {};
-          const dropingDet = booking?.DroppingPointdetails || {};
+        // STRING STATUS (current case)
+        if (typeof status === 'string') {
+            if (status === 'OK') {
+                return {
+                    text: 'Confirmed',
+                    badge: 'bg-success'
+                };
+            }
+            return {
+                text: status,
+                badge: 'bg-danger'
+            };
+        }
+
+        // NUMBER STATUS (future / other APIs)
+        const statusMap = {
+            4: {
+                text: 'Failed',
+                badge: 'bg-danger'
+            },
+            2: {
+                text: 'Confirmed',
+                badge: 'bg-success'
+            },
+            3: {
+                text: 'Cancelled',
+                badge: 'bg-warning'
+            },
+            5: {
+                text: 'Pending',
+                badge: 'bg-warning'
+            },
+            1: {
+                text: 'Tentative',
+                badge: 'bg-secondary'
+            }
+        };
+
+        return statusMap[status] || {
+            text: 'Unknown',
+            badge: 'bg-dark'
+        };
+    }
 
 
-          let html = '';
+    function getDetails(booking) {
+        const passengers = booking?.Passenger || [];
 
-          html += `<div>
+        const boardingDet = booking?.BoardingPointdetails || {};
+        const dropingDet = booking?.DroppingPointdetails || {};
+
+
+        let html = '';
+
+        html += `<div>
                     <div class="bg-white p-4 rounded shadow-sm">
 
                         <div class="d-flex justify-content-between mb-4">
@@ -715,11 +719,11 @@
                                     <span class="text-danger">Block to Book Time : ${booking.BlockDuration ?? 'N/A'}</span>
                                     <br />
                                     Bus Toll Free: ${booking.BoardingPointdetails?.CityPointContactNumber
-                                    ? `<a href="tel:${booking.BoardingPointdetails?.CityPointContactNumber}" class="text-primary fw-semibold">
+                ? `<a href="tel:${booking.BoardingPointdetails?.CityPointContactNumber}" class="text-primary fw-semibold">
                                                                               📞 ${booking.BoardingPointdetails?.CityPointContactNumber}
                                                                           </a>`
-                                    : '-'
-                                    }
+                : '-'
+            }
                                 </div>
                             </div>
 
@@ -729,14 +733,14 @@
 
                                     <div class="text-start">
                                         <div class="city-code">${boardingDet.CityPointLocation || booking.Origin}</div>
-                                        <div class="city-name">${boardingDet.CityPointName ||  booking.Origin}</div>
+                                        <div class="city-name">${boardingDet.CityPointName || booking.Origin}</div>
                                         <div>
                                             ${boardingDet?.CityPointTime ? new Date(boardingDet?.CityPointTime).toLocaleDateString() : ''}<br>
                                             <strong>
                                                 ${boardingDet?.CityPointTime ? new Date(boardingDet?.CityPointTime).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'}) : 
-                                                new Date(booking?.DepartureTime).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'})}
+                { hour: '2-digit', minute: '2-digit' }) :
+                new Date(booking?.DepartureTime).toLocaleTimeString([],
+                    { hour: '2-digit', minute: '2-digit' })}
                                             </strong>
                                         </div>
                                     </div>
@@ -755,9 +759,9 @@
                                             ${booking?.ArrivalTime ? new Date(booking?.ArrivalTime).toLocaleDateString() : ''}<br>
                                             <strong>
                                                 ${dropingDet?.CityPointTime ? new Date(dropingDet?.CityPointTime).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'}) : 
-                                                new Date(booking?.ArrivalTime).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'})}
+                        { hour: '2-digit', minute: '2-digit' }) :
+                new Date(booking?.ArrivalTime).toLocaleTimeString([],
+                    { hour: '2-digit', minute: '2-digit' })}
                                             </strong>
                                         </div>
 
@@ -772,7 +776,7 @@
                                     <div class="text-start"><b>Invoice Created By:</b> ${booking?.InvoiceCreatedByName}</div>
                                     <div class="text-enter"><b>Invoice Created At:</b> 
                                         ${new Date(booking.InvoiceCreatedOn).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'})}</div>
+                        { hour: '2-digit', minute: '2-digit' })}</div>
                                 </div>
                             </div>
                         </div>
@@ -812,14 +816,14 @@
                                                                               ${booking.TicketNo ? `
                                                             <div class="mb-1"><b>Ticket No: </b> ${booking?.TicketNo}</div>
                                                             <div class="mb-1">${(() => {
-                                                                const s = getTicketStatus(booking.Status);
-                                                                return `
+                                    const s = getTicketStatus(booking.Status);
+                                    return `
                                                                                           <div class="mb-1">
                                                                                               <b>Status:</b>
                                                                                               <span class="badge ${s.badge}">${s.text}</span>
                                                                                           </div>
                                                                                           `;
-                                                                })()}
+                                })()}
                                                             </div>` : `
                                         <div class="mb-1 text-danger">
                                             <b>Status:</b> Ticket not generated
@@ -837,13 +841,13 @@
                                                             <span>${p.Seat.IsLadiesSeat ? "Ladies" : p.Seat?.IsMalesSeat ? "Male" : 'Common'} and ${p.Seat.IsUpper ? 'Upper Seat' : 'Lower Seat'}</span>
                                                             <span class="seat-code">Seat Name: ${p.Seat.SeatName} | Seat Id: ${p.Seat.SeatId}</span>
                                                              ${p.Seat.SeatStatus ? `<span class="seat-type text-success">Seat Available</span>` :
-                                                            `<span class="seat-type text-danger">Seat Booked</span>`}
+                                    `<span class="seat-type text-danger">Seat Booked</span>`}
                                                             <span>₹${p.Seat.SeatFare}</span>
                                                            
                                                         
                                                         </div>
-                                                    ` : 
-                                                                          '<div class="seat-row">No seat selected</div>'}
+                                                    ` :
+                                '<div class="seat-row">No seat selected</div>'}
                                                                       </div>
 
                                                                       <hr />
@@ -962,7 +966,7 @@
                         `;
 
 
-          html += `<div class="rticket-route mt-4 ticket-route">
+        html += `<div class="rticket-route mt-4 ticket-route">
                             <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
                                 <div class="fw-semibold ">
                                     🪶 Booking History
@@ -970,16 +974,16 @@
                             </div>
                             <div class="p-3" style="background:#e8ffec; font-size:14px;">`;
 
-          booking.BookingHistory.map(r => {
-              html += `
+        booking.BookingHistory.map(r => {
+            html += `
                                 <div class="mb-3">
                                     <b>Created By: ${r.CreatedByName} (${r.CreatedBy}) <br/> Created On: ${r.CreatedOn}</b>
                                     <b>Last Modified By: ${r.CreatedByName} (${r.LastModifiedBy}) <br/>Last Modified On: ${r.CreatedOn}</b>
                                     <div class="small">${r.Remarks}</div>
                                 </div>`;
-          });
+        });
 
-          html += `
+        html += `
                             </div>
                         </div>
 
@@ -1003,144 +1007,188 @@
                     </div>
                 </div>`;
 
-          $('#ticketContent').html(html);
+        $('#ticketContent').html(html);
 
-          setTimeout(() => {
-              passengers.forEach((p, index) => {
-                  let barcode = booking.TravelOperatorPNR;
-                  makeBarcode(index, barcode);
-                  //   makeBarcode(i, booking.TicketNo + '-' + (i + 1));
-              });
-          }, 100);
-      }
+        setTimeout(() => {
+            passengers.forEach((p, index) => {
+                let barcode = booking.TravelOperatorPNR;
+                makeBarcode(index, barcode);
+                //   makeBarcode(i, booking.TicketNo + '-' + (i + 1));
+            });
+        }, 100);
+    }
 
 
-      function makeBarcode(i, barcode) {
-          const canvas = document.getElementById("barcodeCanvas" + i);
+    function makeBarcode(i, barcode) {
+        const canvas = document.getElementById("barcodeCanvas" + i);
 
-          if (!canvas) return;
+        if (!canvas) return;
 
-          try {
-              bwipjs.toCanvas(canvas, {
-                  bcid: 'pdf417',
-                  text: barcode,
-                  scale: 2,
-                  height: 8,
-                  columns: 6,
-                  rows: 3,
-                  includetext: false,
-                  paddingwidth: 10,
-                  paddingheight: 10,
-              });
-          } catch (e) {
-              $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
-          }
-      }
+        try {
+            bwipjs.toCanvas(canvas, {
+                bcid: 'pdf417',
+                text: barcode,
+                scale: 2,
+                height: 8,
+                columns: 6,
+                rows: 3,
+                includetext: false,
+                paddingwidth: 10,
+                paddingheight: 10,
+            });
+        } catch (e) {
+            $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
+        }
+    }
 
-      function printTicket() {
+    function printTicket() {
 
-          const modal = document.getElementById('viewTicketModal');
-          const originalParent = modal.parentElement;
+        const modal = document.getElementById('viewTicketModal');
+        const originalParent = modal.parentElement;
 
-          // Move modal to body root to avoid parent offsets/visibility issues
-          document.body.appendChild(modal);
+        // Move modal to body root to avoid parent offsets/visibility issues
+        document.body.appendChild(modal);
 
-          window.print();
+        window.print();
 
-          // Move it back after print dialog closes
-          originalParent.appendChild(modal);
+        // Move it back after print dialog closes
+        originalParent.appendChild(modal);
 
-      }
+    }
 
-      //   $(document).on('click', '.generate-ticket', function() {
+    //   $(document).on('click', '.generate-ticket', function() {
 
-      //       const payload = $(this).data('payload');
-      //       let journeyType = $(this).data('journeytype');
+    //       const payload = $(this).data('payload');
+    //       let journeyType = $(this).data('journeytype');
 
-      //       swal({
-      //           title: "Generate Ticket?",
-      //           html: `
+    //       swal({
+    //           title: "Generate Ticket?",
+    //           html: `
     //             <p>Are you sure you want to generate the ticket?</p>
     //             <small class="text-muted">Once generated, it cannot be reversed.</small>
     //         `,
-      //           type: "warning",
-      //           showCancelButton: true,
-      //           confirmButtonText: "Yes, Generate",
-      //           cancelButtonText: "Cancel",
-      //           allowOutsideClick: false,
-      //           allowEscapeKey: false
-      //       }).then((result) => {
-      //           if (result.value || result === true) {
-      //               ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
-      //                   '2', 'table');
-      //           }
-      //       });
+    //           type: "warning",
+    //           showCancelButton: true,
+    //           confirmButtonText: "Yes, Generate",
+    //           cancelButtonText: "Cancel",
+    //           allowOutsideClick: false,
+    //           allowEscapeKey: false
+    //       }).then((result) => {
+    //           if (result.value || result === true) {
+    //               ViewTicketAjax(payload, '/flight/ticket', 'departure', journeyType === 'oneway' ? '1' :
+    //                   '2', 'table');
+    //           }
+    //       });
 
-      //   });
+    //   });
 
 
-      $(document).on('click', '.cancel-bus', function() {
+    $(document).on('click', '.cancel-bus', function () {
 
-          const bookingId = $(this).data('bookingidcancel');
-          const depTimeStr = $(this).data('departuretime');
-          const ticketStatus = $(this).data('ticketstatus');
-          const changereqid = $(this).data('changereqid');
-          const creditno = $(this).data('creditnoteno');
-          const amt = $(this).data('refundamt');
+        const bookingId = $(this).data('bookingidcancel');
+        const depTimeStr = $(this).data('departuretime');
+        const ticketStatus = $(this).data('ticketstatus');
+        const changereqid = $(this).data('changereqid');
+        const creditno = $(this).data('creditnoteno');
+        const amt = $(this).data('refundamt');
 
-          const depTime = new Date(depTimeStr.replace(' ', 'T'));
-          const now = new Date();
-          if (ticketStatus == 'Cancelled') {
-              swal({
-                  title: 'Ticket Already Cancelled',
-                  html: `Refund Amount: ${amt} 
+        const depTime = new Date(depTimeStr.replace(' ', 'T'));
+        const now = new Date();
+        if (ticketStatus == 'Cancelled') {
+            swal({
+                title: 'Ticket Already Cancelled',
+                html: `Refund Amount: ${amt} 
                   <br> Cancel Request id: ${changereqid}
                   <br> Credit Note No: ${creditno}
                   <br/>No further action is allowed.`,
-                  type: 'warning',
-                  confirmButtonText: 'OK, Got It',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-              });
-              return;
-          } else if (ticketStatus !== 'Confirmed') {
-              swal({
-                  title: 'Ticket is Not Confirmed',
-                  text: 'Cancellation is not allowed.',
-                  type: 'warning',
-                  confirmButtonText: 'OK',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-              });
-              return;
-          }
-          if (depTime <= now) {
-              swal({
-                  title: 'Trip Completed',
-                  text: 'Departure time has already passed. Cancellation is not allowed.',
-                  type: 'error',
-                  confirmButtonText: 'OK',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-              });
-              //   return;
-          }
+                type: 'warning',
+                confirmButtonText: 'OK, Got It',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+            return;
+        } else if (ticketStatus !== 'Confirmed') {
+            swal({
+                title: 'Ticket is Not Confirmed',
+                text: 'Cancellation is not allowed.',
+                type: 'warning',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+            return;
+        }
+        if (depTime <= now) {
+            swal({
+                title: 'Trip Completed',
+                text: 'Departure time has already passed. Cancellation is not allowed.',
+                type: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+            //   return;
+        }
 
-          const encoded = btoa(JSON.stringify(bookingId));
-          swal({
-              title: 'Cancel this Bus?',
-              text: 'Cancellation charges may apply.',
-              type: 'warning',
-              showCancelButton: true,
-              confirmButtonText: 'Yes, Cancel Bus',
-              allowOutsideClick: false,
-              allowEscapeKey: false,
-              cancelButtonText: 'No',
-          }).then((result) => {
-              if (result.value) {
-                  window.location.href = `/bus/cancel/${encoded}`;
-              }
-          });
+        const encoded = btoa(JSON.stringify(bookingId));
+        swal({
+            title: 'Cancel this Bus?',
+            text: 'Cancellation charges may apply.',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Cancel Bus',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            cancelButtonText: 'No',
+        }).then((result) => {
+            if (result.value) {
+                window.location.href = `/bus/cancel/${encoded}`;
+            }
+        });
 
-      });
-  </script>
+    });
+
+    $(document).on('click', '.check-status', function () {
+        const id = $(this).data('id');
+        if (!id) {
+            notify("Order Reference ID missing", "error");
+            return;
+        }
+
+        swal({
+            title: 'Checking Status...',
+            text: 'Please wait while we fetch the latest status.',
+            allowOutsideClick: false,
+            onOpen: () => {
+                swal.showLoading();
+            }
+        });
+
+        $.ajax({
+            url: "/bus/check-status",
+            type: "POST",
+            data: {
+                id: id,
+                _token: "{{ csrf_token() }}"
+            },
+            success: function (res) {
+                swal.close();
+                if (res.status === 'success') {
+                    swal({
+                        title: 'Status: ' + res.booking_status,
+                        text: 'Latest status updated successfully.',
+                        type: 'success'
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    notify(res.message || "Failed to fetch status", "error");
+                }
+            },
+            error: function () {
+                swal.close();
+                notify("Connection error occurred", "error");
+            }
+        });
+    });
+</script>

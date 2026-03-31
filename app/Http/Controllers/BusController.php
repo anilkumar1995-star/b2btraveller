@@ -100,37 +100,37 @@ class BusController extends Controller
 
         if (strtolower($response['status'] ?? '') !== 'success') {
 
-            $baseFare    = 0;
-            $tax         = 0;
+            $baseFare = 0;
+            $tax = 0;
             $totalAmount = 0;
-            $totalSeats  = 0;
+            $totalSeats = 0;
 
             if (!empty($request->passenger)) {
                 foreach ($request->passenger as $p) {
                     $price = $p['Seat']['Price'] ?? [];
 
-                    $baseFare    += $price['BasePrice'] ?? 0;
-                    $tax         += $price['Tax'] ?? 0;
+                    $baseFare += $price['BasePrice'] ?? 0;
+                    $tax += $price['Tax'] ?? 0;
                     $totalAmount += $price['PublishedPrice'] ?? 0;
                     $totalSeats++;
                 }
             }
 
             DB::table('failed_bus_bookings_list')->insert([
-                'user_id'        => \Auth::id(),
-                'base_fare'      => $baseFare,
-                'tax'            => $tax,
-                'total_amount'   => $totalAmount,
+                'user_id' => \Auth::id(),
+                'base_fare' => $baseFare,
+                'tax' => $tax,
+                'total_amount' => $totalAmount,
                 'booking_status' => 'failed',
-                'message'        => $response['message'] ?? 'Bus block failed',
-                'raw_response'   => json_encode($response),
-                'raw_payload'    => json_encode($request->all()),
-                'created_at'     => now(),
-                'updated_at'     => now(),
+                'message' => $response['message'] ?? 'Bus block failed',
+                'raw_response' => json_encode($response),
+                'raw_payload' => json_encode($request->all()),
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
 
             return response()->json([
-                'status'  => 'failed',
+                'status' => 'failed',
                 'message' => $response['message'] ?? 'Bus block failed'
             ]);
         }
@@ -139,75 +139,75 @@ class BusController extends Controller
 
         if (!$data || empty($data['Passenger'])) {
             return response()->json([
-                'status'  => 'failed',
+                'status' => 'failed',
                 'message' => 'Invalid bus block response'
             ]);
         }
 
-        $baseFare     = 0;
-        $tax          = 0;
-        $totalAmount  = 0;
-        $totalSeats   = 0;
+        $baseFare = 0;
+        $tax = 0;
+        $totalAmount = 0;
+        $totalSeats = 0;
 
         foreach ($data['Passenger'] as $p) {
             $price = $p['Seat']['Price'] ?? [];
 
-            $baseFare    += $price['BasePrice'] ?? 0;
-            $tax         += $price['Tax'] ?? 0;
+            $baseFare += $price['BasePrice'] ?? 0;
+            $tax += $price['Tax'] ?? 0;
             $totalAmount += $price['PublishedPrice'] ?? 0;
             $totalSeats++;
         }
 
         $departureTime = !empty($data['DepartureTime'])
             ? Carbon::createFromFormat('m/d/Y H:i:s', str_replace('\/', '/', $data['DepartureTime']))
-            ->format('Y-m-d H:i:s')
+                ->format('Y-m-d H:i:s')
             : null;
 
         $arrivalTime = !empty($data['ArrivalTime'])
             ? Carbon::createFromFormat('m/d/Y H:i:s', str_replace('\/', '/', $data['ArrivalTime']))
-            ->format('Y-m-d H:i:s')
+                ->format('Y-m-d H:i:s')
             : null;
         /* ================= SUCCESS SAVE ================= */
         DB::table('bus_bookings')->insert([
-            'user_id'        => \Auth::id(),
-            'pnr'            => null,
+            'user_id' => \Auth::id(),
+            'pnr' => null,
             'booking_id_api' => $data['TraceId'],
             'ticket_no' => $data['TicketNo'] ?? null,
             'bus_id' => $data['BusId'] ?? null,
 
-            'origin'         => $data['BoardingPointdetails']['CityPointLocation'] ?? 'N/A',
-            'destination'    => $data['DropingPointdetails']['CityPointLocation'] ?? 'N/A',
-            'travel_name'    => $data['TravelName'] ?? null,
-            'service_name'    => $data['ServiceName'] ?? null,
-            'bus_type'       => $data['BusType'] ?? null,
+            'origin' => $data['BoardingPointdetails']['CityPointLocation'] ?? 'N/A',
+            'destination' => $data['DropingPointdetails']['CityPointLocation'] ?? 'N/A',
+            'travel_name' => $data['TravelName'] ?? null,
+            'service_name' => $data['ServiceName'] ?? null,
+            'bus_type' => $data['BusType'] ?? null,
 
-            'journey_date'   => $departureTime,
+            'journey_date' => $departureTime,
             'departure_time' => $departureTime,
-            'arrival_time'   => $arrivalTime,
+            'arrival_time' => $arrivalTime,
 
 
             'boarding_point' => $data['BoardingPointdetails']['CityPointName'] ?? null,
             'dropping_point' => $data['DropingPointdetails']['CityPointName'] ?? null,
-            'total_seats'    => $totalSeats,
-            'base_fare'      => $baseFare,
-            'tax'            => $tax,
-            'total_amount'   => $totalAmount,
+            'total_seats' => $totalSeats,
+            'base_fare' => $baseFare,
+            'tax' => $tax,
+            'total_amount' => $totalAmount,
             'is_pricechange' => $data['IsPriceChanged'] ? "true" : "false",
             'payment_status' => 'pending',
             'booking_status' => 'blocked',
-            'api_type'       => 'block',
+            'api_type' => 'block',
 
-            'raw_payload'    => json_encode($request->all()),
-            'raw_response'   => json_encode($response),
+            'raw_payload' => json_encode($request->all()),
+            'raw_response' => json_encode($response),
 
-            'created_at'     => now(),
-            'updated_at'     => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
         ]);
 
         return response()->json([
-            'status'  => 'success',
+            'status' => 'success',
             'message' => 'Bus Block successfully',
-            'data'    => $response['data'],
+            'data' => $response['data'],
             'totalAmount' => $totalAmount
         ]);
     }
@@ -295,7 +295,7 @@ class BusController extends Controller
 
         try {
             DB::beginTransaction();
-          
+
             if (strtolower($response['status'] ?? '') == 'failed' || strtolower($response['status'] ?? '') == 'failure') {
 
                 User::where('id', $user->id)->increment('mainwallet', $request->debitAmount);
@@ -419,72 +419,73 @@ class BusController extends Controller
 
         $agent = Agents::where('user_id', \Auth::id())->first();
         if (!$agent) {
-             $agent = Agents::where('user_id', 1)->first(); 
+            $agent = Agents::where('user_id', 1)->first();
         }
 
-        $clientRefId = AndroidCommonHelper::makeTxnId("", 10);
+        $clientRefId = AndroidCommonHelper::makeTxnId("BUS", 11);
         $url = $api->url . "v1/service/pgcollect/order";
-        
+
         $header = [
             "Content-Type: application/json",
             "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
         ];
 
         $reqData = [
-            "email"        => $user->email,
-            "name"         => $user->name,
+            "email" => $user->email,
+            "name" => $user->name,
             "merchantCode" => $agent->bc_id ?? "MID73323213401",
-            "clientRefId"  => $clientRefId,
-            "mobile"       => $user->mobile,
-            "successUrl"  => route('bus.payment.success'),
-            "failedUrl"   => route('bus.payment.failed'),
-            "amount"       => 1 
-            //$request->totalAmount
+            "clientRefId" => $clientRefId,
+            "mobile" => $user->mobile,
+            "successUrl" => route('bus.payment.success'),
+            "failedUrl" => route('bus.payment.failed'),
+            // "amount" => (float) $request->totalAmount
+            "amount" => 1
         ];
 
         $result = \Myhelper::curl($url, "POST", json_encode($reqData), $header, "yes");
-       
+
         if ($result['response'] != '') {
             $responseStatus = json_decode($result['response']);
-           
+
             if (isset($responseStatus->code) && $responseStatus->code == "0x0200") {
-                $tid = $request->input('traceId', $request->input('TraceId'));
-                
+                $tid = $request->input('traceId') ?? $request->input('TraceId');
+
                 $affected = DB::table('bus_bookings')
                     ->where('booking_id_api', $tid)
                     ->update([
                         'order_ref_id' => $clientRefId,
-                        'raw_payload'  => json_encode($request->all())
+                        'raw_payload' => json_encode($request->all())
                     ]);
 
                 // Debug logging to confirm update
                 \Log::info("Bus Update Attempt: tid=$tid, clientRefId=$clientRefId, affected=$affected");
 
                 Report::create([
-                    'number'      => $tid,
-                    'mobile'      => $user->mobile,
+                    'number' => $tid,
+                    'mobile' => $user->mobile,
                     'provider_id' => 0,
-                    'api_id'      => 0,
-                    'amount'      => $request->totalAmount,
-                    'profit'      => 0,
-                    'txnid'       => $clientRefId,
-                    'payid'       => $clientRefId,
-                    'status'      => 'pending',
-                    'user_id'     => $user->id,
+                    'api_id' => 0,
+                    // 'amount' => (float) $request->totalAmount,
+                    'amount' => 1,
+                    'profit' => 0,
+                    'txnid' => $clientRefId,
+                    'payid' => $clientRefId,
+                    'status' => 'pending',
+                    'user_id' => $user->id,
                     'credited_by' => $user->id,
-                    'rtype'       => 'main',
-                    'via'         => 'portal',
-                    'balance'     => $user->mainwallet,
-                    'trans_type'  => 'debit',
-                    'product'     => 'bustravel',
-                    'transtype'   => 'pg',
+                    'rtype' => 'main',
+                    'via' => 'portal',
+                    'balance' => $user->mainwallet,
+                    'trans_type' => 'debit',
+                    'product' => 'bustravel',
+                    'transtype' => 'pg',
                 ]);
 
                 return response()->json([
                     'status' => 'SUCCESS',
-                    'url'    => $responseStatus->data->url,
+                    'url' => $responseStatus->data->url,
                     'message' => 'Order created successful.',
-                    'data'   => $responseStatus->data
+                    'data' => $responseStatus->data
                 ]);
             } else {
                 return response()->json([
@@ -524,7 +525,7 @@ class BusController extends Controller
             $data['totalblockedCount'] = Bus::where('booking_status', 'blocked')->count();
             $data['totalcancelled'] = Bus::where('booking_status', 'Cancelled')->sum('total_amount');
             $data['totalcancelledCount'] = Bus::where('booking_status', 'Cancelled')->count();
-     
+
         } else {
             $data['totalsuccess'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Confirmed')->sum('total_amount');
             $data['totalsuccessCount'] = Bus::where('user_id', auth()->id())->where('booking_status', 'Confirmed')->count();
@@ -614,7 +615,11 @@ class BusController extends Controller
 
         $booking = DB::table('bus_bookings')->where('order_ref_id', $id)->first();
 
-        if ($booking && $booking->booking_status === 'Confirmed') {
+        if (!$booking) {
+            return response()->json(['status' => 'failed', 'message' => 'Booking record not found']);
+        }
+
+        if ($booking->booking_status === 'Confirmed') {
             return response()->json([
                 'status' => 'success',
                 'booking_status' => 'Confirmed',
@@ -623,19 +628,65 @@ class BusController extends Controller
         }
 
         $api = Api::where('code', 'rrpayment')->first();
+        if (!$api) {
+            return response()->json(['status' => 'failed', 'message' => 'API not found']);
+        }
         if ($api) {
-            $url = $api->url . 'v1/service/paycc/order/' . $id;
+            $url = rtrim($api->url, '/') . '/v1/service/paycc/order/' . $id;
+            $auth = base64_encode(trim($api->username) . ":" . trim($api->password));
+
             $header = [
                 "Content-Type: application/json",
-                "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
+                "Authorization: Basic " . $auth
             ];
 
-            $result = \Myhelper::curl($url, "GET", [], $header, "yes");
+            $result = \Myhelper::curl($url, "GET", "", $header, "yes");
+
             if ($result['response'] != '') {
                 $responseStatus = json_decode($result['response']);
+
                 if (isset($responseStatus->status) && $responseStatus->status == "SUCCESS") {
-                    // Re-fetch booking after API hit as webhook might have updated it
-                    $booking = DB::table('bus_bookings')->where('order_ref_id', $id)->first();
+
+                    if ($booking->payment_status !== 'success') {
+                        DB::table('bus_bookings')->where('id', $booking->id)->update(['payment_status' => 'success']);
+
+                        Report::where('txnid', $booking->order_ref_id)
+                            ->orWhere('payid', $booking->order_ref_id)
+                            ->update(['status' => 'success']);
+
+                        $payload = json_decode($booking->raw_payload, true);
+
+                        if (!isset($payload['clientRefId'])) {
+                            $payload['clientRefId'] = $booking->order_ref_id;
+                        }
+
+                        $service = new BusService();
+                        $serviceResponse = $service->bookBuss($payload);
+
+                        if (isset($serviceResponse['status']) && strtolower($serviceResponse['status']) == 'success') {
+                            $data = $serviceResponse['data'] ?? [];
+                            DB::table('bus_bookings')->where('id', $booking->id)->update([
+                                'booking_status' => 'Confirmed',
+                                'raw_response' => json_encode($serviceResponse),
+                                'pnr' => $data['PNR'] ?? $data['TravelOperatorPNR'] ?? $booking->pnr,
+                                'ticket_no' => $data['TicketNo'] ?? $booking->ticket_no,
+                                'updated_at' => now()
+                            ]);
+
+                            // Refresh booking data
+                            $booking = DB::table('bus_bookings')->where('id', $booking->id)->first();
+                        } else {
+                            \Log::error("Bus Final Booking Failed for $id: " . json_encode($serviceResponse));
+                        }
+                    }
+                }
+
+                if (isset($responseStatus->status) && ($responseStatus->status == "PENDING" || $responseStatus->status == "FAILURE")) {
+                    return response()->json([
+                        'status' => strtolower($responseStatus->status),
+                        'message' => $responseStatus->message ?? "Transaction " . strtolower($responseStatus->status),
+                        'data' => $booking
+                    ]);
                 }
             }
         }
@@ -696,33 +747,33 @@ class BusController extends Controller
             $reportTable->update([
                 'status' => 'reversed',
                 'remark' => 'Booking cancelled, refund initiated.',
-                'refno'  => $bokTable->booking_id_api
+                'refno' => $bokTable->booking_id_api
             ]);
 
             // new record created for refund
             Report::create([
-                'number'      => $reportTable->number,
-                'mobile'      => $reportTable->mobile,
+                'number' => $reportTable->number,
+                'mobile' => $reportTable->mobile,
                 'provider_id' => $reportTable->provider_id,
-                'api_id'      => $reportTable->api_id,
-                'amount'      => $refundAmount > 0 ? $refundAmount : 0,
+                'api_id' => $reportTable->api_id,
+                'amount' => $refundAmount > 0 ? $refundAmount : 0,
                 "charge" => 0.0,
                 "profit" => 0.0,
                 "gst" => 0.0,
                 "tds" => 0.0,
-                'remark'      => 'Refund for cancelled booking',
-                'txnid'       => $reportTable->id,
-                'payid'       => $reportTable->payid,
-                'status'      => 'refunded',
-                'user_id'     => $reportTable->user_id,
+                'remark' => 'Refund for cancelled booking',
+                'txnid' => $reportTable->id,
+                'payid' => $reportTable->payid,
+                'status' => 'refunded',
+                'user_id' => $reportTable->user_id,
                 'credited_by' => $reportTable->user_id,
-                'rtype'       => 'main',
-                'via'         => 'portal',
-                'balance'     =>  $oldBalance,
+                'rtype' => 'main',
+                'via' => 'portal',
+                'balance' => $oldBalance,
                 "closing_balance" => $oldBalance + $refundAmount,
-                'trans_type'  => 'credit',
-                'product'     => 'bus',
-                'transtype'   => 'mainwallet',
+                'trans_type' => 'credit',
+                'product' => 'bus',
+                'transtype' => 'mainwallet',
                 "apitxnid" => null,
                 "refno" => $reportTable->number,
             ]);
@@ -756,7 +807,8 @@ class BusController extends Controller
         return view('bus.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
     }
 
-    public function reviewBooking(){
+    public function reviewBooking()
+    {
         return view('bus.review_booking');
     }
 }
