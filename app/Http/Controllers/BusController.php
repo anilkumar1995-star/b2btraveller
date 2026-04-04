@@ -422,8 +422,8 @@ class BusController extends Controller
             $agent = Agents::where('user_id', 1)->first();
         }
 
-        $clientRefId = AndroidCommonHelper::makeTxnId("BUS", 11);
-        $url = $api->url . "v1/service/pgcollect/order";
+        $clientRefId = AndroidCommonHelper::makeTxnId("BUS", 8);
+        $url = $api->url . "v1/service/pgcollect/jio/order/generate";
 
         $header = [
             "Content-Type: application/json",
@@ -436,10 +436,11 @@ class BusController extends Controller
             "merchantCode" => $agent->bc_id ?? "MID73323213401",
             "clientRefId" => $clientRefId,
             "mobile" => $user->mobile,
+            "redirectUrl" => route('bus.payment.success'),
             "successUrl" => route('bus.payment.success'),
             "failedUrl" => route('bus.payment.failed'),
             // "amount" => (float) $request->totalAmount
-            "amount" => 1
+            "amount" => 2
         ];
 
         $result = \Myhelper::curl($url, "POST", json_encode($reqData), $header, "yes");
@@ -466,7 +467,7 @@ class BusController extends Controller
                     'provider_id' => 0,
                     'api_id' => 0,
                     // 'amount' => (float) $request->totalAmount,
-                    'amount' => 1,
+                    'amount' => 2,
                     'profit' => 0,
                     'txnid' => $clientRefId,
                     'payid' => $clientRefId,
@@ -646,39 +647,16 @@ class BusController extends Controller
                 $responseStatus = json_decode($result['response']);
 
                 if (isset($responseStatus->status) && $responseStatus->status == "SUCCESS") {
-
-                    if ($booking->payment_status !== 'success') {
-                        DB::table('bus_bookings')->where('id', $booking->id)->update(['payment_status' => 'success']);
-
-                        Report::where('txnid', $booking->order_ref_id)
-                            ->orWhere('payid', $booking->order_ref_id)
-                            ->update(['status' => 'success']);
-
-                        $payload = json_decode($booking->raw_payload, true);
-
-                        if (!isset($payload['clientRefId'])) {
-                            $payload['clientRefId'] = $booking->order_ref_id;
-                        }
-
-                        $service = new BusService();
-                        $serviceResponse = $service->bookBuss($payload);
-
-                        if (isset($serviceResponse['status']) && strtolower($serviceResponse['status']) == 'success') {
-                            $data = $serviceResponse['data'] ?? [];
-                            DB::table('bus_bookings')->where('id', $booking->id)->update([
-                                'booking_status' => 'Confirmed',
-                                'raw_response' => json_encode($serviceResponse),
-                                'pnr' => $data['PNR'] ?? $data['TravelOperatorPNR'] ?? $booking->pnr,
-                                'ticket_no' => $data['TicketNo'] ?? $booking->ticket_no,
-                                'updated_at' => now()
-                            ]);
-
-                            // Refresh booking data
-                            $booking = DB::table('bus_bookings')->where('id', $booking->id)->first();
-                        } else {
-                            \Log::error("Bus Final Booking Failed for $id: " . json_encode($serviceResponse));
-                        }
-                    }
+                   $finalResult = $this->finalizeBooking($booking);
+                   $booking = DB::table('bus_bookings')->where('id', $booking->id)->first();
+                   
+                   if (!$finalResult['status']) {
+                       return response()->json([
+                           'status' => 'failed',
+                           'booking_status' => $booking->booking_status ?? 'failed',
+                           'message' => $finalResult['message'] ?? 'Unable to confirm with bus provider.'
+                       ]);
+                   }
                 }
 
                 if (isset($responseStatus->status) && (strtolower($responseStatus->status) == "pending" || strtolower($responseStatus->status) == "failure")) {
@@ -697,6 +675,65 @@ class BusController extends Controller
             'message' => (isset($responseStatus) && isset($responseStatus->message)) ? $responseStatus->message : null,
             'data' => $booking
         ]);
+    }
+
+    private function finalizeBooking($booking)
+    {
+        if ($booking->payment_status !== 'success') {
+            DB::table('bus_bookings')->where('id', $booking->id)->update(['payment_status' => 'success']);
+
+            Report::where('txnid', $booking->order_ref_id)
+                ->orWhere('payid', $booking->order_ref_id)
+                ->update(['status' => 'success']);
+            
+            $booking->payment_status = 'success';
+        }
+
+        if ($booking->payment_status === 'success' && $booking->booking_status !== 'Confirmed') {
+            
+            $payload = json_decode($booking->raw_payload, true);
+
+            if (!isset($payload['totalAmount']) && isset($booking->total_amount)) {
+                $payload['totalAmount'] = $booking->total_amount;
+            }
+            if (!isset($payload['clientRefId'])) {
+                $payload['clientRefId'] = $booking->order_ref_id;
+            }
+
+            $service = new BusService();
+            $serviceResponse = $service->bookBuss($payload);
+            
+            \Log::info("Bus API Response for $booking->order_ref_id: " . json_encode($serviceResponse));
+
+            if (isset($serviceResponse['status']) && strtolower($serviceResponse['status']) == 'success') {
+                $data = $serviceResponse['data'] ?? [];
+                
+                $updateData = [
+                    'booking_status' => 'Confirmed',
+                    'raw_response' => json_encode($serviceResponse),
+                    'updated_at' => now()
+                ];
+
+                if (isset($data['PNR']) || isset($data['TravelOperatorPNR'])) {
+                   $updateData['pnr'] = $data['PNR'] ?? $data['TravelOperatorPNR'];
+                }
+                if (isset($data['TicketNo'])) {
+                   $updateData['ticket_no'] = $data['TicketNo'];
+                }
+
+                DB::table('bus_bookings')->where('id', $booking->id)->update($updateData);
+                
+                return ['status' => true, 'message' => 'Confirmed'];
+            } else {
+                $errMsg = $serviceResponse['message'] ?? 'Unknown API Error';
+                
+                DB::table('bus_bookings')->where('id', $booking->id)->update(['booking_status' => 'failed']);
+
+                return ['status' => false, 'message' => $errMsg];
+            }
+        }
+        
+        return ['status' => true, 'message' => 'Already Confirmed'];
     }
 
     public function cancelPage($id)
@@ -798,14 +835,42 @@ class BusController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid;
-        return view('bus.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id]);
+        $id = $request->clientRefId ?? $request->txnid ?? $request->input('data.clientRefId');
+        $status = $request->status ?? 'SUCCESS';
+        
+        \Log::info("Bus Payment SUCCESS Redirect: id=$id, status=$status");
+
+        if (strtoupper($status) == 'SUCCESS' || $request->code == '0x0200') {
+            $booking = DB::table('bus_bookings')->where('order_ref_id', $id)->first();
+            if ($booking) {
+                $this->finalizeBooking($booking);
+                // Fetch fresh status after finalization attempt
+                $booking = DB::table('bus_bookings')->where('order_ref_id', $id)->first();
+            }
+            return view('bus.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id, 'booking' => $booking]);
+        }
+
+        return view('bus.status')->with(['status' => 'failed', 'message' => $request->message ?? 'Payment Failed', 'id' => $id]);
     }
 
     public function paymentFailed(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid;
-        return view('bus.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
+        $id = $request->clientRefId ?? $request->txnid ?? $request->input('data.clientRefId');
+        $status = $request->status ?? 'FAILURE';
+        
+        \Log::info("Bus Payment FAILED Redirect: id=$id, status=$status");
+
+        if (strtoupper($status) == 'SUCCESS' || $request->code == '0x0200') {
+            $booking = DB::table('bus_bookings')->where('order_ref_id', $id)->first();
+            if ($booking) {
+                $this->finalizeBooking($booking);
+                // Fetch fresh status after finalization attempt
+                $booking = DB::table('bus_bookings')->where('order_ref_id', $id)->first();
+            }
+            return view('bus.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id, 'booking' => $booking]);
+        }
+
+        return view('bus.status')->with(['status' => 'failed', 'message' => $request->message ?? 'Payment Failed', 'id' => $id]);
     }
 
     public function reviewBooking()

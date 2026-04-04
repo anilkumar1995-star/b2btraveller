@@ -304,13 +304,13 @@ class BusService
             $payload = [
                 "EndUserIp" => $this->ip,
                 "TokenId" => $token,
-                "TraceId" => $data['traceId'],
-                "ResultIndex" => $data['resultIndex'],
-                "BoardingPointId" => $data['boardingPointId'],
-                "DroppingPointId" => $data['droppingPointId'],
-                "Passenger" => $data['passenger'],
-                "TotalAmount" => $data['totalAmount'],
-                "clientRefId" => $data['clientRefId'],
+                "TraceId" => $data['traceId'] ?? $data['TraceId'] ?? null,
+                "ResultIndex" => $data['resultIndex'] ?? $data['ResultIndex'] ?? null,
+                "BoardingPointId" => $data['boardingPointId'] ?? $data['BoardingPointId'] ?? null,
+                "DroppingPointId" => $data['droppingPointId'] ?? $data['DroppingPointId'] ?? null,
+                "Passenger" => $data['passenger'] ?? $data['Passenger'] ?? [],
+                "TotalAmount" => $data['totalAmount'] ?? $data['TotalAmount'] ?? 0,
+                "clientRefId" => $data['clientRefId'] ?? $data['ClientRefId'] ?? "none",
             ];
 
             $url = $this->setFullUrl('bookbus');
@@ -319,7 +319,7 @@ class BusService
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 $response = BusStaticResponseHelper::busBookStaticResponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "bus_book", $data['clientRefId'] ?? "none");
                 $response = $response['response'];
             }
 
