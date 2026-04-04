@@ -8,14 +8,18 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <!-- Status Card -->
-                <div class="card status-card {{ $status == 'success' ? 'pending' : 'failed' }} animate__animated animate__zoomIn" id="statusCard">
+                <div class="card status-card {{ ($status == 'success' && (!isset($booking) || in_array($booking->booking_status, ['pending', 'blocked']))) ? 'pending' : (($status == 'success' && $booking->booking_status == 'Confirmed') ? 'success' : 'failed') }} animate__animated animate__zoomIn" id="statusCard">
                     <div class="card-body text-center p-md-5 p-4">
                         
                         <!-- Icon Circle -->
                         <div class="status-icon-container mb-4 mx-auto" id="statusIcon">
-                            @if($status == 'success')
+                            @if($status == 'success' && (!isset($booking) || in_array($booking->booking_status, ['pending', 'blocked'])))
                                 <div class="icon-circle bg-warning shadow-warning pulse">
                                     <i class="ti ti-loader display-3 text-white spin-icon"></i>
+                                </div>
+                            @elseif($status == 'success' && $booking->booking_status == 'Confirmed')
+                                <div class="icon-circle bg-success shadow-success">
+                                    <i class="ti ti-check display-3 text-white"></i>
                                 </div>
                             @else
                                 <div class="icon-circle bg-danger shadow-danger">
@@ -23,10 +27,10 @@
                                 </div>
                             @endif
                         </div>
-
+ 
                         <!-- Status Text -->
                         <div class="status-text animate__animated animate__fadeInUp animate__delay-1s" id="statusContent">
-                            @if($status == 'success')
+                            @if($status == 'success' && (!isset($booking) || in_array($booking->booking_status, ['pending', 'blocked'])))
                                 <h1 class="fw-extra-bold mb-3 text-dark">Processing Booking...</h1>
                                 <p class="lead text-muted px-md-4">
                                     Your payment is successful! We are now confirming your bus ticket. This may take a moment.
@@ -37,20 +41,30 @@
                                         <div id="timerBar" class="progress-bar progress-bar-animated bg-primary" role="progressbar" style="width: 100%"></div>
                                     </div>
                                 </div>
-                            @else
-                                <h1 class="fw-extra-bold mb-3 text-dark">Payment Failed</h1>
+                            @elseif($status == 'success' && $booking->booking_status == 'Confirmed')
+                                <h1 class="fw-extra-bold mb-3 text-dark">Booking Confirmed! 🎉</h1>
                                 <p class="lead text-muted px-md-4">
-                                    Oops! We couldn't process your payment. Don't worry, if any money was deducted, it will be refunded automatically. Please try again.
+                                    Great news! Your bus ticket has been confirmed successfully.<br>
+                                    <strong>Bus ID:</strong> {{ $booking->bus_id ?? 'N/A' }}<br>
+                                    <strong>Ticket No:</strong> {{ $booking->ticket_no ?? 'N/A' }}
+                                </p>
+                            @else
+                                <h1 class="fw-extra-bold mb-3 text-dark">{{ $status == 'success' ? 'Booking Failed' : 'Payment Failed' }}</h1>
+                                <p class="lead text-muted px-md-4">
+                                    {{ $message ?? 'Oops! There was an issue processing your request.' }}<br>
+                                    @if(isset($booking) && $booking->booking_status == 'failed')
+                                        Your payment was successful, but the provider could not confirm the seat. Refund will be initiated.
+                                    @endif
                                 </p>
                             @endif
                         </div>
-
+ 
                         <!-- Divider -->
                         <div class="hr-divider my-4"></div>
-
+ 
                         <!-- Action Buttons -->
                         <div class="action-buttons d-flex flex-column flex-md-row justify-content-center gap-3 animate__animated animate__fadeInUp animate__delay-2s" id="actionButtons">
-                            @if($status != 'success')
+                            @if($status != 'success' || (isset($booking) && in_array($booking->booking_status, ['Confirmed', 'failed'])))
                                 <a href="{{ route('bus.bookingList') }}" class="btn btn-primary btn-cta shadow-sm">
                                     <i class="ti ti-file-text me-2"></i>My Bookings
                                 </a>

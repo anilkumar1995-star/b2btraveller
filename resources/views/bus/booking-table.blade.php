@@ -1174,15 +1174,28 @@
             success: function (res) {
                 swal.close();
                 if (res.status === 'success') {
+                    let swalType = 'info';
+                    if (res.booking_status === 'Confirmed') {
+                        swalType = 'success';
+                    } else if (res.booking_status === 'failed' || res.booking_status === 'FAILURE') {
+                        swalType = 'error';
+                    } else if (res.booking_status === 'pending') {
+                        swalType = 'warning';
+                    }
+
                     swal({
                         title: 'Status: ' + res.booking_status,
-                        text: 'Latest status updated successfully.',
-                        type: 'success'
+                        text: res.message || 'Latest status updated successfully.',
+                        type: swalType
                     }).then(() => {
                         location.reload();
                     });
                 } else {
-                    notify(res.message || "Failed to fetch status", "error");
+                    swal({
+                        title: 'Failed to Fetch Status',
+                        text: res.message || 'The check returned an error.',
+                        type: 'error'
+                    });
                 }
             },
             error: function () {
