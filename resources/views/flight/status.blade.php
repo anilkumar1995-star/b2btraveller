@@ -144,7 +144,8 @@
                     <p class="lead text-muted px-md-4">
                         Great news! Your flight ticket has been confirmed successfully.<br>
                         <strong>PNR:</strong> ${data.pnr || 'N/A'}<br>
-                        <strong>Booking Id:</strong> ${data.booking_id || 'N/A'}
+                        <strong>Booking Id:</strong> ${data.booking_id || data.booking_id_api || 'N/A'}<br>
+                        <strong>Amount Paid:</strong> ₹${data.total_amount || data.amount || '0'}
                     </p>
                 `);
                 $('#actionButtons').html(`
