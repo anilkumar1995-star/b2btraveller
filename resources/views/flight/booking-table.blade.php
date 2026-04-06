@@ -253,7 +253,15 @@
                                                   data-ticketstatus="{{ $b->ticket_status }}"
                                                   data-changereqid="{{ $b->change_request_id }}"
                                                   data-clientrefid="{{ $b->order_ref_id }}">
-                                                  ✅ Check Status
+                                                  ✅ Check Cancel Status
+                                              </a>
+                                          </li>
+                                      @endif
+                                      @if (($b->ticket_status == 'pending' || $b->ticket_status == 'Failed' || $b->ticket_status == 'InProgress') && $b->order_ref_id != null)
+                                          <li>
+                                              <a class="dropdown-item" href="javascript:void(0)"
+                                                  onclick="manualStatusCheck('{{ $b->order_ref_id }}')">
+                                                  🔄 Check Booking Status
                                               </a>
                                           </li>
                                       @endif
@@ -429,13 +437,48 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
 
   <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
-  <script src="{{ asset('') }}js/boookflighttrip.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="{{ asset('') }}js/boookflighttriping.js"></script>
   <script type="text/javascript">
       $(document).ready(function() {
           localStorage.removeItem('cancelCharge');
           localStorage.removeItem('refundAmount');
           localStorage.removeItem('cancelRemarks');
       });
+
+      function manualStatusCheck(orderRefId) {
+          Swal.fire({
+              title: 'Checking Status...',
+              text: 'Please wait while we verify the booking with the provider.',
+              allowOutsideClick: false,
+              didOpen: () => {
+                  Swal.showLoading();
+              }
+          });
+
+          $.ajax({
+              url: "{{ route('flight.checkStatus') }}",
+              type: "POST",
+              data: {
+                  id: orderRefId,
+                  _token: "{{ csrf_token() }}"
+              },
+              success: function(res) {
+                  if (res.status === 'success' && res.booking_status === 'Confirmed') {
+                      Swal.fire('Success!', 'Booking confirmed successfully.', 'success').then(() => {
+                          location.reload();
+                      });
+                  } else if (res.status === 'success' && res.booking_status === 'Pending') {
+                      Swal.fire('Pending', 'Booking is still in progress.', 'info');
+                  } else {
+                      Swal.fire('Error', res.message || 'Wait For Sometime Payment Response Failed If Amount deducted wait for 15 minutes', 'error');
+                  }
+              },
+              error: function() {
+                  Swal.fire('Error', 'Connection failed. Please try again.', 'error');
+              }
+          });
+      }
 
       function openBookingDetails(bookingId) {
 
