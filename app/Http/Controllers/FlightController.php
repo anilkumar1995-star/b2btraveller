@@ -608,14 +608,14 @@ class FlightController extends Controller
         if ($result['response'] != '') {
             $responseStatus = json_decode($result['response']);
 
-            if (isset($responseStatus->status) && $responseStatus->status == "SUCCESS") {
+            if ((isset($responseStatus->status) && $responseStatus->status == "SUCCESS") || (isset($responseStatus->code) && $responseStatus->code == "0x0200")) {
                 $finalResult = $this->finalizeBooking($booking ?? $report);
                 $booking = DB::table('bookings')->where('order_ref_id', $id)->first();
                 
                 if (!$finalResult['status']) {
                     return response()->json([
                         'status' => 'failed',
-                        'booking_status' => $booking->payment_status,
+                        'booking_status' => $booking ? $booking->payment_status : 'failed',
                         'message' => $finalResult['message'] ?? 'Unable to finalize flight ticket.'
                     ]);
                 }
@@ -662,7 +662,7 @@ class FlightController extends Controller
             return ['status' => false, 'message' => 'Report record not found.'];
         }
 
-        if ($booking->payment_status === 'success' && $booking->ticket_status === 'Successful') {
+        if ($booking && $booking->payment_status === 'success' && ($booking->ticket_status === 'Successful' || $booking->ticket_status === 'Confirmed')) {
             return ['status' => true, 'message' => 'Already finalized.'];
         }
 
@@ -690,8 +690,8 @@ class FlightController extends Controller
             'pnr'         => $booking ? $booking->pnr : ($payload['pnr'] ?? 'PENDING'),
             'bookingId'   => $booking ? $booking->booking_id_api : ($payload['traceId'] ?? 'PENDING'),
             'traceId'     => $payload['traceId'] ?? ($booking ? $booking->booking_id_api : 'PENDING'),
-            'resultIndex' => $payload['resultIndex'] ?? 1,
-            'islcc'       => $payload['islcc'] ?? ($booking ? $booking->is_lcc : 'false'),
+            'resultIndex' => $payload['resultIndex'] ?? ($booking ? $booking->result_index : 1),
+            'islcc'       => $payload['islcc'] ?? $payload['isLcc'] ?? ($booking ? $booking->is_lcc : 'true'),
             'debitAmount' => $report->amount,
             'clientRefId' => $report->txnid,
             'passengers'  => $payload['passengers'] ?? [],
