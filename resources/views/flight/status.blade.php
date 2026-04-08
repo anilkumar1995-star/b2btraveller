@@ -102,12 +102,10 @@
                 }
             }, 1000);
 
-            // Start Polling every 10 seconds
             pollingInterval = setInterval(function() {
                 checkBookingStatus();
             }, 10000);
 
-            // Initial check
             checkBookingStatus();
 
             function checkBookingStatus() {
@@ -119,15 +117,18 @@
                         id: orderRefId
                     },
                     success: function(response) {
-                        if (response.status === 'success' && response.booking_status === 'Confirmed') {
+                        if (response.status === 'success' && (response.booking_status === 'Confirmed' || response.booking_status === 'Successful')) {
                             clearInterval(timerInterval);
                             clearInterval(pollingInterval);
                             handleSuccess(response.data);
-                        } else if (response.booking_status === 'failed') {
+                        } else if (response.booking_status === 'failed' || response.status === 'failure' || response.status === 'failed') {
                             clearInterval(timerInterval);
                             clearInterval(pollingInterval);
                             handleFailure(response.message || 'Flight booking failed.');
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Status check error:', error);
                     }
                 });
             }

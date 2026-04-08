@@ -168,8 +168,8 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::get('booking-list', [FlightController::class, 'bookingList'])->name('flight.bookingList');
     Route::get('booking-list-failed', [FlightController::class, 'bookingListFailed'])->name('flight.bookingListFailed');
     Route::post('booking-view', [FlightController::class, 'viewTicket'])->name('flight.booking.view');
-    Route::get('payment/success', [FlightController::class, 'paymentSuccess'])->name('flight.payment.success');
-    Route::get('payment/failed', [FlightController::class, 'paymentFailed'])->name('flight.payment.failed');
+    Route::any('payment/success', [FlightController::class, 'paymentSuccess'])->name('flight.payment.success');
+    Route::any('payment/failed', [FlightController::class, 'paymentFailed'])->name('flight.payment.failed');
     Route::post('check-status', [FlightController::class, 'checkStatus'])->name('flight.checkStatus');
     Route::get('cancel/{id}', [FlightController::class, 'cancelPage']);
     Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);

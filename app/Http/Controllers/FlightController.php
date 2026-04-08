@@ -559,13 +559,13 @@ class FlightController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid;
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id;
         return view('flight.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id]);
     }
 
     public function paymentFailed(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid;
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id;
         return view('flight.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
     }
 
@@ -608,7 +608,7 @@ class FlightController extends Controller
         if ($result['response'] != '') {
             $responseStatus = json_decode($result['response']);
 
-            if ((isset($responseStatus->status) && $responseStatus->status == "SUCCESS") || (isset($responseStatus->code) && $responseStatus->code == "0x0200")) {
+            if ((isset($responseStatus->status) && strtoupper($responseStatus->status) == "SUCCESS") || (isset($responseStatus->code) && $responseStatus->code == "0x0200")) {
                 $finalResult = $this->finalizeBooking($booking ?? $report);
                 $booking = DB::table('bookings')->where('order_ref_id', $id)->first();
                 
@@ -685,7 +685,6 @@ class FlightController extends Controller
             return ['status' => false, 'message' => 'DB update failed: ' . $e->getMessage()];
         }
 
-        // Call provider ticketing API
         $ticketingData = [
             'pnr'         => $booking ? $booking->pnr : ($payload['pnr'] ?? 'PENDING'),
             'bookingId'   => $booking ? $booking->booking_id_api : ($payload['traceId'] ?? 'PENDING'),
