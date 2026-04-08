@@ -559,13 +559,15 @@ class FlightController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid;
+        \Log::info("Flight Payment Success Request:", $request->all());
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id ?? $request->ORDERID ?? $request->ORDER_ID;
         return view('flight.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id]);
     }
 
     public function paymentFailed(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid;
+        \Log::info("Flight Payment Failed Request:", $request->all());
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id ?? $request->ORDERID ?? $request->ORDER_ID;
         return view('flight.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
     }
 
@@ -608,7 +610,7 @@ class FlightController extends Controller
         if ($result['response'] != '') {
             $responseStatus = json_decode($result['response']);
 
-            if ((isset($responseStatus->status) && $responseStatus->status == "SUCCESS") || (isset($responseStatus->code) && $responseStatus->code == "0x0200")) {
+            if ((isset($responseStatus->status) && strtoupper($responseStatus->status) == "SUCCESS") || (isset($responseStatus->code) && $responseStatus->code == "0x0200")) {
                 $finalResult = $this->finalizeBooking($booking ?? $report);
                 $booking = DB::table('bookings')->where('order_ref_id', $id)->first();
                 
@@ -685,7 +687,6 @@ class FlightController extends Controller
             return ['status' => false, 'message' => 'DB update failed: ' . $e->getMessage()];
         }
 
-        // Call provider ticketing API
         $ticketingData = [
             'pnr'         => $booking ? $booking->pnr : ($payload['pnr'] ?? 'PENDING'),
             'bookingId'   => $booking ? $booking->booking_id_api : ($payload['traceId'] ?? 'PENDING'),
@@ -720,7 +721,6 @@ class FlightController extends Controller
             if ($booking) {
                 DB::table('bookings')->where('id', $booking->id)->update($finalUpdate);
             } else {
-                // LCC Case: Create record now
                 $itinerary = $payload['itinerary'] ?? [];
                 $flightDetails = $this->extractFlightDetails([], $itinerary, $payload);
                 
@@ -734,12 +734,13 @@ class FlightController extends Controller
                     'payment_status'  => 'success',
                     'booking_status'  => $status,
                     'ticket_status'   => $status,
-                    'total_amount'    => $report->amount,
                     'raw_payload'     => json_encode($payload),
                     'raw_response'    => $finalUpdate['raw_response'],
                     'created_at'      => now(),
                     'updated_at'      => now(),
                 ], $flightDetails);
+                
+                $newBooking['total_amount'] = $report->amount;
                 
                 DB::table('bookings')->insert($newBooking);
             }
@@ -752,7 +753,6 @@ class FlightController extends Controller
                     'booking_status' => 'Failed'
                 ]);
             } else {
-                // LCC Case: Create failed record
                 $itinerary = $payload['itinerary'] ?? [];
                 $flightDetails = $this->extractFlightDetails([], $itinerary, $payload);
                 $newBooking = array_merge([
@@ -769,6 +769,9 @@ class FlightController extends Controller
                     'created_at'      => now(),
                     'updated_at'      => now(),
                 ], $flightDetails);
+                
+                $newBooking['total_amount'] = $report->amount;
+                
                 DB::table('bookings')->insert($newBooking);
             }
             return ['status' => false, 'message' => $response['message'] ?? 'Ticketing failed with provider.'];
@@ -804,19 +807,19 @@ class FlightController extends Controller
                 $firstSeg = $segments[0];
                 $lastSegInLeg = end($lastLeg);
                 $originCode = $firstSeg['Origin']['Airport']['AirportCode'] ?? 'N/A';
-                $originName = $firstSeg['Origin']['Airport']['AirportName'] ?? '';
+                $originName = ($firstSeg['Origin']['Airport']['AirportName'] ?? '') ?: ($firstSeg['Origin']['Airport']['CityName'] ?? '');
                 $destCode = $lastSegInLeg['Destination']['Airport']['AirportCode'] ?? 'N/A';
-                $destName = $lastSegInLeg['Destination']['Airport']['AirportName'] ?? '';
+                $destName = ($lastSegInLeg['Destination']['Airport']['AirportName'] ?? '') ?: ($lastSegInLeg['Destination']['Airport']['CityName'] ?? '');
                 $airlineCode = $firstSeg['Airline']['AirlineCode'] ?? 'N/A';
                 $airlineName = $firstSeg['Airline']['AirlineName'] ?? '';
                 $flightNumber = $firstSeg['Airline']['FlightNumber'] ?? 'N/A';
                 $journeyDate = $firstSeg['Origin']['DepTime'] ?? now()->format('Y-m-d H:i:s');
             } else if (is_array($segments) && isset($segments['Origin'])) {
                 $originCode = $segments['Origin']['Airport']['AirportCode'] ?? 'N/A';
-                $originName = $segments['Origin']['Airport']['AirportName'] ?? '';
+                $originName = ($segments['Origin']['Airport']['AirportName'] ?? '') ?: ($segments['Origin']['Airport']['CityName'] ?? '');
                 $lastSeg = end($seg);
                 $destCode = $lastSeg['Destination']['Airport']['AirportCode'] ?? 'N/A';
-                $destName = $lastSeg['Destination']['Airport']['AirportName'] ?? '';
+                $destName = ($lastSeg['Destination']['Airport']['AirportName'] ?? '') ?: ($lastSeg['Destination']['Airport']['CityName'] ?? '');
                 $airlineCode = $segments['Airline']['AirlineCode'] ?? 'N/A';
                 $airlineName = $segments['Airline']['AirlineName'] ?? '';
                 $flightNumber = $segments['Airline']['FlightNumber'] ?? 'N/A';
@@ -836,7 +839,6 @@ class FlightController extends Controller
             'total_amount'  => $fare['PublishedFare'] ?? 0,
             'is_refundable' => $isrefund,
             'is_lcc'        => $islcc,
-            'order_ref_id'  => $request['clientRefId'] ?? null,
         ];
     }
 

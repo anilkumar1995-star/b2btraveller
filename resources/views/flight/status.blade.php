@@ -75,19 +75,27 @@
 
 <input type="hidden" id="order_ref_id" value="{{ $id ?? '' }}">
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function() {
-        @if($status == 'success' && isset($id))
+        console.log("Status page loaded. Status: {{ $status }}, ID: {{ $id ?? 'null' }}");
+
+        @if($status == 'success')
             let timeLeft = 60;
             let timerElement = $('#timer');
             let timerBar = $('#timerBar');
             let orderRefId = $('#order_ref_id').val();
             let pollingInterval;
 
+            console.log("Starting timer and polling logic...");
+
             // Start Timer
             let timerInterval = setInterval(function() {
                 timeLeft--;
+                if(timeLeft < 0) {
+                    clearInterval(timerInterval);
+                    return;
+                }
+                
                 let minutes = Math.floor(timeLeft / 60);
                 let seconds = timeLeft % 60;
                 timerElement.text(`${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`);
@@ -102,13 +110,16 @@
                 }
             }, 1000);
 
-            // Start Polling every 10 seconds
-            pollingInterval = setInterval(function() {
-                checkBookingStatus();
-            }, 10000);
+            if (orderRefId) {
+                pollingInterval = setInterval(function() {
+                    checkBookingStatus();
+                }, 10000);
 
-            // Initial check
-            checkBookingStatus();
+                checkBookingStatus();
+            } else {
+                console.error("No order reference ID found. Polling skipped.");
+                $('#statusContent').append('<p class="text-danger mt-3 small">Error: Payment reference ID missing. Status: Success.</p>');
+            }
 
             function checkBookingStatus() {
                 $.ajax({
@@ -119,15 +130,18 @@
                         id: orderRefId
                     },
                     success: function(response) {
-                        if (response.status === 'success' && response.booking_status === 'Confirmed') {
+                        if (response.status === 'success' && (response.booking_status === 'Confirmed' || response.booking_status === 'Successful')) {
                             clearInterval(timerInterval);
                             clearInterval(pollingInterval);
                             handleSuccess(response.data);
-                        } else if (response.booking_status === 'failed') {
+                        } else if (response.booking_status === 'failed' || response.status === 'failure' || response.status === 'failed') {
                             clearInterval(timerInterval);
                             clearInterval(pollingInterval);
                             handleFailure(response.message || 'Flight booking failed.');
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Status check error:', error);
                     }
                 });
             }
