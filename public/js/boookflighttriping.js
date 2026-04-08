@@ -3063,6 +3063,7 @@ function hitBookingAPI(traceId, selectedFlightDetails, selectedSeats, selectedMe
         resultIndex: selectedFlightDetails?.ResultIndex,
         passengers: passengers,
         traceId: traceId,
+        itinerary: selectedFlightDetails,
         islcc: selectedFlightDetails?.IsLCC || false,
         _token: $('meta[name="csrf-token"]').attr('content')
     };
@@ -3240,6 +3241,7 @@ function hitBookingAPIInternationalRoundtrip(
         resultIndex: selectedFlightDetails.ResultIndex,
         passengers: passengers,
         traceId: traceId,
+        itinerary: selectedFlightDetails,
         islcc: selectedFlightDetails?.IsLCC || false,
         _token: $('meta[name="csrf-token"]').attr('content')
     };

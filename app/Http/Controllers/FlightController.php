@@ -719,7 +719,6 @@ class FlightController extends Controller
             if ($booking) {
                 DB::table('bookings')->where('id', $booking->id)->update($finalUpdate);
             } else {
-                // LCC Case: Create record now
                 $itinerary = $payload['itinerary'] ?? [];
                 $flightDetails = $this->extractFlightDetails([], $itinerary, $payload);
                 
@@ -733,12 +732,13 @@ class FlightController extends Controller
                     'payment_status'  => 'success',
                     'booking_status'  => $status,
                     'ticket_status'   => $status,
-                    'total_amount'    => $report->amount,
                     'raw_payload'     => json_encode($payload),
                     'raw_response'    => $finalUpdate['raw_response'],
                     'created_at'      => now(),
                     'updated_at'      => now(),
                 ], $flightDetails);
+                
+                $newBooking['total_amount'] = $report->amount;
                 
                 DB::table('bookings')->insert($newBooking);
             }
@@ -751,7 +751,6 @@ class FlightController extends Controller
                     'booking_status' => 'Failed'
                 ]);
             } else {
-                // LCC Case: Create failed record
                 $itinerary = $payload['itinerary'] ?? [];
                 $flightDetails = $this->extractFlightDetails([], $itinerary, $payload);
                 $newBooking = array_merge([
@@ -768,6 +767,9 @@ class FlightController extends Controller
                     'created_at'      => now(),
                     'updated_at'      => now(),
                 ], $flightDetails);
+                
+                $newBooking['total_amount'] = $report->amount;
+                
                 DB::table('bookings')->insert($newBooking);
             }
             return ['status' => false, 'message' => $response['message'] ?? 'Ticketing failed with provider.'];
@@ -835,7 +837,6 @@ class FlightController extends Controller
             'total_amount'  => $fare['PublishedFare'] ?? 0,
             'is_refundable' => $isrefund,
             'is_lcc'        => $islcc,
-            'order_ref_id'  => $request['clientRefId'] ?? null,
         ];
     }
 
