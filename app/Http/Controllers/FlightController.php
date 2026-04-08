@@ -559,13 +559,15 @@ class FlightController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id;
+        \Log::info("Flight Payment Success Request:", $request->all());
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id ?? $request->ORDERID ?? $request->ORDER_ID;
         return view('flight.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id]);
     }
 
     public function paymentFailed(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id;
+        \Log::info("Flight Payment Failed Request:", $request->all());
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id ?? $request->ORDERID ?? $request->ORDER_ID;
         return view('flight.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
     }
 
@@ -805,19 +807,19 @@ class FlightController extends Controller
                 $firstSeg = $segments[0];
                 $lastSegInLeg = end($lastLeg);
                 $originCode = $firstSeg['Origin']['Airport']['AirportCode'] ?? 'N/A';
-                $originName = $firstSeg['Origin']['Airport']['AirportName'] ?? '';
+                $originName = ($firstSeg['Origin']['Airport']['AirportName'] ?? '') ?: ($firstSeg['Origin']['Airport']['CityName'] ?? '');
                 $destCode = $lastSegInLeg['Destination']['Airport']['AirportCode'] ?? 'N/A';
-                $destName = $lastSegInLeg['Destination']['Airport']['AirportName'] ?? '';
+                $destName = ($lastSegInLeg['Destination']['Airport']['AirportName'] ?? '') ?: ($lastSegInLeg['Destination']['Airport']['CityName'] ?? '');
                 $airlineCode = $firstSeg['Airline']['AirlineCode'] ?? 'N/A';
                 $airlineName = $firstSeg['Airline']['AirlineName'] ?? '';
                 $flightNumber = $firstSeg['Airline']['FlightNumber'] ?? 'N/A';
                 $journeyDate = $firstSeg['Origin']['DepTime'] ?? now()->format('Y-m-d H:i:s');
             } else if (is_array($segments) && isset($segments['Origin'])) {
                 $originCode = $segments['Origin']['Airport']['AirportCode'] ?? 'N/A';
-                $originName = $segments['Origin']['Airport']['AirportName'] ?? '';
+                $originName = ($segments['Origin']['Airport']['AirportName'] ?? '') ?: ($segments['Origin']['Airport']['CityName'] ?? '');
                 $lastSeg = end($seg);
                 $destCode = $lastSeg['Destination']['Airport']['AirportCode'] ?? 'N/A';
-                $destName = $lastSeg['Destination']['Airport']['AirportName'] ?? '';
+                $destName = ($lastSeg['Destination']['Airport']['AirportName'] ?? '') ?: ($lastSeg['Destination']['Airport']['CityName'] ?? '');
                 $airlineCode = $segments['Airline']['AirlineCode'] ?? 'N/A';
                 $airlineName = $segments['Airline']['AirlineName'] ?? '';
                 $flightNumber = $segments['Airline']['FlightNumber'] ?? 'N/A';
