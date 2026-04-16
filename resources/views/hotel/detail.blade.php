@@ -1,7 +1,6 @@
 @extends('layouts.app')
-
-@section('titleName', 'Hotels Details')
-@section('pagetitle', 'Hotels Details')
+@section('title', 'Hotel Details')
+@section('pagetitle', 'Hotel Details')
 
 
 @section('content')
@@ -18,6 +17,22 @@
 
         .hover-overlay button {
             z-index: 1;
+        }
+
+        .hotel-room-img {
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+            border-radius: 10px;
+            position: relative;
+        }
+
+        .hotel-room-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* 🔥 main fix */
+            display: block;
         }
     </style>
     <style>
@@ -43,7 +58,7 @@
                     <div class="bg-white shadow-md rounded p-3 p-sm-4 confirm-details">
 
                         <!-- Hotel Photo Slideshow
-                                      ============================================= -->
+                                                      ============================================= -->
 
                         <div class="row">
 
@@ -65,16 +80,23 @@
                                         data-bs-target="#knownfor" aria-controls="#knownfor" aria-selected="true">
                                         <i class="fa-solid fa-record-vinyl"></i>&nbsp;Known For </button>
                                 </li>
+
+                                <li class="nav-item">
+                                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                                        data-bs-target="#amenities" aria-controls="#amenities" aria-selected="true"><i
+                                            class="fa-solid fa-hands-holding-circle"></i>&nbsp; Amenities </button>
+                                </li>
+                                <li class="nav-item">
+                                    <button class="nav-link" id="attractions-tab" data-bs-toggle="tab"
+                                        data-bs-target="#attractions">
+                                        <i class="fa-solid fa-hand-pointer"></i>&nbsp; Attractions
+                                    </button>
+                                </li>
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
                                         id="chooseroom-tab" data-bs-target="#chooseroom" aria-controls="#chooseroom"
                                         aria-selected="true"><i class="fa-solid fa-hand-pointer"></i>&nbsp; Choose Room
                                     </button>
-                                </li>
-                                <li class="nav-item">
-                                    <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
-                                        data-bs-target="#amenities" aria-controls="#amenities" aria-selected="true"><i
-                                            class="fa-solid fa-hands-holding-circle"></i>&nbsp; Amenities </button>
                                 </li>
                             </ul>
                             <div class="tab-content px-1 pb-0 mb-0" id="viewdetHotelContent">
@@ -85,16 +107,7 @@
                         </div>
                     </div>
 
-                    <div class="card mt-3">
-                        <div class="card-body">
-                            <ul class="simple-ul ms-4">
-                                <li>Age between 0-2 considered infant</li>
-                                <li>Age between 2-17 considered children</li>
-                                <li>Age above 17 considered adults(Extra person charges may apply depending on property
-                                    policy) </li>
-                            </ul>
-                        </div>
-                    </div>
+                    
                 </div>
                 <aside class="col-lg-4 mt-4 mt-lg-0" id="search_param_det">
 
@@ -175,40 +188,55 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="showAllDetailsModal">
+            <div class="modal-dialog modal-fullscreen modal-dialog-scrollable">
+                <div class="modal-content">
+
+                    <div class="modal-header bg-light">
+                        <h5>Room Full Details</h5>
+                        <button class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+
+                    <div class="modal-body" id="roomDetailsBody">
+                        <p class="text-center">Loading...</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-    @endsection
+@endsection
 
 
-    @push('script')
-        <script src="{{ asset('') }}js/hotel.js"></script>
-        <script src="{{ asset('') }}js/inputFormValidation.js"></script>
+@push('script')
+    <script src="{{ asset('') }}js/hotel.js"></script>
+    <script src="{{ asset('') }}js/inputFormValidation.js"></script>
+    <script>
+        $(document).ready(function() {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
 
-        {{-- <script src="{{ asset('/') }}assets/vendor/libs/swiper/swiper.js"></script>
-        <script src="{{ asset('/') }}assets/js/ui-carousel.js"></script> --}}
-        <script>
-            $(document).ready(function() {
-                updateCountdown();
-                setInterval(updateCountdown, 1000);
+            sessionStorage.removeItem('hkey');
+            sessionStorage.removeItem('recomdet');
 
-                sessionStorage.removeItem('hkey');
-                sessionStorage.removeItem('recomdet');
+            storedAllHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
+            sendReq = JSON.parse(localStorage.getItem('sentReqest'));
+            hotelcode = localStorage.getItem('hotelcode');
 
-                storedAllHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
-                sendReq = JSON.parse(localStorage.getItem('sentReqest'));
-                traceid = localStorage.getItem('traceId');
+            hotelDeatilsUrlAjaxHit(storedAllHotelData, hotelcode);
+            preBookingDetailsAjaxHit(storedAllHotelData?.BookingCode);
 
-                hotelDeatilsUrlAjaxHit(storedAllHotelData, traceid);
-                hotelRoomRateDetailsAjaxHit(storedAllHotelData, traceid);
 
-                let htmlsearchparam = '';
+            let htmlsearchparam = '';
 
-                htmlsearchparam += ` <div class="sticky-top"><div class="bg-white shadow-md rounded p-3">
+            htmlsearchparam += ` <div class="sticky-top"><div class="bg-white shadow-md rounded p-3">
                       <p class="reviews text-center"> <span class="reviews-score rounded fw-600 px-2 py-1">✅</span> <span class="fw-600">Excellent</span> </p>
                       <hr class="mx-n3">
                      
                         <div class="row g-3">
                        
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="input-group">
                                     <input class="form-control" readonly placeholder="Check In" value="${sendReq[0]?.chkInDate}">
                                     <span class="input-group-text">
@@ -217,7 +245,7 @@
                                 </div>    
                             </div>
                             
-                            <div class="col-lg-6">
+                            <div class="col-lg-12">
                                 <div class="input-group">
                                     <input class="form-control" readonly placeholder="Check Out" value="${sendReq[0]?.chkOutDate}">
                                     <span class="input-group-text">
@@ -235,7 +263,7 @@
                         
                             <div class="col-12">
                                 <div class="input-group">
-                                <input class="travellers-class-input form-control" placeholder="Destination Name" readonly value="${sendReq[0]?.destFullName}">
+                                <input class="travellers-class-input form-control" placeholder="Destination Name" readonly value="${sendReq[0]?.hotelName}">
                                     <span class="input-group-text"><i class="fas fa-caret-down"></i></span>
                                 </div>   
                             </div> 
@@ -243,46 +271,44 @@
                          
                         </div>
                         <div class="d-flex align-items-center my-4">
-                            <div class="text-dark text-7 lh-1 fw-500 me-2 me-lg-3">₹<span id="selectroomfare">${storedAllHotelData?.Price?.OfferedPriceRoundedOff}</span></div>
-                                <div class="d-block text-4 text-black-50 me-1 me-lg-3">starts</div>
-                                <div class="text-success text-3">0% Off!</div>
+                            <div class="text-7 lh-1 fw-500 me-2 me-lg-3 text-success fs-5">₹<span id="selectroomfare">${storedAllHotelData?.TotalFare}</span></div>
+                                
                                 <div class="text-black-50 ms-auto">1 Room/Night</div>
                             </div>
                             <div class="d-grid" id="d-grid">
-                                <button class="btn btn-primary" type="button" id="bookNowBtn">Book Now</button>
+                                <button class="btn btn-primary float-end mb-2" data-bs-toggle="modal" data-bs-target="#showAllDetailsModal">
+                                    🏨 View Full Details
+                                </button>
                             </div>
                         <h6 class="text-danger text-center mb-0 mt-4"><i class="far fa-clock"></i> Your Booking Session will Expire in <span id="countdown-timer">10:00</span> min. You must complete the booking within the time .</h6>
                         </div>
                     
-                     <div class="card mt-4">
-                        <div class="card-body pb-1">
-                            <p class="text-warning">📢 Please note the following details regarding your booking:</p>
-                            <ul class="simple-ul ms-4">
-                                <li>The child will not be provided with an extra bed.</li>
-                                <li>Meals are not included in the booking.</li>
-                                <li>If you require any meals, you will need to pay directly to the hotel.</li>
-                                <li>All dates/timestamps shown in the search response are in the hotel's local time zone.</li>
-                                <li>All excluded surcharges must be paid at hotel</li>
-                            </ul>
-                            <p>Kindly ensure you are aware of these details before your stay</p>
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <ul class="simple-ul ms-4">
+                                    <li>Age between 0-18 considered children</li>
+                                    <li>Age above 18 considered adults(Extra person charges may apply depending on property
+                                        policy) </li>
+                                </ul>
+                            </div>
                         </div>
-                    </div></div>`;
+                    </div>`;
 
 
-                $('#search_param_det').html(htmlsearchparam);
+            $('#search_param_det').html(htmlsearchparam);
 
 
-                $('#bookNowBtn').on('click', function() {
-                    $('html, body').animate({
-                        scrollTop: $('.tabcontentChooseroom').offset().top
-                    }, 1000);
-                    $('.nav-tabs .nav-link').removeClass('active');
-                    $('.tab-pane').removeClass('show active');
+            $('#bookNowBtn').on('click', function() {
+                $('html, body').animate({
+                    scrollTop: $('.tabcontentChooseroom').offset().top
+                }, 1000);
+                $('.nav-tabs .nav-link').removeClass('active');
+                $('.tab-pane').removeClass('show active');
 
-                    $('#chooseroom-tab').addClass('active');
+                $('#chooseroom-tab').addClass('active');
 
-                    $('#chooseroom').addClass('show active');
-                });
+                $('#chooseroom').addClass('show active');
             });
-        </script>
-    @endpush
+        });
+    </script>
+@endpush

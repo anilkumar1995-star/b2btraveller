@@ -37,10 +37,26 @@ class HotelController extends Controller
         }
     }
 
+    public function searchCountry(Request $request)
+    {
+        // dd($request->all());
+        $service = new HotelService();
+        $response = $service->searchCountry($request->all());
+
+        return response()->json($response);
+    }
+
     public function searchCity(Request $request)
     {
         $service = new HotelService();
         $response = $service->searchCity($request->all());
+
+        return response()->json($response);
+    }
+    public function searchHotelName(Request $request)
+    {
+        $service = new HotelService();
+        $response = $service->searchHotelName($request->all());
 
         return response()->json($response);
     }
@@ -65,10 +81,10 @@ class HotelController extends Controller
 
         return response()->json($response);
     }
-    public function detailsRoom(Request $request)
+    public function prebooking(Request $request)
     {
         $service = new HotelService();
-        $response = $service->hotelRoom($request->all());
+        $response = $service->prebooking($request->all());
 
         return response()->json($response);
     }

@@ -9,10 +9,10 @@ function totalRoomsAndGuest() {
 $(document).ready(function () {
     const maxRooms = 6;
     const maxAdults = 48;
-    const maxChildren = 12;
+    const maxChildren = 24;
     const minRooms = 1;
     const maxAdultsPerRoom = 8;
-    const maxChildrenPerRoom = 2;
+    const maxChildrenPerRoom = 4;
 
     function updateRoomAndGuestSummary() {
         const rooms = parseInt($("#room").text());
@@ -42,7 +42,7 @@ $(document).ready(function () {
                     </div>
                     <div class="col-sm-5">
                         <select class="form-control child-age-select">
-                            ${[...Array(13).keys()].map(age => `<option value="${age}">${age}</option>`).join('')}
+                            ${[...Array(18).keys()].map(age => `<option value="${age}">${age}</option>`).join('')}
                         </select>
                     </div>
                 </div>
@@ -150,8 +150,8 @@ function searchHotel() {
     $(".preview-card-body-calender").empty();
     $(".preview-card-side").children().remove();
 
-    let destid = $("#cityName").val();
-    var destname = $('#cityName').find('option:selected').text();
+    let destid = $("#hotelCode").val();
+    var destname = $('#hotelCode').find('option:selected').text();
 
     const rooms = parseInt($("#room").text());
     const adults = parseInt($("#adult").text());
@@ -161,15 +161,14 @@ function searchHotel() {
     let checkout = $("#checkout").val();
     const childAge = $(".child-age-select").map((_, el) => $(el).val()).get();
 
-    // console.log(childAge.length > 0 ? childAge :[]);
 
     sentR = {
         chkInDate: checkin,
         chkOutDate: checkout,
         adultCount: adults,
         childCount: children,
-        destFullName: destname,
-        destId: destid,
+        hotelCode: destid,
+        hotelName: destname,
         childAges: childAge.length > 0 ? childAge : [],
         roomCount: rooms,
     };
@@ -191,14 +190,12 @@ function searchHotel() {
 
         success: function (data) {
 
-            console.log(data);
             $("#form-wizard1").find("[type='button']").attr("disabled", false);
             $(".preview-card-side").html("");
             $(".preview-card-body").html("");
 
             if (data.status == "success" && data.data?.HotelResults?.length > 0) {
 
-                localStorage.setItem("traceId", data?.data?.TraceId);
                 localStorage.setItem("sentReqest", JSON.stringify([sentR]));
                 renderHotelList(data);
                 // searchFilter(data);
@@ -490,7 +487,7 @@ function filterLocations() {
 
 function renderHotelList(data) {
 
-    let x = data?.data?.HotelResults;
+    let x = data?.data?.HotelResults[0]?.Rooms;
 
     x.forEach(function (hotel, index) {
         var bs = hotelSklt(hotel, index);
@@ -498,121 +495,189 @@ function renderHotelList(data) {
         $(".preview-card-body").append(bs);
     });
 
+    localStorage.setItem("hotelcode", data?.data?.HotelResults[0]?.HotelCode);
     $('[data-bs-toggle="tooltip"]').tooltip({ html: true });
 }
 
 function hotelSklt(z, indexx) {
+
     var dt = '';
-    let maxVisiblePolicies = 5;
-    let hiddenPolicies = [];
+
+    let hotelName = z?.Name || 'Hotel Name';
+    let latitude = z?.Latitude || '';
+    let longitude = z?.Longitude || '';
+
+    let inclusion = z?.Inclusion || '';
+    let mealType = z?.MealType?.replace('_', ' ') || 'Room Only';
+
+    let basePrice = z?.DayRates?.[0]?.[0]?.BasePrice || 0;
+    let totalFare = z?.TotalFare || 0;
+    let totalTax = z?.TotalTax || 0;
+
+    let isRefundable = z?.IsRefundable;
+
+    let rating = z?.StarRating || 0;
+
+    // ⭐ Rating stars
+    let stars = '';
+    for (let i = 0; i < rating; i++) {
+        stars += `<i class="fas fa-star text-warning"></i>`;
+    }
+
+
+    let defaultImg = "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400";
 
     dt += `<div class="hotels-item card bg-white shadow-sm rounded p-3 mb-3" id="hotel${indexx}">
               <div class="row">
+
+                <!-- IMAGE -->
                 <div class="col-md-4" style="height:203px;"> 
-                    <a href="javascript:void(0)"><img class="img-fluid rounded align-top" style="height:100%; width:100%"
-                    src="${z?.HotelPicture}" alt="hotels"></a> 
+                        <img src="${z?.HotelPicture || defaultImg}"
+                            onerror="this.src='${defaultImg}'"
+                            class="img-fluid rounded"
+                            style="height:100%; width:100%">
                 </div>
 
                 <div class="col-md-8 ps-3 ps-md-0 mt-3 mt-md-0">
                   <div class="row g-0">
+
+                    <!-- LEFT CONTENT -->
                     <div class="col-sm-9">
-                      <h4><a target="_blank" href="https://www.google.com/maps/search/${z?.HotelName.replace(/\s+/g, '')}/@${z?.Latitude},${z?.Longitude}" class="text-dark text-5">${z?.HotelName}</a></h3>
-                      <p class="mb-2"> 
-                        <span class="me-2">`;
-    for (let i = 0; i < parseInt(z?.StarRating); i++) {
-        dt += `<i class="fas fa-star text-warning"></i> `;
-    }
-    dt += `</span>
-                        
-                        <span class="text-black-50">
-                                <i class="fas fa-map-marker-alt"></i> ${z?.HotelAddress}
-                        </span> 
-                       </p>
-                      
-                      <p class="hotels-amenities align-items-center mb-2 text-4" id="facilityContainer${indexx}">`;
 
-    let policies = z?.HotelPolicy
-        ? z.HotelPolicy.split('|').map(item => item.trim()).filter(item => item !== '')
-        : [];
-    policies.forEach((policy, index) => {
-        if (index < maxVisiblePolicies) {
-            dt += `<span class="cf border rounded badge text-1 text-nowrap px-2 m-1 text-muted">${policy}</span>`;
-        } else {
-            hiddenPolicies.push(policy);
-        }
-    });
+                      <h4>
+                        <a target="_blank" 
+                           href="https://www.google.com/maps/search/${encodeURIComponent(hotelName)}/@${latitude},${longitude}" 
+                           class="text-dark text-5">
+                           ${hotelName}
+                        </a>
+                      </h4>
 
-    if (hiddenPolicies.length > 0) {
-        const tooltipContent = `
-                        <strong>Policies:</strong><br><ul style='list-style-type: circle; padding-left: 20px; text-align: left;'>
-                        ${hiddenPolicies.map(policy => `<li>${policy}</li>`).join('')}</ul>
-                    `;
-        dt += `<span class="text-nowrap px-2 m-0 more-btn" 
-                            data-bs-toggle="tooltip" 
-                            data-bs-placement="bottom" 
-                            data-bs-html="true" 
-                            title="${tooltipContent}">
-                        <small style="font-size:small">..more</small>
-                        </span>`;
-    }
+                      <p class="mb-2">${stars}</p>
 
-    dt += `
-                       </p>
-                        <p class="reviews mb-2"> 
-                            ${z?.Price?.breakfast
-            ? '🥣 <span class="fw-600">Free Breakfast</span>'
-            : ''}  
-                                &nbsp;&nbsp;&nbsp;
-                            ${z?.Price?.freeCancellation == '2' ? ''
-            : '✅ <span class="fw-600">Free Cancellation Allowed</span>'}  
-                        </p>
-                     
+
+                      <p class="mb-2">🍽️ ${mealType}</p>
+
+                      <p class="hotels-amenities mb-2 text-4">
+                        ${inclusion
+            ? inclusion.split(',').map(i =>
+                `<span class="cf border rounded badge text-1 text-nowrap px-2 m-1 text-muted">${i}</span>`
+            ).join('')
+            : ''}
+                      </p>
+
+                      <p class="reviews mb-2"> 
+                        ${isRefundable
+            ? '✅ <span class="fw-600 text-success">Refundable</span>'
+            : '❌ <span class="fw-600 text-danger">Non-Refundable</span>'}
+                            | 
+                            ${z?.WithTransfers
+            ? '🚗 <span class="text-success">Free Transfer Available</span>'
+            : '❌ <span class="text-danger">No Transfer</span>'}
+                            
+                            <br/>
+                            ${z?.CancelPolicies?.length
+            ? `<button class="ms-2 btn btn-sm btn-outline-primary mt-2" 
+                                    onclick='showCancelPolicy(${JSON.stringify(z.CancelPolicies)})'>
+                                    View Policy
+                            </button>`
+            : ''}                           
+                      </p>
+
                     </div>
-                    <div class="col-sm-3 g-4 text-end d-flex d-sm-block align-items-center">
-                     <div class="text-success text-3 mb-0 mb-sm-1 order-2 ">${z?.Price?.Discount ?? 0}% Off!</div>
-                       <div class="d-block text-3 text-black-50 mb-0 mb-sm-2 me-2 me-sm-0 order-1 mt-3">Starts from</div>
-                      
 
-                      <div class="fare-container" data-index="${indexx}">
-                        <div class="text-6 fw-bold mb-0 mb-sm-2 m-2 me-sm-0 order-0 price-display fw-bold" style="color:#d63b05;">₹${z?.Price?.PublishedPriceRoundedOff || z?.Price?.PublishedPrice}</div>
-                        <div class="fare-breakdown-container-hotel card p-3" style="display:none; background: #f8f9fa; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); min-width: 220px;border:1px solid silver">
-                            <div class="fare-breakdown-row base-fare d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold text-start">Room Price</span>
-                                <span class="fs-6">₹${z?.Price?.RoomPrice}</span>
+                    <div class="col-sm-3 g-4 text-end d-flex d-sm-block align-items-center">
+
+                      <div class="text-black-50 fs-5">Starts from</div>
+
+                      <div class="fare-container">
+
+                        <div class="text-4 fw-bold mb-2 m-2 price-display fw-bold fs-5" style="color:#d63b05;">
+                          ₹${totalFare.toFixed(2)}
+                        </div>
+
+                        <!-- FARE BREAKDOWN -->
+                        <div class="fare-breakdown-container-hotel card p-3" style="display:none; background: #f8f9fa; border-radius: 12px; border:1px solid silver">
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="fw-bold">Room Price</span>
+                                <span>₹${basePrice}</span>
                             </div>
-                            <hr class="my-2"/>
-                            <div class="fare-breakdown-row tax d-flex justify-content-between align-items-center mb-2">
+
+                            <hr/>
+
+                            <div class="d-flex justify-content-between mb-2">
                                 <span class="fw-bold">Tax</span>
-                                <span class="fs-6">₹${z?.Price?.Tax}</span>
+                                <span>₹${totalTax}</span>
                             </div>
-                            
-                            <hr class="my-2"/>
-                            <div class="fare-breakdown-row othercharges d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold">Other</span>
-                                <span class="fs-6">₹${z?.Price?.OtherCharges}</span>
+
+                            <hr/>
+
+                            <div class="d-flex justify-content-between mt-2">
+                                <span class="fw-bold">TOTAL</span>
+                                <span class="fw-bold" style="color:#d63b05;">₹${totalFare}</span>
                             </div>
-                            
-                            <hr class="my-2"/>
-                            <div class="fare-breakdown-row commission d-flex justify-content-between align-items-center mb-2">
-                                <span class="fw-bold">Commission</span>
-                                <span class="fs-6">₹${z?.Price?.AgentCommission}</span>
-                            </div>
-                            <hr class="my-2"/>
-                            <div class="fare-breakdown-row total d-flex justify-content-between align-items-center mt-2">
-                                <span class="fs-6 fw-bold">TOTAL</span>
-                                <span class="fs-5 fw-bold" style="color:#d63b05;">₹${z?.Price?.PublishedPriceRoundedOff || z?.Price?.PublishedPrice}</span>
-                            </div>
+
                         </div>
-                        </div>
-                        <div class="text-black-50 mb-0 mb-sm-2 order-3 d-none d-sm-block mt-3">1 Room/Night</div>
-                      <button onclick=viewNowHotel('${encodeURIComponent(JSON.stringify(z))}') class="btn btn-sm btn-primary order-4 ms-auto">Book Room</button> </div>
+                      </div>
+
+                      <div class="text-black-50 mt-3">1 Room/Night</div>
+
+                      <button onclick=viewNowHotel('${encodeURIComponent(JSON.stringify(z))}') 
+                              class="btn btn-primary ms-auto mt-2">
+                          Book Room
+                      </button>
+
+                    </div>
+
                   </div>
                 </div>
+
               </div>
             </div>`;
+
     return dt;
 }
 
+function showCancelPolicy(policies) {
+
+    let html = `
+        <div class="table-responsive">
+            <table class="table table-bordered table-sm text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th>From Date</th>
+                        <th>Charge Type</th>
+                        <th>Charge</th>
+                    </tr>
+                </thead>
+                <tbody>
+    `;
+
+    policies.forEach(p => {
+
+        let charge = p.ChargeType === 'Percentage'
+            ? p.CancellationCharge + '%'
+            : '₹' + p.CancellationCharge;
+
+        html += `
+            <tr>
+                <td>${p.FromDate}</td>
+                <td>${p.ChargeType}</td>
+                <td>${charge}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+                </tbody>
+            </table>
+        </div>
+    `;
+
+    $('#cancelPolicyBody').html(html);
+
+    $('#cancelPolicyModal').modal('show');
+}
 
 let sessionExpired = false;
 function updateCountdown() {
@@ -663,7 +728,9 @@ function updateCountdown() {
 
 function viewNowHotel(selectData) {
 
+
     let val = JSON.parse(decodeURIComponent(selectData));
+
 
     sessionStorage.setItem("hotelExpireTime", Date.now() + 10 * 60 * 1000);
 
@@ -715,7 +782,7 @@ $(document).ready(function () {
     });
 });
 
-function hotelDeatilsUrlAjaxHit(datas, traceId) {
+function hotelDeatilsUrlAjaxHit(datas, hotelcode) {
 
     $.ajax({
         url: "/hotel/details",
@@ -724,9 +791,7 @@ function hotelDeatilsUrlAjaxHit(datas, traceId) {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         data: {
-            HotelCode: datas?.HotelCode,
-            TraceId: traceId,
-            ResultIndex: datas?.ResultIndex,
+            HotelCode: hotelcode
         },
         success: function (data) {
             showHotelTabContent(data?.data);
@@ -737,156 +802,468 @@ function hotelDeatilsUrlAjaxHit(datas, traceId) {
     });
 }
 
-function hotelRoomRateDetailsAjaxHit(datas, traceId) {
+function preBookingDetailsAjaxHit(datas) {
 
     $.ajax({
-        url: "/hotel/room",
+        url: "/hotel/prebooking",
         type: "POST",
         headers: {
             "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
         },
         data: {
-            HotelCode: datas?.HotelCode,
-            TraceId: traceId,
-            ResultIndex: datas?.ResultIndex,
+            bookingId: datas,
         },
         success: function (data) {
-            let html = viewAllHotelRoom(data?.data?.HotelRoomsDetails);
+            if (data?.status == "success") {
+                let html = viewAllHoTelDetail(data?.data?.HotelResult);
+                $('#roomDetailsBody').html(html);
+            } else {
+                swal({
+                    html: `Pre-booking details are not available for this hotel. Please try booking again or choose another hotel.`,
+                    type: "warning",
+                    confirmButtonText: `Ok,I Understand!`,
+                    showCancelButton: false,
+                    backdrop: true,
+                    allowOutsideClick: false,
+                }).then((result) => {
+                    if (result.isConfirmed || result.value) {
+                        setTimeout(function () {
+                            window.open("/hotel/view", "_self");
+                        }, 2000);
+                    }
+                });
+            }
 
-            $('#chooseroom').html(html);
         },
         error: function () {
             notify('Something went wrong', 'error');
         },
     });
+
+
 }
+
+function formatDate(dateStr) {
+    if (!dateStr) return '';
+
+    let [day, month, year] = dateStr.split('-');
+    let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+    return `${day} ${months[parseInt(month) - 1]} ${year}`;
+}
+
+function viewAllHoTelDetail(data) {
+
+    let hotel = data[0];
+    let sendReq = JSON.parse(localStorage.getItem('sentReqest')) || [];
+    let req = sendReq[0] || {};
+    let adults = req.adultCount || 0;
+    let children = req.childCount || 0;
+    return `
+  
+        <div class="row">
+            <div class="col-md-8">
+
+                ${hotel.Rooms.map(room => `
+                
+                <div class="card mb-4 shadow-sm border-0 rounded-3">
+                    <div class="card-body">
+
+                        <h4 class="fw-bold mb-2">${room.Name?.[0] ?? 'Room'}</h4>
+
+                        <div class="mb-2">
+                            <span class="badge bg-primary">${room.MealType}</span> |
+                            <span class="badge ${room.IsRefundable ? 'bg-success' : 'bg-danger'}">
+                                ${room.IsRefundable ? 'Refundable' : 'Non Refundable'}
+                            </span> | 
+                            <span class="badge ${room.WithTransfers ? 'bg-success' : 'bg-danger'}">
+                                ${room.WithTransfers ? '🚘 With Transfers' : 'Without Transfers'}
+                            </span>
+                        </div>
+
+                        <p class="text-muted">${room.Inclusion || ''}</p>
+
+                         <!-- DAY RATES -->
+                        <div class="mt-3 rounded p-3" style="border:1px dashed silver;">
+                            <h6 class="fw-bold">📅 Day Price</h6>
+                            ${room.DayRates?.map(day => day.map(d => `
+                                <div class="small">
+                                    Base Price: ₹${parseFloat(d.BasePrice).toFixed(2)}
+                                </div>
+                            `).join('')).join('')}
+                        </div>
+
+                        <!-- SUPPLEMENTS -->
+                        ${room.Supplements?.length ? `
+                        <div class="mt-3 rounded p-3" style="border:1px dashed silver;">
+                            <h6 class="fw-bold">➕ Extra Charges</h6>
+                            ${room.Supplements.map(supArr => supArr.map(s => `
+                                <div class="small">
+                                    ${s.Description} → ${s.Price} ${s.Currency} (${s.Type})
+                                </div>
+                            `).join('')).join('')}
+                        </div>
+                        ` : ''}
+
+                        <!-- Amenities -->
+                        <div class="mt-3 rounded p-3" style="border:1px dashed silver;">
+                            <h6 class="fw-bold">🧰 Amenities</h6>
+                            <div class="row">
+                                ${room.Amenities.map(a => `
+                                    <div class="col-md-6 small mb-1">✔ ${a}</div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <!-- Cancellation -->
+                        <div class="mt-3 rounded p-3" style="border:1px dashed silver;">
+                            <h6 class="fw-bold text-danger">❌ Cancellation Policy</h6>
+                            ${room.CancelPolicies.map(p => `
+                                <div class="small">
+                                    ${p.FromDate} → ${p.ChargeType} : ${p.CancellationCharge}%
+                                </div>
+                            `).join('')}
+                            <div class="small fw-bold mt-1 fs-5">
+                               Cancellation Deadline: ${room.LastCancellationDeadline}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                `).join('')}
+
+                <!-- HOTEL POLICIES -->
+                <div class="card shadow-sm border-0 rounded-3">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">📜 Hotel Policies</h5>
+                       ${hotel.RateConditions.map(c => `
+                            <div class="mb-2 text-muted small">
+                                ${c.replace(/&lt;/g, '<').replace(/&gt;/g, '>')}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+            </div>
+
+                <div class="col-md-4">
+                    <div class="card border-0 shadow-sm rounded-4 position-sticky top-0">
+                        <div class="card-body">
+
+                            ${hotel.Rooms.map(room => `
+                            
+                            <!-- Price Header -->
+                            <h5 class="fw-bold mb-3">💰 Price Summary
+                            </h5>
+
+                            <div class="border rounded-3 mb-3">
+                                <div class="d-flex justify-content-between p-2 border-bottom small">
+                                    <div>
+                                        <b>Check-in</b><br>
+                                        ${formatDate(req.chkInDate)}
+                                    </div>
+                                    <div>
+                                        <b>Check-out</b><br>
+                                        ${formatDate(req.chkOutDate)}
+                                    </div>
+                                </div>
+                                <div class="p-2 small">
+                                    <b>Guests:</b> ${adults} Adult${adults > 1 ? 's' : ''}
+                                        ${children > 0 ? `, ${children} Child${children > 1 ? 'ren' : ''}` : ''}
+                                </div>
+                            </div>
+
+                            <!-- Pricing Breakdown -->
+                            <h6 class="fw-bold mb-2">Pricing Breakdown</h6>
+
+                            <div class="d-flex justify-content-between small mb-2">
+                                <span>Room Price</span>
+                                <span>₹${room.PriceBreakUp[0].RoomRate.toFixed(2)}</span>
+                            </div>
+
+                            <div class="d-flex justify-content-between small mb-2">
+                                <span>Taxes & Fees</span>
+                                <span>₹${room.TotalTax.toFixed(2)}</span>
+                            </div>
+
+                            <!-- Supplements -->
+                            ${room.Supplements?.length ? `
+                            ${room.Supplements.map(supArr => supArr.map(s => `
+                                <div class="d-flex justify-content-between small mb-2">
+                                    <span>${s.Description}</span>
+                                    <span>${s.Price} ${s.Currency}</span>
+                                </div>
+                            `).join('')).join('')}
+                            ` : ''}
+
+                            <hr>
+
+                            <!-- Total -->
+                            <div class="d-flex justify-content-between fw-bold fs-5">
+                                <span>Net Total Price</span>
+                                <span class="fw-bold text-success">₹${room.NetAmount.toFixed(2)}</span>
+                            </div>
+
+                            <div class="text-muted small mt-1">
+                                (Includes ₹${room.NetTax.toFixed(2)} taxes)
+                            </div>
+
+                            <!-- Button -->
+                            <button class="btn btn-primary w-100 mt-3 rounded-pill" id="bookNowBtn" onclick="bookNowHotel(this,'${JSON.stringify(room)}', '${hotel.HotelCode}', ${room.NetAmount})">
+                                Continue to Passenger Details
+                            </button>
+
+                            <div class="text-center text-muted small mt-2">
+                                You won’t be charged yet
+                            </div>
+
+                            `).join('')}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+    `;
+}
+
+// function prebookingdetails() {
+//     return `<div class="d-flex align-items-center">
+//             <div class="text-dark text-7 lh-1 fw-500 me-2 me-lg-3">₹${roomd?.totalAmount}</div>
+//             <div class="d-block text-4 text-black-50 me-2 me-lg-3"></div>
+        
+//         </div>
+//         <div class="text-success text-3 me-2 me-lg-3"> 
+//             ${roomd?.ratePlanDetails[0]?.roomAvailability
+//             ? '<span class="cf border rounded badge bg-label-success text-1 text-nowrap px-2 m-1">Room Available</span>'
+//             : '<span class="cf border rounded badge bg-label-danger text-1 text-nowrap px-2 m-1">Room Not Available</span>'}</div>
+                        
+//                             <div class="text-success text-3 me-2 me-lg-3"> 
+//                             ${roomd?.ratePlanDetails[0]?.refundable.toLowerCase() == 'true'
+//             ? '<span class="cf border rounded badge bg-label-success text-1 text-nowrap px-2 m-1">Refundable</span>'
+//             : '<span class="cf border rounded badge bg-label-danger text-1 text-nowrap px-2 m-1">Non-Refundable</span>'}</div>
+//                 <span class="text-black-50">1 Room/Night</span> </div>
+//                 <div class="d-flex align-items-center mt-3"> 
+//                 <a href="javascript:void(0)" onclick="cancelPolicy('${encodeURIComponent(roomd?.ratePlanDetails[0]?.cancellationPolicy)}',
+//                         '${roomd?.ratePlanDetails[0]?.childrenPolicy ? encodeURIComponent(JSON.stringify(roomd?.ratePlanDetails[0]?.childrenPolicy)) : ''}',
+//                         '${JSON.stringify(roomd?.ratePlanDetails[0]?.essentialInformation)}')">Cancellation Policy</a> 
+//             <button onclick="bookNowHotel(this,'${JSON.stringify(roomd)}', '${roomDet?.hotelKey}', ${roomd?.totalAmount})" 
+//             class="btn btn-sm btn-outline-primary shadow-none ms-auto select-room-btn">Select Room</button> </div>
+//         </div>`;
+// }
 
 function showHotelTabContent(viewdet) {
 
-    storedAllHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
+    let hotelInfo = viewdet?.HotelDetails?.[0] || {};
+
+    let rating = hotelInfo?.HotelRating || 0;
+
+    let stars = '';
+    for (let i = 0; i < rating; i++) {
+        stars += `<i class="fas fa-star text-warning fs-6"></i>`;
+    }
 
     let detailstabhtml = '';
     let galleryimg = '';
 
-    detailstabhtml = `<div class="tab-pane fade show active" id="knownfor" role="tabpanel"
-                        aria-labelledby="knowwnfor-tab">
-                        
-                        ${viewdet?.HotelDetails?.Description ? `<p class="mb-2">${viewdet?.HotelDetails.Description}</p>` : '<p class="mb-2">No description available.</p>'}
-                    </div>
-                    <div class="tab-pane fade" id="chooseroom" role="tabpanel" aria-labelledby="chooseroom-tab">
-                       
-                    </div>
-                    <div class="tab-pane fade" id="amenities" role="tabpanel"
-                        aria-labelledby="amenities-tab">
-                      <div class="row ps-3">
-                        ${viewdet?.HotelDetails?.HotelPolicy
-            ?.trim()
-            .replace(/,+$/, '')
-            .split('|')
+
+    let description = hotelInfo?.Description
+        ? hotelInfo.Description
+        : '<p>No description available.</p>';
+
+    let facilitiesHtml = '';
+    if (hotelInfo?.HotelFacilities?.length > 0) {
+
+        let facilities = hotelInfo.HotelFacilities;
+
+        facilitiesHtml = facilities
             .reduce((acc, curr, index, array) => {
                 const itemsPerColumn = Math.ceil(array.length / 3);
                 const columnIndex = Math.floor(index / itemsPerColumn);
                 acc[columnIndex] = acc[columnIndex] || [];
-                acc[columnIndex].push(curr.trim());
+                acc[columnIndex].push(curr);
                 return acc;
-            }, []).map((chunk) => `<div class="col-sm-4"><ul class="simple-ul">${chunk.map(item => `<li>${item}</li>`).join('')}</ul></div>`)
-            .join('')
-        }
+            }, [])
+            .map(chunk => `
+                <div class="col-sm-6">
+                    <ul class="simple-ul">
+                        ${chunk.map(item => `<li>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+    } else {
+        facilitiesHtml = `<p>No facilities available.</p>`;
+    }
+
+
+    let attractionsHtml = '';
+
+    if (hotelInfo?.Attractions) {
+        let attractions = Object.values(hotelInfo.Attractions);
+
+        attractionsHtml = `
+            <div class="row ps-3">
+                ${attractions.map(item => `
+                    <div class="col-sm-6 mb-2">
+                        <div class="border rounded p-2 text-muted">
+                            📍 ${item}
                         </div>
-                    </div>`;
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    } else {
+        attractionsHtml = `<p>No nearby attractions found.</p>`;
+    }
 
-    $('#hotel_name_det').html(`<section class="rounded bg-white p-3 mb-2 d-flex justify-content-between ">
-                            <span><span class="fs-4 fw-bold">${viewdet?.HotelDetails?.HotelName}</span>
-                            <p class="opacity-8 mb-0"><i class="fas fa-map-marker-alt"></i>
-                                ${viewdet?.HotelDetails?.Address}, ${viewdet?.HotelDetails?.CountryName} ${viewdet?.HotelDetails?.PinCode}</p>  </span>
-                                <a target="_blank" href="https://www.google.com/maps/search/${viewdet?.HotelDetails?.HotelName}/@${viewdet?.HotelDetails?.Latitude},${viewdet?.HotelDetails?.Longitude}">
-                                <img src="/images/map.png" title="Goto Map" height="100%" width="100%" style="height:45px;"/></a>
-                        </section>`);
+    let html = viewAllHotelRoom(hotelInfo?.RoomDetails);
 
-    $('#hotel_image').html(`<img src="${viewdet?.HotelDetails?.Images[0]}" width="100%" class="rounded"
-        style="height: 320px; object-fit: cover;width: 100%; border-radius: 8px;"/>`);
+    detailstabhtml = `
+        <div class="tab-pane fade show active" id="knownfor">
+           
+            ${description}
+        </div>        
 
+        <div class="tab-pane fade" id="amenities">
+            <div class="row ps-3">
+                ${facilitiesHtml}
+            </div>
+        </div>
+        <div class="tab-pane fade" id="attractions">
+            ${attractionsHtml}
+        </div>
 
+        <div class="tab-pane fade" id="chooseroom">
+           ${html}
+        </div>
+    `;
+
+    $('#hotel_name_det').html(`
+        <section class="rounded bg-white p-3 mb-2 d-flex justify-content-between">
+            <span>
+                <span class="fs-4 fw-bold">${hotelInfo?.HotelName} (${stars})
+                | 
+                    </span>
+                    ${hotelInfo?.HotelWebsiteUrl ? `<a href="${hotelInfo.HotelWebsiteUrl}" target="_blank" style="text-decoration:none; color:blue;">
+                        🌐 Visit Website
+                    </a>` : ''}
+                <p class="opacity-8 mb-0">
+                    <i class="fas fa-map-marker-alt"></i>
+                    ${hotelInfo?.Address || ''} 
+                    ${hotelInfo?.CityName || ''}, 
+                    ${hotelInfo?.CountryName || ''}
+                    ${hotelInfo?.PinCode || ''}
+                    <br/>
+                    ${hotelInfo?.PhoneNumber
+            ? `<a href="tel:${hotelInfo.PhoneNumber}" style="text-decoration:none; color:blue;">
+                            📞 ${hotelInfo.PhoneNumber}
+                        </a>`
+            : ''} |
+                    ${hotelInfo?.CheckInTime ? 'Check-in: ' + hotelInfo.CheckInTime : ''} 
+                    ${hotelInfo?.CheckOutTime ? ' | Check-out: ' + hotelInfo.CheckOutTime : ''}
+                    
+                </p>
+            </span>
+
+            <a target="_blank" href="https://www.google.com/maps/search/${hotelInfo?.HotelName}/@${hotelInfo?.Map?.split('|')[0]},${hotelInfo?.Map?.split('|')[1]}">
+                <img src="/images/map.png" height="45"/>
+            </a>
+        </section>
+    `);
+
+    let mainImage = hotelInfo?.Images?.[0] || '/images/no-hotel.jpg';
+
+    $('#hotel_image').html(`
+        <img src="${mainImage}" 
+            class="rounded"
+            style="height: 320px; object-fit: cover; width: 100%;">
+    `);
 
     $('#viewdetHotelContent').html(detailstabhtml);
 
-    galleryimg = viewdet?.HotelDetails.Images.map((valH, index) => {
+    if (hotelInfo?.Images?.length > 0) {
 
-        if (index < 3) {
-            return `<div class="col-6 mb-2">
-                        <img src="${valH}" alt="HotelImages${index}" class="img-fluid rounded" width="100%" 
-                        style="height: 153px; object-fit: cover;width: 100%;">
-                    </div>`;
-        } else if (index === 3) {
-            return `<div class="col-6">
-            <div class="position-relative">
-                <img src="${valH}" alt="HotelImages${index}" class="img-fluid rounded" width="100%"
-                style="height: 153px; object-fit: cover;width: 100%;">
-                <div style="height:95%" class="hover-overlay rounded position-absolute top-0 start-0 w-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-25">
-                    <button class="btn btn-secondary btn-sm" id="viewAllImages">view all</button>
-                </div>
-            </div>
-        </div>`;
-        }
-    }).join('');
+        galleryimg = hotelInfo.Images.map((img, index) => {
 
+            if (index < 3) {
+                return `
+                    <div class="col-6 mb-2">
+                        <img src="${img}" class="img-fluid rounded"
+                        style="height:153px; object-fit:cover; width:100%;">
+                    </div>
+                `;
+            }
+
+            if (index === 3) {
+                return `
+                    <div class="col-6">
+                        <div class="position-relative">
+                            <img src="${img}" class="img-fluid rounded"
+                            style="height:153px; object-fit:cover; width:100%;">
+
+                            <div class="hover-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-25">
+                                <button class="btn btn-secondary btn-sm" id="viewAllImages">view all</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+        }).join('');
+
+    } else {
+        galleryimg = `<p>No images available</p>`;
+    }
 
     $('#galleryImgSwiperHotel').html(galleryimg);
-    let allImages = viewdet?.HotelDetails?.Images.map((valH, ind) => {
-        return ` <div class="carousel-item ${ind == 0 ? 'active' : ''}">
-                    <img class="d-block w-100 rounded" src="${valH}" alt="Hotel Images" style="height:550px; object-fit:cover"/>
-                </div>`;
-    }).join('');
+
+    let allImages = hotelInfo?.Images.map((img, ind) => `
+ 
+        <div class="carousel-item ${ind == 0 ? 'active' : ''}">
+            <img class="d-block w-100 rounded" src="${img}" 
+            style="height:550px; object-fit:cover"/>
+        </div>
+    `).join('');
 
     $('#morehotelimg').html(allImages);
+
 
     $('#galleryImgSwiperHotel').on('click', '#viewAllImages', function () {
         $('#showmoreHotelImageModal').modal('show');
     });
-
-    swiperDefault = document.querySelector('#swiper-default')
-
-    if (swiperDefault) {
-        new Swiper(swiperDefault, {
-            slidesPerView: 'auto'
-        });
-    }
-
 }
 
-function viewAllHotelRoom(roomDet) {
+function viewAllHotelRoom(roomdet) {
 
-    console.log(roomDet);
-    let roomdet = roomDet?.Price;
     let roomdetHtml = '';
 
     const maxVisibleInclusion = 4;
     const hiddenInclusion = [];
 
-    let galleryimg = '';
-    let allGalleryImages = '';
+
 
     if (roomdet && Array.isArray(roomdet) && roomdet.length > 0) {
-        roomdetHtml += roomdet?.map((roomd, index) => {
-            let fac = '';
-            let galData = roomd?.ratePlanDetails[0]?.roomDetails[0]?.hotelGallery;
-            if (galData && Array.isArray(galData) && galData.length > 0) {
+        let galleryimg = '';
+        let allGalleryImages = '';
 
-                allGalleryImages = galData.map((valH, ind) => {
+        roomdetHtml += roomdet?.map((roomd, index) => {
+            if (roomd?.imageURL && roomd.imageURL.length > 0) {
+
+                allGalleryImages = roomd?.imageURL.map((valH, ind) => {
                     return ` <div class="carousel-item ${ind == 0 ? 'active' : ''}">
-                                <img class="d-block w-100 rounded" src="${valH?.imageURL}" alt=""${valH?.imageDesc}" style="height:550px; object-fit:cover"/>
+                                <img class="d-block w-100 rounded" src="${valH}" alt="Hotel${ind}" style="height:550px; object-fit:cover"/>
                             </div>`;
                 }).join('');
 
-                galleryimg = galData.map((valH, indexxx) => {
+                galleryimg = roomd?.imageURL.map((valH, indexxx) => {
 
-
+                    let encodedImages = encodeURIComponent(allGalleryImages);
                     if (indexxx === 0) {
                         return `<div class="position-relative">
-                            <img class="img-fluid rounded align-top" src="${valH?.imageURL}" alt="${valH?.imageDesc}" style="height: 225px;width: 100%;"> 
+                            <img class="img-fluid rounded align-top" src="${valH}" alt="Hotel${indexxx}" style="height: 225px;width: 100%;"> 
                            
                             <div style="height: 225px;object-fit: cover;" class="hover-overlay rounded position-absolute top-0 start-0 w-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-25">
-                                <button class="btn btn-secondary btn-sm" onclick="viewAllGalleryImages(${indexxx}, '${allGalleryImages}')">view all</button>
+                                <button class="btn btn-secondary btn-sm" onclick="viewAllGalleryImages(${indexxx}, '${encodedImages}')">view all</button>
                             </div>
                         </div>`;
                     }
@@ -895,57 +1272,29 @@ function viewAllHotelRoom(roomDet) {
                 galleryimg = `<img class="img-fluid rounded align-top" src="https://ik.imagekit.io/ryn4njrqfh/TravlTech/no_img_hotel.jpg?updatedAt=1742980696180" alt="Hotels" style="height: 225px;width: 100%;"> `;
             }
 
-            // Facility
-            if (roomd?.ratePlanDetails[0]?.inclusion != null) {
-                roomd?.ratePlanDetails[0]?.inclusion.split(',').forEach((facility, index) => {
-
-                    if (facility != ' ') {
-                        fac += `<span class="cf border rounded badge text-1 text-nowrap px-2 m-1">${facility}</span>`;
-                    }
-                });
-            }
-
+            let desc = roomd.RoomDescription ? roomd.RoomDescription : '';
 
             return ` <div class="row g-4" id="hotelRoom${index}">
                         <div class="col-12 col-md-5" style="height:225px;"> 
                             ${galleryimg}
                         </div>
                         <div class="col-12 col-md-7">
-                            <h4 class="text-5"> ${roomd?.ratePlanDetails[0]?.roomDetails[0]?.groupName}</h4>
+                            <h4 class="text-5"> ${roomd.RoomName}</h4>
                             <ul class="list-inline mb-2">
                             <li class="list-inline-item"><span class="me-1 text-black-50"><i class="fas fa-bed"></i></span>
-                            <span style="font-size:14px;">${roomd?.ratePlanDetails[0]?.roomDetails[0]?.hotelRoomTypeDesc}</span>
+                            <span style="font-size:14px;">${desc}</span>
                             </li>
 
                             </ul>
                             <div class="mb-3">
-                             <p class="hotels-amenities align-items-center mb-2 text-4" id="facilityContainer10">
-                                ${fac}
-                            </p>
+                                <p class="hotels-amenities align-items-center mb-2 text-4" id="facilityContainer10">
+                                    ${roomd.RoomSize ? `<span class="text-muted">Size: ${roomd.RoomSize}</span>` : ''}
+                                </p>
                             </div>
-                            <div class="d-flex align-items-center">
-                            <div class="text-dark text-7 lh-1 fw-500 me-2 me-lg-3">₹${roomd?.totalAmount}</div>
-                            <div class="d-block text-4 text-black-50 me-2 me-lg-3"></div>
-                            <div class="text-success text-3 me-2 me-lg-3"> 
-                            ${roomd?.ratePlanDetails[0]?.roomAvailability
-                    ? '<span class="cf border rounded badge bg-label-success text-1 text-nowrap px-2 m-1">Room Available</span>'
-                    : '<span class="cf border rounded badge bg-label-danger text-1 text-nowrap px-2 m-1">Room Not Available</span>'}</div>
-                           
-                            <div class="text-success text-3 me-2 me-lg-3"> 
-                            ${roomd?.ratePlanDetails[0]?.refundable.toLowerCase() == 'true'
-                    ? '<span class="cf border rounded badge bg-label-success text-1 text-nowrap px-2 m-1">Refundable</span>'
-                    : '<span class="cf border rounded badge bg-label-danger text-1 text-nowrap px-2 m-1">Non-Refundable</span>'}</div>
-                            <span class="text-black-50">1 Room/Night</span> </div>
-                            <div class="d-flex align-items-center mt-3"> 
-                            <a href="javascript:void(0)" onclick="cancelPolicy('${encodeURIComponent(roomd?.ratePlanDetails[0]?.cancellationPolicy)}',
-                                    '${roomd?.ratePlanDetails[0]?.childrenPolicy ? encodeURIComponent(JSON.stringify(roomd?.ratePlanDetails[0]?.childrenPolicy)) : ''}',
-                                    '${JSON.stringify(roomd?.ratePlanDetails[0]?.essentialInformation)}')">Cancellation Policy</a> 
-                          <button onclick="bookNowHotel(this,'${JSON.stringify(roomd)}', '${roomDet?.hotelKey}', ${roomd?.totalAmount})" 
-                          class="btn btn-sm btn-outline-primary shadow-none ms-auto select-room-btn">Select Room</button> </div>
-                        </div>
-                        </div>
-                     <hr class="my-5"/>`;
+                        </div>                            
+                     <hr class="my-2"/>`;
         }).join('');
+
     } else {
         swal({
             html: `No rate plans available at the moment. Please check back later or try adjusting your search criteria.`,
@@ -955,9 +1304,9 @@ function viewAllHotelRoom(roomDet) {
             backdrop: true,
             allowOutsideClick: false,
         }).then((result) => {
-            if (result.isConfirmed) {
+            if (result.isConfirmed || result.value) {
                 setTimeout(function () {
-                    window.open("/hotel/booking", "_self");
+                    window.open("/hotel/view", "_self");
                 }, 2000);
             }
         });
@@ -967,18 +1316,21 @@ function viewAllHotelRoom(roomDet) {
 }
 
 function bookNowHotel(buton, roomd, hkey, amt) {
-    $('.select-room-btn').removeClass('btn-primary').addClass('btn-outline-primary');
-    $(buton).addClass('btn-primary').removeClass('btn-outline-primary');
-    $('#selectroomfare').html('');
-    $('#d-grid').html('');
-    $('#selectroomfare').html(amt);
-    $('#d-grid').html(`<button class="btn btn-primary" type="button" id="selectRoomBtn" onclick="selectedroom('${roomd}', '${hkey}')">Continue ➜</button>`);
+    
+    console.log(buton, roomd, hkey, amt);
+    // window.open("/hotel/guest/detail", "_blank");
+    // $('.select-room-btn').removeClass('btn-primary').addClass('btn-outline-primary');
+    // $(buton).addClass('btn-primary').removeClass('btn-outline-primary');
+    // $('#selectroomfare').html('');
+    // $('#d-grid').html('');
+    // $('#selectroomfare').html(amt);
+    // $('#d-grid').html(`<button class="btn btn-primary" type="button" id="selectRoomBtn" onclick="selectedroom('${roomd}', '${hkey}')">Continue ➜</button>`);
 }
 
 function selectedroom(roomd, hkey) {
-    sessionStorage.setItem("recomdet", roomd);
-    sessionStorage.setItem("hkey", hkey);
-    window.open("/hotel/guest/detail", "_blank");
+    // sessionStorage.setItem("recomdet", roomd);
+    // sessionStorage.setItem("hkey", hkey);
+    // window.open("/hotel/guest/detail", "_blank");
 }
 
 
@@ -1015,7 +1367,9 @@ function cancelPolicyAjaxHit(recomId, ratePlanId, hotelKy, reqid) {
     });
 }
 
-function viewAllGalleryImages(id, allGalleryImages) {
+function viewAllGalleryImages(id, allGalleryImg) {
+    let allGalleryImages = decodeURIComponent(allGalleryImg);
+    console.log('allGalleryImages', allGalleryImages);
 
     $('#morehotelimgGallery').html(allGalleryImages);
     $('#showmoreHotelImageGalleryModal').modal('show');
@@ -1092,41 +1446,40 @@ $(document).ready(function () {
         storedFareDetails = {};
     }
 
-    let roomCount = parseInt(storedFareDetails[0]?.roomCount);
+    if (storedFareDetails) {
+        let roomCount = parseInt(storedFareDetails[0]?.roomCount);
 
-    var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount);
-    //   var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount) + parseInt(storedFareDetails[0]?.childCount);
+        var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount);
+        //   var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount) + parseInt(storedFareDetails[0]?.childCount);
 
-    var formCount = 0;
-    createForm(formCount);
-    $("#addMoreForm").on("click", function () {
-        if (formCount < totalPassengerCount) {
-            createForm(formCount);
-        }
-    });
+        var formCount = 0;
+        createForm(formCount);
+        $("#addMoreForm").on("click", function () {
+            if (formCount < totalPassengerCount) {
+                createForm(formCount);
+            }
+        });
 
+        function createForm(index) {
+            let formHtml = '';
+            if (storedFareDetails) {
+                var adultCount = parseInt(storedFareDetails[0]?.adultCount) || 2;
+                var childCount = parseInt(storedFareDetails[0]?.childCount) || 0;
+            }
 
+            let paxType;
+            let heading = "";
 
-    function createForm(index) {
-        let formHtml = '';
-        if (storedFareDetails) {
-            var adultCount = parseInt(storedFareDetails[0]?.adultCount) || 2;
-            var childCount = parseInt(storedFareDetails[0]?.childCount) || 0;
-        }
-
-        let paxType;
-        let heading = "";
-
-        if (index < adultCount) {
-            heading = `Adult ${index + 1}`;
-            paxType = 'Adult';
-        } else if (index < adultCount + childCount) {
-            heading = `Child ${index - adultCount + 1}`;
-            paxType = 'Child';
-        }
+            if (index < adultCount) {
+                heading = `Adult ${index + 1}`;
+                paxType = 'Adult';
+            } else if (index < adultCount + childCount) {
+                heading = `Child ${index - adultCount + 1}`;
+                paxType = 'Child';
+            }
 
 
-        formHtml += `
+            formHtml += `
                 <div class="table-responsive border rounded mt-2 rows" style="overflow: hidden;" id="passenger-row-${index + 1}">
                  <input type="hidden" name="occupantType" id="paxtype-${index + 1}" value="${paxType}"/>
   
@@ -1144,14 +1497,14 @@ $(document).ready(function () {
                                                   <div class="form-group">
                                                       <label class="mb-1" for="room-${index + 1}">Room Select</label>
                                                       <select name="room" id="room-${index + 1
-            }" class="form-control room-dropdown" required >
+                }" class="form-control room-dropdown" required >
                 <option value="">Select room</option>`;
 
-        for (var i = 1; roomCount >= i; i++) {
-            formHtml += `<option value="${i}">Room ${i}</option>`;
-        }
+            for (var i = 1; roomCount >= i; i++) {
+                formHtml += `<option value="${i}">Room ${i}</option>`;
+            }
 
-        formHtml += `</select>
+            formHtml += `</select>
                                                   </div>
                                               </div>
                                               <div class="col-md-3 mb-3">
@@ -1162,11 +1515,11 @@ $(document).ready(function () {
                                                           ${paxType === 1 ? `
                                                               <option value="MISS" >Miss</option>
                                                             <option value="MSTR">Mstr</option>`
-                : `
+                    : `
                                                             <option value="MR">Mr.</option>
                                                             <option value="MS">Ms.</option>
                                                             <option value="MRS">Mrs.</option>`
-            }
+                }
                                                       </select>
                                                   </div>
                                               </div>
@@ -1180,10 +1533,10 @@ $(document).ready(function () {
                                                   <div class="col-md-3 mb-3">
                                                       <div class="form-group">
                                                           <label class="mb-1" for="lastName-${index + 1
-            }">Surname</label>
+                }">Surname</label>
                                                           <input type="text" name="lastName" maxlength="50" id="lastName-${index + 1
-            }" oninput="validateName('lastName-${index + 1
-            }')" class="form-control" placeholder="Enter Surname"  required>
+                }" oninput="validateName('lastName-${index + 1
+                }')" class="form-control" placeholder="Enter Surname"  required>
                                                       </div>
                                                   </div>
                                                  
@@ -1194,14 +1547,14 @@ $(document).ready(function () {
                           </table>
                       </div>
         `;
-        $("#formsContainerHotel").append(formHtml);
-        formCount++;
+            $("#formsContainerHotel").append(formHtml);
+            formCount++;
 
-        if (formCount >= totalPassengerCount) {
-            $("#addMoreForm").attr("disabled", true);
+            if (formCount >= totalPassengerCount) {
+                $("#addMoreForm").attr("disabled", true);
+            }
         }
     }
-
 });
 
 

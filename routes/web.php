@@ -209,12 +209,14 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
 
 Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     Route::get('view', [HotelController::class, 'root'])->name('hotel.view');
+     Route::get('search-country', [HotelController::class, 'searchCountry'])->name('hotel.country');
      Route::get('search-city', [HotelController::class, 'searchCity'])->name('hotel.city');
+     Route::get('search-hotelName', [HotelController::class, 'searchHotelName'])->name('hotel.hotelName');
     Route::post('search', [HotelController::class, "searchHotel"]);
     
     Route::get('booking/detail', [HotelController::class, "viewHotelDetails"]);
     Route::post('details', [HotelController::class, "detailsHotel"]);
-    Route::post('room', [HotelController::class, "detailsRoom"]);
+    Route::post('prebooking', [HotelController::class, "prebooking"]);
 
 
     Route::get('guest/detail', [HotelController::class, "gust_Deatils"]);
