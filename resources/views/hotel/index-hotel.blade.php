@@ -36,6 +36,56 @@
         }
     </style>
 
+    <style>
+        .loader {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ccc;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg) translateY(-50%);
+            }
+        }
+
+        .select2-container {
+            width: 100% !important;
+        }
+
+        body {
+            overflow-x: hidden !important;
+        }
+
+        .select2-dropdown {
+            overflow-x: hidden !important;
+        }
+
+        .select2-results__options {
+            overflow-x: hidden !important;
+        }
+
+        .select2-results__option {
+            white-space: normal !important;
+            word-break: break-word;
+        }
+
+        .select2-results__options {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .select2-dropdown {
+            overflow-x: hidden !important;
+        }
+    </style>
 
     <style>
         .custom-scrollbar::-webkit-scrollbar {
@@ -63,39 +113,78 @@
                 <h5 class="card-title mb-0">🏨 Find the top Hotels nearby.</h5>
             </div>
 
-            <form method="post" class="bg-mode bg-white position-relative px-3 px-sm-4 pt-4 mb-4 mb-sm-0">
+            <form method="post" class="bg-mode bg-white position-relative px-3 px-sm-4 py-4 mb-4 mb-sm-0">
                 @csrf
 
 
-                <div class="row g-4 position-relative">
+                <div class="row g-3 position-relative">
 
-                    <div class="col-lg-4">
+                    <div class="col-md-3">
 
                         <div class="form-control-border form-control-transparent form-fs-md d-flex">
-                            <i class="ti ti-geo-alt fs-3 me-2 mt-2"></i>
+
                             <div class="flex-grow-1">
-                                <label>Location</label>
-                                <select class="form-select  select" data-search-enabled="true" name="cityName"
-                                    id="cityName">
+                                <label class="mb-1"> <i class="ti ti-map fs-5"></i> Country</label>
+                                <select class="form-select  select" data-search-enabled="true" name="countryCode"
+                                    id="countryCode">
                                     <option value="">Select location</option>
-                                    <option value="130443" selected>Testing City / Hotel</option>
+                                    {{-- <option value="IN" selected>India</option> --}}
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+
+                        <div class="form-control-border form-control-transparent form-fs-md d-flex">
+
+                            <div class="flex-grow-1">
+                                <label class="mb-1"><i class="ti ti-map fs-5"></i> City</label>
+                                <select class="form-select  select" data-search-enabled="true" name="cityCode"
+                                    id="cityCode">
+                                    <option value="">Select City</option>
+                                    {{-- <option value="126666" selected>Kumarakom</option> --}}
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-5">
+
+                        <div class="form-control-border form-control-transparent form-fs-md d-flex">
+
+                            <div class="flex-grow-1">
+                                <label class="mb-1"><i class="ti ti-building fs-5"></i> Hotel List</label>
+                                <select class="form-select  select" data-search-enabled="true" name="hotelCode"
+                                    id="hotelCode">
+                                    <option value="">Select Hotel List</option>
+                                    {{-- <option value="1279415" selected>Testing Hotel (Lucknow)</option> --}}
 
                                 </select>
                             </div>
                         </div>
                     </div>
 
-
                     <!-- Checkin Checkout -->
-                    <div class="col-lg-4">
+                    <div class="col-md-4 mt-3">
 
 
-                        <label>Check-In / Check-Out</label>
+                        <label>Check-In</label>
                         <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="far fa-calendar-alt fs-6"></i>
+                            </span>
                             <input id="checkin" name="chkInDate" type="text" class="form-control" required=""
                                 placeholder="Check In Date">
+                        </div>
+                    </div>
+                    <div class="col-md-4 mt-3">
+
+
+                        <label>Check-Out</label>
+                        <div class="input-group">
                             <span class="input-group-text">
-                                <i class="far fa-calendar-alt"></i>
+                                <i class="far fa-calendar-alt fs-6"></i>
                             </span>
                             <input id="checkout" value="" name="chkOutDate" type="text" class="form-control"
                                 required="" placeholder="Check Out Date">
@@ -103,8 +192,8 @@
                     </div>
 
                     <!-- Guest & Rooms -->
-                    <div class="col-lg-4">
-                        <label class="form-label fw-semibold">Guests & Rooms</label>
+                    <div class="col-md-4 mt-3">
+                        <label class="mb-1"> <i class="ti ti-user fs-5 fw-bold"></i> Guests & Rooms</label>
 
                         <div class="dropdown travellers-class" onclick="totalRoomsAndGuest()">
                             <input type="text" id="guestAndRooms"
@@ -134,7 +223,7 @@
                                 <li class="d-flex justify-content-between mb-2">
                                     <div>
                                         <strong>Adults</strong><br>
-                                        <small>(13+ years)</small>
+                                        <small>(18+ years)</small>
                                     </div>
 
                                     <div class="d-flex align-items-center gap-2">
@@ -150,7 +239,7 @@
                                 <li class="d-flex justify-content-between mb-2">
                                     <div>
                                         <strong>Children</strong><br>
-                                        <small>(Below 13)</small>
+                                        <small>(Below 18 yr)</small>
                                     </div>
 
                                     <div class="d-flex align-items-center gap-2">
@@ -178,10 +267,12 @@
                         </div>
                     </div>
 
-                    <div class="text-end mb-3">
-                        <button class="btn btn-primary" type="button" id="searchhotel"
-                            onclick="searchHotel()">Search</button>
-                    </div>
+
+                </div>
+                <div class="text-end mt-3">
+                    <button class="btn btn-primary" type="button" id="searchhotel" onclick="searchHotel()"><i
+                            class="ti ti-search fs-6"></i>Find Hotel</button>
+                </div>
             </form>
 
 
@@ -206,6 +297,23 @@
 
     <div class="back-top"></div>
 
+    <div class="modal fade" id="cancelPolicyModal" tabindex="-1" data-bs-backdrop="static">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Cancellation Policy</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body" id="cancelPolicyBody">
+                    <!-- Dynamic Table -->
+                </div>
+
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 
@@ -223,11 +331,14 @@
         $(document).ready(function() {
             localStorage.clear();
 
-            $('#cityName').select2({
-                placeholder: 'Type at least 3 characters',
-                minimumInputLength: 3,
+            $('#cityCode').prop('disabled', true);
+            $('#hotelCode').prop('disabled', true);
+
+            $('#countryCode').select2({
+                placeholder: 'Type at least 2 characters',
+                minimumInputLength: 2,
                 ajax: {
-                    url: "/hotel/search-city",
+                    url: "/hotel/search-country",
                     dataType: 'json',
                     delay: 300,
                     data: function(params) {
@@ -235,21 +346,132 @@
                             query: params.term
                         };
                     },
-                    processResults: function(data) {
+                    processResults: function(data, params) {
+                        let searchTerm = (params.term || '').toLowerCase();
+                        let countrylist = data?.data?.CountryList || [];
+
+                        let filtered = countrylist.filter(function(item) {
+                            return item.Name.toLowerCase().includes(searchTerm) ||
+                                item.Code.toLowerCase().includes(searchTerm);
+                        });
+
                         return {
-                            results: $.map(data, function(item) {
+                            results: $.map(filtered, function(item) {
                                 return {
-                                    id: item.airport_code,
-                                    text: item.airport_name + ' - ' + item.airport_code + ' (' +
-                                        item.city + ')',
-                                    country_code: item.country_code,
-                                    country_name: item.country_name
+                                    id: item.Code,
+                                    text: item.Name + ' (' + item.Code + ')'
                                 };
                             })
                         };
                     },
                     cache: true
                 }
+            });
+
+            $('#countryCode').on('change', function() {
+                $('#cityCode').prop('disabled', false);
+                let countryCode = $(this).val();
+
+                // reset city & hotel
+                $('#cityCode').val(null).trigger('change');
+                $('#hotelCode').val(null).trigger('change');
+
+                $('#cityCode').select2({
+                    placeholder: 'Type at least 3 characters',
+                    minimumInputLength: 3,
+                    placeholder: 'Search City',
+                    ajax: {
+                        url: "/hotel/search-city",
+                        dataType: 'json',
+                        delay: 300,
+                        beforeSend: function() {
+                            $('#cityCode').siblings('.select2-container').append(
+                                '<span class="loader"></span>');
+                        },
+                        complete: function() {
+                            $('.loader').remove();
+                        },
+                        data: function(params) {
+                            return {
+                                countryCode: countryCode
+                            };
+                        },
+                        processResults: function(data, params) {
+                            let searchTerm = (params.term || '').toLowerCase();
+
+                            let citylist = data?.data?.CityList || [];
+
+                            let filtered = citylist.filter(function(item) {
+                                return item.Name.toLowerCase().includes(searchTerm) ||
+                                    item.Code.toLowerCase().includes(searchTerm);
+                            });
+
+                            return {
+                                results: $.map(filtered, function(item) {
+                                    return {
+                                        id: item.Code,
+                                        text: item.Name + ' (' + item.Code + ')'
+                                    };
+                                })
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+            });
+
+            $('#cityCode').on('change', function() {
+                $('#hotelCode').prop('disabled', false);
+                let cityCode = $(this).val();
+
+                // reset hotel
+                $('#hotelCode').val(null).trigger('change');
+
+                $('#hotelCode').select2({
+                    placeholder: 'Search Hotel',
+                    ajax: {
+                        url: "/hotel/search-hotelName",
+                        dataType: 'json',
+                        delay: 300,
+                        beforeSend: function() {
+                            $('#hotelCode').siblings('.select2-container').append(
+                                '<span class="loader"></span>');
+                        },
+                        complete: function() {
+                            $('.loader').remove();
+                        },
+                        data: function(params) {
+                            return {
+                                query: params.term,
+                                cityCode: cityCode
+                            };
+                        },
+                        processResults: function(data, params) {
+
+                            let searchTerm = (params.term || '').toLowerCase();
+
+                            let hotellist = data?.data?.Hotels || [];
+
+                            let filtered = hotellist.filter(function(item) {
+                                return item.HotelName.toLowerCase().includes(
+                                    searchTerm) ||
+                                    item.HotelCode.toLowerCase().includes(searchTerm);
+                            });
+                            return {
+                                results: $.map(filtered, function(item) {
+                                    return {
+                                        id: item.HotelCode,
+                                        text: item.HotelName + ' (' + item.HotelCode +
+                                            ')'
+                                    };
+                                })
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
             });
         });
     </script>

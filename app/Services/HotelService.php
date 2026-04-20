@@ -40,16 +40,18 @@ class HotelService
 
     private function setFullUrl($method): string
     {
-        if ($method == 'citylist') {
-            return $this->baseUrl . '/v1/service/traveller/hotel/city/list';
+        if ($method == 'countrylist') {
+            return $this->baseUrl . '/v1/service/traveller/hotel/country';
+        } else if ($method == 'citylist') {
+            return $this->baseUrl . '/v1/service/traveller/hotel/city';
+        } else if ($method == 'hotelList') {
+            return $this->baseUrl . '/v1/service/traveller/hotel/code/list';
         } else if ($method == 'search') {
             return $this->baseUrl . '/v1/service/traveller/hotel/search';
         } else if ($method == 'hoteldetails') {
-            return $this->baseUrl . '/v1/service/traveller/hotel/info';
-        } else if ($method == 'hotelroom') {
-            return $this->baseUrl . '/v1/service/traveller/hotel/room';
-        } else if ($method == 'hotelblock') {
-            return $this->baseUrl . '/v1/service/traveller/hotel/block';
+            return $this->baseUrl . '/v1/service/traveller/hotel/details';
+        } else if ($method == 'prebooking') {
+            return $this->baseUrl . '/v1/service/traveller/hotel/pre/booking';
         } else if ($method == 'bookhotel') {
             return $this->baseUrl . '/v1/service/traveller/hotel/book';
         } else if ($method == 'bookingDetails') {
@@ -60,21 +62,56 @@ class HotelService
         return "";
     }
 
+    public function searchCountry($data)
+    {
+        try {
+            $url = $this->setFullUrl('countrylist');
+
+            $payload = [];
+
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = HotelStaticResponseHelper::hotelcountryresponse();
+            } else {
+                $response = Permission::curl($url, "GET", json_encode($payload), $this->header, "yes", "country_search", "");
+                $response = $response['response'];
+            }
+
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
+
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
+
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Hotel Country Fetch successfully", 'data' => $response['data']];
+            } else {
+
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Hotel Country Fetch failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
+    }
     public function searchCity($data)
     {
         try {
-            $token = $this->authService->getToken();
-
             $payload = [
-                "EndUserIp" => $this->ip,
-                "TokenId" => $token,
+                "CountryCode" => $data['countryCode']
             ];
 
             $url = $this->setFullUrl('citylist');
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::buscityresponse();
+                $response = HotelStaticResponseHelper::hotelcityresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "city_search", "");
                 $response = $response['response'];
@@ -103,59 +140,72 @@ class HotelService
             return ['status' => 'ERROR', 'message' => $e->getMessage()];
         }
     }
+    public function searchHotelName($data)
+    {
+        try {
+            $payload = [
+                "CityCode" => $data['cityCode']
+            ];
+
+            $url = $this->setFullUrl('hotelList');
+
+            $baseUrl = url('/');
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = HotelStaticResponseHelper::hotelNameresponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "hotel_name_search", "");
+                $response = $response['response'];
+            }
+
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
+
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
+
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Hotel Name Fetch successfully", 'data' => $response['data']];
+            } else {
+
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Hotel Name Fetch failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
+    }
 
     public function searchHotel($data)
     {
         try {
-            $token = $this->authService->getToken();
-
-            $checkIn = \Carbon\Carbon::createFromFormat('d-m-Y', $data['chkInDate'])->format('d/m/Y');
-
-            // Nights calculate
-            $nights = \Carbon\Carbon::createFromFormat('d-m-Y', $data['chkOutDate'])
-                ->diffInDays(\Carbon\Carbon::createFromFormat('d-m-Y', $data['chkInDate']));
-
-            // Room Guests with dynamic child ages
-            $roomGuests = [
-                [
-                    "NoOfAdults" => (int)$data['adultCount'],
-                    "NoOfChild" => (int)$data['childCount'],
-                    "ChildAge" => $data['childCount'] > 0
-                        ? array_map('intval', $data['childAges'])
-                        : null
-                ]
-            ];
-            if ($data['childCount'] > 0) {
-                if ($data['childCount'] != count($data['childAges'])) {
-                    return [
-                        'code' => '0x0202',
-                        'status' => 'failed',
-                        'message' => 'Child count and ages mismatch'
-                    ];
-                }
-            }
-
-            if ($data['adultCount'] > 8 || $data['childCount'] > 2) {
-                return [
-                    'code' => '0x0202',
-                    'status' => 'failed',
-                    'message' => 'Max limit exceeded'
-                ];
-            }
-
             $payload = [
-                "TokenId" => $token,
-                "CheckInDate" => $checkIn,
-                "NoOfNights" => (string)$nights,
-                "CountryCode" => "IN",
-                "CityId" => $data['destId'],
-                "PreferredCurrency" => "INR",
+                "CheckIn" => date('Y-m-d', strtotime($data['chkInDate'])),
+                "CheckOut" => date('Y-m-d', strtotime($data['chkOutDate'])),
+
+                "HotelCodes" => $data['hotelCode'], // 👈 correct id
+
                 "GuestNationality" => "IN",
-                "NoOfRooms" => (string)$data['roomCount'],
-                "RoomGuests" => $roomGuests,
-                "MaxRating" => 5,
-                "IsNearBySearchAllowed" => "0"
+
+                "PaxRooms" => [
+                    [
+                        "Adults" => (int)$data['adultCount'],
+                        "Children" => (int)$data['childCount'],
+                        "ChildrenAges" => $data['childCount'] > 0
+                            ? array_map('intval', $data['childAges'])
+                            : null
+                    ]
+                ],
+
+                "ResponseTime" => 0.1,
+                "IsDetailedResponse" => true
             ];
+
 
             $url = $this->setFullUrl('search');
 
@@ -195,13 +245,10 @@ class HotelService
     public function hotelDetails($data)
     {
         try {
-            $token = $this->authService->getToken();
-
             $payload = [
                 "HotelCode" => $data['HotelCode'],
-                "TokenId" => $token,
-                "TraceId" => $data['TraceId'],
-                "ResultIndex" => $data['ResultIndex'],
+                "Language" => "EN",
+                "IsRoomDetailRequired" => true
             ];
 
 
@@ -238,25 +285,20 @@ class HotelService
         }
     }
 
-    public function hotelRoom($data)
+    public function prebooking($data)
     {
         try {
-            $token = $this->authService->getToken();
-
             $payload = [
-                "HotelCode" => $data['HotelCode'],
-                "TokenId" => $token,
-                "TraceId" => $data['TraceId'],
-                "ResultIndex" => $data['ResultIndex'],
+                "BookingCode" => $data['bookingId']
             ];
 
-            $url = $this->setFullUrl('hotelroom');
+            $url = $this->setFullUrl('prebooking');
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::hotelroomresponse();
+                $response = HotelStaticResponseHelper::hotelprebookingresponse();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "hotel_room", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "hotel_prebooking", "");
                 $response = $response['response'];
             }
 
@@ -269,12 +311,12 @@ class HotelService
             }
 
             if (isset($response['status']) && strtolower($response['status']) == 'success') {
-                return ['status' => 'success', 'message' => "Hotel Room get successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Hotel Pre Booking successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Hotel Room get failed'
+                    'message' => $response['message'] ?? 'Hotel Pre Booking failed'
                 ];
             }
         } catch (Exception $e) {
@@ -304,7 +346,7 @@ class HotelService
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
                 // $response = StaticResponseHelper::flightfailedbookingresponse();
-                $response = HotelStaticResponseHelper::busBlockStaticResponse();
+                // $response = HotelStaticResponseHelper::busBlockStaticResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "block", "");
                 $response = $response['response'];
@@ -353,7 +395,7 @@ class HotelService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::busBookStaticResponse();
+                // $response = HotelStaticResponseHelper::busBookStaticResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
                 $response = $response['response'];
@@ -397,7 +439,7 @@ class HotelService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::busbookingdetailsresponse();
+                // $response = HotelStaticResponseHelper::busbookingdetailsresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "bookingDetail", "");
                 $response = $response['response'];
@@ -442,7 +484,7 @@ class HotelService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::busCancelResponse();
+                // $response = HotelStaticResponseHelper::busCancelResponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "cancel_bus", "");
                 $response = $response['response'];
