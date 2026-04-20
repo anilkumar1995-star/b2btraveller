@@ -265,6 +265,14 @@
                                               </a>
                                           </li>
                                       @endif
+                                      @if (Myhelper::hasRole('admin') && $b->order_ref_id != null && $b->payment_status == 'success' && $b->ticket_status != 'Successful' && $b->ticket_status != 'Confirmed')
+                                          <li>
+                                              <a class="dropdown-item text-danger" href="javascript:void(0)"
+                                                  onclick="refundTicket('{{ $b->order_ref_id }}')">
+                                                  💸 Refund Amount
+                                              </a>
+                                          </li>
+                                      @endif
                                   </ul>
                               </div>
                           </td>
@@ -476,6 +484,60 @@
               },
               error: function() {
                   Swal.fire('Error', 'Connection failed. Please try again.', 'error');
+              }
+          });
+      }
+
+      function refundTicket(orderRefId) {
+          if (!orderRefId) {
+              Swal.fire('Error', 'Transaction ID (clientRefId) is missing.', 'error');
+              return;
+          }
+
+          Swal.fire({
+              title: 'Are you sure?',
+              text: "You want to process refund for this transaction? This action cannot be undone.",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#d33',
+              cancelButtonColor: '#3085d6',
+              confirmButtonText: 'Yes, refund it!',
+              allowOutsideClick: false,
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  Swal.fire({
+                      title: 'Processing Refund...',
+                      text: 'Please wait...',
+                      allowOutsideClick: false,
+                      didOpen: () => {
+                          Swal.showLoading();
+                      }
+                  });
+
+                  $.ajax({
+                      url: "{{ route('flight.refund') }}",
+                      type: "POST",
+                      data: {
+                          clientRefId: orderRefId,
+                          _token: "{{ csrf_token() }}"
+                      },
+                      success: function(res) {
+                          if (res.status === 'success') {
+                              Swal.fire('Refunded!', res.message || 'Refund successful.', 'success').then(() => {
+                                  location.reload();
+                              });
+                          } else {
+                              Swal.fire('Failed', res.message || 'Refund failed.', 'error');
+                          }
+                      },
+                      error: function(xhr) {
+                          let msg = 'Refund request failed.';
+                          if (xhr.responseJSON && xhr.responseJSON.message) {
+                              msg = xhr.responseJSON.message;
+                          }
+                          Swal.fire('Error', msg, 'error');
+                      }
+                  });
               }
           });
       }

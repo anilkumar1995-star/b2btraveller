@@ -497,7 +497,7 @@ class FlightController extends Controller
             "redirectUrl"  => route('flight.payment.success'),
             "successUrl"  => route('flight.payment.success'),
             "failedUrl"   => route('flight.payment.failed'),
-            "amount"       => 1
+            "amount"       => 2
             // "amount"       => $totalAmount
         ];
 
@@ -521,7 +521,7 @@ class FlightController extends Controller
                     'mobile'      => $user->mobile,
                     'provider_id' => 0,
                     'api_id'      => 0,
-                    'amount'      => 1,
+                    'amount'      => 2,
                     // 'amount'      => $totalAmount,
                     'profit'      => 0,
                     'txnid'       => $clientRefId,
@@ -583,11 +583,24 @@ class FlightController extends Controller
 
 
         if ($booking && $booking->payment_status === 'success') {
-            return response()->json([
-                'status' => 'success',
-                'booking_status' => 'Confirmed',
-                'data' => $booking
-            ]);
+            if ($booking->ticket_status === 'Successful' || $booking->ticket_status === 'Confirmed') {
+                return response()->json([
+                    'status' => 'success',
+                    'booking_status' => 'Confirmed',
+                    'data' => $booking
+                ]);
+            } else {
+                $finalResult = $this->finalizeBooking($booking);
+
+                $booking = DB::table('bookings')->where('order_ref_id', $id)->first();
+                
+                return response()->json([
+                    'status' => $finalResult['status'] ? 'success' : 'failed',
+                    'booking_status' => $booking->booking_status ?? 'Pending',
+                    'message' => $finalResult['message'] ?? 'Ticket status updated.',
+                    'data' => $booking
+                ]);
+            }
         }
 
         // Check with PG
@@ -649,7 +662,6 @@ class FlightController extends Controller
     {
         $id = $bookingOrReport->id;
         $isReport = !isset($bookingOrReport->booking_id_api);
-        
         if ($isReport) {
             $report = $bookingOrReport;
             $booking = DB::table('bookings')->where('order_ref_id', $report->txnid)->first();
@@ -1062,5 +1074,67 @@ class FlightController extends Controller
 
     public function reviewBooking(){
         return view('flight.review_booking');
+    }
+
+    public function refundAmount(Request $request)
+    {
+        if (!\Myhelper::hasRole('admin')) {
+             return response()->json(['status' => 'failed', 'message' => 'Unauthorized access']);
+        }
+
+        $api = Api::where('code', 'orpayment')->first();
+        if (!$api) {
+            return response()->json(['status' => 'failed', 'message' => "Refund service is down"]);
+        }
+
+        $url = rtrim($api->url, '/') . "/v1/service/paycc/unlimit/refund";
+        
+        $header = [
+            "Content-Type: application/json",
+            "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
+        ];
+
+        $reqData = [
+            "clientRefId"  => $request->clientRefId,
+        ];
+
+        $result = \Myhelper::curl($url, "POST", json_encode($reqData), $header, "yes");
+       
+        if ($result['response'] != '') {
+            $responseStatus = json_decode($result['response']);
+           
+            if (isset($responseStatus->code) && ($responseStatus->code == "0x0200" || $responseStatus->code == "0x0206")) {
+                $msg = ($responseStatus->code == "0x0206") ? "Refund initiated successfully." : "Refund successful.";
+                
+                $updateData = [
+                    'booking_status' => 'Cancelled',
+                    'refund_status'  => $responseStatus->status ?? 'Success',
+                ];
+
+                if (isset($responseStatus->data->amount)) {
+                    $updateData['refunded_amount'] = $responseStatus->data->amount;
+                }
+
+                DB::table('bookings')
+                    ->where('order_ref_id', $request->clientRefId)
+                    ->update($updateData);
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => $msg,
+                    'data'   => $responseStatus->data ?? []
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $responseStatus->message ?? "Refund failed"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => "Refund service no response"
+            ]);
+        }
     }
 }
