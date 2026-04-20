@@ -131,7 +131,9 @@
           <thead class="bg-light">
               <tr>
                   <th>ID</th>
-                  <th>User</th>
+                  @if (Myhelper::hasRole('admin'))
+                      <th>User</th>
+                  @endif
                   <th>Booking Details</th>
                   <th>Route</th>
                   <th>Amount</th>
@@ -187,11 +189,13 @@
                       @endphp
                       <tr>
                           <td>##{{ $b->id }} <br />{{ $b->created_at }}</td>
-                          <td>
-                              {{ $b->user_name ?? '' }}<br />
-                              {{ $b->user_email ?? '' }}<br />
-                              {{ $b->user_mobile ?? '' }}
-                          </td>
+                          @if (Myhelper::hasRole('admin'))
+                              <td>
+                                  {{ $b->user_name ?? '' }}<br />
+                                  {{ $b->user_email ?? '' }}<br />
+                                  {{ $b->user_mobile ?? '' }}
+                              </td>
+                          @endif
                           <td>PNR: <b>{{ $b->pnr ?? 'N/A' }}</b> <br /> Booking Id:
                               <b>{{ $b->booking_id_api ?? 'N/A' }}</b>
                               <br />{{ $b->airline_code }} - [{{ $b->flight_number }}]
@@ -280,7 +284,7 @@
                   @endforeach
               @else
                   <tr>
-                      <td colspan="7" class="text-center text-danger">No Bookings Details found.</td>
+                      <td colspan="{{ Myhelper::hasRole('admin') ? 8 : 7 }}" class="text-center text-danger">No Bookings Details found.</td>
                   </tr>
               @endif
           </tbody>
