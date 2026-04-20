@@ -130,10 +130,14 @@ class FlightController extends Controller
         // dd($data);
         $userId = \Auth::user()->id;
 
-        $data['bookings'] = DB::table('bookings')
-            ->join('users', 'users.id', '=', 'bookings.user_id')
-            ->where('bookings.user_id', $userId)
-            ->select(
+        $query = DB::table('bookings')
+            ->join('users', 'users.id', '=', 'bookings.user_id');
+
+        if (!\Myhelper::hasRole('admin')) {
+            $query->where('bookings.user_id', $userId);
+        }
+
+        $data['bookings'] = $query->select(
                 'bookings.*',
                 'users.name as user_name',
                 'users.email as user_email',
@@ -154,10 +158,14 @@ class FlightController extends Controller
     {
         $userId = \Auth::user()->id;
 
-        $bookings = DB::table('failed_bookings_list')
-            ->join('users', 'users.id', '=', 'failed_bookings_list.user_id')
-            ->where('failed_bookings_list.user_id', $userId)
-            ->select(
+        $query = DB::table('failed_bookings_list')
+            ->join('users', 'users.id', '=', 'failed_bookings_list.user_id');
+
+        if (!\Myhelper::hasRole('admin')) {
+            $query->where('failed_bookings_list.user_id', $userId);
+        }
+
+        $bookings = $query->select(
                 'failed_bookings_list.*',
                 'users.name as user_name',
                 'users.email as user_email',
@@ -478,7 +486,7 @@ class FlightController extends Controller
         }
 
         $clientRefId = AndroidCommonHelper::makeTxnId("FLIGHT", 10);
-        $url = $api->url . "v1/service/pgcollect/jio/order/generate";
+        $url = $api->url . "v1/service/pgcollect/order";
         
         $header = [
             "Content-Type: application/json",
