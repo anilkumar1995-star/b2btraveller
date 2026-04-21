@@ -1774,9 +1774,9 @@ function submitGuestDetails() {
             storedFareDetails = {};
         }
         var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount) + parseInt(storedFareDetails[0]?.childCount);
-        // var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount);
+      
         let hotelKy = sessionStorage.getItem('hkey');
-        let netAmt = sessionStorage.getItem('amt');
+        let netAmt = parseFloat(sessionStorage.getItem('amt') || 0).toFixed(2);
         let recomdet = JSON.parse(sessionStorage.getItem('recomdet'));
         const passengers = [];
         for (var index = 0; totalPassengerCount > index; index++) {
@@ -1837,7 +1837,7 @@ function submitGuestDetails() {
         };
 
         localStorage.setItem('psgr', JSON.stringify(passengers));
-         var txtMsg = `Want to book this Hoteland Proceed with the payment? </br>Amount: ₹ ${netAmt}`;
+         var txtMsg = `Want to book this Hotel and <br/>Proceed with the payment? </br>Amount: ₹ ${netAmt}`;
         swal({
             title: "Are you sure?",
             html: txtMsg,
@@ -1873,18 +1873,23 @@ function submitGuestDetails() {
                         let psngr = JSON.parse(localStorage.getItem('psgr'));
                         let checkInFormatted = formatDate(sentReqest[0]?.chkInDate);
                         let checkOutFormatted = formatDate(sentReqest[0]?.chkOutDate);
-                        if (response.status == "success") {
+
+                        let bookingStatus = response?.data?.Status;
+                        if (response.status == "success" && bookingStatus == 1) {
                             swal({
                                 type: "success",
                                 html: `<p><span class="badge bg-success">Booking Confirmed</span></p>
-                                    <div class="alert alert-light border rounded p-4">
-                                        <ul class="list-unstyled">
-                                            <li>Your booking is successful at <strong class="fs-5">${alHotelData?.hotelName}, ${alHotelData?.location}</strong> and your 
-                                            Booking ID : <span class="badge bg-primary">${response?.data?.bookingRefNo}</span></li>
+                                    <div class="alert alert-secondary border rounded p-3">
+                                        <ul class="list-unstyled mb-0">
+                                            <li>Your booking is successful at <strong class="fs-5">${alHotelData?.Name}</strong> and your 
+                                            Booking ID : <span class="badge bg-primary">${response?.data?.BookingId}</span>
+                                            
+                                            and Invoice Number : <span class="badge bg-primary">${response?.data?.InvoiceNumber}</span>
+                                            </li>
                                         </ul>
                                     </div>
                                     <div class="card-body px-1 pt-1 pb-0 mb-0">
-                                        <p>Lead Guest:<span class="fs-4"> ${psngr[0]?.title}  ${psngr[0]?.firstName}  ${psngr[0]?.lastName}</span></p>
+                                        <p>Lead Guest:<span class="fs-4"> ${psngr[0]?.Title}  ${psngr[0]?.FirstName}  ${psngr[0]?.LastName}</span></p>
                                     </div>`,
                                 confirmButtonText: 'OK, Got it🙂',
                                 showConfirmButton: true,
@@ -1897,6 +1902,15 @@ function submitGuestDetails() {
                                     }, 1000);
                                 }
                             });                            
+                        } else if (bookingStatus == 3) {
+                            notify("Price changed. Please verify before booking again.", "warning");
+
+                        } else if (bookingStatus == 6) {
+                            notify("Booking has been cancelled.", "error");
+
+                        } else if (bookingStatus == 0) {
+                            notify("Booking failed. Please try again.", "error");
+
                         } else {
                             notify(
                                 response?.message ||
