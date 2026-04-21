@@ -1833,6 +1833,7 @@ function submitGuestDetails() {
             netAmt: netAmt,
             hotelKy: hotelKy,
             BookingId: recomdet?.BookingCode,
+            details: recomdet,
             HotelPassenger: passengers,
         };
 
@@ -1933,10 +1934,6 @@ function submitGuestDetails() {
                         }, 2000);
                     },
                 });
-            } else {
-                setTimeout(function () {
-                    window.open("/hotel/view", "_blank");
-                }, 2000);
             }
         });
 
