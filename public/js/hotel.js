@@ -1010,7 +1010,7 @@ function viewAllHoTelDetail(data) {
                             </div>
 
                             <!-- Button -->
-                            <button class="btn btn-primary w-100 mt-3 rounded-pill" id="bookNowBtn" onclick="bookNowHotel(this,'${JSON.stringify(room)}', '${hotel.HotelCode}', ${room.NetAmount})">
+                            <button class="btn btn-primary w-100 mt-3 rounded-pill" id="bookNowBtn" onclick="bookNowHotel('${encodeURIComponent(JSON.stringify(room))}', '${hotel.HotelCode}', ${room.NetAmount})">
                                 Continue to Passenger Details
                             </button>
 
@@ -1315,16 +1315,13 @@ function viewAllHotelRoom(roomdet) {
     return roomdetHtml;
 }
 
-function bookNowHotel(buton, roomd, hkey, amt) {
+function bookNowHotel(roomd, hkey, amt) {
     
-    console.log(buton, roomd, hkey, amt);
-    // window.open("/hotel/guest/detail", "_blank");
-    // $('.select-room-btn').removeClass('btn-primary').addClass('btn-outline-primary');
-    // $(buton).addClass('btn-primary').removeClass('btn-outline-primary');
-    // $('#selectroomfare').html('');
-    // $('#d-grid').html('');
-    // $('#selectroomfare').html(amt);
-    // $('#d-grid').html(`<button class="btn btn-primary" type="button" id="selectRoomBtn" onclick="selectedroom('${roomd}', '${hkey}')">Continue ➜</button>`);
+    sessionStorage.setItem("recomdet", decodeURIComponent(roomd));
+    sessionStorage.setItem("hkey", hkey);
+    sessionStorage.setItem("amt", amt);
+
+    window.open("/hotel/guest/detail", "_blank");
 }
 
 function selectedroom(roomd, hkey) {
@@ -1428,6 +1425,7 @@ function validateForm() {
     const requiredFields = document.querySelectorAll(
         "#passengerForm input[required], #passengerForm select[required]"
     );
+
     for (let field of requiredFields) {
         if (!field.value) {
             field.focus();
@@ -1447,114 +1445,321 @@ $(document).ready(function () {
     }
 
     if (storedFareDetails) {
+
         let roomCount = parseInt(storedFareDetails[0]?.roomCount);
+        let adultCount = parseInt(storedFareDetails[0]?.adultCount) || 2;
+        let childCount = parseInt(storedFareDetails[0]?.childCount) || 0;
 
-        var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount);
-        //   var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount) + parseInt(storedFareDetails[0]?.childCount);
+        let totalPassengerCount = adultCount + childCount;
 
-        var formCount = 0;
-        createForm(formCount);
-        $("#addMoreForm").on("click", function () {
-            if (formCount < totalPassengerCount) {
-                createForm(formCount);
-            }
-        });
-
-        function createForm(index) {
-            let formHtml = '';
-            if (storedFareDetails) {
-                var adultCount = parseInt(storedFareDetails[0]?.adultCount) || 2;
-                var childCount = parseInt(storedFareDetails[0]?.childCount) || 0;
-            }
+        for (let index = 0; index < totalPassengerCount; index++) {
 
             let paxType;
+            let paxTypeValue;
             let heading = "";
 
             if (index < adultCount) {
                 heading = `Adult ${index + 1}`;
                 paxType = 'Adult';
-            } else if (index < adultCount + childCount) {
+                paxTypeValue = 1;
+            } else {
                 heading = `Child ${index - adultCount + 1}`;
                 paxType = 'Child';
+                paxTypeValue = 2;
             }
 
+            // ⭐ FIXED LEAD LOGIC
+            let isLeadPassenger = (index < roomCount && paxType === 'Adult');
 
-            formHtml += `
-                <div class="table-responsive border rounded mt-2 rows" style="overflow: hidden;" id="passenger-row-${index + 1}">
-                 <input type="hidden" name="occupantType" id="paxtype-${index + 1}" value="${paxType}"/>
-  
-                          <table class="table table-bordered  mb-0 " >
-                              <thead class="thead-light bg-light">
-                                  <tr>
-                                      <th>${heading}</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  <tr>
-                                      <td>
-                                          <div class="row">
-                                              <div class="col-md-3 mb-3">
-                                                  <div class="form-group">
-                                                      <label class="mb-1" for="room-${index + 1}">Room Select</label>
-                                                      <select name="room" id="room-${index + 1
-                }" class="form-control room-dropdown" required >
-                <option value="">Select room</option>`;
+            let roomLabel = '';
 
-            for (var i = 1; roomCount >= i; i++) {
-                formHtml += `<option value="${i}">Room ${i}</option>`;
+            if (isLeadPassenger) {
+                let roomNumber = index + 1; // kyuki first N adults hi lead hain
+                roomLabel = ` - Room ${roomNumber}`;
             }
 
-            formHtml += `</select>
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-3 mb-3">
-                                                  <div class="form-group">
-                                                      <label class="mb-1" for="title-${index + 1}">Title</label>
-                                                      <select name="title" id="title-${index + 1}" class="form-control title-dropdown" required >
-                                                          <option value="">Select Title</option>
-                                                          ${paxType === 1 ? `
-                                                              <option value="MISS" >Miss</option>
-                                                            <option value="MSTR">Mstr</option>`
-                    : `
-                                                            <option value="MR">Mr.</option>
-                                                            <option value="MS">Ms.</option>
-                                                            <option value="MRS">Mrs.</option>`
-                }
-                                                      </select>
-                                                  </div>
-                                              </div>
-                                              <div class="col-md-3 mb-3" >
-                                                      <div class="form-group">
-                                                          <label class="mb-1" for="firstName-${index + 1}">Given  Name</label>
-                                                          <input type="text" name="firstName" maxlength="50" id="firstName-${index + 1}" 
-                                                          oninput="validateName('firstName-${index + 1}')" class="form-control" placeholder="Enter Given name"  required>
-                                                      </div>
-                                                  </div>
-                                                  <div class="col-md-3 mb-3">
-                                                      <div class="form-group">
-                                                          <label class="mb-1" for="lastName-${index + 1
-                }">Surname</label>
-                                                          <input type="text" name="lastName" maxlength="50" id="lastName-${index + 1
-                }" oninput="validateName('lastName-${index + 1
-                }')" class="form-control" placeholder="Enter Surname"  required>
-                                                      </div>
-                                                  </div>
-                                                 
-                                          </div>
-                                      </td>
-                                  </tr>
-                              </tbody>
-                          </table>
-                      </div>
-        `;
+            let formHtml = `
+            <div class="table-responsive border rounded mt-2 rows" id="passenger-row-${index + 1}">
+                
+                <input type="hidden" name="occupantType" id="paxtype-${index + 1}" value="${paxType}"/>
+                <input type="hidden" name="paxTypeValue" id="paxTypeValue-${index + 1}" value="${paxTypeValue}">
+                <input type="hidden" name="paxLeadPassenger" id="paxLeadPassenger-${index + 1}" value="${isLeadPassenger}">
+
+                <table class="table table-bordered mb-0">
+                    <thead class="bg-light">
+                        <tr>
+                            <th>${heading} ${isLeadPassenger ? `(Lead ${roomLabel})` : ''}</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="row">
+
+                                    <!-- Title -->
+                                    <div class="col-md-3 mb-3">
+                                        <label>Title *</label>
+                                        <select name="title" id="title-${index + 1}" class="form-control" required>
+                                            <option value="">Select Title</option>
+                                            <option value="Mr">Mr</option>
+                                            <option value="Mrs">Mrs</option>
+                                            <option value="Miss">Miss</option>
+                                            <option value="Ms">Ms</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- First Name -->
+                                    <div class="col-md-3 mb-3">
+                                        <label>First Name *</label>
+                                        <input type="text" name="firstName" id="firstName-${index + 1}"
+                                        minlength="2" maxlength="50"
+                                        oninput="validateName('firstName-${index + 1}')"
+                                        class="form-control" required
+                                        placeholder="Enter First Name">
+                                    </div>
+
+                                    <!-- Middle Name -->
+                                    <div class="col-md-3 mb-3">
+                                        <label>Middle Name</label>
+                                        <input type="text" name="middleName" id="middleName-${index + 1}"
+                                        maxlength="50"
+                                        oninput="validateName('middleName-${index + 1}')"
+                                        class="form-control" placeholder="Enter Middle Name">
+                                    </div>
+
+                                    <!-- Last Name -->
+                                    <div class="col-md-3 mb-3">
+                                        <label>Last Name *</label>
+                                        <input type="text" name="lastName" id="lastName-${index + 1}"
+                                        minlength="2" maxlength="50"
+                                        oninput="validateName('lastName-${index + 1}')"
+                                        class="form-control" required placeholder="Enter Last Name">
+                                    </div>
+
+                                    <!-- Phone -->
+                                    ${isLeadPassenger ?
+                                        `<div class="col-md-3 mb-3">
+                                        <label>Phone ${isLeadPassenger ? '*' : ''}</label>
+                                        <input type="text" name="mobile" id="mobile-${index + 1}"
+                                            maxlength="10"
+                                         oninput="validatePhone('mobile-${index + 1}')"
+                                        class="form-control" placeholder="Enter Phone Number" required ></div>`
+                                    : ''}
+                                   
+
+                                    <!-- Email -->
+                                    ${isLeadPassenger ? 
+                                        `<div class="col-md-3 mb-3">
+                                            <label>Email ${isLeadPassenger ? '*' : ''}</label>
+                                            <input type="email" name="email" id="email-${index + 1}"
+                                            oninput="validateEmail('email-${index + 1}')"
+                                            class="form-control" placeholder="Enter Email Id"
+                                             required ></div>`
+                                    : ''}
+
+                                    <!-- Age -->
+                                    ${paxType === 'Child' ? `
+                                    <div class="col-md-3 mb-3">
+                                        <label>Age *</label>
+                                        <input type="number" name="age" id="age-${index + 1}"
+                                        max="12" placeholder="Enter Age"
+                                        class="form-control" required>
+                                    </div>` : ''}
+
+                                    <!-- PAN -->
+                                    <div class="col-md-3 mb-3">
+                                        <label>PAN</label>
+                                        <input type="text" name="pan" id="pan-${index + 1}"
+                                        maxlength="10" placeholder="Enter PAN"
+                                        oninput="validatePan('pan-${index + 1}')"
+                                        class="form-control">
+                                    </div>
+
+                                    <!-- Passport -->
+                                    <div class="col-md-3 mb-3">
+                                        <label>Passport No</label>
+                                        <input type="text" name="passport" id="passport-${index + 1}"
+                                        class="form-control" placeholder="Enter Passport Number">
+                                    </div>
+
+                                    <!-- Passport Issue -->
+                                    <div class="col-md-3 mb-3">
+                                        <label>Passport Issue</label>
+                                        <input type="datetime-local" name="passportIssueDate" 
+                                        id="passportIssueDate-${index + 1}"
+                                        placeholder="Enter Passport Issue"
+                                        class="form-control">
+                                    </div>
+
+                                    <!-- Passport Expiry -->
+                                    <div class="col-md-3 mb-3">
+                                        <label>Passport Expiry</label>
+                                        <input type="datetime-local" name="passportExpDate" 
+                                        id="passportExpDate-${index + 1}"
+                                        placeholder="Enter Passport Expiry"
+                                        class="form-control">
+                                    </div>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            `;
+
             $("#formsContainerHotel").append(formHtml);
-            formCount++;
-
-            if (formCount >= totalPassengerCount) {
-                $("#addMoreForm").attr("disabled", true);
-            }
         }
     }
+    // if (storedFareDetails) {
+    //     let roomCount = parseInt(storedFareDetails[0]?.roomCount);
+
+    //     var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount);
+    //     //   var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount) + parseInt(storedFareDetails[0]?.childCount);
+
+    //     var formCount = 0;
+    //     createForm(formCount);
+    //     $("#addMoreForm").on("click", function () {
+    //         if (formCount < totalPassengerCount) {
+    //             createForm(formCount);
+    //         }
+    //     });
+
+    //     function createForm(index) {
+    //         let formHtml = '';
+    //         if (storedFareDetails) {
+    //             var adultCount = parseInt(storedFareDetails[0]?.adultCount) || 2;
+    //             var childCount = parseInt(storedFareDetails[0]?.childCount) || 0;
+    //         }
+
+    //         let paxType;
+    //         let paxTypeValue;
+    //         let heading = "";
+
+    //         if (index < adultCount) {
+    //             heading = `Adult ${index + 1}`;
+    //             paxType = 'Adult';
+    //             paxTypeValue = 1;
+    //         } else if (index < adultCount + childCount) {
+    //             heading = `Child ${index - adultCount + 1}`;
+    //             paxType = 'Child';
+    //             paxTypeValue = 2;
+    //         }
+
+    //         let isLeadPassenger = (index === 0 && paxType === 'Adult') ? true : false;
+
+    //         formHtml += `
+    //             <div class="table-responsive border rounded mt-2 rows" style="overflow: hidden;" id="passenger-row-${index + 1}">
+    //              <input type="hidden" name="occupantType" id="paxtype-${index + 1}" value="${paxType}"/>
+    //                 <input type="hidden" name="paxTypeValue" id="paxTypeValue-${index + 1}" value="${paxTypeValue}">
+    //                 <input type="hidden" name="paxLeadPassenger" id="paxLeadPassenger-${index + 1}" value="${isLeadPassenger}">
+  
+    //                       <table class="table table-bordered  mb-0 " >
+    //                           <thead class="thead-light bg-light">
+    //                               <tr>
+    //                                   <th>${heading}</th>
+    //                               </tr>
+    //                           </thead>
+    //                           <tbody>
+    //                               <tr>
+    //                                   <td>
+    //                                       <div class="row">
+    //                                             <div class="col-md-3 mb-3">
+    //                                                 <div class="form-group">
+    //                                                     <label class="mb-1" for="title-${index + 1}">Title<sup class="text-danger">*</sup></label>
+    //                                                     <select name="title" id="title-${index + 1}" class="form-control title-dropdown" required >
+    //                                                         <option value="">Select Title</option>
+    //                                                                 <option value="Mr">Mr</option>
+    //                                                                 <option value="Mrs">Mrs</option>
+    //                                                                 <option value="Miss">Miss</option>
+    //                                                                 <option value="Ms">Ms</option>
+    //                                                     </select>
+    //                                                 </div>
+    //                                             </div>
+    //                                                 <div class="col-md-3 mb-3" >
+    //                                                   <div class="form-group">
+    //                                                       <label class="mb-1" for="firstName-${index + 1}">First  Name<sup class="text-danger">*</sup></label>
+    //                                                       <input type="text" name="firstName" minlength="2" maxlength="50" id="firstName-${index + 1}" 
+    //                                                       oninput="validateName('firstName-${index + 1}')" 
+    //                                                       class="form-control" placeholder="Enter First Name"  required>
+    //                                                   </div>
+    //                                                 </div>
+    //                                                 <div class="col-md-3 mb-3" >
+    //                                                   <div class="form-group">
+    //                                                       <label class="mb-1" for="middleName-${index + 1}">Middle  Name</label>
+    //                                                       <input type="text" name="middleName" maxlength="50" id="middleName-${index + 1}" 
+    //                                                       oninput="validateName('middleName-${index + 1}')" 
+    //                                                       class="form-control" placeholder="Enter Middle Name">
+    //                                                   </div>
+    //                                                 </div>
+    //                                                 <div class="col-md-3 mb-3">
+    //                                                   <div class="form-group">
+    //                                                       <label class="mb-1" for="lastName-${index + 1}">Last Name<sup class="text-danger">*</sup></label>
+    //                                                       <input type="text" name="lastName" minlength="2" maxlength="50" id="lastName-${index + 1}" 
+    //                                                             oninput="validateName('lastName-${index + 1}')" 
+    //                                                             class="form-control" placeholder="Enter Surname" required>
+    //                                                   </div>
+    //                                                 </div>
+
+    //                                                 ${paxType === 'Child' ? `
+    //                                                     <div class="col-md-3 mb-3">
+    //                                                         <div class="form-group">
+    //                                                             <label class="mb-1" for="age-${index + 1}">Age<sup class="text-danger">*</sup></label>
+    //                                                             <input type="number" name="age" id="age-${index + 1}" 
+    //                                                                     oninput="validateAge('age-${index + 1}')"  max="12"
+    //                                                                     class="form-control" placeholder="Enter Age">
+    //                                                         </div>
+    //                                                     </div>` 
+    //                                                 : ''}
+
+    //                                                 <div class="col-md-3 mb-3">
+    //                                                     <div class="form-group">
+    //                                                         <label class="mb-1" for="pan-${index + 1}">PAN Number</label>
+    //                                                         <input type="text" name="pan" maxlength="10" id="pan-${index + 1}" 
+    //                                                                 oninput="validatePAN('pan-${index + 1}')"
+    //                                                                 class="form-control" placeholder="Enter PAN Number">
+    //                                                     </div>
+    //                                                 </div>
+    //                                                 <div class="col-md-3 mb-3">
+    //                                                     <div class="form-group">
+    //                                                         <label class="mb-1" for="passport-${index + 1}">Passport No</label>
+    //                                                         <input type="number" name="passport" maxlength="10" id="passport-${index + 1}" 
+    //                                                                 oninput="validatePassport('passport-${index + 1}')" 
+    //                                                                 class="form-control" placeholder="Enter passport Number">
+    //                                                     </div>
+    //                                                 </div>
+    //                                                 <div class="col-md-3 mb-3">
+    //                                                     <div class="form-group">
+    //                                                         <label class="mb-1" for="passportIssueDate-${index + 1}">Passport Issue</label>
+    //                                                         <input type="datetime-local" name="passportIssueDate" maxlength="10" id="passportIssueDate-${index + 1}" 
+    //                                                                 class="form-control" placeholder="Enter Passport Issue Date">
+    //                                                     </div>
+    //                                                 </div>
+                                                    
+    //                                                 <div class="col-md-3 mb-3">
+    //                                                     <div class="form-group">
+    //                                                         <label class="mb-1" for="passportExpDate-${index + 1}">Passport Expiry</label>
+    //                                                         <input type="datetime-local" name="passportExpDate" maxlength="10" id="passportExpDate-${index + 1}" 
+    //                                                                 class="form-control" placeholder="Enter Passport Expiry Date">
+    //                                                     </div>
+    //                                                 </div>
+                                                 
+    //                                       </div>
+    //                                   </td>
+    //                               </tr>
+    //                           </tbody>
+    //                       </table>
+    //                   </div>
+    //     `;
+    //         $("#formsContainerHotel").append(formHtml);
+    //         formCount++;
+
+    //         if (formCount >= totalPassengerCount) {
+    //             $("#addMoreForm").attr("disabled", true);
+    //         }
+    //     }
+    // }
 });
 
 
@@ -1568,29 +1773,53 @@ function submitGuestDetails() {
         } catch {
             storedFareDetails = {};
         }
-        // var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount) + parseInt(storedFareDetails[0]?.childCount);
-        var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount);
+        var totalPassengerCount = parseInt(storedFareDetails[0]?.adultCount) + parseInt(storedFareDetails[0]?.childCount);
+      
         let hotelKy = sessionStorage.getItem('hkey');
+        let netAmt = parseFloat(sessionStorage.getItem('amt') || 0).toFixed(2);
         let recomdet = JSON.parse(sessionStorage.getItem('recomdet'));
         const passengers = [];
         for (var index = 0; totalPassengerCount > index; index++) {
             const title = $(`#title-${index + 1}`).val();
             const occupantType = $(`#paxtype-${index + 1}`).val();
+            const paxTypeValue = $(`#paxTypeValue-${index + 1}`).val();
+            const paxLeadPassenger = $(`#paxLeadPassenger-${index + 1}`).val();
             const firstName = $(`#firstName-${index + 1}`).val();
+            const middleName = $(`#middleName-${index + 1}`).val();
             const lastName = $(`#lastName-${index + 1}`).val();
-            const room = $(`#room-${index + 1}`).val();
+            const mobile = $(`#mobile-${index + 1}`).val();
+            const email = $(`#email-${index + 1}`).val();
+            const age = $(`#age-${index + 1}`).val();
+            const passport = $(`#passport-${index + 1}`).val();
+            const pan = $(`#pan-${index + 1}`).val();
+            const passportExpDate = $(`#passportExpDate-${index + 1}`).val();
+            const passportIssueDate = $(`#passportIssueDate-${index + 1}`).val();
 
-            if (!title || !occupantType || !firstName || !lastName || !room) {
+            if (!title || !occupantType || !firstName || !lastName) {
                 notify("Kindly add all travellers before proceeding", "error");
                 return true;
             }
 
             const passenger = {
-                title: title,
-                firstName: firstName,
-                lastName: lastName,
-                occupantType: occupantType,
-                roomId: room
+                Title: title,
+                 FirstName: firstName,
+                MiddleName: middleName,
+                LastName: lastName,     
+                Phoneno: mobile,
+                Email: email,
+                PaxType: occupantType,
+                LeadPassenger: paxLeadPassenger,
+                Age: age,
+                PassportNo: passport,
+                PAN: pan,
+                PaxId: paxTypeValue,
+                PassportExpDate: passportExpDate,
+                PassportIssueDate: passportIssueDate,
+                GSTCompanyAddress: '',
+                GSTCompanyContactNumber: '',
+                GSTCompanyName: '',
+                GSTNumber: '',
+                GSTCompanyEmail: '',
             };
 
             passengers.push(passenger);
@@ -1601,41 +1830,35 @@ function submitGuestDetails() {
         }
 
         const payload = {
-            requestId: sessionStorage.getItem("rId"),
-            email: $('input[name="email"]').val(),
-            mobileNo: $('input[name="mobile"]').val(),
-            pinCode: $('input[name="pinCode"]').val(),
-            address: $('input[name="address"]').val(),
-            remarks: $('input[name="remarks"]').val(),
-            occupantDetails: passengers,
-            hotelKey: hotelKy,
-            recommendationId: recomdet?.recommendationId
+            netAmt: netAmt,
+            hotelKy: hotelKy,
+            BookingId: recomdet?.BookingCode,
+            HotelPassenger: passengers,
         };
 
         localStorage.setItem('psgr', JSON.stringify(passengers));
-
+         var txtMsg = `Want to book this Hotel and <br/>Proceed with the payment? </br>Amount: ₹ ${netAmt}`;
         swal({
+            title: "Are you sure?",
+            html: txtMsg,
             type: "question",
-            text: `Want to book this Hotel ?`,
             showCancelButton: true,
-            confirmButtonText: 'Yes, I Want',
-            cancelButtonText: 'No, Cancel',
-            showLoaderOnConfirm: true,
-            backdrop: true,
-            allowOutsideClick: false,
+            confirmButtonText: "Yes, Proceed",
+            cancelButtonText: "Cancel"
         }).then((result) => {
-            if (result.isConfirmed) {
+            if (result.isConfirmed || result.value) {
                 swal({
+                    type: "warning",
                     title: "Processing...",
-                    text: "Please wait, we are fetching details",
+                    text: "Please wait while your booking is being confirmed.",
                     allowOutsideClick: false,
-                    allowEscapeKey: false,
-                    didOpen: () => {
-                        Swal.showLoading();
-                    },
+                    allowEscapeKey: false
                 });
+                
+                
+            
                 $.ajax({
-                    url: "/hotel/temp-book",
+                    url: "/hotel/booking",
                     method: "POST",
                     contentType: "application/json",
                     headers: {
@@ -1643,65 +1866,83 @@ function submitGuestDetails() {
                     },
                     data: JSON.stringify(payload),
                     success: function (response) {
+                        swal.close();
+                        let recomdet = JSON.parse(sessionStorage.getItem('recomdet'));
+                        let alHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
+                        let sentReqest = JSON.parse(localStorage.getItem('sentReqest'));
+                        let psngr = JSON.parse(localStorage.getItem('psgr'));
+                        let checkInFormatted = formatDate(sentReqest[0]?.chkInDate);
+                        let checkOutFormatted = formatDate(sentReqest[0]?.chkOutDate);
 
-                        if (response?.status == "missing") {
-                            swal.close();
-                            notify(
-                                response?.message || "Passenger details parameter missing",
-                                "error"
-                            );
-                        } else if (response.status == "success") {
-                            notify("Passenger details submitted successfully.", "success");
-                            tripPaymetHit(response);
+                        let bookingStatus = response?.data?.Status;
+                        if (response.status == "success" && bookingStatus == 1) {
+                            swal({
+                                type: "success",
+                                html: `<p><span class="badge bg-success">Booking Confirmed</span></p>
+                                    <div class="alert alert-secondary border rounded p-3">
+                                        <ul class="list-unstyled mb-0">
+                                            <li>Your booking is successful at <strong class="fs-5">${alHotelData?.Name}</strong> and your 
+                                            Booking ID : <span class="badge bg-primary">${response?.data?.BookingId}</span>
+                                            
+                                            and Invoice Number : <span class="badge bg-primary">${response?.data?.InvoiceNumber}</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="card-body px-1 pt-1 pb-0 mb-0">
+                                        <p>Lead Guest:<span class="fs-4"> ${psngr[0]?.Title}  ${psngr[0]?.FirstName}  ${psngr[0]?.LastName}</span></p>
+                                    </div>`,
+                                confirmButtonText: 'OK, Got it🙂',
+                                showConfirmButton: true,
+                                backdrop: true,
+                                allowOutsideClick: false,
+                            }).then((result) => {
+                                if (result.isConfirmed || result.value) {
+                                    setTimeout(function () {
+                                        window.open("/hotel/view", "_self");
+                                    }, 1000);
+                                }
+                            });                            
+                        } else if (bookingStatus == 3) {
+                            notify("Price changed. Please verify before booking again.", "warning");
+
+                        } else if (bookingStatus == 6) {
+                            notify("Booking has been cancelled.", "error");
+
+                        } else if (bookingStatus == 0) {
+                            notify("Booking failed. Please try again.", "error");
+
                         } else {
-                            swal.close();
                             notify(
                                 response?.message ||
-                                "Error while submitting passenger details.",
+                                "Error while booking Hotel.",
                                 "error"
                             );
+                            setTimeout(function () {
+                                window.open("/hotel/view", "_blank");
+                            }, 2000);
                         }
                     },
                     error: function (error) {
                         swal.close();
-                        notify("Failed to submit passenger details.", "error");
+                        notify(
+                            "Something went wrong while confirming the booking.",
+                            "error"
+                        );
+                        setTimeout(function () {
+                            window.open("/hotel/view", "_blank");
+                        }, 2000);
                     },
                 });
+            } else {
+                setTimeout(function () {
+                    window.open("/hotel/view", "_blank");
+                }, 2000);
             }
         });
 
     }
 }
 
-
-function tripPaymetHit($response) {
-    $.ajax({
-        url: "/hotel/payments",
-        type: "POST",
-        data: JSON.stringify({
-            requestId: sessionStorage.getItem("rId"),
-            orderRefNo: $response.data.orderRefNo,
-        }),
-        headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-        },
-        contentType: "application/json",
-        success: function (response) {
-            swal.close();
-
-            if (response.status == "success") {
-                confirmPaymetHit(response?.data);
-            } else if (response.status == "missing") {
-                notify(response.message || "Some fields are missing", "error");
-            } else {
-                notify(response.message || "Something went worng", "error");
-            }
-        },
-        error: function (error) {
-            notify("Something went worng", "error");
-        },
-    });
-}
 
 function formatDate(dateStr) {
     let parts = dateStr.split("-");
@@ -1710,109 +1951,4 @@ function formatDate(dateStr) {
     return formattedDate.toLocaleDateString('en-GB', options).replace(/,/g, '');
 }
 
-function confirmPaymetHit(datas) {
-    // console.log(datas);
-    var txtMsg = `Are you sure you want to proceed with the payment? </br>Amount: ₹ ${datas?.amount}`;
-
-    swal({
-        title: "Confirm Payment",
-        html: txtMsg,
-        type: "warning",
-        confirmButtonText: `Pay & Confirm`,
-        cancelButtonText: "Cancel",
-        showCancelButton: true,
-        showLoaderOnConfirm: true,
-        backdrop: true,
-        allowOutsideClick: false,
-    }).then((result) => {
-        if (result.isConfirmed) {
-            swal({
-                title: "Processing...",
-                text: "Please wait while your booking is being confirmed.",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                },
-            });
-            $.ajax({
-                url: "/hotel/confirm-book",
-                type: "POST",
-                data: JSON.stringify({
-                    requestId: sessionStorage.getItem("rId"),
-                    bookingRefNo: datas?.bookingRefNo || ""
-                }),
-                headers: {
-                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr(
-                        "content"
-                    ),
-                },
-                contentType: "application/json",
-                success: function (response) {
-                    swal.close();
-                    let recomdet = JSON.parse(sessionStorage.getItem('recomdet'));
-                    let alHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
-                    let sentReqest = JSON.parse(localStorage.getItem('sentReqest'));
-                    let psngr = JSON.parse(localStorage.getItem('psgr'));
-
-                    let essentialInfo = recomdet?.ratePlanDetails[0]?.essentialInformation;
-
-                    let checkInInfo = essentialInfo?.find(info => info.type === "Check-in")?.text || "Check-in details not available";
-                    let checkOutInfo = essentialInfo?.find(info => info.type === "Check-out")?.text || "Check-out details not available";
-
-                    let checkInFormatted = formatDate(sentReqest[0]?.chkInDate);
-                    let checkOutFormatted = formatDate(sentReqest[0]?.chkOutDate);
-
-
-                    if (response.status == "success") {
-                        swal({
-                            type: "success",
-                            html: `<p><span class="badge bg-success">Booking Confirmed</span></p>
-                                <div class="alert alert-light border rounded p-4">
-                                    <ul class="list-unstyled">
-                                        <li>Your booking is successful at <strong class="fs-5">${alHotelData?.hotelName}, ${alHotelData?.location}</strong> and your 
-                                        Booking ID : <span class="badge bg-primary">${response?.data?.bookingRefNo}</span></li>
-                                    </ul>
-                                </div>
-                                <div class="card-body px-1 pt-1 pb-0 mb-0">
-                                    <p>Lead Guest:<span class="fs-4"> ${psngr[0]?.title}  ${psngr[0]?.firstName}  ${psngr[0]?.lastName}</span></p>
-                                    <span><small>Check-in:</small> ${checkInFormatted}, <small>(${checkInInfo})</small></span>
-                                    <br/>
-                                    <span><small>Check-out:</small> ${checkOutFormatted}, <small>(${checkOutInfo})</small></span>
-                                </div>`,
-                            confirmButtonText: 'OK, Got it🙂',
-                            showConfirmButton: true,
-                            backdrop: true,
-                            allowOutsideClick: false,
-                        }).then((result) => {
-                            if (result.isConfirmed) {
-                                setTimeout(function () {
-                                    window.open("/booking/history/hotels", "_self");
-                                }, 1000);
-                            }
-                        });
-                    } else {
-                        notify(response.message, "error");
-                    }
-
-                    setTimeout(function () {
-                        window.open("/booking/history/hotels", "_blank");
-                    }, 5000);
-                },
-                error: function (error) {
-                    notify(
-                        "Something went wrong while confirming the booking.",
-                        "error"
-                    );
-                    setTimeout(function () {
-                        window.open("/booking/history/hotels", "_blank");
-                    }, 2000);
-                },
-            });
-        } else {
-            setTimeout(function () {
-                window.open("/booking/history/hotels", "_blank");
-            }, 2000);
-        }
-    });
-}
+   
