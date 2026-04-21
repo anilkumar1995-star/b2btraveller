@@ -134,6 +134,7 @@
                       <th>User</th>
                   @endif
                   <th>Total Amount</th>
+                  <th>Payment Status</th>
                   <th>Status</th>
                   <th>Message</th>
               </tr>
@@ -152,6 +153,11 @@
                               </td>
                           @endif
                           <td>₹{{ $b->total_amount ?? 0 }}</td>
+                          <td>
+                              <span class="badge {{ ($b->payment_status ?? '') == 'success' ? 'bg-success' : (($b->payment_status ?? '') == 'pending' ? 'bg-warning' : 'bg-danger') }}">
+                                  {{ ucfirst($b->payment_status ?? 'Failed') }}
+                              </span>
+                          </td>
                           <td><span class="badge bg-danger">{{ $b->booking_status ?? 'N/A' }}</span></td>
                           <td>{{ $b->message ?? 'N/A' }}</td>
 
@@ -159,7 +165,7 @@
                   @endforeach
               @else
                   <tr>
-                      <td colspan="{{ Myhelper::hasRole('admin') ? 5 : 4 }}" class="text-center text-danger">No Bookings Details found.</td>
+                      <td colspan="{{ Myhelper::hasRole('admin') ? 6 : 5 }}" class="text-center text-danger">No Bookings Details found.</td>
                   </tr>
               @endif
           </tbody>

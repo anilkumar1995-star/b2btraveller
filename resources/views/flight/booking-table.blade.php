@@ -137,6 +137,7 @@
                   <th>Booking Details</th>
                   <th>Route</th>
                   <th>Amount</th>
+                  <th>Payment Status</th>
                   <th>Type</th>
                   <th>Ticket Status</th>
                   <th class="text-center">Action</th>
@@ -203,6 +204,11 @@
 
                           <td>{{ $b->origin }} <br /> {{ $b->destination }}</td>
                           <td>₹{{ $b->total_amount ?? 0 }}</td>
+                          <td>
+                              <span class="badge {{ $b->payment_status == 'success' ? 'bg-success' : ($b->payment_status == 'pending' ? 'bg-warning' : 'bg-danger') }}">
+                                  {{ ucfirst($b->payment_status ?? 'N/A') }}
+                              </span>
+                          </td>
 
                           <td>{!! $b->is_lcc === 'true' ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>' !!}
 
@@ -284,7 +290,7 @@
                   @endforeach
               @else
                   <tr>
-                      <td colspan="{{ Myhelper::hasRole('admin') ? 8 : 7 }}" class="text-center text-danger">No Bookings Details found.</td>
+                      <td colspan="{{ Myhelper::hasRole('admin') ? 9 : 8 }}" class="text-center text-danger">No Bookings Details found.</td>
                   </tr>
               @endif
           </tbody>
@@ -444,10 +450,19 @@
           border-radius: 8px;
           font-size: 15px;
       }
+        .swal2-icon.swal2-warning {
+            width: 4em !important;
+            height: 4em !important;
+            font-size: 0.8em !important;
+        }
+        .swal2-icon.swal2-info {
+            width: 4em !important;
+            height: 4em !important;
+            font-size: 0.8em !important;
+        }
   </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
-
   <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="{{ asset('') }}js/boookflighttriping.js"></script>
@@ -527,7 +542,10 @@
                       },
                       success: function(res) {
                           if (res.status === 'success') {
-                              Swal.fire('Refunded!', res.message || 'Refund successful.', 'success').then(() => {
+                              let apiStatus = (res.data && res.data.status) ? res.data.status : 'SUCCESS';
+                              let iconType = (apiStatus.toUpperCase() === 'PENDING') ? 'info' : 'success';
+                              
+                              Swal.fire(apiStatus, res.message || 'Refund request processed.', iconType).then(() => {
                                   location.reload();
                               });
                           } else {
@@ -1114,8 +1132,8 @@
                   _token: "{{ csrf_token() }}"
               },
               beforeSend: function() {
-                  swal({
-                      type: 'warning',
+                  Swal.fire({
+                      icon: 'warning',
                       title: 'Checking Cancellation Status',
                       text: 'Please wait while we check the cancellation status...',
                       allowOutsideClick: false,
@@ -1137,14 +1155,14 @@
                       let refundAmount = res.data.Response.RefundedAmount;
                       let cancelCharge = res.data.Response.CancellationCharge;
 
-                      swal({
+                      Swal.fire({
                           title: 'Cancellation Status',
                           html: `
                                 <b>Status:</b> ${status} <br>
                                 <b>Refund Amount:</b> ₹${refundAmount} <br>
                                 <b>Cancellation Charge:</b> ₹${cancelCharge}
                             `,
-                          type: 'success',
+                          icon: 'success',
                           confirmButtonText: 'OK, Got it !',
                           allowOutsideClick: false,
                           allowEscapeKey: false,
@@ -1152,20 +1170,20 @@
                           location.reload();
                       });
                   } else {
-                      swal({
+                      Swal.fire({
                           title: 'Error',
                           text: res.message ||
                               'Unable to fetch cancellation status. Please try again later.',
-                          type: 'error'
+                          icon: 'error'
                       });
                   }
 
               },
               error: function() {
-                  swal({
+                  Swal.fire({
                       title: 'Error',
                       text: 'Unable to fetch cancellation status. Please try again later.',
-                      type: 'error'
+                      icon: 'error'
                   });
               }
           });
@@ -1184,23 +1202,23 @@
           const depTime = new Date(depTimeStr.replace(' ', 'T'));
           const now = new Date();
           if (ticketStatus == 'Cancelled' || ticketStatus == 'CancelRejected') {
-              swal({
+              Swal.fire({
                   title: 'Ticket Already Cancelled',
                   html: `Refund Amount: ${amt} 
                   <br> Cancel Request id: ${changereqid}
                   <br> Credit Note No: ${creditno}
                   <br/>No further action is allowed.`,
-                  type: 'warning',
+                  icon: 'warning',
                   confirmButtonText: 'OK, Got It',
                   allowOutsideClick: false,
                   allowEscapeKey: false
               });
               return;
           } else if (ticketStatus == 'CancellationPending') {
-              swal({
+              Swal.fire({
                   title: 'Cancellation in Process',
                   html: `Refund Amount: ${amt} <br/> Cancellation is not allowed.`,
-                  type: 'warning',
+                  icon: 'warning',
                   confirmButtonText: 'OK',
                   allowOutsideClick: false,
                   allowEscapeKey: false
@@ -1209,10 +1227,10 @@
           } else if (ticketStatus == 'Successful') {
 
               if (depTime <= now) {
-                  swal({
+                  Swal.fire({
                       title: 'Trip Completed',
                       text: 'Departure time has already passed. Cancellation is not allowed.',
-                      type: 'error',
+                      icon: 'error',
                       confirmButtonText: 'OK',
                       allowOutsideClick: false,
                       allowEscapeKey: false
@@ -1220,8 +1238,8 @@
                   return;
               }
 
-              swal({
-                  type: 'warning',
+              Swal.fire({
+                  icon: 'warning',
                   title: 'Please Wait',
                   text: 'Checking cancellation charges...',
                   allowOutsideClick: false,
@@ -1238,7 +1256,7 @@
                   },
                   success: function(res) {
 
-                      swal.close();
+                      Swal.close();
 
                       if (res.status == 'success') {
 
@@ -1250,7 +1268,7 @@
                           localStorage.setItem('refundAmount', refundAmount);
                           localStorage.setItem('cancelRemarks', remarks);
 
-                          swal({
+                          Swal.fire({
                               title: 'Confirm Cancellation',
                               html: `
                                 <b>Cancellation Charge:</b> ₹${cancelCharge} <br>
@@ -1258,7 +1276,7 @@
                                 <b>Remarks:</b> ${remarks} <br><br>
                                 Do you want to cancel this flight?
                             `,
-                              type: 'warning',
+                              icon: 'warning',
                               showCancelButton: true,
                               confirmButtonText: 'Yes, Cancel Flight',
                               cancelButtonText: 'No',
@@ -1266,7 +1284,7 @@
                               allowEscapeKey: false,
                           }).then((result) => {
 
-                              if (result.value) {
+                              if (result.isConfirmed) {
 
                                   const encoded = btoa(JSON.stringify(bookingId));
 
@@ -1276,30 +1294,30 @@
                           });
 
                       } else {
-                          swal({
+                          Swal.fire({
                               title: 'Error',
                               text: res.message ||
                                   'Unable to fetch cancellation charges. Please try again later.',
-                              type: 'error'
+                              icon: 'error'
                           });
 
                       }
 
                   },
                   error: function() {
-                      swal({
+                      Swal.fire({
                           title: 'Error',
                           text: 'Unable to fetch cancellation charges. Please try again later.',
-                          type: 'error'
+                          icon: 'error'
                       });
                   }
 
               });
           } else {
-              swal({
+              Swal.fire({
                   title: 'Ticket is Not Confirmed',
                   text: 'Cancellation is not allowed.',
-                  type: 'warning',
+                  icon: 'warning',
                   confirmButtonText: 'OK',
                   allowOutsideClick: false,
                   allowEscapeKey: false
