@@ -846,6 +846,15 @@ class FlightController extends Controller
                 $journeyDate = $segments['Origin']['DepTime'] ?? now()->format('Y-m-d H:i:s');
             }
         }
+        $originCity = DB::table('flightcity')->where('airport_code', $originCode)->first();
+        if ($originCity) {
+            $originName = trim($originCity->airport_name);
+        }
+
+        $destCity = DB::table('flightcity')->where('airport_code', $destCode)->first();
+        if ($destCity) {
+            $destName = trim($destCity->airport_name);
+        }
 
         return [
             'origin'        => trim($originCode . "-" . $originName, "- "),
@@ -1112,7 +1121,7 @@ class FlightController extends Controller
             $responseStatus = json_decode($result['response']);
            
             if (isset($responseStatus->code) && ($responseStatus->code == "0x0200" || $responseStatus->code == "0x0206")) {
-                $msg = ($responseStatus->code == "0x0206") ? "Refund initiated successfully." : "Refund successful.";
+                $msg = $responseStatus->message ?? (($responseStatus->code == "0x0206") ? "Refund initiated successfully." : "Refund successful.");
                 
                 $updateData = [
                     'booking_status' => 'Cancelled',
@@ -1128,9 +1137,9 @@ class FlightController extends Controller
                     ->update($updateData);
 
                 return response()->json([
-                    'status' => 'success',
+                    'status'  => 'success',
                     'message' => $msg,
-                    'data'   => $responseStatus->data ?? []
+                    'data'    => $responseStatus
                 ]);
             } else {
                 return response()->json([
