@@ -6253,4 +6253,231 @@ class HotelStaticResponseHelper
             }
         }';
     }
+
+    static function busbookingdetailsresponse(){
+        return '{
+            "code": "0x0200",
+            "message": "success",
+            "status": "SUCCESS",
+            "data": {
+                "GetBookingDetailResult": {
+                    "TBOReferenceNo": "TBFDXSH3US",
+                    "VoucherStatus": false,
+                    "ResponseStatus": 1,
+                    "Error": {
+                        "ErrorCode": 0,
+                        "ErrorMessage": ""
+                    },
+                    "TraceId": "a00a1f63-340b-11f1-83e8-ba9013e35c3f",
+                    "Status": 1,
+                    "HotelBookingStatus": "Confirmed",
+                    "ConfirmationNo": "7774168895942",
+                    "BookingRefNo": "614202726477662",
+                    "BookingId": 2108197,
+                    "IsPriceChanged": false,
+                    "IsCancellationPolicyChanged": false,
+                    "Rooms": [
+                        {
+                            "AdultCount": 1,
+                            "AvailabilityType": "NotAvailable",
+                            "ChildCount": 0,
+                            "HotelPassenger": [
+                                {
+                                    "Age": 33,
+                                    "Email": null,
+                                    "FileDocument": null,
+                                    "FirstName": "Anil",
+                                    "GSTCompanyAddress": null,
+                                    "GSTCompanyContactNumber": null,
+                                    "GSTCompanyEmail": null,
+                                    "GSTCompanyName": null,
+                                    "GSTNumber": null,
+                                    "GuardianDetail": null,
+                                    "LastName": "Pandey",
+                                    "LeadPassenger": true,
+                                    "MiddleName": null,
+                                    "PAN": "ENGPK9356A",
+                                    "PassportExpDate": null,
+                                    "PassportIssueDate": null,
+                                    "PassportNo": null,
+                                    "PaxId": 263353,
+                                    "PaxType": 1,
+                                    "Phoneno": "01244998999",
+                                    "Title": "Mr"
+                                }
+                            ],
+                            "RequireAllPaxDetails": false,
+                            "RoomId": 195861,
+                            "RoomStatus": 0,
+                            "RoomIndex": 1,
+                            "RoomTypeCode": "229226773|",
+                            "RoomDescription": "<p></p><p>732-sq-foot room with partial ocean views </p><br/><p><b>Layout</b> - Bedroom </p><p><b>Internet</b> - Free WiFi </p><p><b>Entertainment</b> - 32-inch TV with cable channels</p><p><b>Sleep</b> - Blackout drapes/curtains and bed sheets </p><p><b>Bathroom</b> - Shower with a rainfall showerhead</p><p><b>Practical</b> - Desk, phone, and window screens; rollaway beds (surcharge) and cribs (free) available on request</p><p><b>Comfort</b> - Air conditioning and daily housekeeping</p><p>Non-Smoking</p>",
+                            "RoomTypeName": "Superior Room, Partial Ocean View,1 King Bed,NonSm",
+                            "RatePlanCode": "229226773|405682869|37321|141",
+                            "RatePlan": 0,
+                            "IsPerStay": true,
+                            "PriceBreakUp": {
+                                "CurrencyCode": "INR",
+                                "RoomRate": 3929.23000000000001818989403545856475830078125,
+                                "RoomTax": 0,
+                                "RoomExtraGuestCharges": 0,
+                                "RoomChildCharges": 0,
+                                "ServiceFee": 0,
+                                "AgentCommission": 36.49000000000000198951966012828052043914794921875,
+                                "TaxBreakup": [
+                                    {
+                                        "TaxType": "Tax_CGST",
+                                        "TaxAmount": 0
+                                    },
+                                    {
+                                        "TaxType": "Tax_IGST",
+                                        "TaxAmount": 0
+                                    },
+                                    {
+                                        "TaxType": "Tax_SGST",
+                                        "TaxAmount": 0
+                                    },
+                                    {
+                                        "TaxType": "Tax_TCS",
+                                        "TaxAmount": 0
+                                    },
+                                    {
+                                        "TaxType": "Tax_TDS",
+                                        "TaxAmount": 0.729999999999999982236431605997495353221893310546875
+                                    }
+                                ]
+                            },
+                            "RoomPromotion": null,
+                            "Amenities": [
+                                "Towels provided",
+                                "Bedsheets provided",
+                                "Non-Smoking",
+                                "Television",
+                                "Housekeeping (surcharge)",
+                                "Shower only",
+                                "Window screens",
+                                "TV size measurement: inch",
+                                "Blackout drapes/curtains",
+                                "Free toiletries",
+                                "Hair dryer",
+                                "Daily housekeeping",
+                                "Air conditioning",
+                                "TV size: 32",
+                                "Free WiFi",
+                                "Rollaway/extra beds (surcharge)",
+                                "Rainfall showerhead",
+                                "Phone",
+                                "Desk",
+                                "Cable TV service",
+                                "Free cribs/infant beds"
+                            ],
+                            "SmokingPreference": "NoPreference",
+                            "BedTypes": [],
+                            "Supplements": [],
+                            "LastCancellationDate": "2026-04-10T23:59:59",
+                            "CancelPolicies": [
+                                {
+                                    "CancellationCharge": 0,
+                                    "ChargeType": 1,
+                                    "Currency": "INR",
+                                    "FromDate": "08/04/2026 00:00:00",
+                                    "ToDate": "10/04/2026 23:59:59"
+                                },
+                                {
+                                    "CancellationCharge": 100,
+                                    "ChargeType": 2,
+                                    "Currency": "INR",
+                                    "FromDate": "11/04/2026 00:00:00",
+                                    "ToDate": "11/04/2026 23:59:59"
+                                }
+                            ],
+                            "CancellationPolicies": null,
+                            "LastVoucherDate": "2026-04-10T23:59:59",
+                            "CancellationPolicy": "Superior Room, Partial Ocean View,1 King Bed,NonSm#^#No cancellation charge, If cancelled between 08-Apr-2026 00:00:00 and 10-Apr-2026 23:59:59.|100.00% of total amount will be charged, If cancelled between 11-Apr-2026 00:00:00 and 11-Apr-2026 23:59:59.|#!#",
+                            "Inclusion": "Free breakfast"
+                        }
+                    ],
+                    "NetAmount": 3893.46999999999979991116560995578765869140625,
+                    "NetTax": 0.729999999999999982236431605997495353221893310546875,
+                    "RateConditions": [
+                        "Early check out will attract full cancellation charge unless otherwise specified",
+                        "CheckIn Time-Begin: 3:00 PM ",
+                        " CheckIn Time-End: midnight",
+                        "CheckOut Time: 12:00 PM",
+                        "CheckIn Instructions: &lt;ul&gt;  &lt;li&gt;Extra-person charges may apply and vary depending on property policy&lt;/li&gt;&lt;li&gt;Government-issued photo identification and a credit card, debit card, or cash deposit may be required at check-in for incidental charges&lt;/li&gt;&lt;li&gt;Special requests are subject to availability upon check-in and may incur additional charges; special requests cannot be guaranteed&lt;/li&gt;&lt;li&gt;This property accepts credit cards; cash is not accepted&lt;/li&gt;&lt;li&gt;Cashless transactions are available&lt;/li&gt;&lt;li&gt;Safety features at this property include a fire extinguisher, a smoke detector, a security system, and a first aid kit&lt;/li&gt;&lt;li&gt;This property has outdoor spaces, such as balconies, patios, terraces which may not be suitable for children; if you have concerns, we recommend contacting the property prior to your arrival to confirm they can accommodate you in a suitable room&lt;/li&gt;&lt;li&gt;Please note that cultural norms and guest policies may differ by country and by property; the policies listed are provided by the property&lt;/li&gt;  &lt;/ul&gt; ",
+                        " Special Instructions : This property offers transfers from the airport (surcharges may apply). Guests must contact the property with arrival details before travel, using the contact information on the booking confirmation. Front desk staff will greet guests on arrival at the property. For any questions, please contact the property using the information on the booking confirmation. Information provided by the property may be translated using automated translation tools. Guests should notify the property in advance of their flight details. Water park at Aquaventure  may not be open daily. Guests should contact the property directly for hours of operation. All guests must show a valid passport or Emirates ID (for UAE residents) at check-in. These are the only forms of identification accepted at this property. Guests booked in a Suite must contact this property at least 48 hours in advance to schedule airport transportation.",
+                        "Minimum CheckIn Age : 21",
+                        "Mandatory Fees: &lt;p&gt;Youll be asked to pay the following charges at the property. Fees may include applicable taxes:&lt;/p&gt; &lt;ul&gt;&lt;li&gt;New Years Eve (December 31) Gala Dinner per adult: AED 1350&lt;/li&gt;&lt;li&gt;New Years Eve (December 31) Gala Dinner per child: AED 625 (from 4 to 13 years old)&lt;/li&gt;&lt;li&gt;A tax is imposed by the city: AED 20.00 per accommodation, per night&lt;/li&gt;A tourism fee is imposed by the city and collected at the property. The fee is AED 20 for the first bedroom per night, and increases by AED 20 per night for each additional bedroom. &lt;/ul&gt; &lt;p&gt;We have included all charges provided to us by the property. &lt;/p&gt; ",
+                        " Optional Fees: &lt;ul&gt; &lt;li&gt;Fee for buffet breakfast: approximately AED 200 per person&lt;/li&gt;&lt;li&gt;Airport shuttle fee: AED 900 per vehicle (roundtrip, maximum occupancy 4)&lt;/li&gt;&lt;li&gt;Rollaway bed fee: AED 797.0 per night&lt;/li&gt;&lt;/ul&gt; &lt;p&gt;The above list may not be comprehensive. Fees and deposits may not include tax and are subject to change. &lt;/p&gt;",
+                        "Cards Accepted: Visa,Debit cards not accepted,Cash not accepted,American Express,Mastercard",
+                        "&lt;ul&gt;  &lt;li&gt;Reservations are required for massage services and spa treatments. Reservations can be made by contacting the hotel prior to arrival, using the contact information on the booking confirmation. &lt;/li&gt; &lt;li&gt;One child 13 years old or younger stays free when occupying the parent or guardians room, using existing bedding. &lt;/li&gt;&lt;li&gt;Only registered guests are allowed in the guestrooms. &lt;/li&gt; &lt;li&gt;The property has connecting/adjoining rooms, which are subject to availability and can be requested by contacting the property using the number on the booking confirmation. &lt;/li&gt;&lt;li&gt;A car is not required for transportation to and from this property. &lt;/li&gt;&lt;li&gt;Cashless payment methods are available for all transactions.&lt;/li&gt;&lt;li&gt;Contactless check-in and contactless check-out are available.&lt;/li&gt; &lt;/ul&gt;,Pets not allowed,Property does not require health documentation at check-in,Professional property host/manager,Contactless check-out is available,EarthCheck,Cashless transactions are available,Contactless check-in is available,Property does not offer onsite COVID-19 testing"
+                    ],
+                    "AgentRemarks": "",
+                    "BookingSource": "EANPackage",
+                    "BookingStatus": 2,
+                    "CreditNoteGSTIN": null,
+                    "GSTIN": null,
+                    "GuestNationality": "IN",
+                    "HotelItineraryTracking": {
+                        "CampaignId": null,
+                        "CampaignName": null,
+                        "IsLovedByIndians": false,
+                        "IsSelectedFromSimilar": false,
+                        "ItineraryTrackingJson": null,
+                        "SearchType": 1
+                    },
+                    "HotelPolicyDetail": null,
+                    "IntHotelPassportDetails": null,
+                    "InvoiceCreatedOn": null,
+                    "InvoiceNo": null,
+                    "IsCorporate": false,
+                    "LastCancellationDeadline": "2026-04-10T23:59:59",
+                    "PostBookingRequestDetails": [],
+                    "ValidationInfo": {
+                        "ValidationAtVoucher": {
+                            "IsAgencyOwnPANAllowed": false,
+                            "IsCorporateBookingAllowed": false,
+                            "IsCrpPANMandatory": true,
+                            "IsCrpPassportCopyMandatory": false,
+                            "IsCrpPassportMandatory": false,
+                            "IsCrpSamePANForAllAllowed": true,
+                            "IsEmailMandatory": false,
+                            "IsPANCopyPANMandatory": false,
+                            "IsPANMandatory": true,
+                            "IsPassportCopyMandatory": false,
+                            "IsPassportMandatory": false,
+                            "IsSamePANForAllAllowed": true,
+                            "IsTCSApplicableOnCrp": false,
+                            "NoOfPANRequired": 1,
+                            "PassengerValidation": null
+                        }
+                    },
+                    "HotelConfirmationNo": null,
+                    "HotelCode": "51001379",
+                    "HotelId": 170673,
+                    "HotelName": "Hotel Estelar Oceania",
+                    "TBOHotelCode": "1232821",
+                    "StarRating": 3,
+                    "AddressLine1": "Calle 1 No. 3 231 El Laguito, Cartagena",
+                    "AddressLine2": "",
+                    "CountryCode": "CO",
+                    "Latitude": "10.394252",
+                    "Longitude": "-75.560622",
+                    "City": "Cartagena",
+                    "CityId": 113776,
+                    "CheckInDate": "2026-04-12T00:00:00",
+                    "InitialCheckInDate": "2026-04-12T00:00:00",
+                    "CheckOutDate": "2026-04-13T00:00:00",
+                    "InitialCheckOutDate": "2026-04-13T00:00:00",
+                    "LastCancellationDate": "2026-04-10T23:59:59",
+                    "LastVoucherDate": "2026-04-10T23:59:59",
+                    "NoOfRooms": 1,
+                    "BookingDate": "2026-04-09T12:03:37",
+                    "SpecialRequest": "",
+                    "IsDomestic": false,
+                    "BookingAllowedForRoamer": false
+                }
+            }
+        }';
+    }
 }

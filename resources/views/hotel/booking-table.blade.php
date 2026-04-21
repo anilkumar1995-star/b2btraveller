@@ -159,7 +159,6 @@
               @endphp
               @if (!empty($bookings) && $bookings->count() > 0)
                   @foreach ($bookings as $b)
-                
                       @php
                           $status = $statusMap[$b->booking_status] ?? [
                               'label' => 'Unknown',
@@ -170,6 +169,8 @@
                               'label' => ucfirst($b->voucher_status),
                               'class' => 'badge bg-warning',
                           ];
+
+                          $response = json_decode($b->raw_response);
                       @endphp
                       <tr>
                           <td>##{{ $b->id }} <br />{{ $b->created_at }}</td>
@@ -181,10 +182,8 @@
                               </td>
                           @endif
                           <td>Invoice Number: <b>{{ $b->invoice_number ?? 'N/A' }}</b> <br /> Booking Id:
-                                @php
-                                    $response = json_decode($b->raw_response);
-                                @endphp 
-                            <b>{{ $response->data->BookingId ?? 'N/A' }}</b>
+                              
+                              <b>{{ $response->data->BookingId ?? 'N/A' }}</b>
                           </td>
 
                           <td>₹{{ $b->total_amount ?? 0 }}</td>
@@ -213,24 +212,23 @@
 
                                   <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
 
-
                                       <li>
                                           <a class="dropdown-item" href="javascript:void(0)"
-                                              onclick="openBookingDetails({{ $b->id }})">
+                                              onclick='openBookingDetails(@json($response->data))'>
                                               📄 Booking Details
                                           </a>
                                       </li>
-                                      <li>
-                                          <a class="dropdown-item cancel-flight" href="javascript:void(0)"
+                                      {{-- <li>
+                                          <a class="dropdown-item cancel-hotel" href="javascript:void(0)"
                                               data-bookingidcancel="{{ $b->booking_id_api }}"
                                               data-ticketstatus="{{ $b->voucher_status }}"
                                               data-changereqid="{{ $b->change_request_id }}"
                                               data-creditnoteno="{{ $b->credit_note_no }}"
                                               data-refundamt="{{ $b->refunded_amount }}">
-                                              ✈️ Cancel Flight
+                                              🏨 Cancel Hotel
                                           </a>
                                       </li>
-                                      @if ($b->voucher_status == 'CancellationPending' && $b->order_ref_id != null)
+                                      @if ($b->booking_status == 'CancellationPending' && $b->order_ref_id != null)
                                           <li>
                                               <a class="dropdown-item cancel-status" href="javascript:void(0)"
                                                   data-bookingid="{{ $b->booking_id_api }}"
@@ -248,7 +246,7 @@
                                                   💸 Refund Amount
                                               </a>
                                           </li>
-                                      @endif
+                                      @endif --}}
                                   </ul>
                               </div>
                           </td>
@@ -256,7 +254,8 @@
                   @endforeach
               @else
                   <tr>
-                      <td colspan="{{ Myhelper::hasRole('admin') ? 8 : 7 }}" class="text-center text-danger">No Bookings Details found.</td>
+                      <td colspan="{{ Myhelper::hasRole('admin') ? 8 : 7 }}" class="text-center text-danger">No
+                          Bookings Details found.</td>
                   </tr>
               @endif
           </tbody>
@@ -272,7 +271,7 @@
           <div class="modal-content">
 
               <div class="modal-header border-0">
-                  <h4 class="modal-title fw-semibold">Flight Ticket</h4>
+                  <h4 class="modal-title fw-semibold">Hotel Ticket</h4>
                   <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
               </div>
 
@@ -422,101 +421,14 @@
 
   <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="{{ asset('') }}js/boookflighttriping.js"></script>
+  <script src="{{ asset('') }}js/hotel.js"></script>
+  <script src="{{ asset('') }}js/inputFormValidation.js"></script>
   <script type="text/javascript">
       $(document).ready(function() {
           localStorage.removeItem('cancelCharge');
           localStorage.removeItem('refundAmount');
           localStorage.removeItem('cancelRemarks');
       });
-
-      function manualStatusCheck(orderRefId) {
-          Swal.fire({
-              title: 'Checking Status...',
-              text: 'Please wait while we verify the booking with the provider.',
-              allowOutsideClick: false,
-              didOpen: () => {
-                  Swal.showLoading();
-              }
-          });
-
-          $.ajax({
-              url: "{{ route('flight.checkStatus') }}",
-              type: "POST",
-              data: {
-                  id: orderRefId,
-                  _token: "{{ csrf_token() }}"
-              },
-              success: function(res) {
-                  if (res.status === 'success' && res.booking_status === 'Confirmed') {
-                      Swal.fire('Success!', 'Booking confirmed successfully.', 'success').then(() => {
-                          location.reload();
-                      });
-                  } else if (res.status === 'success' && res.booking_status === 'Pending') {
-                      Swal.fire('Pending', 'Booking is still in progress.', 'info');
-                  } else {
-                      Swal.fire('Error', res.message || 'Wait For Sometime Payment Response Failed If Amount deducted wait for 15 minutes', 'error');
-                  }
-              },
-              error: function() {
-                  Swal.fire('Error', 'Connection failed. Please try again.', 'error');
-              }
-          });
-      }
-
-      function refundTicket(orderRefId) {
-          if (!orderRefId) {
-              Swal.fire('Error', 'Transaction ID (clientRefId) is missing.', 'error');
-              return;
-          }
-
-          Swal.fire({
-              title: 'Are you sure?',
-              text: "You want to process refund for this transaction? This action cannot be undone.",
-              icon: 'warning',
-              showCancelButton: true,
-              confirmButtonColor: '#d33',
-              cancelButtonColor: '#3085d6',
-              confirmButtonText: 'Yes, refund it!',
-              allowOutsideClick: false,
-          }).then((result) => {
-              if (result.isConfirmed) {
-                  Swal.fire({
-                      title: 'Processing Refund...',
-                      text: 'Please wait...',
-                      allowOutsideClick: false,
-                      didOpen: () => {
-                          Swal.showLoading();
-                      }
-                  });
-
-                  $.ajax({
-                      url: "{{ route('flight.refund') }}",
-                      type: "POST",
-                      data: {
-                          clientRefId: orderRefId,
-                          _token: "{{ csrf_token() }}"
-                      },
-                      success: function(res) {
-                          if (res.status === 'success') {
-                              Swal.fire('Refunded!', res.message || 'Refund successful.', 'success').then(() => {
-                                  location.reload();
-                              });
-                          } else {
-                              Swal.fire('Failed', res.message || 'Refund failed.', 'error');
-                          }
-                      },
-                      error: function(xhr) {
-                          let msg = 'Refund request failed.';
-                          if (xhr.responseJSON && xhr.responseJSON.message) {
-                              msg = xhr.responseJSON.message;
-                          }
-                          Swal.fire('Error', msg, 'error');
-                      }
-                  });
-              }
-          });
-      }
 
       function openBookingDetails(bookingId) {
 
@@ -530,10 +442,10 @@
           $('#viewTicketModal').modal('show');
 
           $.ajax({
-              url: "/flight/booking-view",
+              url: "/hotel/booking-view",
               type: "POST",
               data: {
-                  booking_id: bookingId,
+                  data: bookingId,
                   _token: "{{ csrf_token() }}"
               },
               success: function(res) {
@@ -543,15 +455,14 @@
                       return;
                   }
 
-                  // ✅ EXACT OBJECT YOU SHARED
-                  const booking = res?.data?.Response?.FlightItinerary;
+                  const booking = res?.data?.GetBookingDetailResult;
 
                   if (!booking) {
                       $('#ticketContent').html(`<div class="alert alert-danger">Invalid booking data</div>`);
                       return;
                   }
 
-                  getDetails(booking);
+                //   getDetails(booking);
               },
               error: function() {
                   $('#ticketContent').html(`
@@ -663,20 +574,10 @@
 
 
       function getDetails(booking) {
-          const segments = booking?.Segments || [];
-          const passengers = booking?.Passenger || [];
-
-          const firstSeg = segments[0] || {};
-          const lastSeg = segments[segments.length - 1] || {};
-
-          const originAirport = firstSeg?.Origin?.Airport || {};
-          const destAirport = lastSeg?.Destination?.Airport || {};
-
-          const departTime = firstSeg?.Origin?.DepTime;
-          const arrivalTime = lastSeg?.Destination?.ArrTime;
-
-
-
+        
+        let bookingData = booking?.GetBookingDetailResult || {};
+        let rooms = bookingData?.Rooms || [];
+        let passengers = rooms[0]?.HotelPassenger || [];
           let html = '';
 
           html += `<div>
@@ -685,28 +586,29 @@
                         <div class="d-flex justify-content-between mb-4">
                             <img src="{{ asset('images/logo.png') }}" style="height:58px;">
                             <div class="text-end">
-                                <div class="fw-bold">Flight Ticket (${booking.JourneyType == '1' ? 'One-way' : 'Roundtrip'})</div>
+                                <div class="fw-bold">Hotel Booking</div>
 
                                 <div class="text-muted small">
-                                    ${booking.AirlineCode} (${segments[0]?.Airline?.AirlineName}) •
-                                    ${segments[0]?.Airline?.FlightNumber}
+                                    ${bookingData.HotelName} • ${bookingData.City}
                                 </div>
+
                                 <div>
-                                    <h4> Booking ID: ${booking.BookingId || '-'}</h4>
+                                    <h4> Booking ID: ${bookingData.BookingId || '-'}</h4>
                                 </div>
                             </div>
                         </div>
-                        <h4>✈️ ${originAirport.AirportName || booking.Origin} → ${destAirport.AirportName || booking.Destination}</h4>
+                        <h4>🏨 ${bookingData.HotelName} → ${bookingData.City}</h4>
 
                         <div class="row ticket-route">
 
 
                             <div class="col-sm-6 p-3 text-center ticket-route">
                                 <div class="mt-2 border rounded p-1  bg-label-warning">
-                                    <span> PNR :
-                                        <b>${booking.PNR || '-'}</b></span>
+                                     <span> Booking Ref :
+                                        <b>${bookingData.BookingRefNo || '-'}</b>
+                                    </span>
                                     <br />
-                                    Invoice Number : <b>${booking.InvoiceNo || '-'}</b>
+                                    Confirmation No : <b>${bookingData.ConfirmationNo || '-'}</b>
                                 </div>
 
                                 <br />
@@ -720,8 +622,8 @@
                                     <br />
                                     Airline Toll Free: ${booking.AirlineTollFreeNo
                                     ? `<a href="tel:${booking.AirlineTollFreeNo}" class="text-primary fw-semibold">
-                                                                                          📞 ${booking.AirlineTollFreeNo}
-                                                                                      </a>`
+                                                                                            📞 ${booking.AirlineTollFreeNo}
+                                                                                        </a>`
                                     : '-'
                                     }
                                 </div>
@@ -789,40 +691,39 @@
                             </div>
 
 
-                            ${passengers.map((p, index) => `
-                                                                              <div class="passenger-card">
+                        ${passengers.map((p, index) => `
+                            <div class="passenger-card">
 
-                                                                                  <div class="row align-items-center mb-2">
-                                                                                      <div class="col-5 text-start">
-                                                                                          <b>${p.Title} ${p.FirstName} ${p.LastName}</b> | ${p.Gender == 1 ? 'Male' : 'Female'} |
-                                                                                          ${p.Nationality} <span class="badge bg-label-success">${booking.PNR || '-'}</span>
-                                                                                          ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
-                                                                                          <div class="contact-box w-50 text-start">
-                                                                                              <div class="mb-1"><b>Mobile:</b> ${p.ContactNo}</div>
-                                                                                              <div class="mb-1"><b>Email:</b> ${p.Email}</div>
-                                                                                              <div class="mb-1"><b>City:</b> ${p.City}, ${p.CountryCode}</div>
-                                                                                              <div class="mb-1"><b>DOB:</b> ${new Date(p.DateOfBirth).toLocaleDateString()}</div>
-                                                                                          </div>
-                                                                                      </div>
+                                <div class="row align-items-center mb-2">
+                                    <div class="col-5 text-start">
+                                        <b>${p.Title} ${p.FirstName} ${p.LastName}</b> 
+                                        ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
+                                        <div class="contact-box w-50 text-start">
+                                            <div class="mb-1"><b>Mobile:</b> ${p.Phoneno }</div>
+                                            <div class="mb-1"><b>Email:</b> ${p.Email}</div>
+                                            <div class="mb-1"><b>City:</b> ${p.PAN}</div>
+                                            <div class="mb-1"><b>Age:</b> ${p.Age}</div>
+                                        </div>
+                                    </div>
 
-                                                                                      <div class="col-3 text-start">
-                                                                                          <h5>Invoice Details</h5>
-                                                                                          <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNo}</div>
-                                                                                          <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
-                                                                                          <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
-                                                                                      </div>
-                                                                                      <div class="col-4 text-end">
-                                                                                          <h5>Ticket Details</h5>
-                                                                                          ${p.Ticket ? `
-                                        <div class="mb-1"><b>Issued On: </b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
-                                        <div class="mb-1">${(() => {
-                                            const s = getTicketStatus(p.Ticket.Status);
-                                            return `
-                                                                                              <div class="mb-1">
-                                                                                                  <b>Status:</b>
-                                                                                                  <span class="badge ${s.badge}">${s.text}</span>
-                                                                                              </div>
-                                                                                              `;
+                                    <div class="col-3 text-start">
+                                        <h5>Invoice Details</h5>
+                                        <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNo}</div>
+                                        <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
+                                        <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
+                                    </div>
+                                    <div class="col-4 text-end">
+                                        <h5>Ticket Details</h5>
+                                        ${p.Ticket ? `
+                            <div class="mb-1"><b>Issued On: </b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
+                            <div class="mb-1">${(() => {
+                                const s = getTicketStatus(p.Ticket.Status);
+                                return `
+                                            <div class="mb-1">
+                                                <b>Status:</b>
+                                                <span class="badge ${s.badge}">${s.text}</span>
+                                            </div>
+                                            `;
                                             })()}
                                         </div>
                                         <div class="mb-1"><b>Validating Airline: </b> ${p.Ticket.ValidatingAirline}</div>
@@ -833,12 +734,12 @@
                                         </div>
                                         `}
 
-                                                                                      </div>
-                                                                                  </div>
+                                                                                        </div>
+                                                                                    </div>
 
-                                                                                  <div class="seat-box">
-                                                                                      <div class="seat-title">Seat Details</div>
-                                                                                      ${p.SeatDynamic?.map(s => `
+                                                                                    <div class="seat-box">
+                                                                                        <div class="seat-title">Seat Details</div>
+                                                                                        ${p.SeatDynamic?.map(s => `
                                     <div class="seat-row">
                                         <span>${s.Origin} → ${s.Destination}</span>
                                         <span class="seat-code">${s.Code}</span>
@@ -846,19 +747,19 @@
                                         <span>₹${s.Price}</span>
                                     </div>
                                     `).join('') || '<div class="seat-row">No seat selected</div>'
-                                                                                      }
-                                                                                  </div>
+                                                                                        }
+                                                                                    </div>
 
-                                                                                  <div class="ssr-box mt-3">
-                                                                                      <div class="seat-title">Special Service Requests (SSR)</div>
-                                                                                      ${renderSSR(p.Ssr)}
-                                                                                  </div>
-                                                                                  <div class="baggage-allow-box mt-2">
-                                                                                      <div class="seat-title">Baggage Allowance</div>
+                                                                                    <div class="ssr-box mt-3">
+                                                                                        <div class="seat-title">Special Service Requests (SSR)</div>
+                                                                                        ${renderSSR(p.Ssr)}
+                                                                                    </div>
+                                                                                    <div class="baggage-allow-box mt-2">
+                                                                                        <div class="seat-title">Baggage Allowance</div>
 
 
-                                                                                      <div class="row text-muted mb-2">
-                                                                                          ${p.SegmentAdditionalInfo?.map(b => `
+                                                                                        <div class="row text-muted mb-2">
+                                                                                            ${p.SegmentAdditionalInfo?.map(b => `
                                             <div class="col-4 text-start">
                                                 <b>Check-in :</b>
                                                 <span>${b.Baggage || '-'}</span>
@@ -872,23 +773,23 @@
                                                 <span>${b.Meal || 'Not Included'}</span>
                                             </div>
                                         `).join('')}
-                                                                                      </div>
-                                                                                  </div>
-                                                                                  <hr />
-                                                                                  <div class="fare-box">
-                                                                                      <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
-                                                                                      <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
-                                                                                      <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
-                                                                                      <div class="fare-total">
-                                                                                          Total: ₹${p.Fare.PublishedFare}
-                                                                                      </div>
-                                                                                  </div>
-                                                                                  <div class="barcode text-center mt-3">
-                                                                                      <canvas id="barcodeCanvas${index}"></canvas>
-                                                                                  </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <hr />
+                                                                                    <div class="fare-box">
+                                                                                        <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
+                                                                                        <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
+                                                                                        <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
+                                                                                        <div class="fare-total">
+                                                                                            Total: ₹${p.Fare.PublishedFare}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="barcode text-center mt-3">
+                                                                                        <canvas id="barcodeCanvas${index}"></canvas>
+                                                                                    </div>
 
-                                                                              </div>
-                                                                              `).join('')}
+                                                                                </div>
+                                                                                `).join('')}
                         </div>
                         <div class="mt-4 p-3 bg-white rounded text-end">
                             <span class="text-success">
@@ -1077,7 +978,7 @@
           let bookingId = $(this).data('bookingid');
 
           $.ajax({
-              url: "/flight/cancel-status",
+              url: "/hotel/cancel-status",
               type: "POST",
               data: {
                   changeReqId: changereqId,
@@ -1144,7 +1045,7 @@
 
       });
 
-      $(document).on('click', '.cancel-flight', function() {
+      $(document).on('click', '.cancel-hotel', function() {
 
           const bookingId = $(this).data('bookingidcancel');
           const ticketStatus = $(this).data('ticketstatus');
@@ -1202,7 +1103,7 @@
               });
 
               $.ajax({
-                  url: "/flight/get-cancellation-charges",
+                  url: "/hotel/get-cancellation-charges",
                   method: "POST",
                   data: {
                       booking_id: bookingId,
@@ -1228,11 +1129,11 @@
                                 <b>Cancellation Charge:</b> ₹${cancelCharge} <br>
                                 <b>Refund Amount:</b> ₹${refundAmount} <br><br>
                                 <b>Remarks:</b> ${remarks} <br><br>
-                                Do you want to cancel this flight?
+                                Do you want to cancel this hotel?
                             `,
                               type: 'warning',
                               showCancelButton: true,
-                              confirmButtonText: 'Yes, Cancel Flight',
+                              confirmButtonText: 'Yes, Cancel Hotel',
                               cancelButtonText: 'No',
                               allowOutsideClick: false,
                               allowEscapeKey: false,

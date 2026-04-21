@@ -16,7 +16,7 @@
                 </div>
                 <div class="card-body">
                     <div id="bookingTable" class="overflow-auto">
-                        @include('flight.booking-table-failed')
+                        @include('hotel.booking-table-failed')
                     </div>
                 </div>
             </div>

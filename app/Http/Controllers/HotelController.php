@@ -350,4 +350,20 @@ class HotelController extends Controller
 
         return view('hotel.bookinglistfailed', compact('bookings'));
     }
+
+    public function viewTicket(Request $request)
+    {
+        $booking = DB::table('hotel_bookings')->where('hotel_id', $request->data['BookingId'])->first();
+
+        if (!$booking) {
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'Booking Details not found'
+            ]);
+        }
+        $service = new HotelService();
+        $response = $service->getDetailsHotel($booking->hotel_id);
+
+        return response()->json($response);
+    }
 }
