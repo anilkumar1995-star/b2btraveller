@@ -219,20 +219,21 @@ Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     Route::post('details', [HotelController::class, "detailsHotel"]);
     Route::post('prebooking', [HotelController::class, "prebooking"]);
 
-
     Route::get('guest/detail', [HotelController::class, "gust_Deatils"]);
+    Route::post('booking', [HotelController::class, 'book_HOTELS'])->name('hotel-search');
 
-    Route::post('search/filter', [HotelController::class, "searchFilter_HOTEL"]);
+    Route::get('booking-list', [HotelController::class, 'bookingList'])->name('hotel.bookingList');
+    Route::get('booking-list-failed', [HotelController::class, 'bookingListFailed'])->name('hotel.bookingListFailed');
 
-    Route::get('booking', [HotelController::class, 'book_HOTELS'])->name('hotel-search');
+    // Route::post('search/filter', [HotelController::class, "searchFilter_HOTEL"]);
+
     
-    Route::post('temp-book', [HotelController::class, "tempBooking_HOTEL"]);
-    Route::post('payments', [HotelController::class, "ticketAddPayments_HOTEL"]);
-    Route::post('confirm-book', [HotelController::class, "book_HOTEL"]);
-    Route::post('policy', [HotelController::class, "cancellationPolicy"]);
-    Route::post('cancel', [HotelController::class, "cancel_HOTEL"]);
+    // Route::post('payments', [HotelController::class, "ticketAddPayments_HOTEL"]);
+    // Route::post('confirm-book', [HotelController::class, "book_HOTEL"]);
+    // Route::post('policy', [HotelController::class, "cancellationPolicy"]);
+    // Route::post('cancel', [HotelController::class, "cancel_HOTEL"]);
 
-    Route::get('calcellation/{txnId?}', [ViewsController::class, 'travelCancel_HOTEL'])->name('travelCancel-HOTEL');
+    // Route::get('calcellation/{txnId?}', [ViewsController::class, 'travelCancel_HOTEL'])->name('travelCancel-HOTEL');
 });
 
 Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActivityLog']], function () {

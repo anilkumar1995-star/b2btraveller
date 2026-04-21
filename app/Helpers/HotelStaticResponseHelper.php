@@ -6203,4 +6203,54 @@ class HotelStaticResponseHelper
             }
         }';
     }
+
+    static function hotelBookStaticResponsefailed(){
+        return '{
+            "code": "0x0202",
+            "status": "FAILURE",
+            "message": "Booking Under Cancellation can only be vouchered",
+            "data": {
+                "TBOReferenceNo": null,
+                "VoucherStatus": false,
+                "ResponseStatus": 3,
+                "Error": {
+                    "ErrorCode": 3,
+                    "ErrorMessage": "Booking Under Cancellation can only be vouchered"
+                },
+                "TraceId": "da280bcc-327b-11f1-bdca-ba9013e35c3f",
+                "Status": 0,
+                "HotelBookingStatus": null,
+                "ConfirmationNo": null,
+                "BookingRefNo": null,
+                "BookingId": 0,
+                "IsPriceChanged": false,
+                "IsCancellationPolicyChanged": false
+            }
+        }';
+    }
+    static function hotelBookStaticResponse(){
+        return '{
+            "code": "0x0200",
+            "status": "SUCCESS",
+            "message": "Booking Succesfully DOne",
+            "data": {
+                "TBOReferenceNo": null,
+                "VoucherStatus": true,
+                "ResponseStatus": 1,
+                "Error": {
+                    "ErrorCode": 0,
+                    "ErrorMessage": ""
+                },
+                "TraceId": "946946a6-319b-11f1-a3de-ba9013e35c3f",
+                "Status": 1,
+                "HotelBookingStatus": "Confirmed",
+                "InvoiceNumber": "MW/2627/481",
+                "ConfirmationNo": "7986895233544",
+                "BookingRefNo": "663555288033297",
+                "BookingId": 2106125,
+                "IsPriceChanged": false,
+                "IsCancellationPolicyChanged": false
+            }
+        }';
+    }
 }

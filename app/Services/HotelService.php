@@ -52,12 +52,12 @@ class HotelService
             return $this->baseUrl . '/v1/service/traveller/hotel/details';
         } else if ($method == 'prebooking') {
             return $this->baseUrl . '/v1/service/traveller/hotel/pre/booking';
-        } else if ($method == 'bookhotel') {
-            return $this->baseUrl . '/v1/service/traveller/hotel/book';
-        } else if ($method == 'bookingDetails') {
-            return $this->baseUrl . '/v1/service/traveller/hotel/booking/details';
-        } else if ($method == 'cancelhotel') {
-            return $this->baseUrl . '/v1/service/traveller/hotel/booking/cancel';
+        } else if ($method == 'bookHotel') {
+            return $this->baseUrl . '/v1/service/traveller/hotel/booking';
+        // } else if ($method == 'bookingDetails') {
+        //     return $this->baseUrl . '/v1/service/traveller/hotel/booking/details';
+        // } else if ($method == 'cancelhotel') {
+        //     return $this->baseUrl . '/v1/service/traveller/hotel/booking/cancel';
         }
         return "";
     }
@@ -324,31 +324,26 @@ class HotelService
         }
     }
 
-    public function busBlocks($data)
+    public function bookHotel($data)
     {
         try {
-            $token = $this->authService->getToken();
-
             $payload = [
-                "EndUserIp" => $this->ip,
-                "TokenId" => $token,
-                "TraceId" => $data['traceId'],
-                "ResultIndex" => $data['resultIndex'],
-                "BoardingPointId" => $data['boardingPointId'],
-                "DroppingPointId" => $data['droppingPointId'],
-                "Passenger" => $data['passenger']
+                "BookingCode" => $data['BookingId'],
+                "GuestNationality" => "IN",
+                "RequestedBookingMode" => 5,
+                "NetAmount" => $data['netAmt'],
+                "ClientRefId" => $data['clientRefId'],
+                "HotelRoomsDetails" => $data['HotelPassenger'],
             ];
 
+            $url = $this->setFullUrl('bookHotel');
 
-            $url = $this->setFullUrl('busblock');
-
-            // dd($response, $payload);
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = StaticResponseHelper::flightfailedbookingresponse();
-                // $response = HotelStaticResponseHelper::busBlockStaticResponse();
+                $response = HotelStaticResponseHelper::hotelBookStaticResponse();
+                // $response = HotelStaticResponseHelper::hotelBookStaticResponsefailed();
             } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "block", "");
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book_hotel", "");
                 $response = $response['response'];
             }
 
@@ -361,61 +356,12 @@ class HotelService
             }
 
             if (isset($response['status']) && strtolower($response['status']) == 'success') {
-                return ['status' => 'success', 'message' => "Bus Block successfully", 'data' => $response['data']];
+                return ['status' => 'success', 'message' => "Hotel Booked successfully", 'data' => $response['data']];
             } else {
                 return [
                     'code' => $response['code'] ?? '0x0202',
                     'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Bus Block failed'
-                ];
-            }
-        } catch (Exception $e) {
-            return ['status' => 'ERROR', 'message' => $e->getMessage()];
-        }
-    }
-
-    public function bookBuss($data)
-    {
-        try {
-            $token = $this->authService->getToken();
-
-            $payload = [
-                "EndUserIp" => $this->ip,
-                "TokenId" => $token,
-                "TraceId" => $data['traceId'],
-                "ResultIndex" => $data['resultIndex'],
-                "BoardingPointId" => $data['boardingPointId'],
-                "DroppingPointId" => $data['droppingPointId'],
-                "Passenger" => $data['passenger'],
-                "TotalAmount" => $data['totalAmount'],
-                "clientRefId" => $data['clientRefId'],
-            ];
-
-            $url = $this->setFullUrl('bookbus');
-
-            $baseUrl = url('/');
-            if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = HotelStaticResponseHelper::busBookStaticResponse();
-            } else {
-                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book", "");
-                $response = $response['response'];
-            }
-
-            if (is_string($response)) {
-                $response = json_decode(($response), true);
-            }
-
-            if (isset($response['data']) && is_string($response['data'])) {
-                $response['data'] = json_decode($response['data'], true);
-            }
-
-            if (isset($response['status']) && strtolower($response['status']) == 'success') {
-                return ['status' => 'success', 'message' => "Bus Booked successfully", 'data' => $response['data']];
-            } else {
-                return [
-                    'code' => $response['code'] ?? '0x0202',
-                    'status' => $response['status'] ?? 'failed',
-                    'message' => $response['message'] ?? 'Bus Booking failed'
+                    'message' => $response['message'] ?? 'Hotel Booking failed'
                 ];
             }
         } catch (Exception $e) {
