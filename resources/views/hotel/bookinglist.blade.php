@@ -13,7 +13,7 @@
                             <div class="d-flex align-items-center mb-2">
                                 <div class="avatar me-3">
                                     <span class="avatar-initial rounded bg-label-primary">
-                                        <i class="ti ti-bus"></i>
+                                        <i class="ti ti-hotel"></i>
                                     </span>
                                 </div>
                                 <p class="mb-0 text-success" data-bs-toggle="tooltip" title=""

@@ -105,7 +105,7 @@ class HotelAuthService
                 "message" => "success",
                 "status" => "SUCCESS",
                 "data" => [
-                    "TokenId" => "3898073d-bf07-49d0-bdfa-8fb7cb82014c"
+                    "TokenId" => "33333373d-bf07-49d0-bdfa-8fb7cb82014c"
                 ]
             ],
             "error" => "",
