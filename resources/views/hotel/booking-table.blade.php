@@ -135,10 +135,9 @@
                       <th>User</th>
                   @endif
                   <th>Booking Details</th>
-                  <th>Route</th>
                   <th>Amount</th>
                   <th>Type</th>
-                  <th>Ticket Status</th>
+                  <th>Voucher Status</th>
                   <th class="text-center">Action</th>
               </tr>
           </thead>
@@ -147,7 +146,7 @@
               @php
                   $statusMap = [
                       'NotSet' => ['label' => 'Not Set', 'class' => 'badge bg-secondary'],
-                      'Successful' => ['label' => 'Successful', 'class' => 'badge bg-success'],
+                      'Confirmed' => ['label' => 'Confirmed', 'class' => 'badge bg-success'],
                       'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
                       'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
                       'OtherFare' => ['label' => 'Other Fare', 'class' => 'badge bg-info'],
@@ -157,33 +156,18 @@
                       'BookedOther' => ['label' => 'Booked Other', 'class' => 'badge bg-primary'],
                       'NotConfirmed' => ['label' => 'Not Confirmed', 'class' => 'badge bg-dark'],
                   ];
-
-                  $ticketStatusMap = [
-                      'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
-                      'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
-                      'Successful' => ['label' => 'Successful', 'class' => 'badge bg-success'],
-                      'NotSaved' => ['label' => 'Not Saved', 'class' => 'badge bg-secondary'],
-                      'NotCreated' => ['label' => 'Not Created', 'class' => 'badge bg-secondary'],
-                      'NotAllowed' => ['label' => 'Not Allowed', 'class' => 'badge bg-warning'],
-                      'CancellationPending' => ['label' => 'Cancellation Pending', 'class' => 'badge bg-warning'],
-                      'CancelRejected' => ['label' => 'Cancellation Rejected', 'class' => 'badge bg-danger'],
-                      'InProgress' => ['label' => 'In Progress', 'class' => 'badge bg-info'],
-                      'TicketAlreadyCreated' => ['label' => 'Ticket Already Created', 'class' => 'badge bg-primary'],
-                      'PriceChanged' => ['label' => 'Price Changed', 'class' => 'badge bg-warning'],
-                      'OtherError' => ['label' => 'Other Error', 'class' => 'badge bg-dark'],
-                  ];
               @endphp
-              {{-- @dd($bookings); --}}
               @if (!empty($bookings) && $bookings->count() > 0)
                   @foreach ($bookings as $b)
+                
                       @php
                           $status = $statusMap[$b->booking_status] ?? [
                               'label' => 'Unknown',
                               'class' => 'badge bg-secondary',
                           ];
 
-                          $ticketStatus = $ticketStatusMap[$b->ticket_status] ?? [
-                              'label' => ucfirst($b->ticket_status),
+                          $ticketStatus = $ticketStatusMap[$b->voucher_status] ?? [
+                              'label' => ucfirst($b->voucher_status),
                               'class' => 'badge bg-warning',
                           ];
                       @endphp
@@ -196,23 +180,20 @@
                                   {{ $b->user_mobile ?? '' }}
                               </td>
                           @endif
-                          <td>PNR: <b>{{ $b->pnr ?? 'N/A' }}</b> <br /> Booking Id:
-                              <b>{{ $b->booking_id_api ?? 'N/A' }}</b>
-                              <br />{{ $b->airline_code }} - [{{ $b->flight_number }}]
+                          <td>Invoice Number: <b>{{ $b->invoice_number ?? 'N/A' }}</b> <br /> Booking Id:
+                                @php
+                                    $response = json_decode($b->raw_response);
+                                @endphp 
+                            <b>{{ $response->data->BookingId ?? 'N/A' }}</b>
                           </td>
 
-                          <td>{{ $b->origin }} <br /> {{ $b->destination }}</td>
                           <td>₹{{ $b->total_amount ?? 0 }}</td>
 
-                          <td>{!! $b->is_lcc === 'true' ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>' !!}
-
-                              <br>
-
-                              {!! $b->is_refundable === 'true'
+                          <td>
+                              {!! @$b->is_refundable === 'true'
                                   ? '<span class="text-success">Refundable</span>'
                                   : '<span class="text-danger">Non-Refundable</span>' !!}
                               <br />
-                              <span class="badge bg-info">{{ $b->journey_type }}</span>
                           </td>
                           <td>
                               <span class="{{ $ticketStatus['class'] }}">
@@ -242,34 +223,25 @@
                                       <li>
                                           <a class="dropdown-item cancel-flight" href="javascript:void(0)"
                                               data-bookingidcancel="{{ $b->booking_id_api }}"
-                                              data-ticketstatus="{{ $b->ticket_status }}"
-                                              data-departuretime="{{ $b->journey_date }}"
+                                              data-ticketstatus="{{ $b->voucher_status }}"
                                               data-changereqid="{{ $b->change_request_id }}"
                                               data-creditnoteno="{{ $b->credit_note_no }}"
                                               data-refundamt="{{ $b->refunded_amount }}">
                                               ✈️ Cancel Flight
                                           </a>
                                       </li>
-                                      @if ($b->ticket_status == 'CancellationPending' && $b->order_ref_id != null)
+                                      @if ($b->voucher_status == 'CancellationPending' && $b->order_ref_id != null)
                                           <li>
                                               <a class="dropdown-item cancel-status" href="javascript:void(0)"
                                                   data-bookingid="{{ $b->booking_id_api }}"
-                                                  data-ticketstatus="{{ $b->ticket_status }}"
+                                                  data-ticketstatus="{{ $b->voucher_status }}"
                                                   data-changereqid="{{ $b->change_request_id }}"
                                                   data-clientrefid="{{ $b->order_ref_id }}">
                                                   ✅ Check Cancel Status
                                               </a>
                                           </li>
                                       @endif
-                                      @if (($b->ticket_status == 'pending' || $b->ticket_status == 'Failed' || $b->ticket_status == 'InProgress') && $b->order_ref_id != null)
-                                          <li>
-                                              <a class="dropdown-item" href="javascript:void(0)"
-                                                  onclick="manualStatusCheck('{{ $b->order_ref_id }}')">
-                                                  🔄 Check Booking Status
-                                              </a>
-                                          </li>
-                                      @endif
-                                      @if (Myhelper::hasRole('admin') && $b->order_ref_id != null && $b->payment_status == 'success' && $b->ticket_status != 'Successful' && $b->ticket_status != 'Confirmed')
+                                      @if (Myhelper::hasRole('admin') && $b->order_ref_id != null && $b->payment_status == 'success')
                                           <li>
                                               <a class="dropdown-item text-danger" href="javascript:void(0)"
                                                   onclick="refundTicket('{{ $b->order_ref_id }}')">
@@ -1270,7 +1242,7 @@
 
                                   const encoded = btoa(JSON.stringify(bookingId));
 
-                                  window.location.href = `/flight/cancel/${encoded}`;
+                                  window.location.href = `/hotel/cancel/${encoded}`;
                               }
 
                           });

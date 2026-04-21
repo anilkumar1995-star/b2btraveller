@@ -340,8 +340,8 @@ class HotelService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::hotelBookStaticResponse();
-                // $response = HotelStaticResponseHelper::hotelBookStaticResponsefailed();
+                // $response = HotelStaticResponseHelper::hotelBookStaticResponse();
+                $response = HotelStaticResponseHelper::hotelBookStaticResponsefailed();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book_hotel", "");
                 $response = $response['response'];
