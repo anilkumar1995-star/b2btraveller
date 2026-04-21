@@ -175,6 +175,7 @@ Route::group(['prefix' => 'flight', 'middleware' => ['auth']], function () {
     Route::post('cancel-submit', [FlightController::class, 'submitCancellation']);
     Route::post('get-cancellation-charges', [FlightController::class, 'getCancellationCharges']);
     Route::post('cancel-status', [FlightController::class, 'checkCancelStatus'])->name('cancelStatus');
+    Route::post('refund', [FlightController::class, 'refundAmount'])->name('flight.refund');
     
     Route::get('review-booking', [FlightController::class, 'reviewBooking'])->name('flight.reviewBooking');
 });
