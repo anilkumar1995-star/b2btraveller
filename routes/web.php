@@ -240,6 +240,15 @@ Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     // Route::get('calcellation/{txnId?}', [ViewsController::class, 'travelCancel_HOTEL'])->name('travelCancel-HOTEL');
     Route::get('review-booking', [HotelController::class, 'reviewBooking'])->name('hotel.reviewBooking');
     Route::post('view-ticket', [HotelController::class, 'viewTicket'])->name('hotel.viewTicket');
+    Route::post('booking-view', [HotelController::class, 'viewTicket'])->name('hotel.booking.view');
+    // Route::any('payment/success', [HotelController::class, 'paymentSuccess'])->name('hotel.payment.success');
+    // Route::any('payment/failed', [HotelController::class, 'paymentFailed'])->name('hotel.payment.failed');
+    // Route::post('check-status', [HotelController::class, 'checkStatus'])->name('hotel.checkStatus');
+    Route::get('cancel/{id}', [HotelController::class, 'cancelPage']);
+    Route::post('cancel-submit', [HotelController::class, 'submitCancellation']);
+    Route::post('get-cancellation-charges', [HotelController::class, 'getCancellationCharges']);
+    Route::post('cancel-status', [HotelController::class, 'checkCancelStatus'])->name('hotel.cancelStatus');
+    Route::post('refund', [HotelController::class, 'refundAmount'])->name('hotel.refund');
 });
 
 

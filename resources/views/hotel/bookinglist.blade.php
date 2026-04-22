@@ -193,4 +193,8 @@
             }
         });
     </script>
+<<<<<<< HEAD
 @endpush
+=======
+@endpush
+>>>>>>> 6ebc2a0aa2dd9004ad1e58c5cc1fdd4bb063dc36

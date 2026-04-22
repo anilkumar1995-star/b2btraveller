@@ -36,7 +36,7 @@ class HotelService
         } else {
             throw new \Exception("Travels API credentials not found or inactive");
         }
-        $this->authService = new BusAuthService();
+        $this->authService = new HotelAuthService();
     }
 
 
@@ -56,8 +56,8 @@ class HotelService
             return $this->baseUrl . '/v1/service/traveller/hotel/pre/booking';
         } else if ($method == 'bookHotel') {
             return $this->baseUrl . '/v1/service/traveller/hotel/booking';
-        // } else if ($method == 'bookingDetails') {
-        //     return $this->baseUrl . '/v1/service/traveller/hotel/booking/details';
+        } else if ($method == 'bookingDetails') {
+            return $this->baseUrl . '/v1/service/traveller/hotel/booking/details';
         // } else if ($method == 'cancelhotel') {
         //     return $this->baseUrl . '/v1/service/traveller/hotel/booking/cancel';
         }
@@ -342,8 +342,8 @@ class HotelService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                $response = HotelStaticResponseHelper::hotelBookStaticResponse();
-                // $response = HotelStaticResponseHelper::hotelBookStaticResponsefailed();
+                // $response = HotelStaticResponseHelper::hotelBookStaticResponse();
+                $response = HotelStaticResponseHelper::hotelBookStaticResponsefailed();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book_hotel", "");
                 $response = $response['response'];
@@ -371,23 +371,21 @@ class HotelService
         }
     }
 
-    public function getDetailsBus($data)
+    public function getDetailsHotel($data)
     {
         try {
             $token = $this->authService->getToken();
 
             $payload = [
-                "EndUserIp" => $this->ip,
-                "TokenId" => $token,
-                "TraceId" => $data->booking_id_api,
-                "BusId" => $data->bus_id
+                "BookingId" => $data,
+                "TokenId" => $token
             ];
             $url = $this->setFullUrl('bookingDetails');
 
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = HotelStaticResponseHelper::busbookingdetailsresponse();
+                $response = HotelStaticResponseHelper::busbookingdetailsresponse();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "bookingDetail", "");
                 $response = $response['response'];
