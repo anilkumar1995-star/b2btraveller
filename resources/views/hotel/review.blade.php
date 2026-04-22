@@ -33,7 +33,7 @@
                         <h5 class="mb-0 card-title">🏨 Hotel Summary</h5>
                         <span id="refundable-badge" class="badge bg-success">Refundable</span>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body mt-3">
                         <div class="row align-items-center">
                             <div class="col-md-3 mb-3 mb-md-0">
                                 <img id="hotel-img" src="" alt="Hotel" class="img-fluid rounded border" style="height: 120px; width: 100%; object-fit: cover;">
@@ -67,7 +67,7 @@
                     <div class="card-header bg-light border-bottom">
                         <h5 class="mb-0 card-title">👤 Guest Details</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body mt-3">
                         <div id="guest-list-container" class="table-responsive">
                             <table class="table table-sm table-hover mb-0">
                                 <thead class="table-light">
@@ -93,7 +93,7 @@
                     <div class="card-header bg-light border-bottom">
                         <h5 class="mb-0 card-title">📞 Contact Information</h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body mt-3">
                         <div class="row">
                             <div class="col-md-6">
                                 <small class="text-muted d-block">Email Address</small>
@@ -137,26 +137,40 @@
                             <div class="form-check mb-3">
                                 <input class="form-check-input" type="checkbox" id="terms-agree" checked>
                                 <label class="form-check-label small" for="terms-agree">
-                                    By proceeding, I agree to the <a href="javascript:void(0)">Cancellation Policy</a> and Booking Terms.
+                                    By proceeding, I agree to the Cancellation Policy and Booking Terms.
                                 </label>
                             </div>
 
-                            <div class="d-grid gap-2">
-                                <button id="final-pay-btn" class="btn btn-primary btn-lg">
-                                    <i class="ti ti-lock me-1"></i> Proceed to Pay
-                                </button>
-                                <button onclick="window.history.back()" class="btn btn-outline-secondary btn-sm">
-                                    <i class="ti ti-arrow-left me-1"></i> Back to Details
-                                </button>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <button id="final-pay-btn" class="btn btn-primary w-100">
+                                        <i class="ti ti-lock me-1"></i> Pay Now
+                                    </button>
+                                </div>
+                                <div class="col-6">
+                                    <button onclick="window.history.back()" class="btn btn-outline-secondary w-100">
+                                        <i class="ti ti-arrow-left me-1"></i> Back
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
                     <div class="alert alert-secondary mt-3 mb-0" role="alert">
-                        <small>
+                        <small class="text-center">
                             <i class="ti ti-shield-check me-1 text-success"></i> 
-                            Secure payment processed via our verified gateway.
+                          Safe & secure checkout for your payments.
                         </small>
+                    </div>
+
+                    <!-- Countdown Timer -->
+                    <div class="card mt-3 border-danger bg-light-danger shadow-sm">
+                        <div class="card-body py-2 px-3 text-center">
+                            <p class="text-danger mb-0 small fw-bold">
+                                <i class="ti ti-clock me-1 animate-pulse"></i> 
+                                Your Booking Session will Expire in <span id="countdown-timer" class="fs-6">--:--</span> min. You must complete the booking within the time.
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -166,8 +180,14 @@
 @endsection
 
 @push('script')
+<script src="{{ asset('') }}js/hotel.js"></script>
 <script>
 $(document).ready(function() {
+    // Initialize Countdown
+    if (typeof updateCountdown === 'function') {
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
     // Collect data from storage
     const recomdet = JSON.parse(sessionStorage.getItem('recomdet'));
     const alHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
