@@ -1166,7 +1166,7 @@ function showHotelTabContent(viewdet) {
             </span>
 
             <a target="_blank" href="https://www.google.com/maps/search/${hotelInfo?.HotelName}/@${hotelInfo?.Map?.split('|')[0]},${hotelInfo?.Map?.split('|')[1]}">
-                <img src="/images/map.png" height="45"/>
+                <img src="/public/images/map.png" height="45"/>
             </a>
         </section>
     `);
