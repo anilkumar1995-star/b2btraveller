@@ -6,6 +6,8 @@ use App\Helpers\AndroidCommonHelper;
 use App\Helpers\HotelStaticResponseHelper;
 use App\Helpers\Permission;
 use App\Helpers\StaticResponseHelper;
+use App\Models\Agents;
+use App\Models\Api;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -454,5 +456,62 @@ class HotelService
         } catch (Exception $e) {
             return ['status' => 'ERROR', 'message' => $e->getMessage()];
         }
+    }
+    /**
+     * Initialize payment gateway collect request
+     */
+    public function initiatePayment($user, $amount, $clientRefId)
+    {
+        $api = Api::where('code', 'rrpayment')->first();
+        if (!$api) {
+            return ['response' => '', 'error' => 'PG service is down', 'code' => 500];
+        }
+
+        $agent = Agents::where('user_id', $user->id)->first();
+        if (!$agent) {
+            $agent = Agents::where('user_id', 1)->first();
+        }
+
+        $url = rtrim($api->url, '/') . "/v1/service/pgcollect/order";
+        $header = [
+            "Content-Type: application/json",
+            "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
+        ];
+
+        $reqData = [
+            "email" => $user->email,
+            "name" => $user->name,
+            "merchantCode" => $agent->bc_id ?? "MID73323213401",
+            "clientRefId" => $clientRefId,
+            "mobile" => $user->mobile,
+            "redirectUrl" => route('hotel.payment.success'),
+            "successUrl" => route('hotel.payment.success'),
+            "failedUrl" => route('hotel.payment.failed'),
+            "amount" => 1
+            // "amount" => $amount
+        ];
+
+        return Permission::curl($url, "POST", json_encode($reqData), $header, "yes", "pg_collect", $clientRefId);
+    }
+
+    /**
+     * Check transaction status from payment gateway
+     */
+    public function checkPaymentStatus($clientRefId)
+    {
+        $api = Api::where('code', 'orpayment')->first();
+        if (!$api) {
+            return ['response' => '', 'error' => 'API source not found', 'code' => 404];
+        }
+
+        $url = rtrim($api->url, '/') . '/v1/service/paycc/order/' . $clientRefId;
+        $auth = base64_encode(trim($api->username) . ":" . trim($api->password));
+
+        $header = [
+            "Content-Type: application/json",
+            "Authorization: Basic " . $auth
+        ];
+
+        return Permission::curl($url, "GET", "", $header, "yes", "payment_status_check", $clientRefId);
     }
 }

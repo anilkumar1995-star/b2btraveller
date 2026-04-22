@@ -1,1183 +1,281 @@
-  <style>
-      .custom-pagination .page-item .page-link {
-          border-radius: 8px !important;
-          padding: 6px 14px;
-          border: 1px solid #dcdcdc;
-          color: #333;
-          font-weight: 500;
-          background: #fff;
-          transition: 0.2s;
-      }
+<style>
+    .custom-pagination .page-item .page-link {
+        border-radius: 8px !important;
+        padding: 6px 14px;
+        border: 1px solid #dcdcdc;
+        color: #333;
+        font-weight: 500;
+        background: #fff;
+        transition: 0.2s;
+    }
+
+    .custom-pagination .page-item .page-link:hover {
+        background: #eef4ff;
+        border-color: #9bb0ff;
+        color: #3154ff;
+    }
+
+    .custom-pagination .page-item.active .page-link {
+        background: #3154ff !important;
+        border-color: #3154ff !important;
+        color: #fff !important;
+        box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
+    }
+</style>
+
+<div class="card-datatable table-responsive p-0">
+    <table class="table table-striped" id="bookingTable">
+        <thead class="bg-light">
+            <tr>
+                <th>ID</th>
+                @if (Myhelper::hasRole('admin'))
+                    <th>User</th>
+                @endif
+                <th>Booking Details</th>
+                <th>Hotel Details</th>
+                <th>Hotel Id & Ticket No</th>
+                <th>Amount</th>
+                <th>Payment Status</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @php
+                $statusMap = [
+                    'Confirmed' => ['label' => 'Confirmed', 'class' => 'badge bg-success'],
+                    'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
+                    'failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                    'pending' => ['label' => 'Pending', 'class' => 'badge bg-warning'],
+                ];
+            @endphp
+
+            @forelse($bookings as $b)
+                @php
+                    $status = $statusMap[$b->booking_status] ?? [
+                        'label' => ucfirst($b->booking_status),
+                        'class' => 'badge bg-secondary',
+                    ];
+                    $payload = json_decode($b->raw_payload, true);
+                @endphp
+                <tr>
+                    <td>##{{ $b->id }} <br />{{ $b->created_at }}</td>
+                    @if (Myhelper::hasRole('admin'))
+                        <td>
+                            <b>{{ $b->user_name ?? '' }}</b><br />
+                            {{ $b->user_email ?? '' }}<br />
+                            {{ $b->user_mobile ?? '' }}
+                        </td>
+                    @endif
+                    <td>
+                        Booking Ref No: <b>{{ $b->booking_ref_no ?? 'N/A' }}</b> <br />
+                        Order Ref ID: <b>{{ $b->order_ref_id ?? 'N/A' }}</b>
+                    </td>
+
+                    <td>
+                        <b class="text-primary">{{ is_array($payload['HotelName'] ?? null) ? 'N/A' : ($payload['HotelName'] ?? 'N/A') }}</b> <br /> 
+                        Check-in: {{ is_array($payload['CheckInDate'] ?? null) ? 'N/A' : ($payload['CheckInDate'] ?? 'N/A') }}<br/>
+                        Rooms: {{ is_array($b->total_room) ? 0 : $b->total_room }}
+                    </td>
+                    <td>
+                        Hotel Id: <b>{{ is_array($b->hotel_id) ? 'N/A' : ($b->hotel_id ?? 'N/A') }}</b> <br />
+                        Ticket No: <b>{{ is_array($b->ticket_no) ? 'N/A' : ($b->ticket_no ?? 'N/A') }}</b>                    </td>
+                    <td>₹{{ is_array($b->total_amount) ? '0.00' : number_format($b->total_amount, 2) }}</td>
+                    <td>
+                        <span class="badge {{ $b->payment_status == 'success' ? 'bg-success' : ($b->payment_status == 'pending' ? 'bg-warning' : 'bg-danger') }}">
+                            {{ is_array($b->payment_status) ? 'N/A' : ucfirst($b->payment_status ?? 'N/A') }}
+                        </span>
+                    </td>
 
-      .custom-pagination .page-item .page-link:hover {
-          background: #eef4ff;
-          border-color: #9bb0ff;
-          color: #3154ff;
-      }
-
-      .custom-pagination .page-item.active .page-link {
-          background: #3154ff !important;
-          border-color: #3154ff !important;
-          color: #fff !important;
-          box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
-      }
-
-      .custom-pagination .page-item .page-link {
-          border-radius: 8px !important;
-          padding: 6px 14px;
-          border: 1px solid #dcdcdc;
-          color: #333;
-          font-weight: 500;
-          background: #fff;
-          transition: 0.2s;
-      }
-
-      .custom-pagination .page-item .page-link:hover {
-          background: #eef4ff;
-          border-color: #9bb0ff;
-          color: #3154ff;
-      }
-
-      .custom-pagination .page-item.active .page-link {
-          background: #3154ff !important;
-          border-color: #3154ff !important;
-          color: #fff !important;
-          box-shadow: 0 2px 6px rgba(49, 84, 255, 0.4);
-      }
-
-      .custom-pagination .page-item.disabled .page-link {
-          background: #f3f3f3;
-          color: #999;
-          border-color: #e1e1e1;
-      }
-
-      .pagination {
-          margin-left: 5px !important;
-      }
-
-      .barcode-card {
-          border: 1px solid #fdfdfdff;
-          border-radius: 14px !important;
-      }
-
-      .barcode-img {
-          max-height: 60px;
-          object-fit: contain;
-      }
-
-
-      .ticket-card {
-          border: 1px solid #e5e7eb;
-      }
-
-      .ticket-card .row div {
-          font-size: 15px;
-      }
-
-      .shadow-sm {
-          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08) !important;
-      }
-
-      .rounded-4 {
-          border-radius: 14px !important;
-      }
-
-      @media print {
-
-          body {
-              margin: 0;
-              padding: 0;
-          }
-
-          .container {
-              max-width: 100% !important;
-              width: 100% !important;
-          }
-
-          .barcode-card {
-              width: 100% !important;
-              max-width: 100% !important;
-              box-shadow: none !important;
-              page-break-inside: avoid;
-              break-inside: avoid;
-          }
-
-          .barcode-card .row {
-              display: flex !important;
-              flex-wrap: nowrap !important;
-          }
-
-          .barcode-card .col-6 {
-              width: 50% !important;
-          }
-
-          .barcode-img {
-              max-width: 100% !important;
-              height: auto !important;
-          }
-
-          img {
-              page-break-inside: avoid;
-          }
-      }
-
-      action-btn {
-          background-color: rgba(49, 84, 255, 0.1);
-      }
-  </style>
-
-  <div class="card-datatable table-responsive p-2">
-      <table class="table table-striped" id="bookingTable">
-          <thead class="bg-light">
-              <tr>
-                  <th>ID</th>
-                  @if (Myhelper::hasRole('admin'))
-                      <th>User</th>
-                  @endif
-                  <th>Booking Details</th>
-                  <th>Amount</th>
-                  <th>Type</th>
-                  <th>Voucher Status</th>
-                  <th class="text-center">Action</th>
-              </tr>
-          </thead>
-
-          <tbody>
-              @php
-                  $statusMap = [
-                      'NotSet' => ['label' => 'Not Set', 'class' => 'badge bg-secondary'],
-                      'Confirmed' => ['label' => 'Confirmed', 'class' => 'badge bg-success'],
-                      'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
-                      'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
-                      'OtherFare' => ['label' => 'Other Fare', 'class' => 'badge bg-info'],
-                      'OtherClass' => ['label' => 'Other Class', 'class' => 'badge bg-warning'],
-                      'CancellationPending' => ['label' => 'Cancellation Pending', 'class' => 'badge bg-warning'],
-                      'CancelRejected' => ['label' => 'Cancellation Rejected', 'class' => 'badge bg-danger'],
-                      'BookedOther' => ['label' => 'Booked Other', 'class' => 'badge bg-primary'],
-                      'NotConfirmed' => ['label' => 'Not Confirmed', 'class' => 'badge bg-dark'],
-                  ];
-              @endphp
-              @if (!empty($bookings) && $bookings->count() > 0)
-                  @foreach ($bookings as $b)
-                      @php
-                          $status = $statusMap[$b->booking_status] ?? [
-                              'label' => 'Unknown',
-                              'class' => 'badge bg-secondary',
-                          ];
-
-                          $ticketStatus = $ticketStatusMap[$b->voucher_status] ?? [
-                              'label' => ucfirst($b->voucher_status),
-                              'class' => 'badge bg-warning',
-                          ];
-
-                          $response = json_decode($b->raw_response);
-                      @endphp
-                      <tr>
-                          <td>##{{ $b->id }} <br />{{ $b->created_at }}</td>
-                          @if (Myhelper::hasRole('admin'))
-                              <td>
-                                  {{ $b->user_name ?? '' }}<br />
-                                  {{ $b->user_email ?? '' }}<br />
-                                  {{ $b->user_mobile ?? '' }}
-                              </td>
-                          @endif
-                          <td>Invoice Number: <b>{{ $b->invoice_number ?? 'N/A' }}</b> <br /> Booking Id:
-                              
-                              <b>{{ $response->data->BookingId ?? 'N/A' }}</b>
-                          </td>
-
-                          <td>₹{{ $b->total_amount ?? 0 }}</td>
-
-                          <td>
-                              {!! @$b->is_refundable === 'true'
-                                  ? '<span class="text-success">Refundable</span>'
-                                  : '<span class="text-danger">Non-Refundable</span>' !!}
-                              <br />
-                          </td>
-                          <td>
-                              <span class="{{ $ticketStatus['class'] }}">
-                                  {{ $ticketStatus['label'] }}
-                              </span>
-                          </td>
-                          <td>
-                              <span class="{{ $status['class'] }}">
-                                  {{ $status['label'] }}
-                              </span><br />
-                              <div class="dropdown mt-1">
-                                  <button class="btn btn-sm btn-light border dropdown-toggle" type="button"
-                                      id="dropdownMenuButton{{ $b->id }}" data-bs-toggle="dropdown"
-                                      aria-expanded="false">
-                                      👁️ View
-                                  </button>
-
-                                  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
-
-                                      <li>
-                                          <a class="dropdown-item" href="javascript:void(0)"
-                                              onclick='openBookingDetails(@json($response->data))'>
-                                              📄 Booking Details
-                                          </a>
-                                      </li>
-                                      {{-- <li>
-                                          <a class="dropdown-item cancel-hotel" href="javascript:void(0)"
-                                              data-bookingidcancel="{{ $b->booking_id_api }}"
-                                              data-ticketstatus="{{ $b->voucher_status }}"
-                                              data-changereqid="{{ $b->change_request_id }}"
-                                              data-creditnoteno="{{ $b->credit_note_no }}"
-                                              data-refundamt="{{ $b->refunded_amount }}">
-                                              🏨 Cancel Hotel
-                                          </a>
-                                      </li>
-                                      @if ($b->booking_status == 'CancellationPending' && $b->order_ref_id != null)
-                                          <li>
-                                              <a class="dropdown-item cancel-status" href="javascript:void(0)"
-                                                  data-bookingid="{{ $b->booking_id_api }}"
-                                                  data-ticketstatus="{{ $b->voucher_status }}"
-                                                  data-changereqid="{{ $b->change_request_id }}"
-                                                  data-clientrefid="{{ $b->order_ref_id }}">
-                                                  ✅ Check Cancel Status
-                                              </a>
-                                          </li>
-                                      @endif
-                                      @if (Myhelper::hasRole('admin') && $b->order_ref_id != null && $b->payment_status == 'success')
-                                          <li>
-                                              <a class="dropdown-item text-danger" href="javascript:void(0)"
-                                                  onclick="refundTicket('{{ $b->order_ref_id }}')">
-                                                  💸 Refund Amount
-                                              </a>
-                                          </li>
-                                      @endif --}}
-                                  </ul>
-                              </div>
-                          </td>
-                      </tr>
-                  @endforeach
-              @else
-                  <tr>
-                      <td colspan="{{ Myhelper::hasRole('admin') ? 8 : 7 }}" class="text-center text-danger">No
-                          Bookings Details found.</td>
-                  </tr>
-              @endif
-          </tbody>
-      </table>
-  </div>
-
-  <div class="d-flex justify-content-center custom-pagination mt-2 mb-3">
-      {!! $bookings->links('pagination::bootstrap-5') !!}
-  </div>
-
-  <div class="modal fade" id="viewTicketModal" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-fullscreen">
-          <div class="modal-content">
-
-              <div class="modal-header border-0">
-                  <h4 class="modal-title fw-semibold">Hotel Ticket</h4>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-
-              <div class="modal-body bg-light" id="ticketContent">
-
-              </div>
-
-              <div class="text-center">
-                  <button class="btn btn-success m-3" onclick="printTicket()">
-                      Print
-                  </button>
-              </div>
-
-          </div>
-      </div>
-  </div>
-
-  <style>
-      .ticket-route {
-          background: #f8fafc;
-          border-radius: 10px;
-          border: 1px dashed #c7d2fe;
-      }
-
-      .city-code {
-          font-size: 26px;
-          font-weight: 700;
-          letter-spacing: 2px;
-      }
-
-      .city-name {
-          font-size: 12px;
-          color: #6b7280;
-      }
-
-      .route-line {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          color: #2563eb;
-          font-size: 18px;
-      }
-
-      .route-line span {
-          width: 50px;
-          height: 1px;
-          background: #94a3b8;
-      }
-  </style>
-  <style>
-      .passenger-section {
-          background: #fff;
-          border-radius: 12px;
-      }
-
-      .passenger-head {
-          font-weight: 700;
-          padding: 10px;
-          border-bottom: 2px solid #2563eb;
-          margin-bottom: 12px;
-      }
-
-      .passenger-card {
-          border: 1px dashed #c7d2fe;
-          border-radius: 12px;
-          padding: 14px;
-          margin-bottom: 16px;
-          background: #f8fafc;
-      }
-
-      .passenger-name {
-          font-size: 16px;
-          font-weight: 700;
-      }
-
-      .lead-pax {
-          background: #2563eb;
-          color: #fff;
-          font-size: 15px;
-          padding: 2px 6px;
-          border-radius: 6px;
-          margin-left: 6px;
-      }
-
-      .passenger-pnr {
-          font-weight: 700;
-          letter-spacing: 1px;
-      }
-
-      .seat-box {
-          background: #fff;
-          padding: 10px;
-          border-radius: 8px;
-          margin-top: 10px;
-      }
-
-      .seat-title {
-          font-weight: 600;
-          margin-bottom: 6px;
-      }
-
-      .seat-row {
-          display: grid;
-          grid-template-columns: 1fr auto 2fr auto;
-          gap: 8px;
-          font-size: 16px;
-          border-bottom: 1px dashed #e5e7eb;
-          padding: 6px 0;
-      }
-
-      .seat-row:last-child {
-          border-bottom: none;
-      }
-
-      .seat-code {
-          font-weight: 700;
-          color: #2563eb;
-      }
-
-      .fare-box {
-          display: flex;
-          justify-content: space-between;
-          margin-top: 10px;
-          font-size: 17px;
-      }
-
-      .fare-total {
-          font-weight: 800;
-      }
-
-      .contact-box {
-          margin-top: 10px;
-          border-top: 1px dashed #e5e7eb;
-          padding-top: 8px;
-      }
-
-      .ssr-box {
-          background: #f8f9ff;
-          border: 1px dashed #cfd5ff;
-          padding: 12px;
-          border-radius: 8px;
-          font-size: 15px;
-      }
-  </style>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
-
-  <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="{{ asset('') }}js/hotel.js"></script>
-  <script src="{{ asset('') }}js/inputFormValidation.js"></script>
-  <script type="text/javascript">
-      $(document).ready(function() {
-          localStorage.removeItem('cancelCharge');
-          localStorage.removeItem('refundAmount');
-          localStorage.removeItem('cancelRemarks');
-      });
-
-      function openBookingDetails(bookingId) {
-
-          $('#ticketContent').html(`
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary"></div>
-                    <p class="mt-2">Fetching booking details...</p>
-                </div>
-            `);
-
-          $('#viewTicketModal').modal('show');
-
-          $.ajax({
-              url: "/hotel/booking-view",
-              type: "POST",
-              data: {
-                  data: bookingId,
-                  _token: "{{ csrf_token() }}"
-              },
-              success: function(res) {
-
-                  if (res.status !== 'success') {
-                      $('#ticketContent').html(`<div class="alert alert-danger">${res.message}</div>`);
-                      return;
-                  }
-
-                  const booking = res?.data?.GetBookingDetailResult;
-
-                  if (!booking) {
-                      $('#ticketContent').html(`<div class="alert alert-danger">Invalid booking data</div>`);
-                      return;
-                  }
-
-                //   getDetails(booking);
-              },
-              error: function() {
-                  $('#ticketContent').html(`
-                <div class="alert alert-danger text-center">
-                    Unable to fetch booking details.
-                </div>
-            `);
-              }
-          });
-      }
-
-      function getSsrIcon(code) {
-          switch (code) {
-              case 'SEAT':
-                  return '💺';
-              case 'MEAL':
-                  return '🍱';
-              case 'BAGGAGE':
-                  return '🧳';
-              case 'WCHR':
-                  return '♿';
-              case 'PETC':
-                  return '🐶';
-              default:
-                  return '📝';
-          }
-      }
-
-      function renderSSR(ssrList = []) {
-
-          if (!ssrList.length) {
-              return `<div class="text-muted small">No special services selected</div>`;
-          }
-
-          return ssrList.map(ssr => `
-                <div class="d-flex justify-content-between border-bottom py-1">
-                    <div>
-                        ${getSsrIcon(ssr.SsrCode)}
-                        <b>${ssr.SsrCode}</b>
-                        <div class="text-muted small">${ssr.Detail}</div>
-                    </div>
-                    <div class="fw-semibold">₹${ssr.Price || 0}</div>
-                </div>
-            `).join('');
-      }
-
-
-      function getTicketStatus(status) {
-
-          // STRING STATUS (current case)
-          if (typeof status === 'string') {
-              if (status === 'OK') {
-                  return {
-                      text: 'Confirmed',
-                      badge: 'bg-success'
-                  };
-              }
-              return {
-                  text: status,
-                  badge: 'bg-danger'
-              };
-          }
-
-          // NUMBER STATUS (future / other APIs)
-          const statusMap = {
-              0: {
-                  text: 'Failed',
-                  badge: 'bg-danger'
-              },
-              1: {
-                  text: 'Successful',
-                  badge: 'bg-success'
-              },
-              2: {
-                  text: 'Not Saved',
-                  badge: 'bg-warning text-dark'
-              },
-              3: {
-                  text: 'Not Created',
-                  badge: 'bg-warning text-dark'
-              },
-              4: {
-                  text: 'Not Allowed',
-                  badge: 'bg-secondary'
-              },
-              5: {
-                  text: 'In Progress',
-                  badge: 'bg-info'
-              },
-              6: {
-                  text: 'Already Created',
-                  badge: 'bg-primary'
-              },
-              8: {
-                  text: 'Price Changed',
-                  badge: 'bg-danger'
-              },
-              9: {
-                  text: 'Other Error',
-                  badge: 'bg-danger'
-              }
-          };
-
-          return statusMap[status] || {
-              text: 'Unknown',
-              badge: 'bg-dark'
-          };
-      }
-
-
-      function getDetails(booking) {
-        
-        let bookingData = booking?.GetBookingDetailResult || {};
-        let rooms = bookingData?.Rooms || [];
-        let passengers = rooms[0]?.HotelPassenger || [];
-          let html = '';
-
-          html += `<div>
-                    <div class="bg-white p-4 rounded shadow-sm">
-
-                        <div class="d-flex justify-content-between mb-4">
-                            <img src="{{ asset('images/logo.png') }}" style="height:58px;">
-                            <div class="text-end">
-                                <div class="fw-bold">Hotel Booking</div>
-
-                                <div class="text-muted small">
-                                    ${bookingData.HotelName} • ${bookingData.City}
-                                </div>
-
-                                <div>
-                                    <h4> Booking ID: ${bookingData.BookingId || '-'}</h4>
-                                </div>
-                            </div>
-                        </div>
-                        <h4>🏨 ${bookingData.HotelName} → ${bookingData.City}</h4>
-
-                        <div class="row ticket-route">
-
-
-                            <div class="col-sm-6 p-3 text-center ticket-route">
-                                <div class="mt-2 border rounded p-1  bg-label-warning">
-                                     <span> Booking Ref :
-                                        <b>${bookingData.BookingRefNo || '-'}</b>
-                                    </span>
-                                    <br />
-                                    Confirmation No : <b>${bookingData.ConfirmationNo || '-'}</b>
-                                </div>
-
-                                <br />
-                                <div>
-                                    ${booking.IsDomestic ? '<span class="text-success">DOMESTIC</span>' : '<span class="text-danger">INTERNATIONAL</span>'} |
-                                    ${booking.IsAutoReissuanceAllowed ? '<span class="text-success">Auto Reissuance Allowed</span>' :
-                                    '<span class="text-danger">Auto Reissuance Not Allowed</span>'} |
-                                    ${booking.IsSeatsBooked ? '<span class="text-success">Seat Booked</span>' : '<span class="text-danger">Seat Not Booked</span>'} | ${booking.IsLCC ? '<span class="text-success">LCC</span>' : '<span class="text-danger">Non-LCC</span>'}
-                                    |
-                                    ${booking.NonRefundable ? '<span class="text-danger">Non-Refundable</span>' : '<span class="text-success">Refundable</span>'}
-                                    <br />
-                                    Airline Toll Free: ${booking.AirlineTollFreeNo
-                                    ? `<a href="tel:${booking.AirlineTollFreeNo}" class="text-primary fw-semibold">
-                                                                                            📞 ${booking.AirlineTollFreeNo}
-                                                                                        </a>`
-                                    : '-'
-                                    }
-                                </div>
-                            </div>
-
-                            <div class="col-sm-6 p-3 ticket-route">
-
-                                <div class="d-flex justify-content-between align-items-center">
-
-                                    <div class="text-start">
-                                        <div class="city-code">${originAirport.AirportCode || ''}</div>
-                                        <div class="city-name">${originAirport.CityName || ''}</div>
-                                        <div>
-                                            ${departTime ? new Date(departTime).toLocaleDateString() : ''}<br>
-                                            <strong>
-                                                ${departTime ? new Date(departTime).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'}) : ''}
-                                            </strong>
-                                        </div>
-                                    </div>
-
-                                    <div class="text-center">
-                                        <h5>${
-                                            lastSeg?.Duration
-                                            ? Math.floor(lastSeg?.Duration / 60) + 'h ' + (lastSeg?.Duration % 60) + 'm'
-                                            : '—'
-                                            }</h5>
-                                        <div class="route-line">
-                                            <span></span>
-                                            ✈️
-                                            <span></span>
-                                        </div>
-                                    </div>
-                                    <div class="text-end">
-                                        <div class="city-code">${destAirport.AirportCode || ''}</div>
-                                        <div class="city-name">${destAirport.CityName || ''}</div>
-                                        <div class="text-end">
-                                            ${arrivalTime ? new Date(arrivalTime).toLocaleDateString() : ''}<br>
-                                            <strong>
-                                                ${arrivalTime ? new Date(arrivalTime).toLocaleTimeString([],
-                                                {hour:'2-digit',minute:'2-digit'}) : ''}
-                                            </strong>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-
-
-                                <hr>
-
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div class="text-start"><b>Aircraft:</b> ${firstSeg.Craft}</div>
-                                    <div class="text-enter"><b>Fare Type:</b> ${booking.FareType}</div>
-                                    <div class="text-end"><b>Fare Class:</b> ${booking.SupplierFareClasses}</div>
-                                </div>
-                            </div>
-                        </div>
                     
+                    <td class="text-center">
+                        <span class="{{ is_array($status['class']) ? 'badge bg-secondary' : $status['class'] }}">
+                            {{ is_array($status['label']) ? 'Unknown' : $status['label'] }}
+                        </span><br />
 
-                        <div class="pt-3 passenger-section">
+                        <div class="dropdown mt-2">
+                            <button class="btn btn-sm btn-light border dropdown-toggle" type="button"
+                                id="dropdownMenuButton{{ $b->id }}" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                👁️ View
+                            </button>
 
-                            <div class="passenger-head">
-                                PASSENGER DETAILS
-                            </div>
-
-
-                        ${passengers.map((p, index) => `
-                            <div class="passenger-card">
-
-                                <div class="row align-items-center mb-2">
-                                    <div class="col-5 text-start">
-                                        <b>${p.Title} ${p.FirstName} ${p.LastName}</b> 
-                                        ${p.IsLeadPax ? '<span class="lead-pax">Lead</span>' : ''}
-                                        <div class="contact-box w-50 text-start">
-                                            <div class="mb-1"><b>Mobile:</b> ${p.Phoneno }</div>
-                                            <div class="mb-1"><b>Email:</b> ${p.Email}</div>
-                                            <div class="mb-1"><b>City:</b> ${p.PAN}</div>
-                                            <div class="mb-1"><b>Age:</b> ${p.Age}</div>
-                                        </div>
-                                    </div>
-
-                                    <div class="col-3 text-start">
-                                        <h5>Invoice Details</h5>
-                                        <div class="mb-1"><b>Invoice No:</b> ${booking.InvoiceNo}</div>
-                                        <div class="mb-1"><b>Invoice Amount:</b> ₹${booking.InvoiceAmount}</div>
-                                        <div class="mb-1"><b>Created On:</b> ${new Date(booking.InvoiceCreatedOn).toLocaleString()}</div>
-                                    </div>
-                                    <div class="col-4 text-end">
-                                        <h5>Ticket Details</h5>
-                                        ${p.Ticket ? `
-                            <div class="mb-1"><b>Issued On: </b> ${new Date(p.Ticket.IssueDate).toLocaleString()}</div>
-                            <div class="mb-1">${(() => {
-                                const s = getTicketStatus(p.Ticket.Status);
-                                return `
-                                            <div class="mb-1">
-                                                <b>Status:</b>
-                                                <span class="badge ${s.badge}">${s.text}</span>
-                                            </div>
-                                            `;
-                                            })()}
-                                        </div>
-                                        <div class="mb-1"><b>Validating Airline: </b> ${p.Ticket.ValidatingAirline}</div>
-                                        <div class="mb-1"><b>Ticket Id: </b> ${p.Ticket.TicketId}</div>
-                                        ` : `
-                                        <div class="mb-1 text-danger">
-                                            <b>Status:</b> Ticket not generated
-                                        </div>
-                                        `}
-
-                                                                                        </div>
-                                                                                    </div>
-
-                                                                                    <div class="seat-box">
-                                                                                        <div class="seat-title">Seat Details</div>
-                                                                                        ${p.SeatDynamic?.map(s => `
-                                    <div class="seat-row">
-                                        <span>${s.Origin} → ${s.Destination}</span>
-                                        <span class="seat-code">${s.Code}</span>
-                                        <span class="seat-type">${s.CraftType} [${s.AirlineCode} ${s.FlightNumber}]</span>
-                                        <span>₹${s.Price}</span>
-                                    </div>
-                                    `).join('') || '<div class="seat-row">No seat selected</div>'
-                                                                                        }
-                                                                                    </div>
-
-                                                                                    <div class="ssr-box mt-3">
-                                                                                        <div class="seat-title">Special Service Requests (SSR)</div>
-                                                                                        ${renderSSR(p.Ssr)}
-                                                                                    </div>
-                                                                                    <div class="baggage-allow-box mt-2">
-                                                                                        <div class="seat-title">Baggage Allowance</div>
-
-
-                                                                                        <div class="row text-muted mb-2">
-                                                                                            ${p.SegmentAdditionalInfo?.map(b => `
-                                            <div class="col-4 text-start">
-                                                <b>Check-in :</b>
-                                                <span>${b.Baggage || '-'}</span>
-                                            </div>
-                                            <div class="col-4 text-center">
-                                                <b>Cabin :</b>
-                                                <span>${b.CabinBaggage || '-'}</span>
-                                            </div>
-                                            <div class="col-4 text-end">
-                                                <b>Meal :</b>
-                                                <span>${b.Meal || 'Not Included'}</span>
-                                            </div>
-                                        `).join('')}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <hr />
-                                                                                    <div class="fare-box">
-                                                                                        <div><b>Base Fare:</b> ₹${p.Fare.BaseFare}</div>
-                                                                                        <div><b>Tax:</b> ₹${p.Fare.Tax}</div>
-                                                                                        <div><b>Seat Charges:</b> ₹${p.Fare.TotalSeatCharges}</div>
-                                                                                        <div class="fare-total">
-                                                                                            Total: ₹${p.Fare.PublishedFare}
-                                                                                        </div>
-                                                                                    </div>
-                                                                                    <div class="barcode text-center mt-3">
-                                                                                        <canvas id="barcodeCanvas${index}"></canvas>
-                                                                                    </div>
-
-                                                                                </div>
-                                                                                `).join('')}
-                        </div>
-                        <div class="mt-4 p-3 bg-white rounded text-end">
-                            <span class="text-success">
-                                You have paid <h4>INR ${booking?.Fare?.PublishedFare || '-'}</h4>
-                            </span>
-                        </div>
-
-                        <div class="ticket-route">
-
-                            <div class="row g-0">
-
-                                <div class="col-sm-9 border-end">
-
-                                    <div class="p-2 px-3 fw-semibold text-white" style="background:#d7261e; border-radius:8px 8px 0 0;">
-                                        Items not allowed in the aircraft
-                                    </div>
-
-                                    <div class="p-3">
-                                        <div class="d-flex flex-wrap gap-4">
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/lighter.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">LIGHTERS,<br>MATCHSTICKS</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:120px;">
-                                                <img src="{{ asset('/images/restricted/flame.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">FLAMMABLE<br>LIQUIDS</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/toxic.png') }}" style="height:50px;">
-                                                <div class="mt-1">TOXIC</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/corrosive.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">CORROSIVES</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/paper.png') }}" style="height:50px;">
-                                                <div class="mt-1">PEPPER<br>SPRAY</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:120px;">
-                                                <img src="{{ asset('/images/restricted/gas.png') }}" style="height:50px;">
-                                                <div class="mt-1">FLAMMABLE<br>GAS</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:100px;">
-                                                <img src="{{ asset('/images/restricted/cigrate.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">E-CIGARETTE</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:120px;">
-                                                <img src="{{ asset('/images/restricted/infection.png') }}" style="height:50px;">
-                                                <div class="mt-1">INFECTIOUS<br>SUBSTANCES</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:130px;">
-                                                <img src="{{ asset('/images/restricted/redio.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">RADIOACTIVE<br>MATERIALS</div>
-                                            </div>
-
-                                            <div class="text-center" style="width:130px;">
-                                                <img src="{{ asset('/images/restricted/explosive.jpeg') }}" style="height:50px;">
-                                                <div class="mt-1">EXPLOSIVES<br>AMMUNITION</div>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="col-sm-3">
-
-                                    <div class="p-2 fw-semibold text-white text-center"
-                                        style="background:#f8a900; border-radius:8px 8px 0 0;">
-                                        Items allowed only<br>in Hand Baggage
-                                    </div>
-
-                                    <div class="p-4 text-center">
-
-                                        <div class="mb-4">
-                                            <img src="{{ asset('/images/restricted/lithium.png') }}" style="height:50px;">
-                                            <div class="mt-1">LITHIUM<br>BATTERIES</div>
-                                        </div>
-
-                                        <div>
-                                            <img src="{{ asset('/images/restricted/powerbank.png') }}" style="height:50px;">
-                                            <div class="mt-1">POWER<br>BANKS</div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                        `;
-
-
-          html += `<div class="rticket-route mt-4 ticket-route">
-                            <div class="p-3 d-flex justify-content-between align-items-center" style="background:#eef3ff;">
-                                <div class="fw-semibold ">
-                                    🪶 Fare Rules
-                                </div>
-                            </div>
-                            <div class="p-3" style="background:#e8ffec; font-size:14px;">`;
-
-          booking.FareRules.forEach(r => {
-              html += `
-                                <div class="mb-3">
-                                    <b>${r.Origin} → ${r.Destination}</b>
-                                    <div class="small">${r.FareRuleDetail}</div>
-                                </div>`;
-          });
-
-          html += `
-                            </div>
-                        </div>
-
-                        <div class="ticket-route mt-4" style="border-left:4px solid #c2c2c2;">
-                            <h6 class="fw-semibold my-3">IMPORTANT INFORMATION</h6>
-                            <ul class="">
-                                <li>Reach airport 3 hours before departure</li>
-                                <li>Carry valid government ID</li>
-                                <li>Do not share OTP or CVV</li>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton{{ $b->id }}">
+                                <li>
+                                    <a class="dropdown-item" href="javascript:void(0)"
+                                        onclick="checkStatus('{{ $b->order_ref_id }}')">
+                                        🔄 Check Status
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="javascript:void(0)" onclick="openHotelBookingDetails({{ $b->id }})">
+                                        📄 View Ticket
+                                    </a>
+                                </li>
                             </ul>
                         </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="{{ Myhelper::hasRole('admin') ? 8 : 7 }}" class="text-center text-danger py-4">No Bookings Details found.</td>
+                </tr>
+            @endforelse
+        </tbody>
+    </table>
+</div>
+
+<!-- Hotel Ticket Modal -->
+<div class="modal fade" id="hotelTicketModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary py-2 text-white">
+                <h5 class="modal-title text-white">🏨 Hotel Booking Ticket</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0" id="ticketBody">
+                <div class="text-center p-5 loading-spinner">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                </div>`;
+                </div>
+            </div>
+            <div class="modal-footer p-2">
+                <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success btn-sm" onclick="printHotelTicket()">
+                    <i class="ti ti-printer me-1"></i> Print Ticket
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
-          $('#ticketContent').html(html);
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
+  <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function openHotelBookingDetails(id) {
+    $('#hotelTicketModal').modal('show');
+    $('#ticketBody').html('<div class="text-center p-5"><div class="spinner-border text-primary" role="status"></div><p class="mt-2">Fetching ticket details...</p></div>');
 
-          setTimeout(() => {
-              passengers.forEach((p, index) => {
-                  let barcode = booking.PNR;
-                  if (p.BarcodeDetails && p.BarcodeDetails.Barcode && p.BarcodeDetails.Barcode.length >
-                      0) {
-                      barcode = p.BarcodeDetails.Barcode[0].Content ?? "N/A";
-                  }
-                  makeBarcode(index, barcode);
-              });
-          }, 100);
-      }
+    $.ajax({
+        url: "{{ route('hotel.viewTicket') }}",
+        type: 'POST',
+        data: {
+            _token: "{{ csrf_token() }}",
+            id: id
+        },
+        success: function(res) {
+            if (res.status === 'success') {
+                renderHotelTicket(res.data);
+            } else {
+                $('#ticketBody').html('<div class="alert alert-danger m-3">' + res.message + '</div>');
+            }
+        },
+        error: function() {
+            $('#ticketBody').html('<div class="alert alert-danger m-3">Something went wrong.</div>');
+        }
+    });
+}
+
+function renderHotelTicket(booking) {
+    const payload = JSON.parse(booking.raw_payload);
+    const hotelData = payload.HotelName || 'N/A';
+    
+    let guests = '';
+    if (payload.HotelPassenger) {
+        payload.HotelPassenger.forEach((p, index) => {
+            guests += `<li>${index + 1}. ${p.Title} ${p.FirstName} ${p.LastName} (${p.PaxType || 'Adult'})</li>`;
+        });
+    }
+
+    let html = `
+        <div class="p-4" id="printableTicket">
+            <div class="d-flex justify-content-between align-items-start mb-4 border-bottom pb-3">
+                <div>
+                    <h3 class="mb-0 text-primary">${hotelData}</h3>
+                    <p class="text-muted mb-0 small">Booking Ref No: <strong class="text-dark">${booking.booking_ref_no || 'N/A'}</strong></p>
+                    <p class="text-muted mb-0 small">Ticket No: <strong class="text-dark">${booking.ticket_no || 'N/A'}</strong></p>
+                    <p class="text-muted mb-0 small">Hotel ID: <strong class="text-dark">${booking.hotel_id || 'N/A'}</strong></p>
+                    <hr class="my-1"/>
+                    <p class="text-muted mb-0 small">Order Ref ID: <span class="text-dark">${booking.order_ref_id || 'N/A'}</span></p>
+                </div>
+                <div class="text-end">
+                    <span class="badge ${booking.booking_status === 'Confirmed' || booking.booking_status === 'success' ? 'bg-success' : (booking.booking_status === 'pending' ? 'bg-warning' : 'bg-danger')} fs-6 mb-1">${booking.booking_status}</span>
+                    <p class="mb-0 text-muted small">Date: ${new Date(booking.created_at).toLocaleDateString()}</p>
+                </div>
+            </div>
 
 
-      function makeBarcode(i, barcode) {
-          const canvas = document.getElementById("barcodeCanvas" + i);
+            <div class="row mb-4">
+                <div class="col-6">
+                    <h6 class="fw-bold"><i class="ti ti-calendar-event me-1"></i> Stay Duration</h6>
+                    <div class="bg-light p-2 rounded">
+                        <div class="d-flex justify-content-between">
+                            <span class="small text-muted">Check-In:</span>
+                            <span class="fw-bold">${payload.CheckInDate || 'N/A'}</span>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="small text-muted">Check-Out:</span>
+                            <span class="fw-bold">${payload.CheckOutDate || 'N/A'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <h6 class="fw-bold"><i class="ti ti-users me-1"></i> Guest Details</h6>
+                    <ul class="list-unstyled mb-0 small">
+                        ${guests || '<li>No guest info</li>'}
+                    </ul>
+                </div>
+            </div>
 
-          if (!canvas) return;
+            <div class="mb-4">
+                <h6 class="fw-bold border-bottom pb-2">🏨 Hotel Information</h6>
+                <div class="row">
+                    <div class="col-12">
+                        <p class="mb-1 small"><strong>Rooms:</strong> ${booking.total_room || 'N/A'}</p>
+                        <p class="mb-1 small"><strong>Address:</strong> ${payload.Address || 'Refer to search info'}</p>
+                    </div>
+                </div>
+            </div>
 
-          try {
-              bwipjs.toCanvas(canvas, {
-                  bcid: 'pdf417',
-                  text: barcode,
-                  scale: 2,
-                  height: 8,
-                  columns: 6,
-                  rows: 3,
-                  includetext: false,
-                  paddingwidth: 10,
-                  paddingheight: 10,
-              });
-          } catch (e) {
-              $(canvas).replaceWith(`<code class="text-primary">${barcode}</code>`);
-          }
-      }
+            <div class="bg-light p-3 rounded">
+                <h6 class="fw-bold mb-2">💰 Payment Summary</h6>
+                <div class="d-flex justify-content-between mb-1">
+                    <span>Amount Paid:</span>
+                    <strong class="text-success">₹${parseFloat(booking.total_amount).toFixed(2)}</strong>
+                </div>
+                <div class="d-flex justify-content-between small">
+                    <span>Payment Mode:</span>
+                    <span>Wallet</span>
+                </div>
+                <div class="d-flex justify-content-between small">
+                    <span>Payment Status:</span>
+                    <span class="text-success fw-bold">${booking.payment_status.toUpperCase()}</span>
+                </div>
+            </div>
 
-      function printTicket() {
-          const printContent = document.getElementById("ticketContent").innerHTML;
-          const originalContent = document.body.innerHTML;
+            <div class="mt-4 pt-4 border-top text-center text-muted small">
+                <p class="mb-1">This is an electronically generated ticket. No signature is required.</p>
+                <p class="mb-0">Thank you for booking with us!</p>
+            </div>
+        </div>
+    `;
+    $('#ticketBody').html(html);
+}
 
-          document.body.innerHTML = printContent;
-          window.print();
-          document.body.innerHTML = originalContent;
+function printHotelTicket() {
+    const printContent = document.getElementById('printableTicket').innerHTML;
+    const originalContent = document.body.innerHTML;
+    document.body.innerHTML = printContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+    window.location.reload(); // Reload to restore event listeners
+}
+</script>
 
-          location.reload();
-      }
 
+<div class="d-flex justify-content-center custom-pagination mt-2 mb-3">
+    {!! $bookings->links('pagination::bootstrap-5') !!}
+</div>
 
-      $(document).on('click', '.cancel-status', function() {
-
-          let changereqId = $(this).data('changereqid');
-          let clientrefId = $(this).data('clientrefid');
-          let bookingId = $(this).data('bookingid');
-
-          $.ajax({
-              url: "/hotel/cancel-status",
-              type: "POST",
-              data: {
-                  changeReqId: changereqId,
-                  clientRefId: clientrefId,
-                  bookingId: bookingId,
-                  _token: "{{ csrf_token() }}"
-              },
-              beforeSend: function() {
-                  swal({
-                      type: 'warning',
-                      title: 'Checking Cancellation Status',
-                      text: 'Please wait while we check the cancellation status...',
-                      allowOutsideClick: false,
-                      showConfirmButton: false,
-                      allowEscapeKey: false,
-                  });
-              },
-              success: function(res) {
-
-                  if (res.status == 'success') {
-                      let status = res.data.Response.ChangeRequestStatus;
-
-                      if (status === 0) status = 'Not Set';
-                      else if (status === 1) status = 'Successful';
-                      else if (status === 2) status = 'Failed';
-                      else if (status === 3) status = 'Invalid Request';
-                      else if (status === 4) status = 'Invalid Session';
-                      else if (status === 5) status = 'Invalid Credentials';
-                      let refundAmount = res.data.Response.RefundedAmount;
-                      let cancelCharge = res.data.Response.CancellationCharge;
-
-                      swal({
-                          title: 'Cancellation Status',
-                          html: `
-                                <b>Status:</b> ${status} <br>
-                                <b>Refund Amount:</b> ₹${refundAmount} <br>
-                                <b>Cancellation Charge:</b> ₹${cancelCharge}
-                            `,
-                          type: 'success',
-                          confirmButtonText: 'OK, Got it !',
-                          allowOutsideClick: false,
-                          allowEscapeKey: false,
-                      }).then(() => {
-                          location.reload();
-                      });
-                  } else {
-                      swal({
-                          title: 'Error',
-                          text: res.message ||
-                              'Unable to fetch cancellation status. Please try again later.',
-                          type: 'error'
-                      });
-                  }
-
-              },
-              error: function() {
-                  swal({
-                      title: 'Error',
-                      text: 'Unable to fetch cancellation status. Please try again later.',
-                      type: 'error'
-                  });
-              }
-          });
-
-      });
-
-      $(document).on('click', '.cancel-hotel', function() {
-
-          const bookingId = $(this).data('bookingidcancel');
-          const ticketStatus = $(this).data('ticketstatus');
-          const depTimeStr = $(this).data('departuretime');
-          const changereqid = $(this).data('changereqid');
-          const creditno = $(this).data('creditnoteno');
-          const amt = $(this).data('refundamt');
-
-          const depTime = new Date(depTimeStr.replace(' ', 'T'));
-          const now = new Date();
-          if (ticketStatus == 'Cancelled' || ticketStatus == 'CancelRejected') {
-              swal({
-                  title: 'Ticket Already Cancelled',
-                  html: `Refund Amount: ${amt} 
-                  <br> Cancel Request id: ${changereqid}
-                  <br> Credit Note No: ${creditno}
-                  <br/>No further action is allowed.`,
-                  type: 'warning',
-                  confirmButtonText: 'OK, Got It',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-              });
-              return;
-          } else if (ticketStatus == 'CancellationPending') {
-              swal({
-                  title: 'Cancellation in Process',
-                  html: `Refund Amount: ${amt} <br/> Cancellation is not allowed.`,
-                  type: 'warning',
-                  confirmButtonText: 'OK',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-              });
-              return;
-          } else if (ticketStatus == 'Successful') {
-
-              if (depTime <= now) {
-                  swal({
-                      title: 'Trip Completed',
-                      text: 'Departure time has already passed. Cancellation is not allowed.',
-                      type: 'error',
-                      confirmButtonText: 'OK',
-                      allowOutsideClick: false,
-                      allowEscapeKey: false
-                  });
-                  return;
-              }
-
-              swal({
-                  type: 'warning',
-                  title: 'Please Wait',
-                  text: 'Checking cancellation charges...',
-                  allowOutsideClick: false,
-                  showConfirmButton: false,
-                  allowEscapeKey: false,
-              });
-
-              $.ajax({
-                  url: "/hotel/get-cancellation-charges",
-                  method: "POST",
-                  data: {
-                      booking_id: bookingId,
-                      _token: $('meta[name="csrf-token"]').attr('content')
-                  },
-                  success: function(res) {
-
-                      swal.close();
-
-                      if (res.status == 'success') {
-
-                          let cancelCharge = res.data.Response.CancellationCharge;
-                          let refundAmount = res.data.Response.RefundAmount;
-                          let remarks = res.data.Response.Remarks;
-
-                          localStorage.setItem('cancelCharge', cancelCharge);
-                          localStorage.setItem('refundAmount', refundAmount);
-                          localStorage.setItem('cancelRemarks', remarks);
-
-                          swal({
-                              title: 'Confirm Cancellation',
-                              html: `
-                                <b>Cancellation Charge:</b> ₹${cancelCharge} <br>
-                                <b>Refund Amount:</b> ₹${refundAmount} <br><br>
-                                <b>Remarks:</b> ${remarks} <br><br>
-                                Do you want to cancel this hotel?
-                            `,
-                              type: 'warning',
-                              showCancelButton: true,
-                              confirmButtonText: 'Yes, Cancel Hotel',
-                              cancelButtonText: 'No',
-                              allowOutsideClick: false,
-                              allowEscapeKey: false,
-                          }).then((result) => {
-
-                              if (result.value) {
-
-                                  const encoded = btoa(JSON.stringify(bookingId));
-
-                                  window.location.href = `/hotel/cancel/${encoded}`;
-                              }
-
-                          });
-
-                      } else {
-                          swal({
-                              title: 'Error',
-                              text: res.message ||
-                                  'Unable to fetch cancellation charges. Please try again later.',
-                              type: 'error'
-                          });
-
-                      }
-
-                  },
-                  error: function() {
-                      swal({
-                          title: 'Error',
-                          text: 'Unable to fetch cancellation charges. Please try again later.',
-                          type: 'error'
-                      });
-                  }
-
-              });
-          } else {
-              swal({
-                  title: 'Ticket is Not Confirmed',
-                  text: 'Cancellation is not allowed.',
-                  type: 'warning',
-                  confirmButtonText: 'OK',
-                  allowOutsideClick: false,
-                  allowEscapeKey: false
-              });
-              return;
-          }
-      });
-  </script>

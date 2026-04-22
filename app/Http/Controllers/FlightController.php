@@ -254,7 +254,7 @@ class FlightController extends Controller
     public function bookFlight(Request $request)
     {
         do {
-            $request['clientRefId'] = AndroidCommonHelper::makeTxnId("FLIGHT", 14);
+            $request['clientRefId'] = AndroidCommonHelper::createPGTxnId(10);
         } while (Report::where('txnid', $request['clientRefId'])->exists());
 
         $service = new FlightService();
@@ -413,7 +413,7 @@ class FlightController extends Controller
 
             if (empty($request['clientRefId'])) {
                 do {
-                    $request['clientRefId'] = AndroidCommonHelper::makeTxnId("FLIGHT", 14);
+                    $request['clientRefId'] = AndroidCommonHelper::createPGTxnId(10);
                 } while (Report::where('txnid', $request['clientRefId'])->exists());
             } else {
                 $request['clientRefId'] = $request['clientRefId'];
@@ -485,7 +485,7 @@ class FlightController extends Controller
              $agent = Agents::where('user_id', 1)->first(); 
         }
 
-        $clientRefId = AndroidCommonHelper::makeTxnId("FLIGHT", 10);
+        $clientRefId = AndroidCommonHelper::createPGTxnId(10);
         $url = $api->url . "v1/service/pgcollect/order";
         
         $header = [

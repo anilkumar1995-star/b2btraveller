@@ -1,7 +1,6 @@
 @extends('layouts.app')
-@section('title', 'Booking Failed List')
-@section('pagetitle', 'Booking Failed List')
-
+@section('title', 'Failed Hotel Bookings')
+@section('pagetitle', 'Failed Hotel Bookings')
 
 @section('content')
     <main>
@@ -15,38 +14,67 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <div id="bookingTable" class="overflow-auto">
+                    <div id="booking-container" class="overflow-auto">
                         @include('hotel.booking-table-failed')
                     </div>
                 </div>
             </div>
         </section>
-
-
     </main>
-
 @endsection
 
 
 @push('script')
-    <script>
-        $(document).ready(function() {
+<script>
+$(document).ready(function() {
+    $(document).on('click', '.pagination a', function(e) {
+        e.preventDefault();
+        let url = $(this).attr('href');
+        fetchBookings(url);
+    });
 
-            // When clicking next/previous page
-            $(document).on('click', '.pagination a', function(e) {
-                e.preventDefault();
-                let url = $(this).attr('href');
-                loadBookings(url);
-            });
-
-            function loadBookings(url) {
-                $.ajax({
-                    url: url,
-                    success: function(data) {
-                        $("#bookingTable").html(data);
-                    }
-                });
+    function fetchBookings(url) {
+        $.ajax({
+            url: url,
+            success: function(data) {
+                $('#booking-container').html(data);
             }
         });
-    </script>
+    }
+
+    window.checkStatus = function(id) {
+        swal({
+            title: "Checking Status...",
+            text: "Please wait while we verify your booking status.",
+            type: "info",
+            showConfirmButton: false,
+            allowOutsideClick: false
+        });
+
+        $.ajax({
+            url: "{{ route('hotel.checkStatus') }}",
+            method: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                id: id
+            },
+            success: function(response) {
+                swal.close();
+                if (response.status === 'success' || response.status === 'SUCCESS') {
+                    notify(response.message || "Status updated successfully!", "success");
+                    fetchBookings(window.location.href);
+                } else if (response.status === 'pending') {
+                    notify(response.message || "Transaction is still pending. Please wait.", "warning");
+                } else {
+                    notify(response.message || "Unable to update status.", "error");
+                }
+            },
+            error: function() {
+                swal.close();
+                notify("Something went wrong.", "error");
+            }
+        });
+    }
+});
+</script>
 @endpush

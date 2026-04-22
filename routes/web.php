@@ -224,9 +224,22 @@ Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
 
     Route::get('booking-list', [HotelController::class, 'bookingList'])->name('hotel.bookingList');
     Route::get('booking-list-failed', [HotelController::class, 'bookingListFailed'])->name('hotel.bookingListFailed');
+    
+    Route::any('payment/success', [HotelController::class, 'paymentSuccess'])->name('hotel.payment.success');
+    Route::any('payment/failed', [HotelController::class, 'paymentFailed'])->name('hotel.payment.failed');
+    Route::post('check-status', [HotelController::class, 'checkStatus'])->name('hotel.checkStatus');
 
     // Route::post('search/filter', [HotelController::class, "searchFilter_HOTEL"]);
 
+    
+    // Route::post('payments', [HotelController::class, "ticketAddPayments_HOTEL"]);
+    // Route::post('confirm-book', [HotelController::class, "book_HOTEL"]);
+    // Route::post('policy', [HotelController::class, "cancellationPolicy"]);
+    // Route::post('cancel', [HotelController::class, "cancel_HOTEL"]);
+
+    // Route::get('calcellation/{txnId?}', [ViewsController::class, 'travelCancel_HOTEL'])->name('travelCancel-HOTEL');
+    Route::get('review-booking', [HotelController::class, 'reviewBooking'])->name('hotel.reviewBooking');
+    Route::post('view-ticket', [HotelController::class, 'viewTicket'])->name('hotel.viewTicket');
     Route::post('booking-view', [HotelController::class, 'viewTicket'])->name('hotel.booking.view');
     // Route::any('payment/success', [HotelController::class, 'paymentSuccess'])->name('hotel.payment.success');
     // Route::any('payment/failed', [HotelController::class, 'paymentFailed'])->name('hotel.payment.failed');
@@ -237,6 +250,8 @@ Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     Route::post('cancel-status', [HotelController::class, 'checkCancelStatus'])->name('hotel.cancelStatus');
     Route::post('refund', [HotelController::class, 'refundAmount'])->name('hotel.refund');
 });
+
+
 
 Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActivityLog']], function () {
     Route::get('{type}', [RoleController::class, 'index'])->name('tools');

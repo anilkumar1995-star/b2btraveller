@@ -238,7 +238,7 @@ class BusController extends Controller
             }
 
             do {
-                $request['clientRefId'] = AndroidCommonHelper::makeTxnId("BUS", 14);
+                $request['clientRefId'] = AndroidCommonHelper::createPGTxnId(10);
             } while (Report::where('txnid', $request['clientRefId'])->exists());
 
             $provider = Provider::where('recharge1', 'bustravel')->firstOrFail();
@@ -422,7 +422,7 @@ class BusController extends Controller
             $agent = Agents::where('user_id', 1)->first();
         }
 
-        $clientRefId = AndroidCommonHelper::makeTxnId("BUS", 8);
+        $clientRefId = AndroidCommonHelper::createPGTxnId(10);
         $url = $api->url . "v1/service/pgcollect/jio/order/generate";
 
         $header = [
@@ -457,9 +457,6 @@ class BusController extends Controller
                         'order_ref_id' => $clientRefId,
                         'raw_payload' => json_encode($request->all())
                     ]);
-
-                // Debug logging to confirm update
-                \Log::info("Bus Update Attempt: tid=$tid, clientRefId=$clientRefId, affected=$affected");
 
                 Report::create([
                     'number' => $tid,

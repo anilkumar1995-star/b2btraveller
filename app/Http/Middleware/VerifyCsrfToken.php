@@ -15,6 +15,10 @@ class VerifyCsrfToken extends Middleware
         "/affiliate",
         "/delete/account",
         "flight/payment/success",
-        "flight/payment/failed"
+        "flight/payment/failed",
+        "hotel/payment/success",
+        "hotel/payment/failed",
+        "bus/payment/success",
+        "bus/payment/failed",
     ];
 }

@@ -124,7 +124,7 @@
                         <span class="my-2"><b>Note:</b> This charges are payable at hotel in local currency and many vary slightly based on exchange rates.</span>
                      </div>
                       <div class="d-grid mt-2">                                           
-                        <button class="btn btn-primary" id="submitButton"  onclick="submitGuestDetails()">Proceed To Booking</button>
+                        <button class="btn btn-primary" id="submitButton"  onclick="submitGuestDetails()">Proceed To Review</button>
                       </div>
                       
                     </div>
