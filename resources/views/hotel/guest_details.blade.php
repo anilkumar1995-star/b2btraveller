@@ -89,8 +89,8 @@
     <script src="{{ asset('') }}js/inputFormValidation.js"></script>
     <script>
         $(document).ready(function() {
-            // updateCountdown();
-            // setInterval(updateCountdown, 1000);
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
             // try {
             let hotelKy = sessionStorage.getItem('hkey');
             let netAmt = sessionStorage.getItem('amt');
