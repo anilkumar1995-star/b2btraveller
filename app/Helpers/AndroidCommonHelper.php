@@ -93,6 +93,12 @@ class AndroidCommonHelper
         return $txnidWithLength35 . rand(111111, 999999);
     }
 
+    public static function createPGTxnId($len = 10)
+    {
+        $max = str_repeat('9', $len);
+        return 'CRD' . str_pad(mt_rand(0, (int)$max), $len, '0', STR_PAD_LEFT);
+    }
+
 
     public static function sendEmailAndOtp($type, $req)
     {

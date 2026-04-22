@@ -224,6 +224,10 @@ Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
 
     Route::get('booking-list', [HotelController::class, 'bookingList'])->name('hotel.bookingList');
     Route::get('booking-list-failed', [HotelController::class, 'bookingListFailed'])->name('hotel.bookingListFailed');
+    
+    Route::any('payment/success', [HotelController::class, 'paymentSuccess'])->name('hotel.payment.success');
+    Route::any('payment/failed', [HotelController::class, 'paymentFailed'])->name('hotel.payment.failed');
+    Route::post('check-status', [HotelController::class, 'checkStatus'])->name('hotel.checkStatus');
 
     // Route::post('search/filter', [HotelController::class, "searchFilter_HOTEL"]);
 
@@ -234,7 +238,11 @@ Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     // Route::post('cancel', [HotelController::class, "cancel_HOTEL"]);
 
     // Route::get('calcellation/{txnId?}', [ViewsController::class, 'travelCancel_HOTEL'])->name('travelCancel-HOTEL');
+    Route::get('review-booking', [HotelController::class, 'reviewBooking'])->name('hotel.reviewBooking');
+    Route::post('view-ticket', [HotelController::class, 'viewTicket'])->name('hotel.viewTicket');
 });
+
+
 
 Route::group(['prefix' => 'tools', 'middleware' => ['auth', 'company', 'webActivityLog']], function () {
     Route::get('{type}', [RoleController::class, 'index'])->name('tools');

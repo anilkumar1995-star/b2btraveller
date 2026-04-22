@@ -10,6 +10,8 @@ use App\Models\Report;
 use App\Models\Api;
 use App\Models\Provider;
 use App\Models\User;
+use App\Models\Agents;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -105,6 +107,89 @@ class HotelController extends Controller
 
     public function book_HOTELS(Request $request)
     {
+        $user = \Auth::user();
+        if ($request->payment_mode === 'pg') {
+            $clientRefId = AndroidCommonHelper::createPGTxnId(10);
+            
+            $service = new HotelService();
+            $result = $service->initiatePayment($user, $request->netAmt, $clientRefId);
+      
+            if ($result['response'] != '') {
+                $responseStatus = json_decode($result['response']);
+
+                if (isset($responseStatus->code) && $responseStatus->code == "0x0200") {
+                    $tid = substr($request->BookingId, 0, 50); 
+
+                    $provider = Provider::where('recharge1', 'hoteltravel')->first();
+
+                    try {
+                        DB::table('hotel_bookings')->insert([
+                            'user_id' => \Auth::id(),
+                            'invoice_number' => null,
+                            'invoice_amount' => $request->netAmt,
+                            'ticket_no' => null,
+                            'booking_id_api' => $tid,
+                            'order_ref_id' => $clientRefId,
+                            'hotel_id' => null,
+                            'total_room' => '',
+                            'base_fare' => 0,
+                            'tax' => 0,
+                            'total_amount' => 1,
+                            // 'total_amount' => $request->netAmt,
+                            'is_pricechange' => "false",
+                            'payment_status' => 'pending',
+                            'booking_status' => 'pending',
+                            'api_type' => 'book',
+                            'raw_payload' => json_encode(array_merge($request->all(), ['clientRefId' => $clientRefId])),
+                            'raw_response' => null,
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+
+                        Report::create([
+                            'number' => substr($tid, 0, 25),
+                            'mobile' => $user->mobile,
+                            'provider_id' => $provider->id ?? 0,
+                            'api_id' => $provider->api_id ?? 0,
+                            'amount' => 2,
+                            // 'amount' => (float) $request->netAmt,
+                            'profit' => 0,
+                            'txnid' => $clientRefId,
+                            'payid' => $clientRefId,
+                            'status' => 'pending',
+                            'user_id' => $user->id,
+                            'credited_by' => $user->id,
+                            'rtype' => 'main',
+                            'via' => 'portal',
+                            'balance' => $user->mainwallet,
+                            'trans_type' => 'debit',
+                            'product' => 'hoteltravel',
+                            'transtype' => 'pg',
+                        ]);
+                    } catch (\Exception $de) {
+                    }
+
+                    return response()->json([
+                        'status' => 'SUCCESS',
+                        'url' => $responseStatus->data->url,
+                        'message' => 'Order created successful.',
+                        'data' => $responseStatus->data
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => 'failed',
+                        'message' => $responseStatus->message ?? "PG Initiation failed: " . ($responseStatus->code ?? 'Unknown code')
+                    ]);
+                }
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => "PG service no response or connection error"
+                ]);
+            }
+        }
+
+        /*
         try {
             DB::beginTransaction();
 
@@ -123,7 +208,7 @@ class HotelController extends Controller
             $request['netAmt'] = number_format((float)$request->netAmt, 2, '.', '');
 
             do {
-                $request['clientRefId'] = AndroidCommonHelper::makeTxnId("HOTEL", 14);
+                $request['clientRefId'] = AndroidCommonHelper::createPGTxnId(10);
             } while (Report::where('txnid', $request['clientRefId'])->exists());
 
             $provider = Provider::where('recharge1', 'hoteltravel')->firstOrFail();
@@ -276,6 +361,8 @@ class HotelController extends Controller
                 'message' => 'Booking processed but final update failed. Please contact support.'
             ]);
         }
+        */
+
     }
 
     public function bookingList(Request $request)
@@ -302,13 +389,15 @@ class HotelController extends Controller
             $data['totalcancelled'] = DB::table('hotel_bookings')->where('user_id', auth()->id())->where('booking_status', 'Cancelled')->sum('total_amount');
             $data['totalcancelledCount'] = DB::table('hotel_bookings')->where('user_id', auth()->id())->where('booking_status', 'Cancelled')->count();
         }
-        // dd($data);
-        $userId = \Auth::user()->id;
+        
+        $query = DB::table('hotel_bookings')
+            ->join('users', 'users.id', '=', 'hotel_bookings.user_id');
 
-        $data['bookings'] = DB::table('hotel_bookings')
-            ->join('users', 'users.id', '=', 'hotel_bookings.user_id')
-            ->where('hotel_bookings.user_id', $userId)
-            ->select(
+        if (!\Myhelper::hasRole('admin')) {
+            $query->where('hotel_bookings.user_id', \Auth::id());
+        }
+
+        $data['bookings'] = $query->select(
                 'hotel_bookings.*',
                 'users.name as user_name',
                 'users.email as user_email',
@@ -327,12 +416,14 @@ class HotelController extends Controller
 
     public function bookingListFailed(Request $request)
     {
-        $userId = \Auth::user()->id;
+        $query = DB::table('failed_hotel_bookings_list')
+            ->join('users', 'users.id', '=', 'failed_hotel_bookings_list.user_id');
 
-        $bookings = DB::table('failed_hotel_bookings_list')
-            ->join('users', 'users.id', '=', 'failed_hotel_bookings_list.user_id')
-            ->where('failed_hotel_bookings_list.user_id', $userId)
-            ->select(
+        if (!\Myhelper::hasRole('admin')) {
+            $query->where('failed_hotel_bookings_list.user_id', \Auth::id());
+        }
+
+        $bookings = $query->select(
                 'failed_hotel_bookings_list.*',
                 'users.name as user_name',
                 'users.email as user_email',
@@ -348,4 +439,196 @@ class HotelController extends Controller
 
         return view('hotel.bookinglistfailed', compact('bookings'));
     }
+
+    public function paymentSuccess(Request $request)
+    {
+        $id = $request->clientRefId ?? $request->txnid ?? $request->input('data.clientRefId');
+        $status = $request->status ?? 'SUCCESS';
+        
+        \Log::info("Hotel Payment SUCCESS Redirect: id=$id, status=$status");
+
+        if (strtoupper($status) == 'SUCCESS' || $request->code == '0x0200') {
+            $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
+            if ($booking) {
+                $this->finalizeBooking($booking);
+                $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
+            }
+            return view('hotel.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id, 'booking' => $booking]);
+        }
+
+        return view('hotel.status')->with(['status' => 'failed', 'message' => $request->message ?? 'Payment Failed', 'id' => $id]);
+    }
+
+    public function paymentFailed(Request $request)
+    {
+        $id = $request->clientRefId ?? $request->txnid ?? $request->input('data.clientRefId');
+        $status = $request->status ?? 'FAILURE';
+        
+
+        if (strtoupper($status) == 'SUCCESS' || $request->code == '0x0200') {
+            $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
+            if ($booking) {
+                $this->finalizeBooking($booking);
+                $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
+            }
+            return view('hotel.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id, 'booking' => $booking]);
+        }
+
+        return view('hotel.status')->with(['status' => 'failed', 'message' => $request->message ?? 'Payment Failed', 'id' => $id]);
+    }
+
+    public function checkStatus(Request $request)
+    {
+        $id = $request->id;
+        if (!$id) {
+            return response()->json(['status' => 'failed', 'message' => 'ID missing']);
+        }
+
+        $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
+        if (!$booking) {
+            return response()->json(['status' => 'failed', 'message' => 'Booking record not found']);
+        }
+
+        if ($booking->booking_status === 'Confirmed') {
+            return response()->json([
+                'status' => 'success',
+                'booking_status' => 'Confirmed',
+                'data' => $booking
+            ]);
+        }
+
+        $service = new HotelService();
+        $result = $service->checkPaymentStatus($id);
+
+        if ($result['response'] != '') {
+                $responseStatus = json_decode($result['response']);
+
+                if ((isset($responseStatus->status) && strtoupper($responseStatus->status) == "SUCCESS") || (isset($responseStatus->code) && $responseStatus->code == "0x0200")) {
+                   $finalResult = $this->finalizeBooking($booking);
+                   $booking = DB::table('hotel_bookings')->where('id', $booking->id)->first();
+                   
+                   if (!$finalResult['status']) {
+                       return response()->json([
+                           'status' => 'failed',
+                           'booking_status' => $booking->booking_status ?? 'failed',
+                           'message' => $finalResult['message'] ?? 'Unable to confirm with hotel provider.'
+                       ]);
+                   }
+                }
+
+                if (isset($responseStatus->status) && (strtolower($responseStatus->status) == "pending" || strtolower($responseStatus->status) == "failure" || strtolower($responseStatus->status) == "failed")) {
+                    
+                    if (strtolower($responseStatus->status) == "failure" || strtolower($responseStatus->status) == "failed") {
+                        DB::table('hotel_bookings')
+                            ->where('id', $booking->id)
+                            ->update([
+                                'payment_status' => 'failed',
+                                'booking_status' => 'failed',
+                                'updated_at' => now()
+                            ]);
+                        
+                        DB::table('reports')
+                            ->where('txnid', $booking->order_ref_id)
+                            ->update(['status' => 'failed']);
+                    }
+
+                    return response()->json([
+                        'status' => strtolower($responseStatus->status),
+                        'message' => $responseStatus->message ?? "Transaction " . strtolower($responseStatus->status),
+                        'data' => DB::table('hotel_bookings')->where('id', $booking->id)->first()
+                    ]);
+                }
+
+            }
+
+        return response()->json([
+            'status' => 'success',
+            'booking_status' => $booking->booking_status ?? 'pending',
+            'message' => (isset($responseStatus) && isset($responseStatus->message)) ? $responseStatus->message : null,
+            'data' => $booking
+        ]);
+    }
+
+    private function finalizeBooking($booking)
+    {
+        if ($booking->payment_status !== 'success') {
+            DB::table('hotel_bookings')->where('id', $booking->id)->update(['payment_status' => 'success']);
+
+            Report::where('txnid', $booking->order_ref_id)
+                ->orWhere('payid', $booking->order_ref_id)
+                ->update(['status' => 'success']);
+            
+            $booking->payment_status = 'success';
+        }
+
+        if ($booking->payment_status === 'success' && $booking->booking_status !== 'Confirmed') {
+            
+            $payload = json_decode($booking->raw_payload, true);
+            $payload['clientRefId'] = $payload['clientRefId'] ?? $booking->order_ref_id; 
+
+            $service = new HotelService();
+            $response = $service->bookHotel($payload);
+            
+            if (strtolower($response['status'] ?? '') == 'success') {
+                $data = $response['data'] ?? null;
+                
+                DB::table('hotel_bookings')
+                    ->where('id', $booking->id)
+                    ->update([
+                        'invoice_number' => $data['InvoiceNumber'] ?? null,
+                        'ticket_no' => $data['ConfirmationNo'] ?? null,
+                        'booking_ref_no' => $data['BookingRefNo'] ?? null,
+                        'hotel_id' => $data['BookingId'] ?? null,
+                        'is_pricechange' => ($data['IsPriceChanged'] ?? false) ? "true" : "false",
+                        'booking_status' => $data['HotelBookingStatus'] ?? 'Confirmed',
+                        'raw_response' => json_encode($response),
+                        'updated_at' => now(),
+                    ]);
+
+                return ['status' => true, 'message' => 'Confirmed'];
+            } else {
+                $errMsg = $response['message'] ?? 'Unknown API Error';
+                
+                DB::table('hotel_bookings')->where('id', $booking->id)->update(['booking_status' => 'failed']);
+
+                DB::table('failed_hotel_bookings_list')->insert([
+                    'user_id' => $booking->user_id,
+                    'booking_status' => 'failed',
+                    'message' => $errMsg,
+                    'raw_response' => json_encode($response),
+                    'raw_payload' => $booking->raw_payload,
+                    'total_amount' => $booking->total_amount,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+
+                return ['status' => false, 'message' => $errMsg];
+            }
+        }
+        
+        return ['status' => true, 'message' => 'Already Confirmed'];
+    }
+    public function reviewBooking()
+    {
+        return view('hotel.review');
+    }
+
+    public function viewTicket(Request $request)
+    {
+        $id = $request->id;
+        $booking = DB::table('hotel_bookings')
+            ->join('users', 'users.id', '=', 'hotel_bookings.user_id')
+            ->where('hotel_bookings.id', $id)
+            ->select('hotel_bookings.*', 'users.name as user_name', 'users.email as user_email', 'users.mobile as user_mobile')
+            ->first();
+
+        if (!$booking) {
+            return response()->json(['status' => 'failed', 'message' => 'Booking not found']);
+        }
+
+        return response()->json(['status' => 'success', 'data' => $booking]);
+    }
 }
+
+
+

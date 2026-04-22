@@ -1611,7 +1611,30 @@ $(document).ready(function () {
 
             $("#formsContainerHotel").append(formHtml);
         }
+
+        try {
+            const existingPsgr = JSON.parse(localStorage.getItem('psgr') || '[]');
+            if (existingPsgr && existingPsgr.length > 0) {
+                existingPsgr.forEach((p, idx) => {
+                    const num = idx + 1;
+                    $(`#title-${num}`).val(p.Title);
+                    $(`#firstName-${num}`).val(p.FirstName);
+                    $(`#middleName-${num}`).val(p.MiddleName);
+                    $(`#lastName-${num}`).val(p.LastName);
+                    $(`#mobile-${num}`).val(p.Phoneno);
+                    $(`#email-${num}`).val(p.Email);
+                    $(`#age-${num}`).val(p.Age);
+                    $(`#pan-${num}`).val(p.PAN);
+                    $(`#passport-${num}`).val(p.PassportNo);
+                    $(`#passportIssueDate-${num}`).val(p.PassportIssueDate);
+                    $(`#passportExpDate-${num}`).val(p.PassportExpDate);
+                });
+            }
+        } catch (e) {
+            console.error("Error repopulating guest details:", e);
+        }
     }
+
     // if (storedFareDetails) {
     //     let roomCount = parseInt(storedFareDetails[0]?.roomCount);
 
@@ -1834,10 +1857,16 @@ function submitGuestDetails() {
             hotelKy: hotelKy,
             BookingId: recomdet?.BookingCode,
             HotelPassenger: passengers,
+            payment_mode: 'pg'
         };
 
         localStorage.setItem('psgr', JSON.stringify(passengers));
-         var txtMsg = `Want to book this Hotel and <br/>Proceed with the payment? </br>Amount: ₹ ${netAmt}`;
+        window.location.href = "/hotel/review-booking"; 
+        return;
+
+        /*
+        var txtMsg = `Want to book this Hotel and <br/>Proceed with the payment? </br>Amount: ₹ ${netAmt}`;
+
         swal({
             title: "Are you sure?",
             html: txtMsg,
@@ -1850,13 +1879,11 @@ function submitGuestDetails() {
                 swal({
                     type: "warning",
                     title: "Processing...",
-                    text: "Please wait while your booking is being confirmed.",
+                    text: "Please wait, redirecting you to the secure payment gateway.",
                     allowOutsideClick: false,
                     allowEscapeKey: false
                 });
                 
-                
-            
                 $.ajax({
                     url: "/hotel/booking",
                     method: "POST",
@@ -1866,6 +1893,11 @@ function submitGuestDetails() {
                     },
                     data: JSON.stringify(payload),
                     success: function (response) {
+                        if (response.url) {
+                            window.location.href = response.url;
+                            return;
+                        }
+
                         swal.close();
                         let recomdet = JSON.parse(sessionStorage.getItem('recomdet'));
                         let alHotelData = JSON.parse(sessionStorage.getItem('allHotelData'));
@@ -1939,9 +1971,10 @@ function submitGuestDetails() {
                 }, 2000);
             }
         });
-
+        */
     }
 }
+
 
 
 function formatDate(dateStr) {
