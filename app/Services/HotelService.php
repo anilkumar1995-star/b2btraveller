@@ -487,7 +487,7 @@ class HotelService
             "redirectUrl" => route('hotel.payment.success'),
             "successUrl" => route('hotel.payment.success'),
             "failedUrl" => route('hotel.payment.failed'),
-            "amount" => 1
+            "amount" => 2
             // "amount" => $amount
         ];
 

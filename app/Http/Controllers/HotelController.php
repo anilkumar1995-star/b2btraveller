@@ -134,7 +134,7 @@ class HotelController extends Controller
                             'total_room' => '',
                             'base_fare' => 0,
                             'tax' => 0,
-                            'total_amount' => 1,
+                            'total_amount' => 2,
                             // 'total_amount' => $request->netAmt,
                             'is_pricechange' => "false",
                             'payment_status' => 'pending',
