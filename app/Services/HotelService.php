@@ -248,7 +248,7 @@ class HotelService
     {
         try {
             $payload = [
-                "HotelCode" => $data['HotelCode'],
+                "Hotelcodes" => $data['HotelCode'],
                 "Language" => "EN",
                 "IsRoomDetailRequired" => true
             ];
