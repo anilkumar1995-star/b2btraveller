@@ -293,7 +293,11 @@ $(document).ready(function() {
                     CheckInDate: sentReqest[0]?.chkInDate,
                     CheckOutDate: sentReqest[0]?.chkOutDate,
                     Address: alHotelData?.Address,
-                    TotalRooms: sentReqest[0]?.roomCount
+                    TotalRooms: sentReqest[0]?.roomCount,
+                    base_fare: (recomdet?.PriceBreakUp?.[0]?.RoomRate || 0).toFixed(2),
+                    tax: (recomdet?.NetTax || 0).toFixed(2),
+                    is_refundable: alHotelData?.IsRefundable ? 'true' : 'false',
+                    voucher_status: 'Pending'
                 };
 
 

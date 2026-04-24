@@ -131,14 +131,16 @@ class HotelController extends Controller
                             'booking_id_api' => $tid,
                             'order_ref_id' => $clientRefId,
                             'hotel_id' => null,
-                            'total_room' => '',
-                            'base_fare' => 0,
-                            'tax' => 0,
+                            'total_room' => $request->TotalRooms ?? 1,
+                            'base_fare' => $request->base_fare ?? 0,
+                            'tax' => $request->tax ?? 0,
                             'total_amount' => 2,
                             // 'total_amount' => $request->netAmt,
                             'is_pricechange' => "false",
                             'payment_status' => 'pending',
                             'booking_status' => 'pending',
+                            'is_refundable' => $request->is_refundable ?? 'false',
+                            'voucher_status' => $request->voucher_status ?? 'Pending',
                             'api_type' => 'book',
                             'raw_payload' => json_encode(array_merge($request->all(), ['clientRefId' => $clientRefId])),
                             'raw_response' => null,
@@ -526,7 +528,7 @@ class HotelController extends Controller
                             ->update([
                                 'payment_status' => 'failed',
                                 'booking_status' => 'failed',
-                                'updated_at' => now()
+                                'payment_failed_msg' => $responseStatus->message ?? "Transaction " . strtolower($responseStatus->status),
                             ]);
                         
                         DB::table('reports')
@@ -583,15 +585,18 @@ class HotelController extends Controller
                         'hotel_id' => $data['BookingId'] ?? null,
                         'is_pricechange' => ($data['IsPriceChanged'] ?? false) ? "true" : "false",
                         'booking_status' => $data['HotelBookingStatus'] ?? 'Confirmed',
-                        'raw_response' => json_encode($response),
-                        'updated_at' => now(),
+                        'base_fare' => $data['PriceBreakUp'][0]['RoomRate'] ?? 0,
+                        'tax' => $data['NetTax'] ?? 0,
+                        'raw_response' => json_encode($response)
                     ]);
 
                 return ['status' => true, 'message' => 'Confirmed'];
             } else {
                 $errMsg = $response['message'] ?? 'Unknown API Error';
                 
-                DB::table('hotel_bookings')->where('id', $booking->id)->update(['booking_status' => 'failed']);
+                DB::table('hotel_bookings')->where('id', $booking->id)->update(
+                    ['booking_status' => 'failed',
+                    'booking_failed_msg' => $errMsg ?? 'Booking Failed.']);
 
                 DB::table('failed_hotel_bookings_list')->insert([
                     'user_id' => $booking->user_id,
@@ -619,16 +624,23 @@ class HotelController extends Controller
     {
         $id = $request->id;
         $booking = DB::table('hotel_bookings')
-            ->join('users', 'users.id', '=', 'hotel_bookings.user_id')
-            ->where('hotel_bookings.id', $id)
-            ->select('hotel_bookings.*', 'users.name as user_name', 'users.email as user_email', 'users.mobile as user_mobile')
+            ->where('id', $id)
             ->first();
 
         if (!$booking) {
             return response()->json(['status' => 'failed', 'message' => 'Booking not found']);
         }
 
-        return response()->json(['status' => 'success', 'data' => $booking]);
+        try {
+            $service = new HotelService();
+            $response = $service->getDetailsHotel($booking->hotel_id);
+            $response['record'] = $booking;
+
+            return response()->json($response);
+           
+        } catch (\Exception $e) {
+            return response()->json(['status' => 'failed', 'message' => 'Error fetching details: ' . $e->getMessage()]);
+        }
     }
 }
 
