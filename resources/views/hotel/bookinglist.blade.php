@@ -114,7 +114,7 @@
 
         </div>
 
-        <div class="card mt-3">
+        <div class="card">
             <div class="card-header pb-0 d-flex justify-content-between mb-lg-n4 ">
                 <div class="card-title mb-5">
                     <h4 class="mb-0">
@@ -134,6 +134,10 @@
 @endsection
 
 @push('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
+    <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
+    <script src="{{ asset('js/hotel.js') }}"></script>
+    <script src="{{ asset('js/inputFormValidation.js') }}"></script>
 
     <script>
         $(document).ready(function() {

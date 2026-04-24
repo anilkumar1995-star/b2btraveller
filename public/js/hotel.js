@@ -679,7 +679,7 @@ function showCancelPolicy(policies) {
     $('#cancelPolicyModal').modal('show');
 }
 
-let sessionExpired = false;
+var sessionExpired = false;
 function updateCountdown() {
     let expireTime = parseInt(sessionStorage.getItem("hotelExpireTime"), 10);
 
