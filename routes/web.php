@@ -204,6 +204,7 @@ Route::group(['prefix' => 'bus', 'middleware' => ['auth']], function () {
     Route::any('payment/success', [BusController::class, 'paymentSuccess'])->name('bus.payment.success');
     Route::any('payment/failed', [BusController::class, 'paymentFailed'])->name('bus.payment.failed');
     Route::post('check-status', [BusController::class, 'checkStatus'])->name('bus.checkStatus');
+    Route::post('refund', [BusController::class, 'refundAmount'])->name('bus.refund');
 
     Route::get('review-booking', [BusController::class, 'reviewBooking'])->name('bus.reviewBooking');
 });
