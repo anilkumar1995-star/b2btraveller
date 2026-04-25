@@ -446,36 +446,19 @@ class HotelController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid ?? $request->input('data.clientRefId');
-        $status = $request->status ?? 'SUCCESS';
-        
-        \Log::info("Hotel Payment SUCCESS Redirect: id=$id, status=$status");
-
-        if (strtoupper($status) == 'SUCCESS' || $request->code == '0x0200') {
-            $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
-            if ($booking) {
-                $this->finalizeBooking($booking);
-                $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
-            }
-            return view('hotel.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id, 'booking' => $booking]);
-        }
-
-        return view('hotel.status')->with(['status' => 'failed', 'message' => $request->message ?? 'Payment Failed', 'id' => $id]);
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id;
+        $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
+        return view('hotel.status')->with(['status' => 'pending', 'message' => 'Payment Received, Finalizing...', 'id' => $id, 'booking' => $booking]);
     }
 
     public function paymentFailed(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid ?? $request->input('data.clientRefId');
-        $status = $request->status ?? 'FAILURE';
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id;
+        $status = strtoupper($request->status ?? 'FAILURE');
         
-
-        if (strtoupper($status) == 'SUCCESS' || $request->code == '0x0200') {
+        if ($status == 'SUCCESS' || $status == 'PENDING' || $request->code == '0x0200') {
             $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
-            if ($booking) {
-                $this->finalizeBooking($booking);
-                $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
-            }
-            return view('hotel.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id, 'booking' => $booking]);
+            return view('hotel.status')->with(['status' => 'pending', 'message' => 'Payment Received, Finalizing...', 'id' => $id, 'booking' => $booking]);
         }
 
         return view('hotel.status')->with(['status' => 'failed', 'message' => $request->message ?? 'Payment Failed', 'id' => $id]);
@@ -503,47 +486,68 @@ class HotelController extends Controller
 
         $service = new HotelService();
         $result = $service->checkPaymentStatus($id);
-
         if ($result['response'] != '') {
-                $responseStatus = json_decode($result['response']);
+            $responseStatus = json_decode($result['response']);
+            $isSuccess = (isset($responseStatus->status) && strtoupper($responseStatus->status) == "SUCCESS") || (isset($responseStatus->code) && $responseStatus->code == "0x0200");
+            $isFailure = (isset($responseStatus->status) && (strtolower($responseStatus->status) == "failure" || strtolower($responseStatus->status) == "failed")) 
+                         || (isset($responseStatus->code) && !in_array($responseStatus->code, ["0x0200", "0x0201"]));
+            $isPending = (isset($responseStatus->status) && strtolower($responseStatus->status) == "pending") || (isset($responseStatus->code) && $responseStatus->code == "0x0201");
 
-                if ((isset($responseStatus->status) && strtoupper($responseStatus->status) == "SUCCESS") || (isset($responseStatus->code) && $responseStatus->code == "0x0200")) {
-                   $finalResult = $this->finalizeBooking($booking);
-                   $booking = DB::table('hotel_bookings')->where('id', $booking->id)->first();
-                   
-                   if (!$finalResult['status']) {
-                       return response()->json([
-                           'status' => 'failed',
-                           'booking_status' => $booking->booking_status ?? 'failed',
-                           'message' => $finalResult['message'] ?? 'Unable to confirm with hotel provider.'
-                       ]);
-                   }
+            if ($isSuccess) {
+                if ($booking->payment_status !== 'success') {
+                    DB::table('hotel_bookings')->where('id', $booking->id)->update(['payment_status' => 'success']);
+                    Report::where('txnid', $booking->order_ref_id)
+                        ->orWhere('payid', $booking->order_ref_id)
+                        ->update(['status' => 'success']);
+                    $booking->payment_status = 'success';
                 }
 
-                if (isset($responseStatus->status) && (strtolower($responseStatus->status) == "pending" || strtolower($responseStatus->status) == "failure" || strtolower($responseStatus->status) == "failed")) {
-                    
-                    if (strtolower($responseStatus->status) == "failure" || strtolower($responseStatus->status) == "failed") {
-                        DB::table('hotel_bookings')
-                            ->where('id', $booking->id)
-                            ->update([
-                                'payment_status' => 'failed',
-                                'booking_status' => 'failed',
-                                'payment_failed_msg' => $responseStatus->message ?? "Transaction " . strtolower($responseStatus->status),
-                            ]);
-                        
-                        DB::table('reports')
-                            ->where('txnid', $booking->order_ref_id)
-                            ->update(['status' => 'failed']);
-                    }
-
+                $finalResult = $this->finalizeBooking($booking);
+                $booking = DB::table('hotel_bookings')->where('id', $booking->id)->first();
+                
+                if (!$finalResult['status']) {
                     return response()->json([
-                        'status' => strtolower($responseStatus->status),
-                        'message' => $responseStatus->message ?? "Transaction " . strtolower($responseStatus->status),
-                        'data' => DB::table('hotel_bookings')->where('id', $booking->id)->first()
+                        'status' => 'failed',
+                        'booking_status' => $booking->booking_status ?? 'failed',
+                        'message' => $finalResult['message'] ?? 'Unable to confirm with hotel provider.'
                     ]);
                 }
 
+                return response()->json([
+                    'status' => 'success',
+                    'booking_status' => 'Confirmed',
+                    'data' => $booking
+                ]);
             }
+
+            if ($isFailure) {
+                DB::table('hotel_bookings')
+                    ->where('id', $booking->id)
+                    ->update([
+                        'payment_status' => 'failed',
+                        'booking_status' => 'failed',
+                        'payment_failed_msg' => $responseStatus->message ?? "Transaction failed",
+                    ]);
+                
+                DB::table('reports')
+                    ->where('txnid', $booking->order_ref_id)
+                    ->update(['status' => 'failed']);
+
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $responseStatus->message ?? "Transaction failed",
+                    'data' => DB::table('hotel_bookings')->where('id', $booking->id)->first()
+                ]);
+            }
+
+            if ($isPending) {
+                return response()->json([
+                    'status' => 'pending',
+                    'message' => $responseStatus->message ?? "Transaction pending",
+                    'data' => $booking
+                ]);
+            }
+        }
 
         return response()->json([
             'status' => 'success',
@@ -555,16 +559,6 @@ class HotelController extends Controller
 
     private function finalizeBooking($booking)
     {
-        if ($booking->payment_status !== 'success') {
-            DB::table('hotel_bookings')->where('id', $booking->id)->update(['payment_status' => 'success']);
-
-            Report::where('txnid', $booking->order_ref_id)
-                ->orWhere('payid', $booking->order_ref_id)
-                ->update(['status' => 'success']);
-            
-            $booking->payment_status = 'success';
-        }
-
         if ($booking->payment_status === 'success' && $booking->booking_status !== 'Confirmed') {
             
             $payload = json_decode($booking->raw_payload, true);
@@ -640,6 +634,67 @@ class HotelController extends Controller
            
         } catch (\Exception $e) {
             return response()->json(['status' => 'failed', 'message' => 'Error fetching details: ' . $e->getMessage()]);
+        }
+    }
+
+    public function refundAmount(Request $request)
+    {
+        if (!\Myhelper::hasRole('admin')) {
+             return response()->json(['status' => 'failed', 'message' => 'Unauthorized access']);
+        }
+
+        $api = DB::table('apis')->where('code', 'orpayment')->first();
+        if (!$api) {
+            return response()->json(['status' => 'failed', 'message' => "Refund service is down"]);
+        }
+
+        $url = rtrim($api->url, '/') . "/v1/service/paycc/unlimit/refund";
+        
+        $header = [
+            "Content-Type: application/json",
+            "Authorization: Basic " . base64_encode($api->username . ":" . $api->password)
+        ];
+
+        $reqData = [
+            "clientRefId"  => $request->clientRefId,
+        ];
+
+        $result = \Myhelper::curl($url, "POST", json_encode($reqData), $header, "yes");
+       
+        if ($result['response'] != '') {
+            $responseStatus = json_decode($result['response']);
+           
+            if (isset($responseStatus->code) && ($responseStatus->code == "0x0200" || $responseStatus->code == "0x0206")) {
+                $msg = $responseStatus->message ?? (($responseStatus->code == "0x0206") ? "Refund initiated successfully." : "Refund successful.");
+                
+                $updateData = [
+                    'booking_status' => 'Cancelled',
+                ];
+
+                if (isset($responseStatus->data->amount)) {
+                    $updateData['refunded_amount'] = $responseStatus->data->amount;
+                }
+
+                DB::table('hotel_bookings')
+                    ->where('order_ref_id', $request->clientRefId)
+                    ->update($updateData);
+
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => $msg,
+                    'data'    => $responseStatus
+                ]);
+            } else {
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => $responseStatus->message ?? "Refund failed"
+                ]);
+            }
+        } else {
+            return response()->json([
+                'status' => 'failed',
+                'message' => "Refund service no response"
+            ]);
         }
     }
 }

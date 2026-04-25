@@ -567,14 +567,12 @@ class FlightController extends Controller
 
     public function paymentSuccess(Request $request)
     {
-        \Log::info("Flight Payment Success Request:", $request->all());
         $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id ?? $request->ORDERID ?? $request->ORDER_ID;
         return view('flight.status')->with(['status' => 'success', 'message' => 'Payment Successful', 'id' => $id]);
     }
 
     public function paymentFailed(Request $request)
     {
-        \Log::info("Flight Payment Failed Request:", $request->all());
         $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id ?? $request->ORDERID ?? $request->ORDER_ID;
         return view('flight.status')->with(['status' => 'failed', 'message' => 'Payment Failed', 'id' => $id]);
     }

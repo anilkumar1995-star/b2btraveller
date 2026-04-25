@@ -15,24 +15,17 @@
             <div class="row justify-content-center">
                 <div class="col-md-6">
                     <!-- Status Card -->
-                    @php
-                        $isSuccess = ($status == 'success' && isset($booking) && $booking->booking_status == 'Confirmed');
-                        $isFailed = ($status == 'failed' || (isset($booking) && $booking->booking_status == 'failed'));
-                        $isPending = ($status == 'success' && !$isSuccess && !$isFailed);
-                        
-                        $cardClass = $isSuccess ? 'success' : ($isFailed ? 'failed' : 'pending');
-                    @endphp
-
-                    <div class="card status-card {{ $cardClass }} animate__animated animate__zoomIn" id="statusCard">
+                    <div class="card status-card {{ $status == 'success' ? 'success' : ($status == 'failed' ? 'failed' : 'pending') }} animate__animated animate__zoomIn"
+                        id="statusCard">
                         <div class="card-body text-center p-md-4 p-3">
 
                             <!-- Icon Circle -->
                             <div class="status-icon-container mb-3 mx-auto" id="statusIcon">
-                                @if ($isSuccess)
+                                @if ($status == 'success')
                                     <div class="icon-circle bg-success shadow-success">
                                         <i class="ti ti-check display-3 text-white"></i>
                                     </div>
-                                @elseif ($isFailed)
+                                @elseif ($status == 'failed')
                                     <div class="icon-circle bg-danger shadow-danger">
                                         <i class="ti ti-x display-3 text-white"></i>
                                     </div>
@@ -45,14 +38,14 @@
 
                             <!-- Status Text -->
                             <div class="status-text animate__animated animate__fadeInUp animate__delay-1s" id="statusContent">
-                                @if ($isSuccess)
+                                @if ($status == 'success')
                                     <h1 class="fw-extra-bold mb-2 text-dark fs-3">Booking Confirmed! 🎉</h1>
                                     <p class="lead text-muted px-md-4 mb-3 small">
                                         Great news! Your hotel reservation has been confirmed successfully.<br>
                                         <strong>Hotel:</strong> {{ $booking->hotel_name ?? 'N/A' }}<br>
                                         <strong>Confirmation No:</strong> {{ $booking->ticket_no ?? 'N/A' }}
                                     </p>
-                                @elseif ($isFailed)
+                                @elseif ($status == 'failed')
                                     <h1 class="fw-extra-bold mb-2 text-dark fs-3">Booking Failed</h1>
                                     <p class="lead text-muted px-md-4 mb-3 small">
                                         {{ $message ?? 'Oops! We couldn\'t process your reservation. Any deducted amount will be refunded automatically.' }}
@@ -60,7 +53,7 @@
                                 @else
                                     <h1 class="fw-extra-bold mb-2 text-dark fs-3">Processing Booking...</h1>
                                     <p class="lead text-muted px-md-4 mb-3 small">
-                                        Your payment is successful! We are confirming your hotel reservation.
+                                        Please wait! We are confirming your hotel reservation.
                                     </p>
                                     <div class="timer-wrapper my-3">
                                         <div class="h4 fw-bold text-primary mb-1" id="timer">01:00</div>
@@ -78,7 +71,7 @@
                             <!-- Action Buttons -->
                             <div class="action-buttons d-flex flex-column flex-md-row justify-content-center gap-3 animate__animated animate__fadeInUp animate__delay-2s"
                                 id="actionButtons">
-                                @if (!$isPending)
+                                @if ($status != 'pending')
                                     <a href="{{ route('hotel.bookingList') }}" class="btn btn-primary btn-cta shadow-sm">
                                         <i class="ti ti-file-text me-2"></i>My Bookings
                                     </a>
@@ -99,18 +92,22 @@
     @push('script')
         <script>
             $(document).ready(function() {
-                @if ($isPending)
+                @if ($status == 'pending')
                     let timeLeft = 60;
                     let timerElement = $('#timer');
                     let timerBar = $('#timerBar');
                     let orderRefId = $('#order_ref_id').val();
                     let pollingInterval;
 
+                    console.log("Status Page Initialized. Order ID:", orderRefId, "Status:", "{{ $status }}");
+
                     // Start Timer
                     let timerInterval = setInterval(function() {
                         timeLeft--;
-                        if (timeLeft < 0) {
+                        if (timeLeft <= 0) {
                             clearInterval(timerInterval);
+                            clearInterval(pollingInterval);
+                            handleTimeout();
                             return;
                         }
 
@@ -120,22 +117,20 @@
 
                         let percentage = (timeLeft / 60) * 100;
                         timerBar.css('width', percentage + '%');
-
-                        if (timeLeft <= 0) {
-                            clearInterval(timerInterval);
-                            clearInterval(pollingInterval);
-                            handleTimeout();
-                        }
                     }, 1000);
 
-                    if (orderRefId) {
+                    if (orderRefId && orderRefId !== '') {
+                        console.log("Starting polling for Order ID:", orderRefId);
                         pollingInterval = setInterval(function() {
                             checkBookingStatus();
-                        }, 10000);
-                        checkBookingStatus();
+                        }, 10000); // Changed to 10 seconds to match flight status behavior
+                        checkBookingStatus(); // Run immediately on load
+                    } else {
+                        console.error("Order ID not found, polling not started.");
                     }
 
                     function checkBookingStatus() {
+                        console.log("Checking status for:", orderRefId);
                         $.ajax({
                             url: "{{ route('hotel.checkStatus') }}",
                             method: "POST",
@@ -144,19 +139,23 @@
                                 id: orderRefId
                             },
                             success: function(response) {
-                                if (response.status === 'success' && response.booking_status === 'Confirmed') {
+                                console.log("Status Check Response:", response);
+                                if (response.status === 'success' && (response.booking_status === 'Confirmed' || response.booking_status === 'Successful')) {
                                     clearInterval(timerInterval);
                                     clearInterval(pollingInterval);
                                     handleSuccess(response.data);
                                 } else if (response.status === 'failure' || response.status === 'failed' || response.status === 'FAILURE' || response.booking_status === 'failed') {
                                     clearInterval(timerInterval);
                                     clearInterval(pollingInterval);
-                                    handleFailure(response.message || (response.data && response.data.failedMessage) || 'Hotel booking failed.');
-                                } else if (response.status === 'pending' || response.status === 'PENDING') {
+                                    handleFailure(response.message || 'Hotel booking failed.');
+                                } else if (response.status === 'pending' || response.status === 'PENDING' || response.booking_status === 'pending') {
                                     if (response.message) {
                                         $('#statusContent p.lead').text(response.message);
                                     }
                                 }
+                            },
+                            error: function(xhr, status, error) {
+                                console.error("Status Check Error:", error);
                             }
                         });
                     }

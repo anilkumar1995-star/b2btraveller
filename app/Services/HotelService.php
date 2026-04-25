@@ -499,6 +499,7 @@ class HotelService
      */
     public function checkPaymentStatus($clientRefId)
     {
+        Log::info("Checking payment status for: " . $clientRefId);
         $api = Api::where('code', 'orpayment')->first();
         if (!$api) {
             return ['response' => '', 'error' => 'API source not found', 'code' => 404];

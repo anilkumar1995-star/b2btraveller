@@ -142,6 +142,7 @@
                       <th>User</th>
                   @endif
                   <th>Booking Details</th>
+                  <th>Hotel</th>
                   <th>Reference IDs</th>
                   <th>Amount</th>
                   <th>Payment Info</th>
@@ -159,6 +160,7 @@
                       'Failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
                       'failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
                       'Cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
+                      'cancelled' => ['label' => 'Cancelled', 'class' => 'badge bg-danger'],
                       'pending' => ['label' => 'Pending', 'class' => 'badge bg-warning'],
                       'OtherFare' => ['label' => 'Other Fare', 'class' => 'badge bg-info'],
                       'OtherClass' => ['label' => 'Other Class', 'class' => 'badge bg-warning'],
@@ -207,6 +209,16 @@
                               Booking ID: <b>{{ $response?->data?->BookingId ?? 'N/A' }}</b>
                           </td>
                           <td>
+                              @php
+                                  $payload = json_decode($b->raw_payload);
+                                  $hotelName = $payload->HotelName ?? $payload->hotel_name ?? 'N/A';
+                                  if (is_array($hotelName)) {
+                                      $hotelName = $hotelName[0] ?? 'N/A';
+                                  }
+                              @endphp
+                              <b>{{ $hotelName }}</b>
+                          </td>
+                          <td>
                               Ticket No: <b>{{ $b->ticket_no ?? 'N/A' }}</b> <br />
                               TXN ID: <b>{{ $b->order_ref_id ?? 'N/A' }}</b>
                           </td>
@@ -247,16 +259,18 @@
                                               </a>
                                           </li>
                                       @endif
-                                      {{-- <li>
-                                          <a class="dropdown-item cancel-hotel" href="javascript:void(0)"
-                                              data-bookingidcancel="{{ $b->booking_id_api }}"
-                                              data-ticketstatus="{{ $b->voucher_status }}"
-                                              data-changereqid="{{ $b->change_request_id }}"
-                                              data-creditnoteno="{{ $b->credit_note_no }}"
-                                              data-refundamt="{{ $b->refunded_amount }}">
-                                              🏨 Cancel Hotel
-                                          </a>
-                                      </li>
+                                      @if (in_array(strtolower($b->booking_status), ['success', 'confirmed']))
+                                          <li>
+                                              <a class="dropdown-item cancel-hotel" href="javascript:void(0)"
+                                                  data-bookingidcancel="{{ $b->booking_id_api }}"
+                                                  data-ticketstatus="{{ $b->voucher_status }}"
+                                                  data-changereqid="{{ $b->change_request_id }}"
+                                                  data-creditnoteno="{{ $b->credit_note_no }}"
+                                                  data-refundamt="{{ $b->refunded_amount }}">
+                                                  🏨 Cancel Hotel
+                                              </a>
+                                          </li>
+                                      @endif
                                       @if ($b->booking_status == 'CancellationPending' && $b->order_ref_id != null)
                                           <li>
                                               <a class="dropdown-item cancel-status" href="javascript:void(0)"
@@ -275,7 +289,7 @@
                                                   💸 Refund Amount
                                               </a>
                                           </li>
-                                      @endif --}}
+                                      @endif
                                   </ul>
                               </div>
                           </td>
@@ -283,7 +297,7 @@
                   @endforeach
               @else
                   <tr>
-                      <td colspan="{{ Myhelper::hasRole('admin') ? 9 : 8 }}" class="text-center text-danger">No
+                      <td colspan="{{ Myhelper::hasRole('admin') ? 10 : 9 }}" class="text-center text-danger">No
                           Bookings Details found.</td>
                   </tr>
               @endif
@@ -460,6 +474,7 @@
       }
   </style>
 
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script type="text/javascript">
       $(document).ready(function() {
           localStorage.removeItem('cancelCharge');
@@ -468,14 +483,14 @@
       });
 
       function manualCheckStatus(orderRefId) {
-          swal({
+          Swal.fire({
               title: 'Checking Status',
               text: 'Please wait while we verify the booking status...',
-              type: 'info',
+              icon: 'info',
               allowOutsideClick: false,
               showConfirmButton: false,
-              onOpen: () => {
-                  swal.showLoading();
+              didOpen: () => {
+                  Swal.showLoading();
               }
           });
 
@@ -489,32 +504,32 @@
               success: function(res) {
                   let status = res.status ? res.status.toLowerCase() : '';
                   if (status === 'success' || res.booking_status === 'Confirmed') {
-                      swal({
+                      Swal.fire({
                           title: 'Update',
                           text: res.message || 'Booking Confirmed Successfully!',
-                          type: 'success'
+                          icon: 'success'
                       }).then(() => {
                           location.reload();
                       });
                   } else if (status === 'failure' || status === 'failed') {
                       let errMsg = res.message || (res.data && res.data.failedMessage) || 'Transaction Failed.';
-                      swal({
+                      Swal.fire({
                           title: 'Failed',
                           text: errMsg,
-                          type: 'error'
+                          icon: 'error'
                       }).then(() => {
                           location.reload();
                       });
                   } else {
-                      swal({
+                      Swal.fire({
                           title: 'Status',
                           text: res.message || 'Still processing. Please try again after some time.',
-                          type: 'info'
+                          icon: 'info'
                       });
                   }
               },
               error: function() {
-                  swal('Error', 'Unable to check status at this moment.', 'error');
+                  Swal.fire('Error', 'Unable to check status at this moment.', 'error');
               }
           });
       }
@@ -522,6 +537,41 @@
       function showFailureMsg(msg) {
           $('#failureMsgText').text(msg);
           $('#failureMsgModal').modal('show');
+      }
+
+      function refundTicket(clientRefId) {
+          Swal.fire({
+              title: 'Are you sure?',
+              text: "You want to refund this transaction!",
+              icon: 'warning',
+              showCancelButton: true,
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33',
+              confirmButtonText: 'Yes, Refund it!',
+              showLoaderOnConfirm: true,
+              preConfirm: () => {
+                  return $.ajax({
+                      url: "{{ route('hotel.refund') }}",
+                      type: "POST",
+                      data: {
+                          clientRefId: clientRefId,
+                          _token: "{{ csrf_token() }}"
+                      }
+                  });
+              },
+              allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  const res = result.value;
+                  if (res && res.status === 'success') {
+                      Swal.fire('Success', res.message, 'success').then(() => {
+                          location.reload();
+                      });
+                  } else {
+                      showFailureMsg(res ? res.message : 'Refund failed');
+                  }
+              }
+          });
       }
 
       function openBookingDetails(bookingId) {
@@ -575,27 +625,54 @@
           let status = record?.booking_status || booking.HotelBookingStatus || 'Pending';
           let statusClass = 'bg-success';
           let upperStatus = status.toUpperCase();
-          if (upperStatus === 'FAILED' || upperStatus === 'FAILURE') statusClass = 'bg-danger';
+          if (upperStatus === 'FAILED' || upperStatus === 'FAILURE' || upperStatus === 'CANCELLED') statusClass = 'bg-danger';
           else if (upperStatus === 'PENDING') statusClass = 'bg-warning';
 
+          let starRating = '';
+          if (booking.StarRating) {
+              for (let i = 0; i < booking.StarRating; i++) {
+                  starRating += '<i class="fas fa-star text-warning small"></i> ';
+              }
+          }
+
+          let fullAddress = booking.AddressLine1 || '';
+          if (booking.AddressLine2) fullAddress += ', ' + booking.AddressLine2;
+          if (booking.City) fullAddress += ', ' + booking.City;
+
           let html = `
-            <div class="bg-white p-4 rounded shadow-sm border text-dark">
+            <style>
+                @media print {
+                    .modal-footer, .btn-close, .print-btn { display: none !important; }
+                    .badge { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; border: 1px solid #ddd !important; }
+                    .bg-success { background-color: #28a745 !important; color: white !important; }
+                    .bg-danger { background-color: #dc3545 !important; color: white !important; }
+                    .bg-warning { background-color: #ffc107 !important; color: black !important; }
+                    .bg-primary { background-color: #0d6efd !important; color: white !important; }
+                    .bg-light { background-color: #f8f9fa !important; }
+                    .text-primary { color: #0d6efd !important; }
+                    .text-success { color: #28a745 !important; }
+                    .card, .border { border: 1px solid #e5e7eb !important; }
+                }
+            </style>
+            <div id="hotelPrintArea" class="bg-white p-4 rounded shadow-sm border text-dark">
                 <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
                     <img src="{{ asset('images/logo.png') }}" style="height:60px;">
                     <div class="text-end">
                         <h3 class="fw-bold mb-0 text-primary">Hotel Ticket</h3>
                         <div class="text-muted small">Booking ID: <b>${booking.BookingId || '-'}</b></div>
                         <div class="mt-1">
-                            <span class="badge ${statusClass}">${status}</span>
-                            <span class="badge ${record?.is_refundable === 'true' ? 'bg-success' : 'bg-danger'} ms-1">${record?.is_refundable === 'true' ? 'Refundable' : 'Non-Refundable'}</span>
+                            <span class="badge ${record?.is_refundable === 'true' || record?.is_refundable === true ? 'bg-success' : 'bg-danger'} ms-1">${record?.is_refundable === 'true' || record?.is_refundable === true ? 'Refundable' : 'Non-Refundable'}</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="row mb-4">
                     <div class="col-md-8">
-                        <h4 class="text-dark fw-bold mb-1"><i class="fas fa-hotel me-2 text-primary"></i>${booking.HotelName}</h4>
-                        <p class="text-muted mb-1 small"><i class="fas fa-map-marker-alt me-2"></i>${booking.AddressLine1}, ${booking.City}</p>
+                        <h4 class="text-dark fw-bold mb-1">
+                            <i class="fas fa-hotel me-2 text-primary"></i>${booking.HotelName}
+                            <span class="ms-2">${starRating}</span>
+                        </h4>
+                        <p class="text-muted mb-1 small"><i class="fas fa-map-marker-alt me-2"></i>${fullAddress}</p>
                         <p class="text-muted small mb-0">Confirmation No: <b class="text-dark">${booking.ConfirmationNo || '-'}</b></p>
                     </div>
                     <div class="col-md-4 text-end">
@@ -628,15 +705,15 @@
                             <div class="p-3 border rounded bg-light">
                                 <div class="d-flex justify-content-between mb-2 small">
                                      <span>Base Fare:</span>
-                                     <span>₹${record?.base_fare || '0.00'}</span>
+                                     <span>₹${booking.NetAmount || '0.00'}</span>
                                  </div>
                                  <div class="d-flex justify-content-between mb-2 small">
                                      <span>Tax:</span>
-                                     <span>₹${record?.tax || '0.00'}</span>
+                                     <span>₹${booking.NetTax || '0.00'}</span>
                                  </div>
                                   <div class="d-flex justify-content-between mb-2">
                                     <span class="fw-bold">Total Paid:</span>
-                                    <span class="fw-bold text-primary fs-5">₹${totalAmount}</span>
+                                    <span class="fw-bold text-primary fs-5">₹${parseFloat(booking.NetAmount || 0) + parseFloat(booking.NetTax || 0)}</span>
                                 </div>
                                 <div class="d-flex justify-content-between align-items-center">
                                     <span>Payment Status:</span>
@@ -655,15 +732,19 @@
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
                                     <span>Booking Date:</span>
-                                    <span>${record?.created_at ? new Date(record.created_at).toLocaleDateString('en-GB') : '-'}</span>
+                                    <span>${booking.BookingDate ? new Date(booking.BookingDate).toLocaleDateString('en-GB') : (record?.created_at ? new Date(record.created_at).toLocaleDateString('en-GB') : '-')}</span>
                                 </div>
                                 <div class="d-flex justify-content-between mb-2">
-                                    <span>Hotel Code:</span>
-                                    <span class="small">${booking.HotelCode || '-'}</span>
-                                </div>
-                                <div class="d-flex justify-content-between">
                                     <span>Total Room:</span>
-                                    <span class="small">${record?.total_room || '1'}</span>
+                                    <span class="small">${booking.NoOfRooms || record?.total_room || '1'} Room(s)</span>
+                                </div>
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span>Room Type:</span>
+                                    <span class="small fw-bold">${rooms[0]?.RoomTypeName || '-'}</span>
+                                </div>
+                                 <div class="d-flex justify-content-between  align-items-center">
+                                    <span>Booking Status:</span>
+                                    <span class="badge ${statusClass}">${status.toUpperCase()}</span>
                                 </div>
                             </div>
                         </div>
@@ -688,7 +769,7 @@
                                     <tr class="text-center">
                                         <td>${idx+1}</td>
                                         <td class="text-start"><b>${p.Title} ${p.FirstName} ${p.LastName}</b></td>
-                                        <td>Adult</td>
+                                        <td>${p.PaxType == 1 || p.PaxType == '1' ? 'Adult' : (p.PaxType == 2 || p.PaxType == '2' ? 'Child' : 'Guest')}</td>
                                         <td>${p.Age || '-'}</td>
                                         <td>${p.LeadPassenger ? '<span class="badge bg-primary">Lead</span>' : '-'}</td>
                                     </tr>
@@ -696,13 +777,18 @@
                             </tbody>
                         </table>
                     </div>
+                    ${booking.SpecialRequest ? `
+                        <div class="mt-2 p-2 border rounded bg-light-warning small">
+                            <strong>Special Request:</strong> ${booking.SpecialRequest}
+                        </div>
+                    ` : ''}
                 </div>
 
                 <div class="room-section mb-4">
-                    <div class="passenger-head" style="font-weight: 700; padding: 10px; border-bottom: 2px solid #2563eb; margin-bottom: 12px; color: #1e293b;">ROOM & INCLUSION</div>
+                    <div class="passenger-head" style="font-weight: 700; padding: 10px; border-bottom: 2563eb; margin-bottom: 12px; color: #1e293b;">ROOM & INCLUSION</div>
                     ${rooms.map((room, idx) => `
                         <div class="border rounded-3 p-3 bg-light mb-3">
-                            <div class="row align-items-center">
+                            <div class="row align-items-center mb-2">
                                 <div class="col-md-7">
                                     <h6 class="fw-bold mb-1">Room ${idx+1}: ${room.RoomTypeName}</h6>
                                     <div class="text-primary small fw-bold"><i class="fas fa-utensils me-1"></i> Inclusion: ${room.Inclusion || 'No Meals'}</div>
@@ -713,19 +799,76 @@
                                     </div>
                                 </div>
                             </div>
+                            ${room.Amenities && room.Amenities.length > 0 ? `
+                                <div class="mt-2 pt-2 border-top">
+                                    <div class="small text-muted mb-2 fw-bold">Amenities:</div>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        ${room.Amenities.map(amenity => `<span class="badge bg-label-secondary text-dark border fw-normal" style="font-size: 11px;">${amenity}</span>`).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${room.RoomDescription ? `
+                                <div class="mt-2 pt-2 border-top small text-muted room-desc-html">
+                                    <strong class="text-dark">Description:</strong>
+                                    <div class="mt-1 text-dark">${room.RoomDescription}</div>
+                                </div>
+                            ` : ''}
                         </div>
                     `).join('')}
+                </div>
+
+                <div class="policy-section mb-4 d-none">
+                    <div class="passenger-head" style="font-weight: 700; padding: 10px; border-bottom: 2px solid #2563eb; margin-bottom: 12px; color: #1e293b;">CANCELLATION POLICY</div>
+                    <div class="p-3 border rounded bg-white shadow-none" style="font-size: 13px; line-height: 1.6;">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-bordered mb-2">
+                                <thead class="table-light">
+                                    <tr class="text-center">
+                                        <th>From Date</th>
+                                        <th>To Date</th>
+                                        <th>Cancellation Charge</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${rooms[0] && rooms[0].CancelPolicies ? rooms[0].CancelPolicies.map(policy => `
+                                        <tr class="text-center">
+                                            <td>${policy.FromDate}</td>
+                                            <td>${policy.ToDate}</td>
+                                            <td class="text-danger fw-bold">${policy.ChargeType == 2 ? policy.CancellationCharge + '%' : '₹' + policy.CancellationCharge}</td>
+                                        </tr>
+                                    `).join('') : '<tr><td colspan="3" class="text-center">No cancellation policy available</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+                        ${booking.CancellationPolicy ? `
+                            <div class="mt-2 small text-muted p-2 border-start border-primary border-4 bg-light">
+                                <strong>Policy Summary:</strong><br/>
+                                ${booking.CancellationPolicy.split('#^#')[1] ? booking.CancellationPolicy.split('#^#')[1].split('|').filter(p => p && p !== '#!#').map(p => `• ${p}<br/>`).join('') : booking.CancellationPolicy}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+
+                <div class="policy-section mb-4">
+                    <div class="passenger-head" style="font-weight: 700; padding: 10px; border-bottom: 2px solid #2563eb; margin-bottom: 12px; color: #1e293b;">POLICIES & IMPORTANT INFO</div>
+                    <div class="p-3 border rounded bg-white shadow-none" style="font-size: 13px; line-height: 1.6;">
+                        <ul class="ps-3 mb-0">
+                            <li>Early check-in and late check-out are subject to availability.</li>
+                            ${booking.RateConditions ? booking.RateConditions.map(cond => {
+                                // Simple HTML decode for &lt; &gt;
+                                let decoded = cond.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+                                return `<li class="mb-2">${decoded}</li>`;
+                            }).join('') : '<li>No specific policies mentioned.</li>'}
+                        </ul>
+                    </div>
                 </div>
 
                 <div class="alert alert-info mt-4 py-2 border-0" style="background-color: #f0f7ff; color: #0c5460;">
                     <div class="row align-items-center">
                         <div class="col-md-1 text-center"><i class="fas fa-info-circle fs-4"></i></div>
                         <div class="col-md-11">
-                            <h6 class="mb-0 fw-bold">Important Information</h6>
-                            <ul class="mb-0 small ps-3 mt-1">
-                                <li>Please present this voucher and a valid government-issued photo ID at the hotel front desk.</li>
-                                <li>Early check-in and late check-out are subject to availability.</li>
-                            </ul>
+                            <h6 class="mb-0 fw-bold">Important Note</h6>
+                            <p class="mb-0 small">Please present this voucher and a valid government-issued photo ID at the hotel front desk upon arrival.</p>
                         </div>
                     </div>
                 </div>
@@ -734,15 +877,21 @@
           $('#ticketContent').html(html);
       }
 
-      function printTicket() {
-          const printContent = document.getElementById("ticketContent").innerHTML;
-          const originalContent = document.body.innerHTML;
-
-          document.body.innerHTML = printContent;
-          window.print();
-          document.body.innerHTML = originalContent;
-
-          location.reload();
+      window.printTicket = function() {
+          $("#hotelPrintArea").print({
+              globalStyles: true,
+              mediaPrint: true,
+              stylesheet: null,
+              noPrintSelector: ".no-print",
+              iframe: true,
+              append: null,
+              prepend: null,
+              manuallyCopyFormValues: true,
+              deferred: $.Deferred(),
+              timeout: 750,
+              title: "Hotel Ticket",
+              doctype: '<!doctype html>'
+          });
       }
 
 

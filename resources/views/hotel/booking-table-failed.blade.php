@@ -41,6 +41,7 @@
                 @if (Myhelper::hasRole('admin'))
                     <th>User</th>
                 @endif
+                <th>Hotel</th>
                 <th>Total Amount</th>
                 <th>Payment Status</th>
                 <th>Status</th>
@@ -59,6 +60,16 @@
                             {{ $b->user_mobile ?? '' }}
                         </td>
                     @endif
+                    <td>
+                        @php
+                            $payload = json_decode($b->raw_payload);
+                            $hotelName = $payload->HotelName ?? $payload->hotel_name ?? 'N/A';
+                            if (is_array($hotelName)) {
+                                $hotelName = $hotelName[0] ?? 'N/A';
+                            }
+                        @endphp
+                        <b>{{ $hotelName }}</b>
+                    </td>
                     <td>₹{{ number_format($b->total_amount ?? 0, 2) }}</td>
                     <td>
                         <span class="badge bg-danger">Failed</span>
@@ -72,7 +83,7 @@
                 </tr>
             @empty
                 <tr>
-                    <td colspan="{{ Myhelper::hasRole('admin') ? 6 : 5 }}" class="text-center text-danger py-4">No Failed Bookings Details found.</td>
+                    <td colspan="{{ Myhelper::hasRole('admin') ? 7 : 6 }}" class="text-center text-danger py-4">No Failed Bookings Details found.</td>
                 </tr>
             @endforelse
         </tbody>
