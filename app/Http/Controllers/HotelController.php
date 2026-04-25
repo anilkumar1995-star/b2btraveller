@@ -453,15 +453,9 @@ class HotelController extends Controller
 
     public function paymentFailed(Request $request)
     {
-        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id;
-        $status = strtoupper($request->status ?? 'FAILURE');
-        
-        if ($status == 'SUCCESS' || $status == 'PENDING' || $request->code == '0x0200') {
-            $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
-            return view('hotel.status')->with(['status' => 'pending', 'message' => 'Payment Received, Finalizing...', 'id' => $id, 'booking' => $booking]);
-        }
-
-        return view('hotel.status')->with(['status' => 'failed', 'message' => $request->message ?? 'Payment Failed', 'id' => $id]);
+        $id = $request->clientRefId ?? $request->txnid ?? $request->orderId ?? $request->id;        
+        $booking = DB::table('hotel_bookings')->where('order_ref_id', $id)->first();
+        return view('hotel.status')->with(['status' => 'pending', 'message' => 'Payment Received, Finalizing...', 'id' => $id, 'booking' => $booking]);
     }
 
     public function checkStatus(Request $request)
@@ -668,7 +662,8 @@ class HotelController extends Controller
                 $msg = $responseStatus->message ?? (($responseStatus->code == "0x0206") ? "Refund initiated successfully." : "Refund successful.");
                 
                 $updateData = [
-                    'booking_status' => 'Cancelled',
+                    'booking_status' => 'failed',
+                    'payment_status' => 'refunded',
                 ];
 
                 if (isset($responseStatus->data->amount)) {

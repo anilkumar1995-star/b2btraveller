@@ -123,8 +123,8 @@
                         console.log("Starting polling for Order ID:", orderRefId);
                         pollingInterval = setInterval(function() {
                             checkBookingStatus();
-                        }, 10000); // Changed to 10 seconds to match flight status behavior
-                        checkBookingStatus(); // Run immediately on load
+                        }, 10000); 
+                        checkBookingStatus(); 
                     } else {
                         console.error("Order ID not found, polling not started.");
                     }

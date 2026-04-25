@@ -194,17 +194,28 @@
     action-btn {
         background-color: rgba(49, 84, 255, 0.1);
     }
+
+    .failed-badge-clickable {
+        text-decoration: underline dotted;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .failed-badge-clickable:hover {
+        transform: scale(1.1);
+    }
 </style>
 
 <div class="card-datatable table-responsive p-2">
     <table class="table table-striped" id="bookingTable">
         <thead class="bg-light">
             <tr>
-                <th width="10%">ID</th>
+                <th width="8%">ID</th>
                 <th width="10%">User</th>
                 <th width="15%">Booking Details</th>
                 <th width="15%">Bus Details</th>
-                <th width="10%">Amount</th>
+                <th width="8%">Amount</th>
+                <th width="12%">Payment Info</th>
                 <th width="10%">Type</th>
                 <th class="text-center" width="10%">Action</th>
             </tr>
@@ -229,6 +240,12 @@
                     'blocked' => ['label' => 'Blocked', 'class' => 'badge bg-info'],
                 ];
 
+                $payStatusMap = [
+                    'success' => ['label' => 'Success', 'class' => 'badge bg-success'],
+                    'pending' => ['label' => 'Pending', 'class' => 'badge bg-warning'],
+                    'failed' => ['label' => 'Failed', 'class' => 'badge bg-danger'],
+                    'refunded' => ['label' => 'Refunded', 'class' => 'badge bg-info'],
+                ];
               @endphp
 
             @if (!empty($bookings) && $bookings->count() > 0)
@@ -260,6 +277,19 @@
                         </td>
 
                         <td>₹{{ $b->total_amount ?? 0 }}</td>
+                        <td>
+                            Order Ref Id: <b>{{ $b->order_ref_id ?? 'N/A' }}</b><br/>
+                            @php
+                                $payStatus = $payStatusMap[$b->payment_status] ?? [
+                                    'label' => $b->payment_status ?? 'N/A',
+                                    'class' => 'badge bg-secondary',
+                                ];
+                            @endphp
+                            <span class="{{ $payStatus['class'] }} mt-1 {{ $b->payment_failed_msg ? 'failed-badge-clickable' : '' }}" style="font-size: 10px;"
+                                @if ($b->payment_failed_msg) onclick="showFailureMsg('{{ addslashes($b->payment_failed_msg) }}')" @endif>
+                                {{ $payStatus['label'] }}
+                            </span>
+                        </td>
 
                         <td>
                             {!! $b->is_pricechange == 'true'
@@ -270,7 +300,8 @@
                         </td>
 
                         <td>
-                            <span class="{{ $status['class'] }}">
+                            <span class="{{ $status['class'] }} {{ $b->booking_failed_msg ? 'failed-badge-clickable' : '' }}"
+                                @if ($b->booking_failed_msg) onclick="showFailureMsg('{{ addslashes($b->booking_failed_msg) }}')" @endif>
                                 {{ $status['label'] }}
                             </span>
                             <br />
@@ -306,6 +337,14 @@
                                             🚌 Cancel Bus
                                         </a>
                                     </li>
+                                    @if (Myhelper::hasRole('admin') && $b->payment_status == 'success' && $b->booking_status == 'failed')
+                                        <li>
+                                            <a class="dropdown-item refund-btn" href="javascript:void(0)"
+                                                data-id="{{ $b->order_ref_id }}">
+                                                💰 Refund Amount
+                                            </a>
+                                        </li>
+                                    @endif
                                     {{-- @if(strtolower($b->booking_status) == 'cancelled')
                                     <li>
                                         <a class="dropdown-item refund-btn" href="javascript:void(0)"
@@ -517,6 +556,8 @@
         }
     </style>
 
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.6.2/jQuery.print.min.js"></script>
 
     <script src="https://unpkg.com/bwip-js/dist/bwip-js-min.js"></script>
@@ -560,6 +601,51 @@
 
     //   });
 
+
+    $(document).on('click', '.refund-btn', function() {
+        let orderRefId = $(this).data('id');
+        
+        swal({
+            title: "Are you sure?",
+            text: "You want to refund this transaction!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Yes, Refund it!",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        }).then((result) => {
+            if (result.value) {
+                swal({
+                    title: "Please wait...",
+                    text: "Processing refund...",
+                    type: "info",
+                    showConfirmButton: false,
+                    allowOutsideClick: false
+                });
+                $.ajax({
+                    url: "{{ route('bus.refund') }}",
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        clientRefId: orderRefId
+                    },
+                    success: function(res) {
+                        if (res.status == 'success') {
+                            swal("Refunded!", res.message, "success").then(() => {
+                                location.reload();
+                            });
+                        } else {
+                            swal("Failed!", res.message, "error");
+                        }
+                    },
+                    error: function() {
+                        swal("Error!", "Something went wrong while processing refund.", "error");
+                    }
+                });
+            }
+        });
+    });
 
     function openBookingDetails(busId) {
 
@@ -1195,6 +1281,8 @@
                         title: 'Failed to Fetch Status',
                         text: res.message || 'The check returned an error.',
                         type: 'error'
+                    }).then(() => {
+                        location.reload();
                     });
                 }
             },

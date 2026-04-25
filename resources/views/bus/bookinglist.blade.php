@@ -116,12 +116,22 @@
                 </div>
             </div>
         </section>
-
-
     </main>
 
+  <div class="modal fade" id="failureMsgModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content border-0 shadow-lg" style="border-radius: 1.5rem;">
+              <div class="modal-header bg-danger text-white border-0 py-3" style="border-top-left-radius: 1.5rem; border-top-right-radius: 1.5rem;">
+                  <h5 class="modal-title fw-bold text-white mb-0"><i class="ti ti-alert-circle me-2"></i>Failure Message</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body p-4 text-center">
+                  <p id="failureMsgText" class="text-muted fs-5 mb-0"></p>
+              </div>
+          </div>
+      </div>
+  </div>
 @endsection
-
 
 @push('script')
     <script>
@@ -143,5 +153,10 @@
                 });
             }
         });
+
+        function showFailureMsg(msg) {
+            $('#failureMsgText').text(msg);
+            $('#failureMsgModal').modal('show');
+        }
     </script>
 @endpush
