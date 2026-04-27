@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Storage;
 use MiladRahimi\Jwt\Cryptography\Algorithms\Hmac\HS256;
 use MiladRahimi\Jwt\JwtGenerator;
 use Illuminate\Validation\Rule;
+use App\Helpers\CommonHelper;
 
 class UserController extends Controller
 {
@@ -147,8 +148,20 @@ class UserController extends Controller
                     $arr = ["mobile" => $post->mobile, "var2" => $otp];
                     $send = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
 
-                    // $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Login OTP"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Login Otp");
-                    if ($send['status'] == true) {
+                    try {
+                        $html = view('emails.otp', [
+                            'otp' => $otp,
+                            'name' => $user->name,
+                            'subhead' => 'Login OTP',
+                            'mydata' => ['company' => $company]
+                        ])->render();
+                        $mail = CommonHelper::sendZohoOtpEmail([$user->email], 'B2B Traveller Login OTP', $html, null, 'otp');
+                    } catch (\Exception $e) {
+                        \Log::error('Login OTP Email Error: ' . $e->getMessage());
+                        $mail = "fail";
+                    }
+
+                    if ($send['status'] == true || $mail == "success" || (is_array($mail) && in_array($mail['code'] ?? 0, [200, 201]))) {
                         User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678"), 'otpresend' => $user->otpresend, 'otp_resend_date' => now()->format('Y-m-d')]);
                         return response()->json(['status' => 'otpsent'], 200);
                     }
@@ -167,11 +180,20 @@ class UserController extends Controller
                 $arr = ["mobile" => $post->mobile, "var2" => $otp];
                 $send = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
 
-                $otpmailid = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
-                $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
-                // $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Login OTP"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Login Otp");
+                try {
+                    $html = view('emails.otp', [
+                        'otp' => $otp,
+                        'name' => $user->name,
+                        'subhead' => 'Login OTP',
+                        'mydata' => ['company' => $company]
+                    ])->render();
+                    $mail = CommonHelper::sendZohoOtpEmail([$user->email], 'B2B Traveller Login OTP', $html, null, 'otp');
+                } catch (\Exception $e) {
+                    \Log::error('Login OTP Email Error: ' . $e->getMessage());
+                    $mail = "fail";
+                }
 
-                if ($send['status'] == true) {
+                if ($send['status'] == true || $mail == "success" || (is_array($mail) && in_array($mail['code'] ?? 0, [200, 201]))) {
                     User::where('mobile', $post->mobile)->update(['otpverify' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678")]);
                     return response()->json(['status' => 'otpsent'], 200);
                 }
@@ -231,19 +253,21 @@ class UserController extends Controller
                 $sms = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
 
 
-                $otpmailid = \App\Models\PortalSetting::where('code', 'otpsendmailid')->first();
-                $otpmailname = \App\Models\PortalSetting::where('code', 'otpsendmailname')->first();
+                $company = Company::where('id', $user->company_id)->first();
                 try {
-                    $mail = \Myhelper::mail('mail.password', ["token" => $otp, "name" => $user->name, "subhead" => "Reset Password"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Reset Password");
-                }
-                catch (\Exception $e) {
+                    $html = view('emails.otp', [
+                        'otp' => $otp,
+                        'name' => $user->name,
+                        'subhead' => 'Reset Password OTP',
+                        'mydata' => ['company' => $company]
+                    ])->render();
+                    $mail = CommonHelper::sendZohoOtpEmail([$user->email], 'B2B Traveller Reset Password OTP', $html, null, 'otp');
+                } catch (\Exception $e) {
+                    \Log::error('Reset Password OTP Email Error: ' . $e->getMessage());
                     $mail = "fail";
-
-
-                // return response()->json(['status' => 'ERR', 'message' => "Something went wrong1"], 400);
                 }
-                //dd($sms);
-                if ($sms['status'] || $mail) {
+
+                if ($sms['status'] == true || $mail == "success" || (is_array($mail) && in_array($mail['code'] ?? 0, [200, 201]))) {
                     User::where('mobile', $post->mobile)->update(['remember_token' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678")]);
                     return response()->json(['status' => 'TXN', 'message' => "Password reset token sent successfully"], 200);
                 }
@@ -267,7 +291,7 @@ class UserController extends Controller
                 }
             }
             else {
-                return response()->json(['status' => 'ERR', 'message' => "Please enter valid token"], 400);
+                return response()->json(['status' => 'ERR', 'message' => "Please enter valid otp"], 400);
             }
         }
     }
@@ -287,17 +311,23 @@ class UserController extends Controller
         $user = \App\User::where('mobile', $post->mobile)->first();
         if ($user) {
             $otp = rand(111111, 999999);
+            $company = Company::where('id', $user->company_id)->first();
 
             $arr = ["mobile" => $post->mobile, "var2" => $otp];
             $sms = AndroidCommonHelper::sendEmailAndOtp("sendOtp", $arr);
             try {
-                $mail = \Myhelper::mail('mail.otp', ["otp" => $otp, "name" => $user->name, "subhead" => "Reset TPIN"], $user->email, $user->name, $otpmailid->value, $otpmailname->value, "Reset TPIN");
-            }
-            catch (\Exception $e) {
-                // dd($e) ;
+                $html = view('emails.otp', [
+                    'otp' => $otp,
+                    'name' => $user->name,
+                    'subhead' => 'Reset TPIN OTP',
+                    'mydata' => ['company' => $company]
+                ])->render();
+                $mail = CommonHelper::sendZohoOtpEmail([$user->email], 'B2B Traveller Reset TPIN OTP', $html, null, 'otp');
+            } catch (\Exception $e) {
+                \Log::error('Reset TPIN OTP Email Error: ' . $e->getMessage());
                 $mail = "fail";
             }
-            if ($mail == "success" || $sms['status'] == true) {
+            if ($sms['status'] == true || $mail == "success" || (is_array($mail) && in_array($mail['code'] ?? 0, [200, 201]))) {
                 $user = \DB::table('password_resets')->insert([
                     'mobile' => $post->mobile,
                     'token' => \Myhelper::encrypt($otp, "sdsada7657hgfh$$&7678"),

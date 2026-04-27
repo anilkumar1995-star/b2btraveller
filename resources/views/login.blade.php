@@ -564,7 +564,7 @@
     </div> --}}
 
 
-    <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -601,7 +601,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -619,12 +619,12 @@
                         <input type="hidden" name="type" value="reset">
                         {{ csrf_field() }}
                         <div class="form-group my-1">
-                            <label>Reset Token</label>
+                            <label>OTP :</label>
                             <input type="text" name="token" class="form-control my-1" placeholder="Enter OTP"
                                 required="">
                         </div>
                         <div class="form-group my-1">
-                            <label>New Password</label>
+                            <label>New Password :</label>
                             <input type="password" name="password" class="form-control my-1"
                                 placeholder="Enter New Password" required="">
                         </div>
@@ -1310,12 +1310,20 @@
                         'type': 'request',
                         "mobile": mobile
                     },
-                    beforeSubmit: function() {
+                    beforeSend: function() {
+                        swal({
+                            title: 'Please wait...',
+                            text: 'Sending password reset OTP',
+                            allowOutsideClick: false,
+                            onOpen: () => {
+                                swal.showLoading()
+                            }
+                        });
                         form.find('button[type="submit"]').html('Please wait...').attr('disabled', true)
                             .addClass('btn-secondary');
                     },
                     complete: function() {
-                        form.find('button[type="submit"]').html('Reset Password').attr('disabled', false)
+                        form.find('button[type="submit"]').html('Sign in').attr('disabled', false)
                             .removeClass('btn-secondary');
                     },
                     success: function(data) {

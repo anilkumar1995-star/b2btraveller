@@ -251,8 +251,7 @@
                                               📄 Booking Details
                                           </a>
                                       </li>
-                                      @if ($b->booking_status == 'pending' && $b->order_ref_id != null)
-                                          <li>
+                                      @if (!in_array($b->payment_status, ['success', 'refunded']) && !empty($b->order_ref_id))                                          <li>
                                               <a class="dropdown-item text-primary" href="javascript:void(0)"
                                                   onclick="manualCheckStatus('{{ $b->order_ref_id }}')">
                                                   🔄 Check Status
@@ -619,6 +618,7 @@
           let pStatus = (record?.payment_status || '').toUpperCase();
           if (pStatus === 'SUCCESS' || pStatus === 'SUCCESSFUL') payStatusClass = 'bg-success';
           else if (pStatus === 'FAILED' || pStatus === 'FAILURE') payStatusClass = 'bg-danger';
+          else if (pStatus === 'REFUNDED') payStatusClass = 'bg-info';
 
           let totalAmount = record?.total_amount || 0;
 
@@ -688,7 +688,7 @@
                         <div class="small text-muted">15:00 PM onwards</div>
                     </div>
                     <div class="col-sm-2 d-flex align-items-center justify-content-center">
-                        <i class="fas fa-moon text-primary fs-3"></i>
+                        <i class="fas fa-hotel text-primary fs-3"></i>
                     </div>
                     <div class="col-sm-5">
                         <div class="text-muted small mb-1 uppercase fw-bold">CHECK-OUT</div>
@@ -719,7 +719,7 @@
                                     <span>Payment Status:</span>
                                     <span class="badge ${payStatusClass}">${record?.payment_status?.toUpperCase() || 'PENDING'}</span>
                                 </div>
-                            </div>
+                                        </div>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -865,9 +865,8 @@
 
                 <div class="alert alert-info mt-4 py-2 border-0" style="background-color: #f0f7ff; color: #0c5460;">
                     <div class="row align-items-center">
-                        <div class="col-md-1 text-center"><i class="fas fa-info-circle fs-4"></i></div>
                         <div class="col-md-11">
-                            <h6 class="mb-0 fw-bold">Important Note</h6>
+                            <h6 class="mb-0 fw-bold">Important Note :</h6>
                             <p class="mb-0 small">Please present this voucher and a valid government-issued photo ID at the hotel front desk upon arrival.</p>
                         </div>
                     </div>

@@ -10,6 +10,7 @@ use App\Models\Provider;
 use App\Models\Report;
 use App\Models\User;
 use App\Models\UserOTPS;
+use App\Services\Mail\Zoho;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -507,5 +508,121 @@ class CommonHelper
         $jsonString = self::decode($decrypted);
 
         return json_decode($jsonString, true);
+    }
+
+     public static function httpClient($url, $method, $parameters, $header, $log = "yes", $userId = null, $modal = "none", $txnid = "none", $orderId = null, $timeout = '30')
+    {
+        $curl = curl_init();
+        
+        $curl_headers = [];
+        foreach ($header as $key => $value) {
+            $curl_headers[] = $key . ': ' . $value;
+        }
+
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => (int)$timeout,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => strtoupper($method),
+            CURLOPT_POSTFIELDS => $parameters,
+            CURLOPT_HTTPHEADER => $curl_headers,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+        ]);
+
+        $response = curl_exec($curl);
+
+        $err = curl_error($curl);
+        $code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($log != "no") {
+            try {
+                Apilog::create([
+                    "url"      => $url,
+                    "modal"    => $modal,
+                    "txnid"    => @$txnid,
+                    "header"   => json_encode($header),
+                    "request"  => $parameters,
+                    "response" => $err ?: $response,
+                    "user_id"  => $userId
+                ]);
+            } catch (\Exception $e) {
+                \Log::error("API Log Error: " . $e->getMessage());
+            }
+        }
+
+        return ["response" => $response, "error" => $err, 'code' => $code];
+    }
+
+    public static function curlTest($url, $method, $parameters, $header, $log = "yes", $userId = null, $modal = "none", $txnid = "none")
+    {
+        return self::httpClient($url, $method, $parameters, $header, $log, $userId, $modal, $txnid);
+    }
+
+    public static function sendZohoEmail($to, $subject, $html, $userId = null, $method = 'general')
+    {
+        // dd($to,$subject,$html,$userId,$method);
+        $zoho = new Zoho();
+
+        $recipients = [];
+        if (is_array($to)) {
+            foreach ($to as $email) {
+                if (!empty($email)) {
+                    $recipients[] = ['email_address' => ['address' => $email]];
+                }
+            }
+        } else {
+            if (!empty($to)) {
+                $recipients[] = ['email_address' => ['address' => $to]];
+            }
+        }
+
+        if (empty($recipients)) {
+            return ['status' => false, 'message' => 'No recipients found'];
+        }
+
+        $param = [
+            'from' => ['address' => 'alert@ipayments.co.in', 'name' => 'iPaymnt Tech'],
+            'to' => $recipients,
+            'subject' => $subject,
+            'htmlbody' => (string)$html
+        ];
+
+        return $zoho->init($param, '/v1.1/email', $method, $userId);
+    }
+     public static function sendZohoOtpEmail($to, $subject, $html, $userId = null, $method = 'general')
+    {
+        // dd($to,$subject,$html,$userId,$method);
+        $zoho = new Zoho();
+
+        $recipients = [];
+        if (is_array($to)) {
+            foreach ($to as $email) {
+                if (!empty($email)) {
+                    $recipients[] = ['email_address' => ['address' => $email]];
+                }
+            }
+        } else {
+            if (!empty($to)) {
+                $recipients[] = ['email_address' => ['address' => $to]];
+            }
+        }
+
+        if (empty($recipients)) {
+            return ['status' => false, 'message' => 'No recipients found'];
+        }
+
+        $param = [
+            'from' => ['address' => 'otp@ipayments.co.in', 'name' => 'iPaymnt Tech'],
+            'to' => $recipients,
+            'subject' => $subject,
+            'htmlbody' => (string)$html
+        ];
+
+        return $zoho->init($param, '/v1.1/email', $method, $userId);
     }
 }
