@@ -16,11 +16,11 @@
                 <div class="col-md-6">
                     <!-- Status Card -->
                     @php
-                        $isPending = $status == 'success' && (!isset($booking) || in_array($booking->booking_status, ['pending', 'blocked']));
-                        $isSuccess = $status == 'success' && isset($booking) && $booking->booking_status == 'Confirmed';
-                        $cardClass = $isPending ? 'pending' : ($isSuccess ? 'success' : 'failed');
+                        $isPending = $status == 'pending';
+                        $isSuccess = $status == 'success';
+                        $cardClass = $status == 'success' ? 'success' : ($status == 'failed' ? 'failed' : 'pending');
                     @endphp
-                    
+
                     <div class="card status-card {{ $cardClass }} animate__animated animate__zoomIn" id="statusCard">
                         <div class="card-body text-center p-md-4 p-3">
 
@@ -155,7 +155,9 @@
                                 } else if (response.status === 'failure' || response.status === 'failed' || response.status === 'FAILURE' || response.booking_status === 'failed') {
                                     clearInterval(timerInterval);
                                     clearInterval(pollingInterval);
-                                    handleFailure(response.message || (response.data && response.data.failedMessage) || 'Ticket booking failed.');
+                                    let isPaymentFailed = response.data && response.data.payment_status === 'failed';
+                                    let title = isPaymentFailed ? 'Payment Failed' : 'Booking Failed';
+                                    handleFailure(title, response.message || (response.data && response.data.failedMessage) || 'Ticket booking failed.');
                                 } else if (response.status === 'pending' || response.status === 'PENDING') {
                                     if (response.message) {
                                         $('#statusContent p.lead').text(response.message);
@@ -190,7 +192,7 @@
                         `);
                     }
 
-                    function handleFailure(message) {
+                    function handleFailure(title, message) {
                         $('#statusCard').removeClass('pending').addClass('failed').css('border-top', '6px solid #ef4444');
                         $('#statusIcon').html(`
                             <div class="icon-circle bg-danger shadow-danger">
@@ -198,9 +200,9 @@
                             </div>
                         `);
                         $('#statusContent').html(`
-                            <h1 class="fw-extra-bold mb-3 text-dark">Booking Failed</h1>
+                            <h1 class="fw-extra-bold mb-3 text-dark">${title}</h1>
                             <p class="lead text-muted px-md-4">
-                                ${message}<br>Any amount deducted will be refunded to your wallet.
+                                ${message}<br>
                             </p>
                         `);
                         $('#actionButtons').html(`

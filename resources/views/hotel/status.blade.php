@@ -147,7 +147,9 @@
                                 } else if (response.status === 'failure' || response.status === 'failed' || response.status === 'FAILURE' || response.booking_status === 'failed') {
                                     clearInterval(timerInterval);
                                     clearInterval(pollingInterval);
-                                    handleFailure(response.message || 'Hotel booking failed.');
+                                    let isPaymentFailed = response.data && response.data.payment_status === 'failed';
+                                    let title = isPaymentFailed ? 'Payment Failed' : 'Booking Failed';
+                                    handleFailure(title, response.message || (response.data && response.data.failedMessage) || 'Hotel booking failed.');
                                 } else if (response.status === 'pending' || response.status === 'PENDING' || response.booking_status === 'pending') {
                                     if (response.message) {
                                         $('#statusContent p.lead').text(response.message);
@@ -185,7 +187,7 @@
                         `).removeClass('d-none');
                     }
 
-                    function handleFailure(message) {
+                    function handleFailure(title, message) {
                         $('#statusCard').removeClass('pending').addClass('failed').css('border-top', '6px solid #ef4444');
                         $('#statusIcon').html(`
                             <div class="icon-circle bg-danger shadow-danger">
@@ -193,9 +195,9 @@
                             </div>
                         `);
                         $('#statusContent').html(`
-                            <h1 class="fw-extra-bold mb-2 text-dark fs-3">Booking Failed</h1>
+                            <h1 class="fw-extra-bold mb-2 text-dark fs-3">${title}</h1>
                             <p class="lead text-muted px-md-4 mb-3 small">
-                                ${message}<br>Any amount deducted will be refunded to your wallet.
+                                ${message}<br>
                             </p>
                         `);
                         $('#actionButtons').html(`

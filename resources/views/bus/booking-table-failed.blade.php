@@ -130,7 +130,9 @@
           <thead class="bg-light">
               <tr>
                   <th>ID</th>
+                  @if(Myhelper::hasRole('admin'))
                   <th>User</th>
+                  @endif
                   <th>Total Amount</th>
                   <th>Status</th>
                   <th>Message</th>
@@ -142,11 +144,13 @@
                   @foreach ($bookings as $b)
                       <tr>
                           <td>##{{ $b->id }} <br />{{ $b->created_at }}</td>
+                          @if(Myhelper::hasRole('admin'))
                           <td>
                               {{ $b->user_name ?? '' }}<br />
                               {{ $b->user_email ?? '' }}<br />
                               {{ $b->user_mobile ?? '' }}
                           </td>
+                          @endif
                           <td>₹{{ $b->total_amount ?? 0 }}</td>
                           <td><span class="badge bg-danger">{{ $b->booking_status ?? 'N/A' }}</span></td>
                           <td>{{ $b->message ?? 'N/A' }}</td>
