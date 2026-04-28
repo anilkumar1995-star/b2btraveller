@@ -211,7 +211,9 @@
         <thead class="bg-light">
             <tr>
                 <th width="8%">ID</th>
+                @if(Myhelper::hasRole('admin'))
                 <th width="10%">User</th>
+                @endif
                 <th width="15%">Booking Details</th>
                 <th width="15%">Bus Details</th>
                 <th width="8%">Amount</th>
@@ -258,11 +260,13 @@
                       @endphp
                     <tr>
                         <td>##{{ $b->id }} <br />{{ $b->created_at }}</td>
+                        @if(Myhelper::hasRole('admin'))
                         <td>
                             {{ $b->user_name ?? '' }}<br />
                             {{ $b->user_email ?? '' }}<br />
                             {{ $b->user_mobile ?? '' }}
                         </td>
+                        @endif
                         <td>Bus Id:
                             <b>{{ $b->bus_id ?? 'N/A' }}</b>
                             <br />
