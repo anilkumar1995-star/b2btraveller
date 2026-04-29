@@ -712,8 +712,8 @@ function updateCountdown() {
                 backdrop: true,
                 allowOutsideClick: false,
             }).then((result) => {
-                if (result.isConfirmed) {
-                    window.open("/hotel/booking", "_self");
+                if (result.isConfirmed || result.value) {
+                    window.open("/hotel/view", "_self");
                 }
             });
         }
