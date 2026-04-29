@@ -6480,4 +6480,30 @@ class HotelStaticResponseHelper
             }
         }';
     }
+
+    static function hotelVoucherStaticResponse(){
+        return '{
+            "code": "0x0200",
+            "status": "SUCCESS",
+            "message": "Voucher Succesfully Done",
+            "data": {
+                "TBOReferenceNo": null,
+                "VoucherStatus": true,
+                "ResponseStatus": 1,
+                "Error": {
+                    "ErrorCode": 0,
+                    "ErrorMessage": ""
+                },
+                "TraceId": "946946a6-319b-11f1-a3de-ba9013e35c3f",
+                "Status": 1,
+                "HotelBookingStatus": "Confirmed",
+                "BookingRefNo": "663555288033297",
+                "InvoiceNumber": "MW/1516/4343",
+                "ConfirmationNo": "LL8F392693 - 010/502365",
+                "BookingId": 2106125,
+                "IsPriceChanged": false,
+                "IsCancellationPolicyChanged": false
+             }
+        }';
+    }
 }

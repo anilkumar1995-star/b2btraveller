@@ -58,8 +58,8 @@ class HotelService
             return $this->baseUrl . '/v1/service/traveller/hotel/booking';
         } else if ($method == 'bookingDetails') {
             return $this->baseUrl . '/v1/service/traveller/hotel/booking/details';
-        // } else if ($method == 'cancelhotel') {
-        //     return $this->baseUrl . '/v1/service/traveller/hotel/booking/cancel';
+        } else if ($method == 'generatevoucher') {
+            return $this->baseUrl . '/v1/service/traveller/hotel/generate/voucher';
         }
         return "";
     }
@@ -342,8 +342,8 @@ class HotelService
 
             $baseUrl = url('/');
             if ($baseUrl === 'http://127.0.0.1:8000') {
-                // $response = HotelStaticResponseHelper::hotelBookStaticResponse();
-                $response = HotelStaticResponseHelper::hotelBookStaticResponsefailed();
+                $response = HotelStaticResponseHelper::hotelBookStaticResponse();
+                // $response = HotelStaticResponseHelper::hotelBookStaticResponsefailed();
             } else {
                 $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "book_hotel", "");
                 $response = $response['response'];
@@ -514,5 +514,44 @@ class HotelService
         ];
 
         return Permission::curl($url, "GET", "", $header, "yes", "payment_status_check", $clientRefId);
+    }
+
+    public function generateVoucher($data)
+    {
+        try {
+            $payload = [
+                "BookingId" => $data
+            ];
+
+            $url = $this->setFullUrl('generatevoucher');
+
+            $baseUrl = url('/');    
+            if ($baseUrl === 'http://127.0.0.1:8000') {
+                $response = HotelStaticResponseHelper::hotelVoucherStaticResponse();
+            } else {
+                $response = Permission::curl($url, "POST", json_encode($payload), $this->header, "yes", "generate_voucher", "");
+                $response = $response['response'];
+            }
+
+            if (is_string($response)) {
+                $response = json_decode(($response), true);
+            }
+
+            if (isset($response['data']) && is_string($response['data'])) {
+                $response['data'] = json_decode($response['data'], true);
+            }
+
+            if (isset($response['status']) && strtolower($response['status']) == 'success') {
+                return ['status' => 'success', 'message' => "Hotel Voucher generated successfully", 'data' => $response['data']];
+            } else {
+                return [
+                    'code' => $response['code'] ?? '0x0202',
+                    'status' => $response['status'] ?? 'failed',
+                    'message' => $response['message'] ?? 'Hotel Voucher generation failed'
+                ];
+            }
+        } catch (Exception $e) {
+            return ['status' => 'ERROR', 'message' => $e->getMessage()];
+        }
     }
 }
