@@ -161,6 +161,10 @@ function searchHotel() {
     let checkout = $("#checkout").val();
     const childAge = $(".child-age-select").map((_, el) => $(el).val()).get();
 
+    if (destname == "" || destid == "") {
+        notify("Please Select Hotel Location.", "error");
+        return;
+    }
 
     sentR = {
         chkInDate: checkin,
@@ -708,8 +712,8 @@ function updateCountdown() {
                 backdrop: true,
                 allowOutsideClick: false,
             }).then((result) => {
-                if (result.isConfirmed) {
-                    window.open("/hotel/booking", "_self");
+                if (result.isConfirmed || result.value) {
+                    window.open("/hotel/view", "_self");
                 }
             });
         }

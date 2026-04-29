@@ -274,7 +274,6 @@ $(document).ready(function() {
             cancelButtonText: "Review Again"
         }).then((result) => {
             if (result.isConfirmed || result.value) {
-                // Same logic as submitGuestDetails success state
                 swal({
                     title: "Processing...",
                     text: "Redirecting to secure payment gateway.",
@@ -297,7 +296,7 @@ $(document).ready(function() {
                     base_fare: (recomdet?.PriceBreakUp?.[0]?.RoomRate || 0).toFixed(2),
                     tax: (recomdet?.NetTax || 0).toFixed(2),
                     is_refundable: alHotelData?.IsRefundable ? 'true' : 'false',
-                    voucher_status: 'Pending'
+                    voucher_status: true
                 };
 
 

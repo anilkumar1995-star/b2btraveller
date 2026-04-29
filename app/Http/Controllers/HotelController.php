@@ -140,7 +140,7 @@ class HotelController extends Controller
                             'payment_status' => 'pending',
                             'booking_status' => 'pending',
                             'is_refundable' => $request->is_refundable ?? 'false',
-                            'voucher_status' => $request->voucher_status ?? 'Pending',
+                            'voucher_status' => $request->voucher_status ?? true,
                             'api_type' => 'book',
                             'raw_payload' => json_encode(array_merge($request->all(), ['clientRefId' => $clientRefId])),
                             'raw_response' => null,
@@ -569,6 +569,7 @@ class HotelController extends Controller
                     ->update([
                         'invoice_number' => $data['InvoiceNumber'] ?? null,
                         'ticket_no' => $data['ConfirmationNo'] ?? null,
+                        'voucher_status' => $data['VoucherStatus'],
                         'booking_ref_no' => $data['BookingRefNo'] ?? null,
                         'hotel_id' => $data['BookingId'] ?? null,
                         'is_pricechange' => ($data['IsPriceChanged'] ?? false) ? "true" : "false",
@@ -582,9 +583,10 @@ class HotelController extends Controller
             } else {
                 $errMsg = $response['message'] ?? 'Unknown API Error';
                 
-                DB::table('hotel_bookings')->where('id', $booking->id)->update(
-                    ['booking_status' => 'failed',
-                    'booking_failed_msg' => $errMsg ?? 'Booking Failed.']);
+                DB::table('hotel_bookings')->where('id', $booking->id)->update([
+                        'booking_status' => 'failed',
+                        'booking_failed_msg' => $errMsg ?? 'Booking Failed.'
+                    ]);
 
                 DB::table('failed_hotel_bookings_list')->insert([
                     'user_id' => $booking->user_id,
@@ -691,6 +693,36 @@ class HotelController extends Controller
                 'message' => "Refund service no response"
             ]);
         }
+    }
+
+
+    public function generateVoucher(Request $request)
+    {
+        $id = $request->booking_id;
+
+        $booking = DB::table('hotel_bookings')
+            ->where('booking_id_api', $id)
+            ->first();
+
+        if (!$booking) {
+            return response()->json(['status' => 'failed', 'message' => 'Booking not found']);
+        }
+
+        $service = new HotelService();
+        $response = $service->generateVoucher($booking->hotel_id);
+
+
+        if (strtolower($response['status'] ?? '') == 'success') {
+            DB::table('hotel_bookings')
+                ->where('id', $booking->id)
+                ->update([
+                    'voucher_status' => true,
+                    'booking_status' => 'Confirmed',
+                    'updated_at'     => now(),
+                ]);
+        }
+
+        return response()->json($response);
     }
 }
 

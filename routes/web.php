@@ -244,7 +244,7 @@ Route::group(['prefix' => 'hotel', 'middleware' => ['auth']], function () {
     Route::post('booking-view', [HotelController::class, 'viewTicket'])->name('hotel.booking.view');
     // Route::any('payment/success', [HotelController::class, 'paymentSuccess'])->name('hotel.payment.success');
     // Route::any('payment/failed', [HotelController::class, 'paymentFailed'])->name('hotel.payment.failed');
-    // Route::post('check-status', [HotelController::class, 'checkStatus'])->name('hotel.checkStatus');
+    Route::post('voucher', [HotelController::class, 'generateVoucher'])->name('hotel.voucher');
     Route::get('cancel/{id}', [HotelController::class, 'cancelPage']);
     Route::post('cancel-submit', [HotelController::class, 'submitCancellation']);
     Route::post('get-cancellation-charges', [HotelController::class, 'getCancellationCharges']);

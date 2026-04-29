@@ -126,7 +126,7 @@
                             <div class="flex-grow-1">
                                 <label class="mb-1"> <i class="ti ti-map fs-5"></i> Country</label>
                                 <select class="form-select  select" data-search-enabled="true" name="countryCode"
-                                    id="countryCode">
+                                    id="countryCode" required>
                                     <option value="">Select location</option>
                                     {{-- <option value="IN" selected>India</option> --}}
 
@@ -141,7 +141,7 @@
                             <div class="flex-grow-1">
                                 <label class="mb-1"><i class="ti ti-map fs-5"></i> City</label>
                                 <select class="form-select  select" data-search-enabled="true" name="cityCode"
-                                    id="cityCode">
+                                    id="cityCode" required>
                                     <option value="">Select City</option>
                                     {{-- <option value="126666" selected>Kumarakom</option> --}}
 
@@ -156,7 +156,7 @@
                             <div class="flex-grow-1">
                                 <label class="mb-1"><i class="ti ti-building fs-5"></i> Hotel List</label>
                                 <select class="form-select  select" data-search-enabled="true" name="hotelCode"
-                                    id="hotelCode">
+                                    id="hotelCode" required>
                                     <option value="">Select Hotel List</option>
                                     {{-- <option value="1279415" selected>Testing Hotel (Lucknow)</option> --}}
 
