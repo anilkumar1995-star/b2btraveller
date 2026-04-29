@@ -161,6 +161,10 @@ function searchHotel() {
     let checkout = $("#checkout").val();
     const childAge = $(".child-age-select").map((_, el) => $(el).val()).get();
 
+    if (destname == "" || destid == "") {
+        notify("Please Select Hotel Location.", "error");
+        return;
+    }
 
     sentR = {
         chkInDate: checkin,

@@ -274,7 +274,6 @@ $(document).ready(function() {
             cancelButtonText: "Review Again"
         }).then((result) => {
             if (result.isConfirmed || result.value) {
-                // Same logic as submitGuestDetails success state
                 swal({
                     title: "Processing...",
                     text: "Redirecting to secure payment gateway.",

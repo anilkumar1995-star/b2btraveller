@@ -569,6 +569,7 @@ class HotelController extends Controller
                     ->update([
                         'invoice_number' => $data['InvoiceNumber'] ?? null,
                         'ticket_no' => $data['ConfirmationNo'] ?? null,
+                        'voucher_status' => $data['VoucherStatus'] ?? 'Pending',
                         'booking_ref_no' => $data['BookingRefNo'] ?? null,
                         'hotel_id' => $data['BookingId'] ?? null,
                         'is_pricechange' => ($data['IsPriceChanged'] ?? false) ? "true" : "false",
@@ -582,9 +583,10 @@ class HotelController extends Controller
             } else {
                 $errMsg = $response['message'] ?? 'Unknown API Error';
                 
-                DB::table('hotel_bookings')->where('id', $booking->id)->update(
-                    ['booking_status' => 'failed',
-                    'booking_failed_msg' => $errMsg ?? 'Booking Failed.']);
+                DB::table('hotel_bookings')->where('id', $booking->id)->update([
+                        'booking_status' => 'failed',
+                        'booking_failed_msg' => $errMsg ?? 'Booking Failed.'
+                    ]);
 
                 DB::table('failed_hotel_bookings_list')->insert([
                     'user_id' => $booking->user_id,
