@@ -74,8 +74,15 @@
             margin: 0;
             height: 100vh;
             font-family: 'Poppins', sans-serif;
-            background: url({{ asset('images/bg.png') }}) no-repeat center center fixed;
-            background-size: 100% 100%;
+            background: linear-gradient(
+                135deg,
+                #0f172a 0%,
+                #1e293b 50%,
+                #334155 100%
+            );
+
+            /* background: url({{ asset('images/bg.png') }}) no-repeat center center fixed;
+            background-size: 100% 100%; */
             display: flex;
             align-items: center;
             justify-content: flex-end;
@@ -94,7 +101,8 @@
             width: 100%;
             max-width: 480px;
             padding: 45px;
-            margin-right: 70px;
+            /* margin-right: 70px; */
+            margin: 0px auto;
             border-radius: 25px;
             background: rgb(10 25 40 / 90%);
             backdrop-filter: blur(20px);
