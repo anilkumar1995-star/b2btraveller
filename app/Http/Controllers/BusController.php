@@ -467,13 +467,13 @@ class BusController extends Controller
 
         if ($result['response'] != '') {
             $responseStatus = json_decode($result['response']);
-
+            $provider = Provider::where('recharge1', 'bustravel')->first();
             if (isset($responseStatus->code) && $responseStatus->code == "0x0200") {
 
                 Report::create([
                     'number' => $booking->booking_id_api ?? $tid,
                     'mobile' => $user->mobile,
-                    'provider_id' => 0,
+                    'provider_id' => $provider->id ?? 0,
                     'api_id' => 0,
                     // 'amount' => (float) $request->totalAmount,
                     'amount' => 2,
@@ -835,7 +835,7 @@ class BusController extends Controller
                 'balance' => $oldBalance,
                 "closing_balance" => $oldBalance + $refundAmount,
                 'trans_type' => 'credit',
-                'product' => 'bus',
+                'product' => 'bustravel',
                 'transtype' => 'mainwallet',
                 "apitxnid" => null,
                 "refno" => $reportTable->number,

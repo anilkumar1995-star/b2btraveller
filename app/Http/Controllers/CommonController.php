@@ -84,7 +84,9 @@ class CommonController extends Controller
 			$parentData = \Myhelper::getParents($id);
 		}
 		switch ($type) {
-
+			case 'allbooking':
+				return $this->getAllBooking($request);
+			break;
 			case 'permissions':
 				$request['table'] = '\App\Models\Permission';
 				$request['searchdata'] = ['name', 'slug'];
@@ -369,7 +371,6 @@ class CommonController extends Controller
 					$request['return'] = 'single';
 				}
 				break;
-			// case 'billpaystatement':
 			case 'affiliateList':
 				$request['table'] = '\App\Models\AffiliateMerchantDetails';
 				$request['searchdata'] = ['txn', 'referral_details', 'customer_type', 'data_info_type', 'customer_email', 'customer_mobile', 'id'];
@@ -1451,9 +1452,7 @@ class CommonController extends Controller
 				$data->where('product', 'cms');
 				break;
 			case 'billpaystatement':
-
 				$data->where('product', 'billpay')->where('rtype', 'main');
-
 				break;
 			case 'cablestatement':
 				$data->where('product', 'billpay')->whereHas('provider', function ($q) {
@@ -1660,6 +1659,89 @@ class CommonController extends Controller
 				return $data->select($request->select)->first();
 			}
 		}
+	}
+
+	public function getAllBooking(Request $request)
+	{
+		$hotel = DB::table('hotel_bookings')
+			->select(
+				'id',
+				'user_id',
+				DB::raw("'Hotel' as product"),
+				'booking_id_api as booking_id',
+				'order_ref_id',
+				DB::raw("CONCAT('Hotel ID : ', hotel_id) as route"),
+				'total_amount as amount',
+				'payment_status',
+				'booking_status',
+				'api_type',
+				'created_at'
+			);
+
+		$flight = DB::table('flight_txn_details')
+			->select(
+				'id',
+				'user_id',
+				DB::raw("'Flight' as product"),
+				'booking_refno as booking_id',
+				'client_ref_no as order_ref_id',
+				DB::raw("flight_id as route"),
+				'amount',
+				DB::raw("
+					CASE
+						WHEN is_payment = '1' THEN 'success'
+						ELSE 'failed'
+					END as payment_status
+				"),
+				DB::raw("
+					CASE
+						WHEN is_ticket_booked = '1' THEN 'Confirmed'
+						ELSE 'Pending'
+					END as booking_status
+				"),
+				'booking_type as api_type',
+				'created_at'
+			);
+
+		$bus = DB::table('bus_bookings')
+			->select(
+				'id',
+				'user_id',
+				DB::raw("'Bus' as product"),
+				'booking_id_api as booking_id',
+				'order_ref_id',
+				DB::raw("CONCAT(origin, ' - ', destination) as route"),
+				'total_amount as amount',
+				'payment_status',
+				'booking_status',
+				'api_type',
+				'created_at'
+			);
+
+		$data = $hotel
+			->unionAll($flight)
+			->unionAll($bus);
+
+		$data = \DB::query()
+		->fromSub($data,'booking')
+		->orderBy('created_at','desc');
+
+		if(!\Myhelper::hasRole('admin')){
+			$data->where('user_id',Auth::id());
+		}
+
+		$total = $data->count();
+
+		$records = $data
+            ->offset($request->start)
+            ->limit($request->length)
+            ->get();
+		return response()->json([
+			"draw"=>intval($request->draw),
+			"recordsTotal"=>$total,
+			"recordsFiltered"=>$total,
+			"data"=>$records
+		]);
 	}
 
 	public function agentFilter($post)

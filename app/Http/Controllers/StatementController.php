@@ -32,6 +32,7 @@ class StatementController extends Controller
         }
 
         switch ($type) { 
+            case 'allbooking' :
             case 'vancollection' :
             case 'upipayout':
             case 'ccledger':
@@ -567,7 +568,7 @@ class StatementController extends Controller
             case 'utiid':
                 $datas = $query->get(['utiids.id', 'utiids.created_at', 'utiids.vleid', 'utiids.status', 'utiids.name', 'utiids.location', 'utiids.contact_person', 'utiids.pincode', 'utiids.state', 'utiids.state', 'utiids.email', 'utiids.mobile', 'utiids.remark', 'utiids.user_id', 'users.name as username', 'users.mobile as usermobile']);
                 break;
-
+  
             case 'wallet':
                 $datas = $query->get(['reports.id', 'reports.created_at', 'reports.number', 'reports.amount', 'reports.charge', 'reports.profit', 'reports.status', 'retailer.name as username', 'retailer.mobile as usermobile', 'reports.user_id', 'reports.product', 'reports.rtype', 'reports.trans_type', 'reports.balance']);
                 break;
@@ -946,7 +947,7 @@ class StatementController extends Controller
                     array_push($excelData, $data);
                 }
                 break;
-
+            
             case 'wallet':
                 $name = $type . 'report' . date('d_M_Y');
                 $titles = ['Date', 'Transaction Id', 'User Details', 'Product', 'Number', 'ST Type', 'Status', 'Opening Balance', 'Credit', 'Debit'];

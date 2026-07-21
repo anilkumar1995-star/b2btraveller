@@ -24,8 +24,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet" />
 
     <!-- Icons -->
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/fontawesome.css') }}" />
@@ -57,7 +55,9 @@
     <!-- Page -->
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/pages/page-auth.css') }}" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
@@ -74,42 +74,42 @@
             margin: 0;
             height: 100vh;
             font-family: 'Poppins', sans-serif;
-            /* background: linear-gradient(135deg,
-                    #0f172a 0%,
-                    #1e293b 50%,
-                    #334155 100%); */
-
-            background: white;
+            background: linear-gradient(
+                135deg,
+                #0f172a 0%,
+                #1e293b 50%,
+                #334155 100%
+            );
 
             /* background: url({{ asset('images/bg.png') }}) no-repeat center center fixed;
             background-size: 100% 100%; */
-            /* display: flex;
+            display: flex;
             align-items: center;
-            justify-content: flex-end; */
-            position: relative !important;
+            justify-content: flex-end;
+            position: relative;
         }
 
-        /* body::before {
+        body::before {
             content: "";
             position: absolute;
             inset: 0;
             background: rgb(0 0 0 / 0%)
-        } */
+        }
 
         .login-panel {
-            /* position: relative; */
+            position: relative;
             width: 100%;
             max-width: 480px;
             padding: 45px;
             /* margin-right: 70px; */
             margin: 0px auto;
             border-radius: 25px;
-            /* background: rgb(10 25 40 / 90%); */
-            /* backdrop-filter: blur(20px); */
-            /* box-shadow: 0 0 25px rgba(110, 121, 121, 0.4); */
-            /* color: #fff; */
-            /* z-index: 2; */
-            /* transform: scale(1); */
+            background: rgb(10 25 40 / 90%);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 25px rgba(0, 255, 255, 0.4);
+            color: #fff;
+            z-index: 2;
+            transform: scale(0.80);
             transform-origin: right center;
         }
 
@@ -124,9 +124,9 @@
         }
 
         .form-control {
-            /* background: transparent; */
-            border: 1px solid #827d7d4d;
-            /* color: #fff; */
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
             height: 50px;
             border-radius: 12px;
         }
@@ -136,16 +136,16 @@
         }
 
         .form-control:focus {
-            /* background: transparent; */
-            /* color: #fff; */
+            background: transparent;
+            color: #fff;
             box-shadow: none;
-            /* border-color: #00e5ff; */
+            border-color: #00e5ff;
         }
 
         .input-group-text {
-            /* background: transparent; */
-            /* border: 1px solid rgba(255, 255, 255, 0.3); */
-            /* color: #fff; */
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
             border-radius: 12px 0 0 12px;
         }
 
@@ -153,7 +153,7 @@
             height: 50px;
             border: none;
             border-radius: 12px;
-            background: linear-gradient(90deg, #002359, #1b7919);
+            background: linear-gradient(90deg, #ff9800, #ff3d00);
             font-size: 18px;
             font-weight: 600;
             color: #fff;
@@ -174,8 +174,8 @@
         .divider::after {
             content: "";
             position: absolute;
-            top: 52%;
-            width: 45%;
+            top: 50%;
+            width: 40%;
             height: 1px;
             background: #777;
         }
@@ -210,48 +210,34 @@
             color: #000;
         }
 
-        .input-group {
-            margin-bottom: 0;
-        }
-
-        .login-form p.error {
-            display: block;
-            width: 100%;
-            margin: 6px 0 15px;
-            padding: 0;
-            font-size: 13px;
-            color: #ff3b30;
-            background: transparent;
-        }
-
         .secure-badge {
-            margin-top: 20px;
-            padding: 9px;
+            margin-top: 25px;
+            padding: 10px;
             border-radius: 30px;
-            border: 1px solid rgba(99, 94, 94, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             opacity: 0.9;
         }
 
         @media(max-width:768px) {
+            body {
+                justify-content: center;
+            }
+
             .login-panel {
-
-                margin: 25px auto;
-                width: 100%;
-                max-width: 420px;
-
+                margin: 20px;
             }
         }
 
         .modal select {
-            /* background-color: #2c3e50 !important; */
-            /* color: #fff !important; */
+            background-color: #2c3e50 !important;
+            color: #fff !important;
         }
 
         .modal select option {
-            /* background-color: #2c3e50; */
-            /* color: #fff; */
+            background-color: #2c3e50;
+            color: #fff;
         }
     </style>
     <style>
@@ -279,16 +265,16 @@
 
         /* Modal Background Blur */
         .modal-content {
-            /* background: rgba(10, 25, 40, 0.85); */
+            background: rgba(10, 25, 40, 0.85);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            /* border: 1px solid rgba(255, 255, 255, 0.15); */
-            /* box-shadow: 0 0 30px rgba(0, 255, 255, 0.2); */
-            /* color: #fff; */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            color: #fff;
         }
 
         .modal-header {
-            /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .modal-title {
@@ -301,7 +287,7 @@
 
         /* Section Headings */
         .modal-body h5 {
-            /* color: #00e5ff; */
+            color: #00e5ff;
             font-weight: 600;
             margin-top: 15px;
         }
@@ -310,9 +296,9 @@
         .modal .form-control,
         .modal select,
         .modal textarea {
-            /* background: rgba(255, 255, 255, 0.08); */
-            /* border: 1px solid rgba(255, 255, 255, 0.2); */
-            /* color: #fff; */
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
             border-radius: 10px;
         }
 
@@ -324,10 +310,10 @@
         .modal .form-control:focus,
         .modal select:focus,
         .modal textarea:focus {
-            /* background: rgba(255, 255, 255, 0.12); */
-            /* border-color: #00e5ff; */
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #00e5ff;
             box-shadow: none;
-            /* color: #fff; */
+            color: #fff;
         }
 
         /* Labels */
@@ -338,12 +324,12 @@
 
         /* Submit Button */
         .modal .btn-primary {
-            background: linear-gradient(90deg, #002359, #1b7919);
+            background: linear-gradient(90deg, #ff9800, #ff3d00);
             border: none;
             padding: 10px 30px;
             border-radius: 10px;
             font-weight: 600;
-            box-shadow: 0 0 15px rgba(0, 102, 255, 0.5);
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
         }
 
         .modal .btn-primary:hover {
@@ -355,134 +341,6 @@
             font-size: 12px;
             color: #ff5252;
         }
-
-        /* ===========================
-   Mobile Responsive
-=========================== */
-
-        @media (max-width: 991px) {
-
-            body {
-                height: auto;
-                min-height: 100vh;
-                background: #f5f7fb;
-            }
-
-            .authentication-wrapper,
-            .authentication-inner {
-                height: auto !important;
-                min-height: 100vh;
-            }
-
-            /* Login Section */
-
-            .d-flex.col-lg-5 {
-                width: 100%;
-                padding: 10px !important;
-                align-items: flex-start !important;
-            }
-
-            .login-panel {
-
-                max-width: 100%;
-                width: 100%;
-                margin: 0;
-                padding: 25px;
-                border-radius: 20px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
-
-            }
-
-            .login-panel h4 {
-                font-size: 24px;
-            }
-
-            .login-panel h6 {
-                font-size: 12px;
-            }
-
-            .form-control {
-                height: 48px;
-                font-size: 15px;
-            }
-
-            .input-group-text {
-                height: 48px;
-            }
-
-            .login-btn {
-                height: 50px;
-                font-size: 17px;
-            }
-
-            .bottom-links {
-                font-size: 10px;
-                line-height: 25px;
-            }
-            .secure-badge {
-                font-size: 13px;
-                margin-top: 18px;
-            }
-        }
-
-        .login-header {
-            margin-bottom: 30px;
-        }
-
-        .login-logo {
-            width: 70px;
-            height: 70px;
-            object-fit: contain;
-            margin-bottom: 15px;
-            border-radius: 50%;
-            background: #fff;
-            padding: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, .12);
-        }
-
-        .welcome-text {
-            /* font-family: 'Pacifico', cursive; */
-            font-family: 'Kaushan Script', cursive;
-            color: #2ba84a;
-            font-size: 24px;
-            font-weight: 400;
-            margin-bottom: 10px;
-        }
-
-        .login-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #3d425c;
-            margin-bottom: 12px;
-        }
-
-        .title-line {
-            width: 60px;
-            height: 4px;
-            margin: auto;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #2563eb, #22c55e);
-        }
-
-        @media (max-width:768px) {
-
-            .login-logo {
-                width: 65px;
-                height: 65px;
-            }
-
-            .welcome-text {
-                font-size: 24px;
-            }
-
-            .login-title {
-                font-size: 22px;
-            }
-
-            .title-line {
-                width: 45px;
-            }
-        }
     </style>
 </head>
 
@@ -492,114 +350,229 @@
         {{ Artisan::call('down') }}
     @endif
 
-    <div class="authentication-wrapper authentication-cover authentication-bg vh-100">
+    <div class="login-panel">
+
+        <div class="text-center mb-3">
+            <h6>Welcome Back!</h6>
+            <h4>Merchant Login Panel</h4>
+        </div>
+
+        <form action="{{ route('authCheck') }}" method="POST" class="login-form">
+            @csrf
+            <b class="errorText text-danger d-block mb-2"></b>
+            <b class="successText text-success d-block mb-2"></b>
+
+            <div class="mb-3 input-group">
+                <span class="input-group-text"><i class="fa fa-user"></i></span>
+                <input type="tel" class="form-control w-75" name="mobile" maxlength="10" minlength="10" required
+                    placeholder="Enter User Mobile Number" autocomplete="off">
+            </div>
+
+            <div class="mb-3 input-group">
+                <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                <input type="password" name="password" class="form-control w-75" required
+                    placeholder="Enter Password Here">
+                {{-- <span class="input-group-text"><i class="fa fa-eye"></i></span> --}}
+            </div>
+
+            <div class="d-flex justify-content-between mb-3 small">
+                <div>
+                    <input type="checkbox"> Remember Me
+                </div>
+                <a href="javascript:void(0)" onclick="forgetPassword()" class="text-warning text-decoration-none">Forgot
+                    Password?</a>
+            </div>
+
+            <div class="formdata">
+
+            </div>
+
+            <button class="btn login-btn w-100" id="login-btn"><i class="fa fa-user"></i> &nbsp;Login</button>
+
+            <div class="divider my-4">
+                <div class="divider-text">or</div>
+            </div>
+
+
+            <p class="text-center">
+                <span>New on our platform?</span>
+                <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal"
+                    class="text-warning text-decoration-none">
+                    <span>Create an account</span>
+                </a>
+            </p>
+        </form>
+
+        <div class="bottom-links text-center">
+            <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
+            <span>|</span>
+            <a href="{{ route('refund-policy') }}">Refund Policy</a>
+
+            <div class="text-center">
+                <a href="{{ route('term-of-use') }}">Terms & Conditions</a>
+                <span>|</span>
+                <a href="{{ route('about') }}">About Us</a>
+                <span>|</span>
+                <a href="{{ route('contact') }}">Contact Us</a>
+            </div>
+
+        </div>
+
+        {{-- <div class="d-flex gap-2">
+                <button type="button" class="btn social-btn google w-50">
+                    <i class="fab fa-chrome"></i> &nbsp;Google
+                </button>
+                <button type="button" class="btn social-btn otp w-50">
+                    <i class="fa fa-globe"></i> &nbsp;OTP Login
+                </button>
+            </div> --}}
+
+
+        <div class="secure-badge">
+            🔒 Secure & Encrypted
+        </div>
+
+        </form>
+
+    </div>
+    {{-- <div class="authentication-wrapper authentication-cover authentication-bg vh-100">
         <div class="authentication-inner row m-0 vh-100">
 
 
-            <div class="d-none d-lg-flex col-lg-7 h-100">
+            <div class="d-none d-lg-flex col-lg-7 p-5 h-100">
+                <div class="w-100 h-100">
 
-                <img src="{{ asset('images/slider.png') }}" class="d-block w-100 h-100" alt="Flight" width="100%"
-                    height="100%">
+                    <div id="flightSlider" class="carousel slide carousel-fade h-100 w-100" data-bs-ride="carousel"
+                        data-bs-interval="4000">
 
+                        <div class="carousel-inner h-100 rounded">
+
+
+                            <div class="carousel-item active h-100">
+                                <img src="{{ asset('images/slider1.jpeg') }}" class="d-block w-100 h-100"
+                                    alt="Flight">
+
+                            </div>
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/Air-India.jpg') }}" class="d-block w-100 h-100"
+                                    alt="Flight">
+
+                            </div>
+
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/02.jpg') }}" class="d-block w-100 h-100" alt="Flight">
+
+                            </div>
+
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/bus01.jpeg') }}" class="d-block w-100 h-100"
+                                    alt="Flight">
+
+                            </div>
+
+                            <div class="carousel-item h-100">
+                                <img src="{{ asset('images/hotel.jpeg') }}" class="d-block w-100 h-100"
+                                    alt="Flight">
+                               
+                            </div>
+
+                        </div>
+
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#flightSlider"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+
+                        <button class="carousel-control-next" type="button" data-bs-target="#flightSlider"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+
+                    </div>
+
+                </div>
             </div>
 
 
             <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
+                <div class="w-px-400 mx-auto sign-in-from mt-n5">
 
-                <div class="login-panel mt-4">
-                    <div class="login-header text-center mb-4">
 
-                        <img src="{{ asset('images/icon.png') }}" class="login-logo" alt="Logo">
-
-                        <h6 class="welcome-text">Welcome Back !</h6>
-
-                        <h6 class="login-title">Merchant Login Panel</h6>
-
-                        <div class="title-line"></div>
-
+                    <div class="app-brand mb-4">
+                        <a href="{{ route('home') }}" class="app-brand-link gap-2"></a>
                     </div>
-                    {{-- <div class="text-center mb-3">
-                        <h6>Welcome Back!</h6>
-                        <h4>Merchant Login Panel</h4>
-                    </div> --}}
+
+                    <h3 class="mb-1 fw-bold">
+                        Welcome to iPaymnt Tech
+                    </h3>
+                    <p class="mb-4">
+                        Sign in to your account and begin your journey
+                    </p>
 
                     <form action="{{ route('authCheck') }}" method="POST" class="login-form">
                         @csrf
                         <b class="errorText text-danger d-block mb-2"></b>
                         <b class="successText text-success d-block mb-2"></b>
-
-                        <div class="mb-1 input-group">
-                            <span class="input-group-text"><i class="fa fa-user"></i></span>
+                        <div class="mb-3">
+                            <label class="form-label">Mobile No.</label>
                             <input type="tel" class="form-control" name="mobile" maxlength="10" minlength="10"
-                                required placeholder="Enter User Mobile Number" autocomplete="off">
+                                required>
                         </div>
 
-                        <div class="mt-3 input-group">
-                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                            <input type="password" name="password" class="form-control" required
-                                placeholder="Enter Password Here">
-                            {{-- <span class="input-group-text"><i class="fa fa-eye"></i></span> --}}
-                        </div>
-
-                        <div class="d-flex justify-content-between my-3 small">
-                            <div>
-                                <input type="checkbox"> Remember Me
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <label class="form-label">Password</label>
+                                <a href="javascript:void(0)" onclick="forgetPassword()">
+                                    <small>Forgot Password?</small>
+                                </a>
                             </div>
-                            <a href="javascript:void(0)" onclick="forgetPassword()"
-                                class="text-primary text-decoration-none">Forgot
-                                Password?</a>
+                            <input type="password" name="password" class="form-control" required>
                         </div>
+
 
                         <div class="formdata">
 
                         </div>
 
-                        <button class="btn login-btn w-100" id="login-btn"><i class="fa fa-user"></i>
-                            &nbsp;Login</button>
-
-                        <div class="divider my-2">
-                            <div class="divider-text">or</div>
-                        </div>
-
+                        <button class="btn btn-primary w-100 mb-3" id="login-btn">
+                            Sign in
+                        </button>
 
                         <p class="text-center">
                             <span>New on our platform?</span>
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal"
-                                class="text-success text-decoration-none">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal">
                                 <span>Create an account</span>
                             </a>
                         </p>
                     </form>
+                    <div class=" divider my-4">
+                        <div class="divider-text">or</div>
+                    </div>
 
-                    <div class="bottom-links text-center">
+                    <div class="bottom-links">
                         <a href="{{ route('privacy-policy') }}">Privacy Policy</a>
                         <span>|</span>
                         <a href="{{ route('refund-policy') }}">Refund Policy</a>
-
-                        <div class="text-center">
-                            <a href="{{ route('term-of-use') }}">Terms & Conditions</a>
-                            <span>|</span>
-                            <a href="{{ route('about') }}">About Us</a>
+                        <span>|</span>
+                        <a href="{{ route('term-of-use') }}">Terms & Conditions</a>
+                        <span>|</span>
+                        <div class="text-center"><a href="{{ route('about') }}">About Us</a>
                             <span>|</span>
                             <a href="{{ route('contact') }}">Contact Us</a>
                         </div>
 
                     </div>
-                    <div class="secure-badge">
-                        🔒 Secure & Encrypted
-                    </div>
-
-                    </form>
 
                 </div>
             </div>
 
 
         </div>
-    </div>
+    </div> --}}
 
 
-    <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="passwordResetModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -636,7 +609,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true">
+    <div class="modal fade" id="passwordModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -654,12 +627,12 @@
                         <input type="hidden" name="type" value="reset">
                         {{ csrf_field() }}
                         <div class="form-group my-1">
-                            <label>Reset Token</label>
+                            <label>OTP :</label>
                             <input type="text" name="token" class="form-control my-1" placeholder="Enter OTP"
                                 required="">
                         </div>
                         <div class="form-group my-1">
-                            <label>New Password</label>
+                            <label>New Password :</label>
                             <input type="password" name="password" class="form-control my-1"
                                 placeholder="Enter New Password" required="">
                         </div>
@@ -772,31 +745,7 @@
                                 <textarea name="address" class="form-control my-1" rows="3" required="" placeholder="Enter Value"></textarea>
                             </div>
                         </div>
-                        {{-- <h5 class="my-2">Upload Your Documents</h5>
-                        <div class="row">
-                            <div class="form-group col-md-6 my-1">
-                                <label>Passport size photo <span class="text-danger fw-bold">*</span></label>
 
-                                <input type="file" class="form-control my-1" autocomplete="off" name="profiles" placeholder="Enter Demat account" required">
-                            </div>
-                            <div class="form-group col-md-6 my-1">
-                                <label>Pancard Photo <span class="text-danger fw-bold">*</span></label>
-                                <input type="file" class="form-control my-1" autocomplete="off"
-                                    name="pancardpics" placeholder="Enter Business saving account" required>
-                            </div>
-                            <div class="form-group col-md-6 my-1">
-                                <label>Aadharcard Front Photo <span class="text-danger fw-bold">*</span></label>
-                                <input type="file" class="form-control my-1" autocomplete="off"
-                                    name="aadharcardpics" placeholder="Enter Digital saving account" value=""
-                                    required>
-                            </div>
-                            <div class="form-group col-md-6 my-1">
-                                <label>Aadharcard Back Photo <span class="text-danger fw-bold">*</span></label>
-                                <input type="file" class="form-control my-1" autocomplete="off"
-                                    name="aadharcardpicsback" placeholder="Enter Digital saving account"
-                                    value="" required>
-                            </div>
-                        </div> --}}
                         <div class="text-center form-group">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>
@@ -910,19 +859,13 @@
                 },
                 errorElement: "p",
                 errorPlacement: function(error, element) {
-                    if (element.parent('.input-group').length) {
-                        error.insertAfter(element.parent());
+                    if (element.prop("tagName").toLowerCase() === "select") {
+                        error.insertAfter(element.closest(".form-group").find(".select2"));
                     } else {
                         error.insertAfter(element);
+                        $
                     }
                 },
-                // errorPlacement: function(error, element) {
-                //     if (element.prop("tagName").toLowerCase() === "select") {
-                //         error.insertAfter(element.closest(".form-group").find(".select2"));
-                //     } else {
-                //         error.insertAfter(element);
-                //     }
-                // },
                 submitHandler: function() {
                     var form = $('.login-form');
                     form.ajaxSubmit({
@@ -967,7 +910,11 @@
                                                                 <small>Resend OTP</small>
                                                             </a>
                                                         </div>
-                                                        <input type="password" class="form-control my-1" placeholder="Enter Otp" name="otp" required>
+                                                        <div class="input-group">
+                                                            <span class="input-group-text"><i class="fa fa-lock"></i></span>
+                                                            <input type="password" class="form-control" placeholder="Enter Otp" name="otp" required>
+                                                        </div>
+                                                        
                                                     </div>
                                                 `);
                                 if (data.status ==
@@ -1371,12 +1318,20 @@
                         'type': 'request',
                         "mobile": mobile
                     },
-                    beforeSubmit: function() {
+                    beforeSend: function() {
+                        swal({
+                            title: 'Please wait...',
+                            text: 'Sending password reset OTP',
+                            allowOutsideClick: false,
+                            onOpen: () => {
+                                swal.showLoading()
+                            }
+                        });
                         form.find('button[type="submit"]').html('Please wait...').attr('disabled', true)
                             .addClass('btn-secondary');
                     },
                     complete: function() {
-                        form.find('button[type="submit"]').html('Reset Password').attr('disabled', false)
+                        form.find('button[type="submit"]').html('Sign in').attr('disabled', false)
                             .removeClass('btn-secondary');
                     },
                     success: function(data) {

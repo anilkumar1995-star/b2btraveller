@@ -516,6 +516,8 @@ class FlightController extends Controller
            
             if (isset($responseStatus->code) && $responseStatus->code == "0x0200") {
                 $tid = $request->input('traceId', $request->input('TraceId'));
+
+                $provider = Provider::where('recharge1', 'flighttravel')->first();
                 
                 $affected = DB::table('bookings')
                     ->where('booking_id_api', $tid)
@@ -527,7 +529,7 @@ class FlightController extends Controller
                 Report::create([
                     'number'      => $tid,
                     'mobile'      => $user->mobile,
-                    'provider_id' => 0,
+                    'provider_id' => $provider->id ?? 0,
                     'api_id'      => 0,
                     'amount'      => 2,
                     // 'amount'      => $totalAmount,

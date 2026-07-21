@@ -157,29 +157,33 @@
             <div class="row justify-content-center">
                 <div class="col-lg-8">
                     <span class="travel-tag mb-3 d-inline-block">iPaymnt Tech Private Limited</span>
-                    <h1 class="display-3 fw-bold mb-3">Empowering Rural India</h1>
-                    <p class="lead opacity-90 mb-0">Bridging the urban-rural divide through Digital Finance & World-Class Travel Solutions.</p>
+                    <h1 class="display-3 fw-bold mb-3">Empowering Travel Businesses</h1>
+                    <p class="lead opacity-90 mb-0">Connecting travelers with seamless Flight, Hotel, Bus & Cruise booking solutions through a powerful TravelTech platform.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ================= MAIN ABOUT ================= -->
-    <section class="py-5" style="margin-top: -80px;">
+    <section class="py-5">
         <div class="container">
             <div class="card about-card p-4 p-md-5">
                 <div class="row align-items-center g-5">
                     <div class="col-lg-6">
                         <h2 class="section-title">About iPaymnt Tech</h2>
                         <p class="lead-text mb-4">
-                            iPaymnt Tech Private Limited is at the forefront of driving financial inclusion and digital empowerment in rural India. Our goal is to ensure that everyone, regardless of location, has easy access to essential financial services.
+                           iPaymnt Tech Private Limited is building next-generation TravelTech solutions that empower travel agencies, tour operators, OTAs, and enterprises with a single, scalable booking platform.
+                        </p>
+                        <p class="lead-text mb-4">
+                            Our mission is to simplify travel commerce by providing secure, fast, and technology-driven solutions that streamline booking operations and enhance customer experiences.
                         </p>
                         <p class="lead-text">
-                            By bridging the urban-rural divide, we aim to transform the way rural communities access banking, financial products, and digital services. With a strong network of <strong>2.5 lakh+ retail touchpoints</strong>, we are committed to providing seamless last-mile delivery.
+                           With powerful APIs, white-label solutions, real-time inventory, and cloud-based infrastructure, we enable businesses to offer Flight, Hotel, Bus, and Cruise bookings from one unified platform—helping them grow faster, operate efficiently, and serve travelers across India and beyond.
                         </p>
                     </div>
                     <div class="col-lg-6 text-center">
-                        <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=800" alt="Travel and Tech" class="img-fluid about-image">
+                        {{-- <img src="https://images.unsplash.com/photo-1544620347-c4fd4a3d5957?auto=format&fit=crop&q=80&w=800" alt="Travel and Tech" class="img-fluid about-image"> --}}
+                        <img src="{{ asset('images/about.png') }}" alt="Travel and Tech" class="img-fluid about-image">
                     </div>
                 </div>
             </div>
@@ -190,7 +194,7 @@
     <section class="py-5">
         <div class="container">
             <div class="text-center mb-5">
-                <h2 class="section-title">Our Premium Travel Solutions</h2>
+                <h2 class="section-title">One Platform. Unlimited Travel Possibilities. ✈️🌍</h2>
                 <p class="text-muted">Fast, Secure, and Transparent Booking Experience</p>
             </div>
             

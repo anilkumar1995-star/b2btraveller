@@ -24,8 +24,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
         rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet" />
 
     <!-- Icons -->
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/fonts/fontawesome.css') }}" />
@@ -57,7 +55,6 @@
     <!-- Page -->
     <link rel="stylesheet" href="{{ asset('theme_1/assets/vendor/css/pages/page-auth.css') }}" />
 
-    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&display=swap" rel="stylesheet">
     <style>
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
@@ -74,42 +71,40 @@
             margin: 0;
             height: 100vh;
             font-family: 'Poppins', sans-serif;
-            /* background: linear-gradient(135deg,
+            background: linear-gradient(135deg,
                     #0f172a 0%,
                     #1e293b 50%,
-                    #334155 100%); */
-
-            background: white;
+                    #334155 100%);
 
             /* background: url({{ asset('images/bg.png') }}) no-repeat center center fixed;
             background-size: 100% 100%; */
-            /* display: flex;
+            display: flex;
             align-items: center;
-            justify-content: flex-end; */
-            position: relative !important;
+            justify-content: flex-end;
+            position: relative;
         }
 
-        /* body::before {
+        body::before {
             content: "";
             position: absolute;
             inset: 0;
             background: rgb(0 0 0 / 0%)
-        } */
+        }
 
         .login-panel {
-            /* position: relative; */
+            position: relative;
             width: 100%;
             max-width: 480px;
             padding: 45px;
             /* margin-right: 70px; */
             margin: 0px auto;
             border-radius: 25px;
-            /* background: rgb(10 25 40 / 90%); */
-            /* backdrop-filter: blur(20px); */
-            /* box-shadow: 0 0 25px rgba(110, 121, 121, 0.4); */
-            /* color: #fff; */
-            /* z-index: 2; */
-            /* transform: scale(1); */
+            background: rgb(10 25 40 / 90%);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 25px rgba(110, 121, 121, 0.4);
+            color: #fff;
+            z-index: 2;
+            /* transform: scale(0.80); */
             transform-origin: right center;
         }
 
@@ -124,9 +119,9 @@
         }
 
         .form-control {
-            /* background: transparent; */
-            border: 1px solid #827d7d4d;
-            /* color: #fff; */
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
             height: 50px;
             border-radius: 12px;
         }
@@ -136,16 +131,16 @@
         }
 
         .form-control:focus {
-            /* background: transparent; */
-            /* color: #fff; */
+            background: transparent;
+            color: #fff;
             box-shadow: none;
-            /* border-color: #00e5ff; */
+            border-color: #00e5ff;
         }
 
         .input-group-text {
-            /* background: transparent; */
-            /* border: 1px solid rgba(255, 255, 255, 0.3); */
-            /* color: #fff; */
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
             border-radius: 12px 0 0 12px;
         }
 
@@ -153,7 +148,7 @@
             height: 50px;
             border: none;
             border-radius: 12px;
-            background: linear-gradient(90deg, #002359, #1b7919);
+            background: linear-gradient(90deg, #ff9800, #ff3d00);
             font-size: 18px;
             font-weight: 600;
             color: #fff;
@@ -174,8 +169,8 @@
         .divider::after {
             content: "";
             position: absolute;
-            top: 52%;
-            width: 45%;
+            top: 50%;
+            width: 40%;
             height: 1px;
             background: #777;
         }
@@ -210,48 +205,34 @@
             color: #000;
         }
 
-        .input-group {
-            margin-bottom: 0;
-        }
-
-        .login-form p.error {
-            display: block;
-            width: 100%;
-            margin: 6px 0 15px;
-            padding: 0;
-            font-size: 13px;
-            color: #ff3b30;
-            background: transparent;
-        }
-
         .secure-badge {
-            margin-top: 20px;
-            padding: 9px;
+            margin-top: 25px;
+            padding: 10px;
             border-radius: 30px;
-            border: 1px solid rgba(99, 94, 94, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             text-align: center;
-            font-size: 13px;
+            font-size: 14px;
             opacity: 0.9;
         }
 
         @media(max-width:768px) {
+            body {
+                justify-content: center;
+            }
+
             .login-panel {
-
-                margin: 25px auto;
-                width: 100%;
-                max-width: 420px;
-
+                margin: 20px;
             }
         }
 
         .modal select {
-            /* background-color: #2c3e50 !important; */
-            /* color: #fff !important; */
+            background-color: #2c3e50 !important;
+            color: #fff !important;
         }
 
         .modal select option {
-            /* background-color: #2c3e50; */
-            /* color: #fff; */
+            background-color: #2c3e50;
+            color: #fff;
         }
     </style>
     <style>
@@ -279,16 +260,16 @@
 
         /* Modal Background Blur */
         .modal-content {
-            /* background: rgba(10, 25, 40, 0.85); */
+            background: rgba(10, 25, 40, 0.85);
             backdrop-filter: blur(20px);
             border-radius: 20px;
-            /* border: 1px solid rgba(255, 255, 255, 0.15); */
-            /* box-shadow: 0 0 30px rgba(0, 255, 255, 0.2); */
-            /* color: #fff; */
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.2);
+            color: #fff;
         }
 
         .modal-header {
-            /* border-bottom: 1px solid rgba(255, 255, 255, 0.1); */
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .modal-title {
@@ -301,7 +282,7 @@
 
         /* Section Headings */
         .modal-body h5 {
-            /* color: #00e5ff; */
+            color: #00e5ff;
             font-weight: 600;
             margin-top: 15px;
         }
@@ -310,9 +291,9 @@
         .modal .form-control,
         .modal select,
         .modal textarea {
-            /* background: rgba(255, 255, 255, 0.08); */
-            /* border: 1px solid rgba(255, 255, 255, 0.2); */
-            /* color: #fff; */
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
             border-radius: 10px;
         }
 
@@ -324,10 +305,10 @@
         .modal .form-control:focus,
         .modal select:focus,
         .modal textarea:focus {
-            /* background: rgba(255, 255, 255, 0.12); */
-            /* border-color: #00e5ff; */
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #00e5ff;
             box-shadow: none;
-            /* color: #fff; */
+            color: #fff;
         }
 
         /* Labels */
@@ -338,12 +319,12 @@
 
         /* Submit Button */
         .modal .btn-primary {
-            background: linear-gradient(90deg, #002359, #1b7919);
+            background: linear-gradient(90deg, #ff9800, #ff3d00);
             border: none;
             padding: 10px 30px;
             border-radius: 10px;
             font-weight: 600;
-            box-shadow: 0 0 15px rgba(0, 102, 255, 0.5);
+            box-shadow: 0 0 15px rgba(255, 140, 0, 0.5);
         }
 
         .modal .btn-primary:hover {
@@ -354,134 +335,6 @@
         .alert-message {
             font-size: 12px;
             color: #ff5252;
-        }
-
-        /* ===========================
-   Mobile Responsive
-=========================== */
-
-        @media (max-width: 991px) {
-
-            body {
-                height: auto;
-                min-height: 100vh;
-                background: #f5f7fb;
-            }
-
-            .authentication-wrapper,
-            .authentication-inner {
-                height: auto !important;
-                min-height: 100vh;
-            }
-
-            /* Login Section */
-
-            .d-flex.col-lg-5 {
-                width: 100%;
-                padding: 10px !important;
-                align-items: flex-start !important;
-            }
-
-            .login-panel {
-
-                max-width: 100%;
-                width: 100%;
-                margin: 0;
-                padding: 25px;
-                border-radius: 20px;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
-
-            }
-
-            .login-panel h4 {
-                font-size: 24px;
-            }
-
-            .login-panel h6 {
-                font-size: 12px;
-            }
-
-            .form-control {
-                height: 48px;
-                font-size: 15px;
-            }
-
-            .input-group-text {
-                height: 48px;
-            }
-
-            .login-btn {
-                height: 50px;
-                font-size: 17px;
-            }
-
-            .bottom-links {
-                font-size: 10px;
-                line-height: 25px;
-            }
-            .secure-badge {
-                font-size: 13px;
-                margin-top: 18px;
-            }
-        }
-
-        .login-header {
-            margin-bottom: 30px;
-        }
-
-        .login-logo {
-            width: 70px;
-            height: 70px;
-            object-fit: contain;
-            margin-bottom: 15px;
-            border-radius: 50%;
-            background: #fff;
-            padding: 12px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, .12);
-        }
-
-        .welcome-text {
-            /* font-family: 'Pacifico', cursive; */
-            font-family: 'Kaushan Script', cursive;
-            color: #2ba84a;
-            font-size: 24px;
-            font-weight: 400;
-            margin-bottom: 10px;
-        }
-
-        .login-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #3d425c;
-            margin-bottom: 12px;
-        }
-
-        .title-line {
-            width: 60px;
-            height: 4px;
-            margin: auto;
-            border-radius: 10px;
-            background: linear-gradient(90deg, #2563eb, #22c55e);
-        }
-
-        @media (max-width:768px) {
-
-            .login-logo {
-                width: 65px;
-                height: 65px;
-            }
-
-            .welcome-text {
-                font-size: 24px;
-            }
-
-            .login-title {
-                font-size: 22px;
-            }
-
-            .title-line {
-                width: 45px;
-            }
         }
     </style>
 </head>
@@ -496,57 +349,57 @@
         <div class="authentication-inner row m-0 vh-100">
 
 
-            <div class="d-none d-lg-flex col-lg-7 h-100">
+            <div class="d-none d-lg-flex col-lg-7 p-5 h-100">
+                <div class="w-100 h-100">
 
-                <img src="{{ asset('images/slider.png') }}" class="d-block w-100 h-100" alt="Flight" width="100%"
-                    height="100%">
+                    <div id="flightSlider" class="carousel slide carousel-fade h-100 w-100" data-bs-ride="carousel"
+                        data-bs-interval="4000">
 
+
+                        <img src="{{ asset('images/slider.png') }}" class="d-block w-100 h-100" alt="Flight"
+                            width="100%" height="100%">
+
+
+
+                    </div>
+
+                </div>
             </div>
 
 
             <div class="d-flex col-12 col-lg-5 align-items-center p-sm-5 p-4 h-100">
 
-                <div class="login-panel mt-4">
-                    <div class="login-header text-center mb-4">
+                <div class="login-panel">
 
-                        <img src="{{ asset('images/icon.png') }}" class="login-logo" alt="Logo">
-
-                        <h6 class="welcome-text">Welcome Back !</h6>
-
-                        <h6 class="login-title">Merchant Login Panel</h6>
-
-                        <div class="title-line"></div>
-
-                    </div>
-                    {{-- <div class="text-center mb-3">
+                    <div class="text-center mb-3">
                         <h6>Welcome Back!</h6>
                         <h4>Merchant Login Panel</h4>
-                    </div> --}}
+                    </div>
 
                     <form action="{{ route('authCheck') }}" method="POST" class="login-form">
                         @csrf
                         <b class="errorText text-danger d-block mb-2"></b>
                         <b class="successText text-success d-block mb-2"></b>
 
-                        <div class="mb-1 input-group">
+                        <div class="mb-3 input-group">
                             <span class="input-group-text"><i class="fa fa-user"></i></span>
-                            <input type="tel" class="form-control" name="mobile" maxlength="10" minlength="10"
+                            <input type="tel" class="form-control w-75" name="mobile" maxlength="10" minlength="10"
                                 required placeholder="Enter User Mobile Number" autocomplete="off">
                         </div>
 
-                        <div class="mt-3 input-group">
+                        <div class="mb-3 input-group">
                             <span class="input-group-text"><i class="fa fa-lock"></i></span>
-                            <input type="password" name="password" class="form-control" required
+                            <input type="password" name="password" class="form-control w-75" required
                                 placeholder="Enter Password Here">
                             {{-- <span class="input-group-text"><i class="fa fa-eye"></i></span> --}}
                         </div>
 
-                        <div class="d-flex justify-content-between my-3 small">
+                        <div class="d-flex justify-content-between mb-3 small">
                             <div>
                                 <input type="checkbox"> Remember Me
                             </div>
                             <a href="javascript:void(0)" onclick="forgetPassword()"
-                                class="text-primary text-decoration-none">Forgot
+                                class="text-warning text-decoration-none">Forgot
                                 Password?</a>
                         </div>
 
@@ -557,7 +410,7 @@
                         <button class="btn login-btn w-100" id="login-btn"><i class="fa fa-user"></i>
                             &nbsp;Login</button>
 
-                        <div class="divider my-2">
+                        <div class="divider my-4">
                             <div class="divider-text">or</div>
                         </div>
 
@@ -565,7 +418,7 @@
                         <p class="text-center">
                             <span>New on our platform?</span>
                             <a href="#" data-bs-toggle="modal" data-bs-target="#registerModal"
-                                class="text-success text-decoration-none">
+                                class="text-warning text-decoration-none">
                                 <span>Create an account</span>
                             </a>
                         </p>
@@ -585,6 +438,17 @@
                         </div>
 
                     </div>
+
+                    {{-- <div class="d-flex gap-2">
+                <button type="button" class="btn social-btn google w-50">
+                    <i class="fab fa-chrome"></i> &nbsp;Google
+                </button>
+                <button type="button" class="btn social-btn otp w-50">
+                    <i class="fa fa-globe"></i> &nbsp;OTP Login
+                </button>
+            </div> --}}
+
+
                     <div class="secure-badge">
                         🔒 Secure & Encrypted
                     </div>
@@ -910,19 +774,13 @@
                 },
                 errorElement: "p",
                 errorPlacement: function(error, element) {
-                    if (element.parent('.input-group').length) {
-                        error.insertAfter(element.parent());
+                    if (element.prop("tagName").toLowerCase() === "select") {
+                        error.insertAfter(element.closest(".form-group").find(".select2"));
                     } else {
                         error.insertAfter(element);
+                        $
                     }
                 },
-                // errorPlacement: function(error, element) {
-                //     if (element.prop("tagName").toLowerCase() === "select") {
-                //         error.insertAfter(element.closest(".form-group").find(".select2"));
-                //     } else {
-                //         error.insertAfter(element);
-                //     }
-                // },
                 submitHandler: function() {
                     var form = $('.login-form');
                     form.ajaxSubmit({

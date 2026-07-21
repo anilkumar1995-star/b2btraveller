@@ -27,7 +27,7 @@
     <!-- Hero Banner -->
     @if (Auth::id() != 13)
         <div class="row g-3">
-            <div class="col-lg-10 mb-2 col-12">
+            <div class="col-lg-12 mb-2 col-12">
                 <div class="banner p-4 rounded-3 text-white h-100"
                     style="background: linear-gradient(135deg, #6366f1, #3b82f6);
                    box-shadow: 0 10px 25px rgba(0,0,0,0.15);">
@@ -46,7 +46,7 @@
             </div>
 
             <!-- RIGHT : SERVICES CARD (lg-2) -->
-            <div class="col-lg-2 mb-2 col-12">
+            {{-- <div class="col-lg-2 mb-2 col-12">
                 <div class="card shadow-sm border-0 rounded-4 h-100">
                     <div class="card-body">
                         <div class="services-scroll-wrapper d-flex flex-column gap-2">
@@ -64,7 +64,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
         </div>
     @else

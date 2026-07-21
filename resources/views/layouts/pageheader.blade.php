@@ -1,5 +1,6 @@
 @if (
-    !Request::is('flight/*') &&
+        !Request::is('statement/allbooking') &&
+        !Request::is('flight/*') &&
         !Request::is('bus/*') &&
         !Request::is('wallet-dashboard') &&
         !Request::is('hotel/*') &&

@@ -173,7 +173,7 @@
 
 
 
-            <li class="menu-item {{ Request::is('recharge/*') ? 'active open' : '' }}">
+            {{-- <li class="menu-item {{ Request::is('recharge/*') ? 'active open' : '' }}">
                 <a href="#menu-design" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons ti ti-file-dollar" style="color: #00cfe8;"></i>
                     <div data-i18n="Utility Recharge">Recharge</div>
@@ -190,9 +190,8 @@
                             <div data-i18n="DTH">DTH</div>
                         </a>
                     </li>
-                    {{--  @endif --}}
                 </ul>
-            </li>
+            </li> 
 
             <li class="menu-item {{ Request::is('billpay/*') ? 'active open' : '' }}">
                 <a href="#userinfo" class="menu-link menu-toggle">
@@ -267,11 +266,6 @@
                             <div data-i18n="Donation">Donation</div>
                         </a>
                     </li>
-                    {{-- <li class="menu-item {{ Request::is('billpay/dthbbps') ? 'active' : '' }}">
-                                    <a href="{{ route('bill', ['type' => 'dthbbps']) }}" class="menu-link">
-                                        <div data-i18n="DTH Bbps">DTH Bbps</div>
-                                    </a>
-                                </li> --}}
                     <li class="menu-item {{ Request::is('billpay/subscription') ? 'active' : '' }}">
                         <a href="{{ route('bill', ['type' => 'subscription']) }}" class="menu-link">
                             <div data-i18n="Subscription">Subscription</div>
@@ -322,19 +316,8 @@
                             <div data-i18n="Recurring Deposit">Recurring Deposit</div>
                         </a>
                     </li>
-                    {{-- <li class="menu-item {{ Request::is('billpay/mobileprepaid') ? 'active' : '' }}">
-                                    <a href="{{ route('bill', ['type' => 'mobileprepaid']) }}" class="menu-link">
-                                        <div data-i18n="Mobile Prepaid">Mobile prepaid</div>
-                                    </a>
-                                </li> --}}
-                    {{-- <li class="menu-item {{ Request::is('billpay/ncmcrecharge') ? 'active' : '' }}">
-                                    <a href="{{ route('bill', ['type' => 'ncmcrecharge']) }}" class="menu-link">
-                                        <div data-i18n="NCMC Recharge">NCMC Recharge</div>
-                                    </a>
-                                </li> --}}
-
                 </ul>
-            </li>
+            </li>--}}
 
 
 
@@ -405,6 +388,23 @@
             @endif
 
             <li
+                class="menu-item {{ Request::is('statement/allbooking') ? 'active open' : '' }}">
+                <a href="#txnreport" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons ti ti-file" style="color: #6c96b9ff;"></i>
+                    <div data-i18n="My Bookings">My Bookings</div>
+                </a>
+                <ul class="menu-sub {{ Request::is('statement/allbooking') ? 'show' : '' }}"
+                    id="txnreport">
+                 
+                    <li class="menu-item {{ Request::is('statement/allbooking') ? 'active' : '' }}">
+                        <a href="{{ route('statement', ['type' => 'allbooking']) }}" class="menu-link">
+                            <div data-i18n="All Bookings Report">All Bookings Report</div>
+                        </a>
+                    </li>
+                   
+                </ul>
+            </li>
+            {{-- <li
                 class="menu-item {{ Request::is('statement/aeps') || Request::is('fund/aepsrequest') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/affiliateList') || Request::is('statement/cmsreport') ? 'active open' : '' }}">
                 <a href="#txnreport" class="menu-link menu-toggle">
                     <i class="menu-icon tf-icons ti ti-file" style="color: #6c96b9ff;"></i>
@@ -412,107 +412,25 @@
                 </a>
                 <ul class="menu-sub {{ Request::is('statement/aeps') || Request::is('fund/aepsrequest') || Request::is('statement/billpay') || Request::is('statement/money') || Request::is('statement/matm') || Request::is('statement/recharge') || Request::is('statement/utipancard') || Request::is('statement/loanenquiry') || Request::is('statement/cmsreport') || Request::is('statement/affiliateList') ? 'show' : '' }}"
                     id="txnreport">
-                    {{-- @if (Myhelper::can('aeps_statement'))
-                    <li class="menu-item {{ Request::is('statement/aeps') ? 'active' : '' }}">
-                                <a href="{{ route('statement', ['type' => 'aeps']) }}" class="menu-link">
-                                    <div data-i18n="AePS CW Statement">AePS CW Statement</div>
-                                </a>
-                            </li>
-                    <li class="menu-item {{ Request::is('statement/aepstxn') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'aepstxn']) }}" class="menu-link">
-                            <div data-i18n="All AePS Transaction">All AePS Transaction</div>
-                        </a>
-                    </li>
-                @endif
-
-                <li class="menu-item {{ Request::is('statement/ccpayout') ? 'active' : '' }}">
-                    <a href="{{ route('statement', ['type' => 'ccpayout']) }}" class="menu-link">
-                        <div data-i18n="CC Payout Statement">CC Payout Statement</div>
-                    </a>
-                </li>
-
-                <li class="menu-item {{ Request::is('statement/dmt') ? 'active' : '' }}">
-                    <a href="{{ route('statement', ['type' => 'dmt']) }}" class="menu-link">
-                        <div data-i18n="Xpayout Statement">X Payout Statement</div>
-                    </a>
-                </li> --}}
-                    {{-- @if (Myhelper::hasRole('admin')) --}}
+                 
                     <li class="menu-item {{ Request::is('fund/aepsrequest') ? 'active' : '' }}">
                         <a href="{{ route('fund', ['type' => 'aepsrequest']) }}" class="menu-link">
                             <div data-i18n="Commission Statement">Commission Statement</div>
                         </a>
                     </li>
-                    {{-- @endif --}}
-
-                    {{-- @if (Myhelper::can('billpayment_statement')) --}}
                     <li class="menu-item {{ Request::is('statement/billpay') ? 'active' : '' }}">
                         <a href="{{ route('statement', ['type' => 'billpay']) }}" class="menu-link">
                             <div data-i18n="Billpay Statement">Billpay Statement</div>
                         </a>
                     </li>
-                    {{-- <li class="menu-item {{ Request::is('statement/ccpay') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'ccpay']) }}" class="menu-link">
-                            <div data-i18n="Credit Card Payment">Credit Card Payment</div>
-                        </a>
-                    </li> --}}
-                    {{-- @endif --}}
-
-                    {{-- @if (Myhelper::can('money_statement'))
-                    <li class="menu-item {{ Request::is('statement/money') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'money']) }}" class="menu-link">
-                            <div data-i18n="Payout Statement">Payout Statement</div>
-                        </a>
-                    </li>
-                    <li class="menu-item {{ Request::is('statement/upipayout') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'upipayout']) }}" class="menu-link">
-                            <div data-i18n="UPI-Payout Statement">UPI-Payout Statement</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ Request::is('statement/verification') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'verification']) }}" class="menu-link">
-                            <div data-i18n="Verification Statement">Verification Statement</div>
-                        </a>
-                    </li>
-                @endif
-                @if (Myhelper::can('affiliate_statement'))
-                    <li class="menu-item {{ Request::is('statement/affiliateList') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'affiliateList']) }}" class="menu-link">
-                            <div data-i18n="Affiliate Statement">Affiliate Statement</div>
-                        </a>
-                    </li>
-                @endif
-
-                @if (Myhelper::can('matm_fund_report'))
-                    <li class="menu-item {{ Request::is('statement/matm') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'matm']) }}" class="menu-link">
-                            <div data-i18n="Micro ATM Statement">Micro ATM Statement</div>
-                        </a>
-                    </li>
-                @endif --}}
-
-                    {{-- @if (Myhelper::can('recharge_statement')) --}}
                     <li class="menu-item {{ Request::is('statement/recharge') ? 'active' : '' }}">
                         <a href="{{ route('statement', ['type' => 'recharge']) }}" class="menu-link">
                             <div data-i18n="Recharge Statement">Recharge Statement</div>
                         </a>
                     </li>
-                    {{-- @endif --}}
-                    {{-- <li class="menu-item {{ Request::is('statement/vancollection') ? 'active' : '' }}">
-                    <a href="{{ route('statement', ['type' => 'vancollection']) }}" class="menu-link">
-                        <div data-i18n="Collection Statement">Collection Statement</div>
-                    </a>
-                </li>
-                @if (Myhelper::can('utipancard_statement'))
-                    <li class="menu-item {{ Request::is('statement/utipancard') ? 'active' : '' }}">
-                        <a href="{{ route('statement', ['type' => 'utipancard']) }}" class="menu-link">
-                            <div data-i18n="Uti Pancard Statement">Uti Pancard Statement</div>
-                        </a>
-                    </li>
-                @endif --}}
-
+                   
                 </ul>
-            </li>
+            </li> --}}
 
         @endif
         <li class="menu-item {{ Request::is('profile/*') ? 'active open' : '' }}">
